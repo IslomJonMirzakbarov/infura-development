@@ -1,3 +1,5 @@
+import { Box } from '@mui/material';
+import Container from 'components/Container';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import CardsContainer from './CardsContainer';
@@ -17,18 +19,25 @@ const Billing = () => {
   const onSubmit = (data) => {};
 
   return (
-    <>
-      <GatewayModal
-        open={open}
-        cancelLabel="Cancel"
-        submitLabel="Continue"
-        toggle={toggle}
-        onSubmit={onSubmit}
-        handleSubmit={handleSubmit}
-        control={control}
-      />
-      <CardsContainer onSelect={onSelect} />
-    </>
+    <Container maxWidth={true}>
+      <Box
+        width="100%"
+        height="calc(100vh - 160px)"
+        display="flex"
+        alignItems="center"
+      >
+        <GatewayModal
+          open={open}
+          cancelLabel="Cancel"
+          submitLabel="Continue"
+          toggle={toggle}
+          onSubmit={onSubmit}
+          handleSubmit={handleSubmit}
+          control={control}
+        />
+        <CardsContainer onSelect={onSelect} />
+      </Box>
+    </Container>
   );
 };
 
