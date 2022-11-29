@@ -1,0 +1,55 @@
+@import 'styles/unit';
+
+.modal {
+  border-radius: 7px;
+
+  width: 300px;
+  .header {
+    @include align-items-center;
+    padding: 13px 16px;
+    background: #151c52;
+    justify-content: space-between;
+    color: #fff;
+    p {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 21px;
+    }
+    .close {
+      display: flex;
+      cursor: pointer;
+    }
+  }
+  .subHeader {
+    background: #f1f3ff;
+    font-size: 12px;
+    line-height: 18px;
+    padding: 3px 15px;
+  }
+  .body {
+    .item {
+      padding: 8px;
+      @include align-items-center;
+      column-gap: 13px;
+      .icon {
+        width: 27px;
+        height: 27px;
+        @include element-center;
+        background: #f3f3f3;
+        border-radius: 50%;
+      }
+      .name {
+        font-size: 14px;
+        line-height: 21px;
+        width: calc(100% - 27px - 20px);
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+      .checkIcon {
+        width: 20px;
+        display: flex;
+      }
+    }
+  }
+}

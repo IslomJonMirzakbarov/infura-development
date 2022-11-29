@@ -1,0 +1,36 @@
+.items {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 6px;
+  .item {
+    border-radius: 7px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    height: 80px;
+    .img {
+      width: 70px;
+      padding: 10px;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+    .content {
+      padding: 14px 10px;
+      p {
+        &:first-child {
+          font-size: 15px;
+          line-height: 22px;
+          color: #7d8890;
+        }
+        &:last-child {
+          font-weight: 700;
+          font-size: 20px;
+          line-height: 30px;
+        }
+      }
+    }
+  }
+}

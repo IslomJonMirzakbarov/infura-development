@@ -1,0 +1,112 @@
+@import 'styles/unit';
+
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background: var(--secondary-color);
+  overflow: auto;
+  color: #969bbf;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  .header {
+    padding: 43px 23px 74px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    a svg {
+      width: 128px;
+      height: 38px;
+    }
+  }
+  .body {
+    nav {
+      ul {
+        li {
+          a {
+            height: 56px;
+            @include align-items-center;
+            font-weight: 500;
+            font-size: 15px;
+            line-height: 150%;
+            column-gap: 15px;
+            padding: 17px 24px;
+            color: #969bbf;
+            position: relative;
+            transition: 0.4s ease-in-out all;
+            .activeBorder {
+              display: none;
+              width: 4px;
+              position: absolute;
+              left: 0;
+              top: calc(50% - 10px);
+              height: 20px;
+              background: #27e6d6;
+            }
+            &:hover {
+              .activeBorder {
+                display: none !important;
+              }
+            }
+            &:hover,
+            &.active {
+              color: #fff;
+              background-color: #262f71;
+              .activeBorder {
+                display: block;
+              }
+              svg {
+                path {
+                  fill: #fff;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .footer {
+    .dropFile {
+      height: 55px;
+      @include justify-content-center;
+      color: #ffffff;
+      background: #0e42e5;
+      box-shadow: 5px 6px 17px rgba(0, 0, 0, 0.2);
+      margin-bottom: 27px;
+      padding: 16px;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 150%;
+      position: relative;
+      .icon {
+        border: 1px solid #f1f3ff;
+        box-shadow: 5px 6px 17px rgba(0, 0, 0, 0.2);
+        width: 30px;
+        height: 30px;
+        position: absolute;
+        top: calc(50% - 15px);
+        right: 20px;
+        background: #ffffff;
+        border-radius: 50%;
+        @include element-center;
+        svg {
+          fill: #0e42e5;
+        }
+      }
+    }
+    .logout {
+      height: 55px;
+      padding: 16px 20px;
+      background: #0e42e5;
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 150%;
+      @include align-items-center;
+      justify-content: space-between;
+      color: #f1f3ff;
+      cursor: pointer;
+    }
+  }
+}

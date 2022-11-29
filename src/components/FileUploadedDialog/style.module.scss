@@ -1,0 +1,67 @@
+@import 'styles/unit';
+
+.modal {
+  border-radius: 7px;
+  width: 450px;
+  position: relative;
+  padding: 16px 21px 21px;
+  @include align-items-center;
+  flex-direction: column;
+  .title {
+    font-weight: 700;
+    font-size: 22px;
+    line-height: 33px;
+    text-align: center;
+  }
+  .subTitle {
+    margin-bottom: 18px;
+    display: block;
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 21px;
+    text-align: center;
+    span {
+      color: var(--primary-color);
+      font-weight: 700;
+    }
+  }
+  .close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    cursor: pointer;
+    svg {
+      color: #d9d9d9;
+    }
+  }
+  .body {
+    height: 206px;
+    overflow: auto;
+    border: 1px solid #e9e9e9;
+    border-radius: 7px;
+    width: 100%;
+    .item {
+      padding: 7px 15px;
+      @include align-items-center;
+      column-gap: 13px;
+      .icon {
+        width: 27px;
+        height: 27px;
+        @include element-center;
+        background: #f3f3f3;
+        border-radius: 50%;
+      }
+      .name {
+        font-size: 14px;
+        line-height: 21px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        color: #1f1f1f;
+      }
+    }
+  }
+  button {
+    margin-top: 36px;
+  }
+}

@@ -1,0 +1,59 @@
+@import 'styles/unit';
+
+.dialog {
+  max-width: 550px;
+  padding: 55px 20px 20px 35px;
+  display: flex;
+  align-items: flex-start;
+  column-gap: 25px;
+  height: 300px;
+  position: relative;
+  .closeBtn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    cursor: pointer;
+    svg {
+      fill: #d9d9d9;
+    }
+  }
+  .img {
+    min-width: 161px;
+    max-width: 161px;
+    min-height: 161px;
+    max-height: 161px;
+    @include element-center;
+    img {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+    }
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    .text {
+      p {
+        &:first-child {
+          font-weight: 700;
+          font-size: 22px;
+          line-height: 33px;
+          margin-bottom: 10px;
+        }
+        &:last-child {
+          font-weight: 500;
+          font-size: 15px;
+          line-height: 22px;
+          color: #4b4b4b;
+        }
+      }
+    }
+    .buttons {
+      @include align-items-center;
+      justify-content: flex-end;
+      column-gap: 9px;
+    }
+  }
+}
