@@ -1,6 +1,10 @@
 import MainLayout from 'layouts/MainLayout';
 import { Navigate, useRoutes } from 'react-router-dom';
 import Billing from 'views/Billing';
+import Connect from 'views/Billing/Connect';
+import Deposit from 'views/Billing/Deposit';
+import BillingContainer from 'views/Billing/index.container';
+import Pool from 'views/Billing/Pool';
 import Dashboard from 'views/Dashboard';
 import ProfileContainer from 'views/Profile';
 
@@ -19,7 +23,25 @@ export const privateRoutes = [
       },
       {
         path: 'billing',
-        element: <Billing />
+        element: <BillingContainer />,
+        children: [
+          {
+            index: true,
+            element: <Billing />
+          },
+          {
+            path: 'pool',
+            element: <Pool />
+          },
+          {
+            path: 'connect',
+            element: <Connect />
+          },
+          {
+            path: 'deposit',
+            element: <Deposit />
+          }
+        ]
       }
     ]
   },

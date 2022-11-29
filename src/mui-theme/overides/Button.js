@@ -19,6 +19,11 @@ export const MuiButton = {
       border: '1px solid #fff',
       color: '#fff'
     },
+    outlined: {
+      backgroundColor: 'transparent',
+      border: '1px solid #0E42E5',
+      color: '#0E42E5'
+    },
     containedPrimary: {
       backgroundColor: 'var(--text-color)',
       '&:hover': {

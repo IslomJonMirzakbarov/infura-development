@@ -19,10 +19,8 @@ function App() {
         <ThemeProvider theme={theme}>
           <BrowserRouter>
             <QueryClientProvider client={queryClient}>
-              <UpdateProvider>
-                <ToastContainer />
-                <AuthProvider />
-              </UpdateProvider>
+              <ToastContainer />
+              <AuthProvider />
             </QueryClientProvider>
           </BrowserRouter>
         </ThemeProvider>

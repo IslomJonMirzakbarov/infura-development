@@ -5,8 +5,6 @@ export const { actions: authActions, reducer: authReducer } = createSlice({
   initialState: {
     isAuth: false,
     token: null,
-    mnemonics: null,
-    privateKey: null,
     walletAddress: null
   },
   reducers: {
@@ -21,12 +19,6 @@ export const { actions: authActions, reducer: authReducer } = createSlice({
     },
     setUser: (state, { payload }) => {
       state.user = payload;
-    },
-    setMnemonics: (state, { payload }) => {
-      state.mnemonics = payload;
-    },
-    setPrivateKey: (state, { payload }) => {
-      state.privateKey = payload;
     },
     setWalletAddress: (state, { payload }) => {
       state.walletAddress = payload;

@@ -1,0 +1,116 @@
+.card {
+  background-color: #fff;
+  box-shadow: 5px 4px 19px rgba(167, 167, 167, 0.15);
+  border-radius: 10px;
+  padding: 23px 38px 17px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  transition: 0s ease-in-out all;
+  position: relative;
+
+  .title {
+    font-size: 15px;
+    line-height: 22.5px;
+    font-weight: 500;
+    color: #292929;
+  }
+
+  .price {
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 48px;
+    color: #292929;
+  }
+
+  .month {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 22px;
+    color: #cacaca;
+  }
+
+  .list {
+    margin: 0;
+    padding: 0;
+    margin-top: 37px;
+    list-style: none;
+
+    .item {
+      font-weight: 500;
+      font-size: 12px;
+      line-height: 192.5%;
+      color: #cacaca;
+      display: flex;
+      align-items: center;
+      margin: 5px 0;
+
+      svg {
+        width: 15px;
+        height: 15px;
+        margin-right: 5px;
+      }
+    }
+  }
+
+  button {
+    background-color: #fff;
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    margin-top: 30px;
+
+    &:hover {
+      color: #fff;
+    }
+
+    &:active .card {
+      background-color: var(--primary-color);
+      color: #fff;
+    }
+  }
+
+  button:active div {
+    background-color: var(--primary-color) !important;
+    color: #fff;
+  }
+
+  &:active,
+  &.currentPlan {
+    background-color: var(--primary-color);
+    color: #fff;
+
+    .title,
+    .month,
+    .price,
+    .item {
+      color: #fff;
+    }
+  }
+
+  &.disabled {
+    background-color: #fff;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 4;
+    }
+
+    .title,
+    .month,
+    .price,
+    .item {
+      color: #cacaca;
+    }
+
+    button {
+      border: 1px solid #cacaca;
+      color: #cacaca;
+    }
+  }
+}

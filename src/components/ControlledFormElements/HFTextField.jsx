@@ -7,10 +7,11 @@ const HFTextField = ({
   disabledHelperText = false,
   required = false,
   rules = {},
+  boxProps,
   ...props
 }) => {
   return (
-    <Box display="flex" flexDirection="column">
+    <Box display="flex" flexDirection="column" {...boxProps}>
       <Typography variant="standard" fontWeight={500} mb={1}>
         {props?.label}
       </Typography>
