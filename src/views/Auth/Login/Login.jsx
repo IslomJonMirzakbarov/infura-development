@@ -6,12 +6,22 @@ import { NavLink } from 'react-router-dom';
 import { Box, Button, Typography } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { authActions } from 'store/auth/auth.slice';
+import useAuth from 'hooks/useAuth';
 
 export default function Login() {
   const dispatch = useDispatch();
+  const { loginMutation } = useAuth();
+
   const { control, handleSubmit } = useForm({});
+
   const onSubmit = (data) => {
-    dispatch(authActions.login());
+    console.log(data);
+    loginMutation.mutate(data, {
+      onSuccess: (e) => {
+        console.log(e);
+      }
+    });
+    // dispatch(authActions.login());
   };
 
   return (
