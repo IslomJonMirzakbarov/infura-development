@@ -1,28 +1,36 @@
-import styles from './style.module.scss';
-import WalletLogic from 'layouts/WallerLogic';
-import { useForm } from 'react-hook-form';
-import HFTextField from 'components/ControlledFormElements/HFTextField';
-import { NavLink } from 'react-router-dom';
-import { Box, Button, Typography } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { authActions } from 'store/auth/auth.slice';
-import useAuth from 'hooks/useAuth';
+import styles from './style.module.scss'
+import WalletLogic from 'layouts/WallerLogic'
+import { useForm } from 'react-hook-form'
+import HFTextField from 'components/ControlledFormElements/HFTextField'
+import { NavLink } from 'react-router-dom'
+import { Box, Button, Typography } from '@mui/material'
+import { useDispatch } from 'react-redux'
+import { authActions } from 'store/auth/auth.slice'
+import useAuth from 'hooks/useAuth'
+import { useMutation } from 'react-query'
+import { useState } from 'react'
 
 export default function Login() {
-  const dispatch = useDispatch();
-  const { loginMutation } = useAuth();
+  const dispatch = useDispatch()
+  const [error, setError] = useState(null)
+  const { loginMutation } = useAuth()
 
-  const { control, handleSubmit } = useForm({});
+  const { control, handleSubmit } = useForm({})
 
-  const onSubmit = (data) => {
-    console.log(data);
-    loginMutation.mutate(data, {
-      onSuccess: (e) => {
-        console.log(e);
-      }
-    });
-    // dispatch(authActions.login());
-  };
+  const onSubmit = async (data) => {
+    try {
+      const response = await loginMutation.mutateAsync(data)
+      // console.log('Login successful', response)
+      dispatch(authActions.setUser(response.user))
+      dispatch(authActions.setToken(response.tokens.access.token))
+      dispatch(authActions.login())
+    } catch (error) {
+      console.error('Login failed', error?.data?.message)
+      setError(
+        error?.data?.message ?? 'Something went wrong. Please try again later.'
+      )
+    }
+  }
 
   return (
     <WalletLogic title="Login" hidePreviusLink>
@@ -56,11 +64,16 @@ export default function Login() {
               Forget Password
             </Typography>
           </NavLink>
+          {error && (
+            <Box color="error.main" mt={2} mb={1}>
+              {error}
+            </Box>
+          )}
           <Box display="flex" justifyContent="center" mt="95px">
             <Button type="submit">Login</Button>
           </Box>
         </form>
       </div>
     </WalletLogic>
-  );
+  )
 }
