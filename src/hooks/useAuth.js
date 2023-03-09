@@ -10,7 +10,7 @@ const logout = (data) => request.post('auth/logout', data)
 const reset = (data, token) =>
   request.post(`auth/reset-password?token=${token}`, data)
 
-const forget = (data) => request.post('auth/forget-password', data)
+const forgot = (data) => request.post('auth/forgot-password', data)
 
 const refresh = (data) => request.post('auth/refresh-tokens', data)
 
@@ -25,7 +25,7 @@ const useAuth = (token) => {
 
   const resetMutation = useMutation((data) => reset(data, token))
 
-  const forgetMutation = useMutation((data) => forget(data))
+  const forgotMutation = useMutation((data) => forgot(data))
 
   const refreshMutation = useMutation((data) => refresh(data))
 
@@ -36,7 +36,7 @@ const useAuth = (token) => {
     registerMutation,
     logoutMutation,
     resetMutation,
-    forgetMutation,
+    forgotMutation,
     refreshMutation,
     verifyMutation
   }

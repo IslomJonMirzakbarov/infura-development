@@ -12,10 +12,10 @@ export default function Reset() {
   const token = searchParams.get('token')
   const [error, setError] = useState(null)
   const { resetMutation } = useAuth(token)
+  const [success, setSuccess] = useState(false)
 
   const { control, handleSubmit } = useForm({})
 
-  const [success, setSuccess] = useState(false)
   const navigate = useNavigate()
   const [submitDisabled, setSubmitDisabled] = useState(false)
 

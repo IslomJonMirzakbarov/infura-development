@@ -16,6 +16,7 @@ export const { actions: authActions, reducer: authReducer } = createSlice({
       state.isAuth = false
       state.token = null
       state.user = null
+      state.walletAddress = null
     },
     setToken: (state, { payload }) => {
       state.token = payload
