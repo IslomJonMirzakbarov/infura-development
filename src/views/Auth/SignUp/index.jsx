@@ -1,13 +1,38 @@
-import WalletLogic from 'layouts/WallerLogic';
-import { useForm } from 'react-hook-form';
-import HFTextField from 'components/ControlledFormElements/HFTextField';
-import { Box, Button } from '@mui/material';
+import WalletLogic from 'layouts/WallerLogic'
+import { useForm } from 'react-hook-form'
+import HFTextField from 'components/ControlledFormElements/HFTextField'
+import { Box, Button } from '@mui/material'
+import { useDispatch } from 'react-redux'
+import { authActions } from 'store/auth/auth.slice'
+import { useState } from 'react'
+import useAuth from 'hooks/useAuth'
 
 export default function Signup() {
-  const { control, handleSubmit } = useForm({});
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const dispatch = useDispatch()
+  const { registerMutation } = useAuth()
+
+  const [error, setError] = useState(null)
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({})
+
+  const onSubmit = async (data) => {
+    try {
+      const { user, tokens } = await registerMutation.mutateAsync(data)
+      // console.log('data: ', user, tokens)
+      dispatch(authActions.setUser(user))
+      dispatch(authActions.setToken(tokens))
+      dispatch(authActions.login())
+    } catch (error) {
+      console.log(error)
+      setError(
+        error?.data?.message ?? 'Something went wrong. Please try again later.'
+      )
+    }
+  }
 
   return (
     <WalletLogic
@@ -21,11 +46,20 @@ export default function Signup() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <HFTextField
             fullWidth={true}
+            name="name"
+            label="Name"
+            placeholder="Enter your name"
+            required={true}
+            control={control}
+          />
+          <HFTextField
+            fullWidth={true}
             name="email"
             label="Email"
             placeholder="Enter your email"
             required={true}
             control={control}
+            pattern={/^\S+@\S+\.\S+$/i}
           />
           <HFTextField
             fullWidth={true}
@@ -36,12 +70,18 @@ export default function Signup() {
             mb={0}
             type="password"
             required={true}
+            minLength={8}
           />
+          {error && (
+            <Box color="error.main" mt={2} mb={1}>
+              {error}
+            </Box>
+          )}
           <Box display="flex" justifyContent="center" mt="95px">
             <Button type="submit">Sign Up</Button>
           </Box>
         </form>
       </Box>
     </WalletLogic>
-  );
+  )
 }

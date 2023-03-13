@@ -1,14 +1,39 @@
-import WalletLogic from 'layouts/WallerLogic';
-import { useForm } from 'react-hook-form';
-import HFTextField from 'components/ControlledFormElements/HFTextField';
-import { NavLink } from 'react-router-dom';
-import { Box, Button, Typography } from '@mui/material';
+import WalletLogic from 'layouts/WallerLogic'
+import { useForm } from 'react-hook-form'
+import HFTextField from 'components/ControlledFormElements/HFTextField'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { Box, Button, Typography } from '@mui/material'
+import { useState } from 'react'
+import useAuth from 'hooks/useAuth'
 
 export default function Reset() {
-  const { control, handleSubmit } = useForm({});
-  const onSubmit = (data) => {
-    console.log(data);
-  };
+  const { control, handleSubmit, reset } = useForm({})
+  const [error, setError] = useState(null)
+  const { forgotMutation } = useAuth()
+  const [success, setSuccess] = useState(false)
+  const [submitDisabled, setSubmitDisabled] = useState(false)
+  const navigate = useNavigate()
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await forgotMutation.mutateAsync(data)
+      console.log('Link sent to email successfully', response)
+      setSuccess(true)
+      setSubmitDisabled(true)
+      setTimeout(() => {
+        navigate('/login')
+      }, 2300)
+    } catch (error) {
+      console.error('Sending link failed', error?.data?.message)
+      setError(
+        error?.data?.message ?? 'Something went wrong. Please try again later.'
+      )
+      setTimeout(() => {
+        setError(null)
+        reset()
+      }, 3000)
+    }
+  }
 
   return (
     <WalletLogic
@@ -27,9 +52,27 @@ export default function Reset() {
             control={control}
             placeholder="Enter your email"
             required={true}
+            pattern={/^\S+@\S+\.\S+$/i}
           />
+
+          {success && (
+            <Typography variant="body1" sx={{ color: 'green' }}>
+              Link sent to the email successfully. Redirecting to login page...
+            </Typography>
+          )}
+          {error && (
+            <Typography variant="body1" sx={{ color: 'red' }}>
+              {error}
+            </Typography>
+          )}
+
           <Box display="flex" justifyContent="center" mt="95px">
-            <Button type="submit">Submit</Button>
+            <Button
+              type="submit"
+              disabled={submitDisabled || forgotMutation?.isLoading}
+            >
+              {forgotMutation?.isLoading ? 'Loading...' : 'Submit'}
+            </Button>
           </Box>
           <Typography
             fontSize="10px"
@@ -55,5 +98,5 @@ export default function Reset() {
         </form>
       </Box>
     </WalletLogic>
-  );
+  )
 }

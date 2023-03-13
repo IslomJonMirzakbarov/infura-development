@@ -1,5 +1,5 @@
-import { Box, TextField, Typography } from '@mui/material';
-import { Controller } from 'react-hook-form';
+import { Box, TextField, Typography } from '@mui/material'
+import { Controller } from 'react-hook-form'
 
 const HFTextField = ({
   control,
@@ -7,6 +7,8 @@ const HFTextField = ({
   disabledHelperText = false,
   required = false,
   rules = {},
+  minLength,
+  pattern,
   boxProps,
   ...props
 }) => {
@@ -20,7 +22,19 @@ const HFTextField = ({
         name={name}
         defaultValue=""
         rules={{
-          required: required ? `Provided ${name} is incorrect` : false,
+          required: required ? `Enter your ${name}` : false,
+          ...(minLength && {
+            minLength: {
+              value: minLength,
+              message: 'Password should be at least 8 characters long'
+            }
+          }),
+          ...(pattern && {
+            pattern: {
+              value: pattern,
+              message: 'Invalid email format'
+            }
+          }),
           ...rules
         }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -37,7 +51,7 @@ const HFTextField = ({
         )}
       ></Controller>
     </Box>
-  );
-};
+  )
+}
 
-export default HFTextField;
+export default HFTextField
