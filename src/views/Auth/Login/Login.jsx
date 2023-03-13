@@ -43,6 +43,7 @@ export default function Login() {
             control={control}
             placeholder="Enter your email"
             required={true}
+            pattern={/^\S+@\S+\.\S+$/i}
           />
           <HFTextField
             fullWidth={true}
@@ -51,6 +52,7 @@ export default function Login() {
             control={control}
             required={true}
             placeholder="Enter your password"
+            minLength={8}
             type="password"
             mb={0}
           />

@@ -61,6 +61,7 @@ export default function Reset() {
             control={control}
             placeholder="Enter your new password"
             required={true}
+            minLength={8}
           />
           {success && (
             <Typography variant="body1" sx={{ color: 'green' }}>

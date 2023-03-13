@@ -8,6 +8,7 @@ const HFTextField = ({
   required = false,
   rules = {},
   minLength,
+  pattern,
   boxProps,
   ...props
 }) => {
@@ -22,15 +23,15 @@ const HFTextField = ({
         defaultValue=""
         rules={{
           required: required ? `Enter your ${name}` : false,
-          ...(name === 'password' && {
+          ...(minLength && {
             minLength: {
-              value: 8,
+              value: minLength,
               message: 'Password should be at least 8 characters long'
             }
           }),
-          ...(name === 'email' && {
+          ...(pattern && {
             pattern: {
-              value: /^\S+@\S+\.\S+$/i,
+              value: pattern,
               message: 'Invalid email format'
             }
           }),

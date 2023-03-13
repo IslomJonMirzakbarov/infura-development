@@ -59,6 +59,7 @@ export default function Signup() {
             placeholder="Enter your email"
             required={true}
             control={control}
+            pattern={/^\S+@\S+\.\S+$/i}
           />
           <HFTextField
             fullWidth={true}
