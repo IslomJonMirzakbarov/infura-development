@@ -17,9 +17,9 @@ const errorHandler = (error, hooks) => {
       return axios
         .post(`${baseURL}/auth/renew`, { refresh_token })
         .then((response) => {
-          const { access, refresh } = response.tokens
-          store.dispatch(authActions.setToken({ access, refresh }))
-          error.config.headers.Authorization = `Bearer ${access.token}`
+          const { access_token } = response?.payload.token
+          store.dispatch(authActions.setAccessToken(access_token))
+          error.config.headers.Authorization = `Bearer ${access_token.token}`
           return axios.request(error.config)
         })
         .catch((error) => {
