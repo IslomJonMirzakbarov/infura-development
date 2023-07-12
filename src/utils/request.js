@@ -12,10 +12,10 @@ const request = axios.create({
 const errorHandler = (error, hooks) => {
   const status = error.response.status
   if (status === 401 || status === 403) {
-    const refresh_token = store.getState()?.auth?.token?.refresh?.token
+    const refresh_token = store.getState()?.auth?.token?.refresh_token?.token
     if (refresh_token) {
       return axios
-        .post(`${baseURL}/auth/refresh-tokens`, { refresh_token })
+        .post(`${baseURL}/auth/renew`, { refresh_token })
         .then((response) => {
           const { access, refresh } = response.tokens
           store.dispatch(authActions.setToken({ access, refresh }))
@@ -40,8 +40,8 @@ const errorHandler = (error, hooks) => {
 
 request.interceptors.request.use(
   (config) => {
-    const token = store.getState()?.auth?.token?.access?.token
-
+    config.headers['X-Conun-Service'] = 'infura'
+    const token = store.getState()?.auth?.token?.access_token?.token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }

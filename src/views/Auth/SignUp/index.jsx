@@ -21,10 +21,9 @@ export default function Signup() {
 
   const onSubmit = async (data) => {
     try {
-      const { user, tokens } = await registerMutation.mutateAsync(data)
-      // console.log('data: ', user, tokens)
-      dispatch(authActions.setUser(user))
-      dispatch(authActions.setToken(tokens))
+      const response = await registerMutation.mutateAsync(data)
+      dispatch(authActions.setUser(response?.payload?.user))
+      dispatch(authActions.setToken(response?.payload?.token))
       dispatch(authActions.login())
     } catch (error) {
       console.log(error)
@@ -36,49 +35,49 @@ export default function Signup() {
 
   return (
     <WalletLogic
-      title="Create an account"
-      label="Already have an account?<br/>Login here."
-      btnLabel="Login"
-      link="/"
+      title='Create an account'
+      label='Already have an account?<br/>Login here.'
+      btnLabel='Login'
+      link='/'
       hidePreviusLink
     >
-      <Box width="100%">
+      <Box width='100%'>
         <form onSubmit={handleSubmit(onSubmit)}>
           <HFTextField
             fullWidth={true}
-            name="name"
-            label="Name"
-            placeholder="Enter your name"
+            name='name'
+            label='Name'
+            placeholder='Enter your name'
             required={true}
             control={control}
           />
           <HFTextField
             fullWidth={true}
-            name="email"
-            label="Email"
-            placeholder="Enter your email"
+            name='email'
+            label='Email'
+            placeholder='Enter your email'
             required={true}
             control={control}
             pattern={/^\S+@\S+\.\S+$/i}
           />
           <HFTextField
             fullWidth={true}
-            name="password"
-            label="Password"
-            placeholder="Enter your password"
+            name='password'
+            label='Password'
+            placeholder='Enter your password'
             control={control}
             mb={0}
-            type="password"
+            type='password'
             required={true}
             minLength={8}
           />
           {error && (
-            <Box color="error.main" mt={2} mb={1}>
+            <Box color='error.main' mt={2} mb={1}>
               {error}
             </Box>
           )}
-          <Box display="flex" justifyContent="center" mt="95px">
-            <Button type="submit">Sign Up</Button>
+          <Box display='flex' justifyContent='center' mt='95px'>
+            <Button type='submit'>Sign Up</Button>
           </Box>
         </form>
       </Box>
