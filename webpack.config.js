@@ -1,5 +1,5 @@
-const path = require('path');
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+const path = require('path')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 
 module.exports = {
   entry: './src/index.js',
@@ -12,5 +12,13 @@ module.exports = {
       fs: false
     }
   },
-  plugins: [new NodePolyfillPlugin()]
-};
+  plugins: [new NodePolyfillPlugin()],
+  module: {
+    rules: [
+      {
+        test: /\.svg$/,
+        use: ['svg-inline-loader']
+      }
+    ]
+  }
+}
