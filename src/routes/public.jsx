@@ -1,14 +1,19 @@
 import { Navigate, useRoutes } from 'react-router-dom'
-import Login from 'views/Auth/Login/Login'
+import Login from 'views/Auth/Login'
 import Reset from 'views/Auth/Reset'
-import Signup from 'views/Auth/SignUp'
 import ResetPassword from 'views/Auth/ResetPassword'
+import Signup from 'views/Auth/SignUp'
+import LandingPage from 'views/LandingPage'
 
 export const publicRoutes = [
   {
     children: [
       {
         path: '/',
+        element: <LandingPage />
+      },
+      {
+        path: 'login',
         element: <Login />
       },
       {
@@ -27,7 +32,7 @@ export const publicRoutes = [
   },
   {
     path: '*',
-    element: <Navigate to="/" />
+    element: <Navigate to='/' />
   }
 ]
 

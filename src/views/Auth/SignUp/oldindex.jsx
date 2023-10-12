@@ -1,30 +1,32 @@
-import styles from './style.module.scss'
 import WalletLogic from 'layouts/WallerLogic'
 import { useForm } from 'react-hook-form'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
-import { NavLink } from 'react-router-dom'
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { authActions } from 'store/auth/auth.slice'
-import useAuth from 'hooks/useAuth'
-import { useMutation } from 'react-query'
 import { useState } from 'react'
+import useAuth from 'hooks/useAuth'
 
-export default function OldLogin() {
+export default function OldSignup() {
   const dispatch = useDispatch()
-  const [error, setError] = useState(null)
-  const { loginMutation } = useAuth()
+  const { registerMutation } = useAuth()
 
-  const { control, handleSubmit } = useForm({})
+  const [error, setError] = useState(null)
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({})
 
   const onSubmit = async (data) => {
     try {
-      const response = await loginMutation.mutateAsync(data)
+      const response = await registerMutation.mutateAsync(data)
       dispatch(authActions.setUser(response?.payload?.user))
       dispatch(authActions.setToken(response?.payload?.token))
       dispatch(authActions.login())
     } catch (error) {
-      console.error('Login failed', error?.data?.message)
+      console.log(error)
       setError(
         error?.data?.message ?? 'Something went wrong. Please try again later.'
       )
@@ -32,49 +34,53 @@ export default function OldLogin() {
   }
 
   return (
-    <WalletLogic title='Login' hidePreviusLink>
-      <div className={styles.box}>
+    <WalletLogic
+      title='Create an account'
+      label='Already have an account?<br/>Login here.'
+      btnLabel='Login'
+      link='/'
+      hidePreviusLink
+    >
+      <Box width='100%'>
         <form onSubmit={handleSubmit(onSubmit)}>
+          <HFTextField
+            fullWidth={true}
+            name='name'
+            label='Name'
+            placeholder='Enter your name'
+            required={true}
+            control={control}
+          />
           <HFTextField
             fullWidth={true}
             name='email'
             label='Email'
-            control={control}
             placeholder='Enter your email'
             required={true}
+            control={control}
             pattern={/^\S+@\S+\.\S+$/i}
           />
           <HFTextField
             fullWidth={true}
             name='password'
             label='Password'
-            control={control}
-            required={true}
             placeholder='Enter your password'
-            minLength={8}
-            type='password'
+            control={control}
             mb={0}
+            type='password'
+            required={true}
+            minLength={8}
           />
-          <NavLink to='/reset'>
-            <Typography
-              color='primary'
-              fontSize='10px'
-              lineHeight='15px'
-              fontWeight={500}
-            >
-              Forget Password
-            </Typography>
-          </NavLink>
           {error && (
             <Box color='error.main' mt={2} mb={1}>
               {error}
             </Box>
           )}
           <Box display='flex' justifyContent='center' mt='95px'>
-            <Button type='submit'>Login</Button>
+            <Button type='submit'>Sign Up</Button>
           </Box>
         </form>
-      </div>
+      </Box>
     </WalletLogic>
   )
 }
