@@ -4,7 +4,10 @@ export const { actions: authActions, reducer: authReducer } = createSlice({
   name: 'auth',
   initialState: {
     isAuth: false,
-    token: null,
+    token: {
+      access_token: {},
+      refresh_token: {}
+    },
     walletAddress: null,
     user: null
   },
@@ -20,6 +23,9 @@ export const { actions: authActions, reducer: authReducer } = createSlice({
     },
     setToken: (state, { payload }) => {
       state.token = payload
+    },
+    setAccessToken: (state, { payload }) => {
+      state.token.access_token = payload
     },
     setUser: (state, { payload }) => {
       state.user = payload

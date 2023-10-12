@@ -20,9 +20,8 @@ export default function Login() {
   const onSubmit = async (data) => {
     try {
       const response = await loginMutation.mutateAsync(data)
-      // console.log('Login successful', response)
-      dispatch(authActions.setUser(response.user))
-      dispatch(authActions.setToken(response.tokens.access.token))
+      dispatch(authActions.setUser(response?.payload?.user))
+      dispatch(authActions.setToken(response?.payload?.token))
       dispatch(authActions.login())
     } catch (error) {
       console.error('Login failed', error?.data?.message)
@@ -33,46 +32,46 @@ export default function Login() {
   }
 
   return (
-    <WalletLogic title="Login" hidePreviusLink>
+    <WalletLogic title='Login' hidePreviusLink>
       <div className={styles.box}>
         <form onSubmit={handleSubmit(onSubmit)}>
           <HFTextField
             fullWidth={true}
-            name="email"
-            label="Email"
+            name='email'
+            label='Email'
             control={control}
-            placeholder="Enter your email"
+            placeholder='Enter your email'
             required={true}
             pattern={/^\S+@\S+\.\S+$/i}
           />
           <HFTextField
             fullWidth={true}
-            name="password"
-            label="Password"
+            name='password'
+            label='Password'
             control={control}
             required={true}
-            placeholder="Enter your password"
+            placeholder='Enter your password'
             minLength={8}
-            type="password"
+            type='password'
             mb={0}
           />
-          <NavLink to="/reset">
+          <NavLink to='/reset'>
             <Typography
-              color="primary"
-              fontSize="10px"
-              lineHeight="15px"
+              color='primary'
+              fontSize='10px'
+              lineHeight='15px'
               fontWeight={500}
             >
               Forget Password
             </Typography>
           </NavLink>
           {error && (
-            <Box color="error.main" mt={2} mb={1}>
+            <Box color='error.main' mt={2} mb={1}>
               {error}
             </Box>
           )}
-          <Box display="flex" justifyContent="center" mt="95px">
-            <Button type="submit">Login</Button>
+          <Box display='flex' justifyContent='center' mt='95px'>
+            <Button type='submit'>Login</Button>
           </Box>
         </form>
       </div>
