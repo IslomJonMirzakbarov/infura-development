@@ -1,86 +1,87 @@
-import WalletLogic from 'layouts/WallerLogic'
-import { useForm } from 'react-hook-form'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
-import { Box, Button } from '@mui/material'
-import { useDispatch } from 'react-redux'
-import { authActions } from 'store/auth/auth.slice'
-import { useState } from 'react'
-import useAuth from 'hooks/useAuth'
+import React, { useState } from 'react'
+import { Button, InputLabel, TextField } from '@material-ui/core'
+import rightB from 'assets/images/signup/right-bottom.svg'
+import leftT from 'assets/images/signup/left-top.svg'
+import forwardIcon from 'assets/images/signup/forward-icon.svg'
+import oceanDriveLogo from 'assets/images/signup/oceandrive.svg'
+import styles from './style.module.scss'
+import { useNavigate } from 'react-router-dom'
+import { IconButton, InputAdornment } from '@mui/material'
+import { Visibility, VisibilityOff } from '@material-ui/icons'
 
-export default function Signup() {
-  const dispatch = useDispatch()
-  const { registerMutation } = useAuth()
+const Signup = () => {
+  const navigate = useNavigate()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false) // New state
 
-  const [error, setError] = useState(null)
-
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({})
-
-  const onSubmit = async (data) => {
-    try {
-      const response = await registerMutation.mutateAsync(data)
-      dispatch(authActions.setUser(response?.payload?.user))
-      dispatch(authActions.setToken(response?.payload?.token))
-      dispatch(authActions.login())
-    } catch (error) {
-      console.log(error)
-      setError(
-        error?.data?.message ?? 'Something went wrong. Please try again later.'
-      )
-    }
+  const handleTogglePassword = () => {
+    setShowPassword(!showPassword)
   }
 
   return (
-    <WalletLogic
-      title='Create an account'
-      label='Already have an account?<br/>Login here.'
-      btnLabel='Login'
-      link='/'
-      hidePreviusLink
-    >
-      <Box width='100%'>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <HFTextField
-            fullWidth={true}
-            name='name'
-            label='Name'
-            placeholder='Enter your name'
-            required={true}
-            control={control}
-          />
-          <HFTextField
-            fullWidth={true}
-            name='email'
-            label='Email'
+    <div className={styles.container}>
+      <img src={rightB} alt='right-bottom-img' className={styles.blurImgR} />
+      <img src={leftT} alt='right-bottom-img' className={styles.blurImgL} />
+      <img
+        src={oceanDriveLogo}
+        alt='oceandrive-logo'
+        className={styles.oceanDriveLogo}
+      />
+      <form className={styles.form}>
+        <h1 className={styles.title}>Create an account</h1>
+        <div className={styles.inputDiv}>
+          <InputLabel className={styles.inputLabel}>
+            ID Email <span>*</span>
+          </InputLabel>
+          <TextField
+            type='email'
+            variant='outlined'
             placeholder='Enter your email'
-            required={true}
-            control={control}
-            pattern={/^\S+@\S+\.\S+$/i}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={styles.input}
           />
-          <HFTextField
-            fullWidth={true}
-            name='password'
-            label='Password'
+        </div>
+        <div className={styles.inputDiv}>
+          <InputLabel className={styles.inputLabel}>
+            Password <span>*</span>
+          </InputLabel>
+          <TextField
+            type={showPassword ? 'text' : 'password'}
+            variant='outlined'
             placeholder='Enter your password'
-            control={control}
-            mb={0}
-            type='password'
-            required={true}
-            minLength={8}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={styles.input}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton onClick={handleTogglePassword}>
+                    {showPassword ? (
+                      <VisibilityOff color='#C2C2C2;' />
+                    ) : (
+                      <Visibility color='#C2C2C2;' />
+                    )}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
           />
-          {error && (
-            <Box color='error.main' mt={2} mb={1}>
-              {error}
-            </Box>
-          )}
-          <Box display='flex' justifyContent='center' mt='95px'>
-            <Button type='submit'>Sign Up</Button>
-          </Box>
-        </form>
-      </Box>
-    </WalletLogic>
+        </div>
+
+        <Button variant='contained' color='primary' className={styles.button}>
+          Sign up
+        </Button>
+        <div className={styles.alreadyUser}>
+          Already have an account?{'  '}
+          <span onClick={() => navigate('/login')}>
+            Log In <img src={forwardIcon} alt='forward-icon' />
+          </span>
+        </div>
+      </form>
+    </div>
   )
 }
+
+export default Signup
