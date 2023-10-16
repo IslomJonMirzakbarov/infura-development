@@ -10,7 +10,7 @@
     "@mui/icons-material": "^5.10.6",
     "@mui/lab": "^5.0.0-alpha.110",
     "@mui/material": "^5.10.8",
-    "@mui/styles": "^5.10.10",
+    "@mui/styles": "^5.14.13",
     "@reduxjs/toolkit": "^1.9.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
