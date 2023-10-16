@@ -18,10 +18,11 @@
     top: -500px;
     left: -400px;
   }
-  .oceanDriveLogo {
+  .logo {
     position: absolute;
     top: 34px;
     right: 34px;
+    display: flex;
   }
 
   .form {
@@ -29,7 +30,7 @@
     flex-direction: column;
     align-items: center;
     z-index: 100;
-
+    width: 470px;
     .title {
       color: #fff;
       text-align: center;
@@ -40,69 +41,17 @@
       margin-bottom: 67px;
     }
 
-    .inputDiv:nth-of-type(2) {
-      margin-bottom: 45px;
-    }
-
-    .inputDiv {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-
-      .inputLabel {
-        color: #fff;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 600;
-        line-height: normal;
-        text-align: left;
-
-        span {
-          color: #27e6d6;
-        }
-      }
-
-      .input {
-        width: 470px;
-        height: 55px;
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 7px;
-        border: 1.5px solid #5c5a64;
-        color: #fff;
-        font-size: 15px;
-        font-weight: 600;
-        margin-bottom: 28px;
-
-        & input {
-          color: #fff;
-        }
-
-        & input::placeholder {
-          color: #fff;
-          opacity: 0.5;
-        }
-
-        & input:-ms-input-placeholder {
-          color: #fff;
-        }
-
-        & input::-ms-input-placeholder {
-          color: #fff;
-        }
-      }
-    }
-
-    .button {
-      cursor: pointer;
-      width: 170px;
-      height: 55px;
-      border-radius: 10px;
-      background: linear-gradient(97deg, #27e6d6 3.65%, #130fcc 81.9%);
+    .forgot {
+      padding-right: 15px;
+      margin-top: -17px;
+      margin-bottom: 49px;
+      text-align: right;
+      width: 100%;
       color: #fff;
-      text-align: center;
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 23px;
+      font-size: 12px;
+      font-weight: 400;
+      text-decoration-line: underline;
+      cursor: pointer;
     }
 
     .alreadyUser {
@@ -114,15 +63,11 @@
       align-items: center;
       justify-content: center;
       gap: 7px;
-
+      margin-top: 23px;
       span {
         color: #27e6d6;
-        font-size: 15px;
-        font-weight: 500;
         text-decoration-line: underline;
         cursor: pointer;
-        position: relative;
-
         img {
           margin-left: 6px;
           position: absolute;

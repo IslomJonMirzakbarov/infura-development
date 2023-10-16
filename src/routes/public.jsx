@@ -1,4 +1,5 @@
 import { Navigate, useRoutes } from 'react-router-dom'
+import ConfirmationCode from 'views/Auth/ConfirmationCode'
 import Login from 'views/Auth/Login'
 import Reset from 'views/Auth/Reset'
 import ResetPassword from 'views/Auth/ResetPassword'
@@ -19,6 +20,10 @@ export const publicRoutes = [
       {
         path: 'register',
         element: <Signup />
+      },
+      {
+        path: 'confirm-code',
+        element: <ConfirmationCode />
       },
       {
         path: 'reset',

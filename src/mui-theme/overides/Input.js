@@ -5,8 +5,9 @@ export const MuiInput = {
     styleOverrides: {
       input: {
         padding: '15px',
+        color: '#fff',
         '&::placeholder': {
-          color: '#292929;'
+          color: '#fff;'
         }
       },
       root: {
@@ -17,18 +18,19 @@ export const MuiInput = {
         position: 'relative',
         height: '55px',
         borderRadius: '7px',
+        background: 'rgba(255, 255, 255, 0.15)',
         '&:hover': {
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'var(--primary-color)'
+            borderColor: '#27E6D6'
           }
         },
 
         '& .MuiOutlinedInput-notchedOutline': {
-          border: '1.5px solid #E8E8E8',
+          border: '1.5px solid #5C5A64',
           transition: '0.4s ease-in-out all',
           borderWidth: '1.5px!important',
           '&:hover': {
-            borderColor: 'var(--primary-color)'
+            borderColor: '#27E6D6'
           }
         },
         '&.MuiInputBase-sizeSmall': {
@@ -45,7 +47,7 @@ export const MuiInput = {
         },
         '&.Mui-focused': {
           '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: 'var(--primary-color)'
+            borderColor: '#27E6D6'
           }
         },
         '&.MuiInputBase-multiline': {
@@ -57,4 +59,4 @@ export const MuiInput = {
       }
     }
   }
-};
+}

@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form'
 import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
 import { ReactComponent as Logo } from 'assets/images/signup/oceandrive.svg'
 
-const Login = () => {
+const ConfirmationCode = () => {
   const navigate = useNavigate()
 
   const { control, handleSubmit } = useForm({})
@@ -22,42 +22,21 @@ const Login = () => {
         <Logo />
       </div>
       <form className={styles.form}>
-        <h1 className={styles.title}>Login</h1>
+        <h1 className={styles.title}>Confirmation Code</h1>
         <HFTextField
           fullWidth
-          name='email'
-          label='ID Email'
+          name='code'
+          label='Enter confirmation code'
           control={control}
-          placeholder='Enter your email'
-          required
+          placeholder='Please enter code'
           type='email'
         />
-        <HFTextField
-          fullWidth
-          name='password'
-          label='Password'
-          control={control}
-          placeholder='Enter your password'
-          required
-          type='password'
-        />
-
-        <a href='#' className={styles.forgot}>
-          <p>Forgot password?</p>
-        </a>
-
         <Button variant='contained' color='primary'>
-          Login
+          Confirm
         </Button>
-        <div className={styles.alreadyUser}>
-          Don't have an account?{'  '}
-          <span onClick={() => navigate('/register')}>
-            Sign Up <ForwardIcon />
-          </span>
-        </div>
       </form>
     </div>
   )
 }
 
-export default Login
+export default ConfirmationCode
