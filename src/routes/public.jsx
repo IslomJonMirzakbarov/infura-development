@@ -1,3 +1,4 @@
+import AuthLayout from 'layouts/AuthLayout'
 import { Navigate, useRoutes } from 'react-router-dom'
 import ConfirmationCode from 'views/Auth/ConfirmationCode'
 import Login from 'views/Auth/Login'
@@ -14,20 +15,26 @@ export const publicRoutes = [
         element: <LandingPage />
       },
       {
-        path: 'login',
-        element: <Login />
-      },
-      {
-        path: 'register',
-        element: <Signup />
-      },
-      {
-        path: 'confirm-code',
-        element: <ConfirmationCode />
-      },
-      {
-        path: 'reset',
-        element: <Reset />
+        path: '/auth',
+        element: <AuthLayout />,
+        children: [
+          {
+            path: 'login',
+            element: <Login />
+          },
+          {
+            path: 'register',
+            element: <Signup />
+          },
+          {
+            path: 'confirm-code',
+            element: <ConfirmationCode />
+          },
+          {
+            path: 'reset',
+            element: <Reset />
+          }
+        ]
       }
     ]
   },

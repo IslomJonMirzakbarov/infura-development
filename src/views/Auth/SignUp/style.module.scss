@@ -1,78 +1,50 @@
-.container {
-  background: #141332;
-  padding-top: 126px;
+.form {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
-  position: relative;
-  overflow: hidden;
-
-  .blurImgR {
-    position: absolute;
-    bottom: -500px;
-    right: -400px;
-  }
-  .blurImgL {
-    position: absolute;
-    top: -500px;
-    left: -400px;
-  }
-  .logo {
-    position: absolute;
-    top: 34px;
-    right: 34px;
-    display: flex;
+  z-index: 100;
+  width: 470px;
+  .title {
+    color: #fff;
+    text-align: center;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 50px; /* 125% */
+    margin-bottom: 67px;
   }
 
-  .form {
+  .forgot {
+    padding-right: 15px;
+    margin-top: -17px;
+    margin-bottom: 49px;
+    text-align: right;
+    width: 100%;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 400;
+    text-decoration-line: underline;
+    cursor: pointer;
+  }
+
+  .alreadyUser {
+    color: #7d8890;
+    text-align: right;
+    font-size: 15px;
+    font-weight: 500;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    z-index: 100;
-    width: 470px;
-    .title {
-      color: #fff;
-      text-align: center;
-      font-size: 40px;
-      font-style: normal;
-      font-weight: 700;
-      line-height: 50px; /* 125% */
-      margin-bottom: 67px;
-    }
-
-    .forgot {
-      padding-right: 15px;
-      margin-top: -17px;
-      margin-bottom: 49px;
-      text-align: right;
-      width: 100%;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 400;
+    justify-content: center;
+    gap: 7px;
+    margin-top: 23px;
+    span {
+      color: #27e6d6;
       text-decoration-line: underline;
       cursor: pointer;
-    }
-
-    .alreadyUser {
-      color: #7d8890;
-      text-align: right;
-      font-size: 15px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      margin-top: 23px;
-      span {
-        color: #27e6d6;
-        text-decoration-line: underline;
-        cursor: pointer;
-        img {
-          margin-left: 6px;
-          position: absolute;
-          top: 4px;
-        }
+      img {
+        margin-left: 6px;
+        position: absolute;
+        top: 4px;
       }
     }
   }
