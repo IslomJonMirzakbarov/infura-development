@@ -24,7 +24,11 @@ const ResetPassword = () => {
         type='email'
       />
 
-      <Button variant='contained' color='primary'>
+      <Button
+        onClick={() => navigate('/auth/create-new-password')}
+        variant='contained'
+        color='primary'
+      >
         Submit
       </Button>
       <div className={styles.alreadyUser}>
