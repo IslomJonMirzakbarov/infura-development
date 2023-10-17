@@ -4,6 +4,7 @@ import NavbarLanding from 'components/Landing/NavbarLanding'
 import globusIcon from 'assets/images/landing/globus.svg'
 import styles from './style.module.scss'
 import MainContentLanding from 'components/Landing/MainContentLanding'
+import FooterLanding from 'components/Landing/FooterLanding'
 
 const LandingPage = () => {
   const navigate = useNavigate()
@@ -17,6 +18,8 @@ const LandingPage = () => {
       <img src={globusIcon} alt='' className={styles.globusIcon} />
 
       <MainContentLanding />
+
+      <FooterLanding />
     </div>
   )
 }
