@@ -3,26 +3,27 @@
   flex-direction: column;
   align-items: center;
   z-index: 100;
-  width: 470px;
+  width: 500px;
   .title {
     color: #fff;
     text-align: center;
     font-size: 40px;
     font-weight: 700;
     line-height: 50px;
+  }
+
+  .text {
+    color: #fff;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: normal;
+    margin-top: 10px;
     margin-bottom: 67px;
   }
 
-  .forgot {
-    padding-right: 15px;
-    margin-top: -17px;
-    text-align: right;
-    width: 100%;
-    color: #fff;
-    font-size: 12px;
-    text-decoration-line: underline;
-    position: relative;
-    z-index: 9;
+  button {
+    margin-top: 100px;
   }
 
   .alreadyUser {
@@ -45,8 +46,5 @@
         top: 4px;
       }
     }
-  }
-  .button {
-    margin-top: 70px;
   }
 }

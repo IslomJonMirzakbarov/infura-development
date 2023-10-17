@@ -1,0 +1,27 @@
+.container {
+  background: #141332;
+  padding-top: 126px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+
+  .blurImgR {
+    position: absolute;
+    bottom: -500px;
+    right: -400px;
+  }
+  .blurImgL {
+    position: absolute;
+    top: -500px;
+    left: -400px;
+  }
+  .logo {
+    position: absolute;
+    top: 34px;
+    right: 34px;
+    display: flex;
+  }
+}

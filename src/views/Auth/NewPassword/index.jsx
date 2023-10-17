@@ -1,45 +1,38 @@
 import { Button } from '@mui/material'
-import styles from './style.module.scss'
+import styles from '../SignUp/style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
-import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
 
-const Signup = () => {
+const NewPassword = () => {
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm({})
   return (
     <form className={styles.form}>
-      <h1 className={styles.title}>Create an account</h1>
-      <HFTextField
-        fullWidth
-        name='email'
-        label='ID Email'
-        control={control}
-        placeholder='Enter your email'
-        required
-        type='email'
-      />
+      <h1 className={styles.title}>Create a new password</h1>
       <HFTextField
         fullWidth
         name='password'
-        label='Password'
+        label='New password'
         control={control}
-        placeholder='Enter your password'
+        placeholder='Enter new password'
+        required
+        type='password'
+      />
+      <HFTextField
+        fullWidth
+        name='confirm_password'
+        label='Confirm password'
+        control={control}
+        placeholder='Enter new password'
         required
         type='password'
       />
       <Button className={styles.button} variant='contained' color='primary'>
-        Sign up
+        Submit
       </Button>
-      <div className={styles.alreadyUser}>
-        Already have an account?
-        <span onClick={() => navigate('/auth/login')}>
-          Log In <ForwardIcon />
-        </span>
-      </div>
     </form>
   )
 }
 
-export default Signup
+export default NewPassword

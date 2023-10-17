@@ -1,8 +1,9 @@
 export const MuiButton = {
   styleOverrides: {
     root: {
-      fontSize: '15px',
-      lineHeight: '22.5px',
+      fontSize: '14px',
+      lineHeight: 'normal',
+      fontWeigth: 700,
       color: '#fff',
       height: 55,
       minWidth: 150,
@@ -25,9 +26,9 @@ export const MuiButton = {
       color: '#0E42E5'
     },
     containedPrimary: {
-      backgroundColor: 'var(--text-color)',
+      background: 'linear-gradient(97deg, #27E6D6 3.65%, #130FCC 81.9%)',
       '&:hover': {
-        backgroundColor: 'var(--text-color)',
+        background: 'linear-gradient(97deg, #27E6D6 3.65%, #130FCC 81.9%)',
         color: '#fff',
         opacity: 0.8
       }
@@ -47,4 +48,4 @@ export const MuiButton = {
       lineHeight: '18px'
     }
   }
-};
+}
