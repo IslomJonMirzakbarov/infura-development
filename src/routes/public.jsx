@@ -31,8 +31,8 @@ export const publicRoutes = [
             element: <ConfirmationCode />
           },
           {
-            path: 'reset',
-            element: <Reset />
+            path: 'reset-password',
+            element: <ResetPassword />
           }
         ]
       }

@@ -1,6 +1,6 @@
 import { Button } from '@mui/material'
 import styles from '../SignUp/style.module.scss'
-import { useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
@@ -32,9 +32,9 @@ const Login = () => {
         type='password'
       />
 
-      <a href='#' className={styles.forgot}>
-        <p>Forgot password?</p>
-      </a>
+      <NavLink to='/auth/reset-password' className={styles.forgot}>
+        Forgot password?
+      </NavLink>
 
       <Button variant='contained' color='primary'>
         Login
