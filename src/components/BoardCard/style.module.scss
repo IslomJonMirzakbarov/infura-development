@@ -1,0 +1,36 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  height: 139px;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 5px 4px 19px rgba(167, 167, 167, 0.15);
+  border-radius: 7px;
+
+  .value {
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 48px;
+    color: #292929;
+  }
+
+  .label {
+    font-weight: 400;
+    font-size: 13px;
+    line-height: 20px;
+    color: #7d8890;
+  }
+
+  .percent {
+    display: flex;
+    align-items: center;
+
+    &.down {
+      font-weight: 400;
+      font-size: 13px;
+      line-height: 20px;
+      color: #c70030;
+    }
+  }
+}

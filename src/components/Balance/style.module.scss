@@ -1,0 +1,26 @@
+@import 'styles/unit';
+
+.balance {
+  width: 380px;
+  height: 72px;
+  border: 1px solid #e9e9e9;
+  box-shadow: 7px 4px 20px rgba(150, 155, 191, 0.18);
+  border-radius: 10px;
+  padding: 0 20px;
+  @include align-items-center;
+  justify-content: space-between;
+  background-color: #fff;
+  p {
+    font-weight: 600;
+    font-size: 25px;
+    line-height: 150%;
+  }
+  .box {
+    @include align-items-center;
+    column-gap: 7px;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 150%;
+    color: #4b4b4b;
+  }
+}

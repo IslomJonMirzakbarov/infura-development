@@ -1,0 +1,48 @@
+@import 'styles/unit';
+
+.item {
+  background-color: #fff;
+  border-radius: 7px;
+  overflow: hidden;
+  .img {
+    height: 215px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  .body {
+    padding: 12px 8px;
+    .text {
+      @include align-items-center;
+      justify-content: space-between;
+      p {
+        &:first-child {
+          font-weight: 500;
+          font-size: 13px;
+          line-height: 150%;
+        }
+        &:last-child {
+          font-weight: 600;
+          font-size: 10px;
+          line-height: 15px;
+          color: #7d8890;
+          @include align-items-center;
+          column-gap: 4px;
+        }
+      }
+    }
+    .status {
+      font-weight: 700;
+      font-size: 13px;
+      line-height: 150%;
+      color: var(--primary-color);
+      margin-top: 13px;
+      text-align: right;
+    }
+  }
+  button {
+    border-radius: 0;
+  }
+}

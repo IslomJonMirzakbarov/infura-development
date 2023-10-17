@@ -1,0 +1,19 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 100;
+  width: 470px;
+  .title {
+    color: #fff;
+    text-align: center;
+    font-size: 40px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 50px; /* 125% */
+    margin-bottom: 67px;
+  }
+  button {
+    margin-top: 100px;
+  }
+}

@@ -1,0 +1,31 @@
+.wrapper {
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  flex-direction: column;
+  padding: 70px 71px 40px;
+  width: 595px;
+  min-height: 454px;
+  background-color: #fff;
+  justify-content: space-between;
+  border-radius: 10px;
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+  }
+  .content {
+    display: flex;
+    width: 100%;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+}
