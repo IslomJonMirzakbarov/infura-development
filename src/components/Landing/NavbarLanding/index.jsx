@@ -52,8 +52,16 @@ const NavbarLanding = () => {
         </Box>
 
         <Box className={styles.navBtnDiv2}>
-          <Box className={styles.navBtn}>sign up</Box>
-          <Box className={classNames(styles.navBtn, styles.loginBtn)}>
+          <Box
+            className={styles.navBtn}
+            onClick={() => navigate('/auth/register')}
+          >
+            sign up
+          </Box>
+          <Box
+            className={classNames(styles.navBtn, styles.loginBtn)}
+            onClick={() => navigate('/auth/login')}
+          >
             login
           </Box>
           <Box
