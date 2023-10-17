@@ -36,7 +36,7 @@ const Login = () => {
         Forgot password?
       </NavLink>
 
-      <Button variant='contained' color='primary'>
+      <Button className={styles.button} variant='contained' color='primary'>
         Login
       </Button>
       <div className={styles.alreadyUser}>

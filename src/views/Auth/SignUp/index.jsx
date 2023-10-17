@@ -29,10 +29,7 @@ const Signup = () => {
         required
         type='password'
       />
-      <a href='#' className={styles.forgot}>
-        <p>Forgot password?</p>
-      </a>
-      <Button variant='contained' color='primary'>
+      <Button className={styles.button} variant='contained' color='primary'>
         Sign up
       </Button>
       <div className={styles.alreadyUser}>
