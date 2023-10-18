@@ -36,7 +36,9 @@ export default function Profile({
 
         {viewTable ? (
           <>
-            {value === 0 && <Table columns={headColumns} data={data} />}
+            {value === 0 && (
+              <Table name='profileTable' columns={headColumns} data={data} />
+            )}
             {/* {value === 1 && (
               <div className={styles.downloads}>
                 <Table

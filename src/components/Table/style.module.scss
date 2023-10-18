@@ -36,7 +36,8 @@
       background: #1d1d41;
       tr {
         height: 53px;
-        border-bottom: 1px solid #382121;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        cursor: pointer;
         &:last-child {
           border-bottom: none;
 
