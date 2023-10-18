@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import middleIcon from 'assets/images/landing/middle_icon.svg'
+import middleIcon from 'assets/images/landing/middle_icon2.svg'
 import demoCardPhoto from 'assets/images/landing/demo_card_photo.png'
 import leftArrow from 'assets/images/landing/left_arrow.svg'
 import rightArrow from 'assets/images/landing/right_arrow.svg'
@@ -44,6 +44,7 @@ const MainContentLanding = () => {
           OceanDrive's <br /> Network Stats
         </Typography>
 
+        {/* <div className={styles.statBoxesHolder}> */}
         {stats.map((stat) => (
           <Box className={styles.stats}>
             <Typography className={styles.statTitle}>
@@ -67,6 +68,7 @@ const MainContentLanding = () => {
             </Box>
           </Box>
         ))}
+        {/* </div> */}
       </Box>
 
       <div className={styles.featuresContainer}>
