@@ -14,6 +14,7 @@ export default function Table({
   if (isLoading) return <></>
   const handleRowClick = () => {
     if (name === 'profileTable') {
+      navigate('/main/billing/pool/details')
     }
   }
 

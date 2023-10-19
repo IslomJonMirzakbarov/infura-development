@@ -11,7 +11,7 @@ const MainContentLanding = () => {
 
   return (
     <div className={styles.mainContainer}>
-      <Box className={styles.smallDescDiv}>
+      <Box className={styles.smallDesc}>
         <Box className={styles.titleSection}>
           <Typography className={styles.oceanDriveTxt}>OceanDrive</Typography>
           <Typography className={styles.infuraTxt}>Infura</Typography>
@@ -24,7 +24,12 @@ const MainContentLanding = () => {
           sustainable growth.
         </Typography>
 
-        <Button className={styles.goToBtn}>Go to dashboard</Button>
+        <Button
+          className={styles.goToBtn}
+          onClick={() => navigate('/main/dashboard')}
+        >
+          Go to dashboard
+        </Button>
       </Box>
 
       <Stats />

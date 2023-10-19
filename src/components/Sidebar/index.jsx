@@ -16,17 +16,17 @@ const items = [
   {
     title: 'Dashboard',
     icon: <GridIcon />,
-    path: '/'
+    path: '/main/dashboard'
   },
   {
     title: 'Billing',
     icon: <BillingIcon />,
-    path: '/billing'
+    path: '/main/billing'
   },
   {
     title: 'Profile',
     icon: <ProfileIcon />,
-    path: '/profile'
+    path: '/main/profile'
   }
 ]
 
