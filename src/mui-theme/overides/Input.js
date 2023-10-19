@@ -25,6 +25,24 @@ export const MuiInput = {
           }
         },
 
+        '&.MuiInputBase-colorSecondary': {
+          background: '#F3F4F6',
+          '& .MuiOutlinedInput-notchedOutline': {
+            border: '1.5px solid #E9E9E9',
+            transition: '0.4s ease-in-out all',
+            borderWidth: '1.5px!important',
+            '&:hover': {
+              borderColor: '#27E6D6'
+            }
+          },
+          '& input': {
+            color: '#fff',
+            '&::placeholder': {
+              color: '#7D8890;'
+            }
+          }
+        },
+
         '& .MuiOutlinedInput-notchedOutline': {
           border: '1.5px solid #5C5A64',
           transition: '0.4s ease-in-out all',
