@@ -1,9 +1,13 @@
 .main {
   display: flex;
   align-items: center;
+  background: #1d1d41;
+
   .body {
-    height: 100vh;
+    height: calc(100vh - 40px);
+    width: calc(100% - 310px);
     overflow: auto;
-    width: calc(100% - 250px);
+    border-radius: 10px;
+    background: #141332;
   }
 }

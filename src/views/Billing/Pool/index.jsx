@@ -1,10 +1,10 @@
-import { Box, Button, Typography } from '@mui/material';
-import Container from 'components/Container';
-import HFSelect from 'components/ControlledFormElements/HFSelect';
-import HFTextField from 'components/ControlledFormElements/HFTextField';
-import React from 'react';
-import { useForm } from 'react-hook-form';
-
+import { Box, Button, Typography } from '@mui/material'
+import Container from 'components/Container'
+import HFTextField from 'components/ControlledFormElements/HFTextField'
+import React, { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import styles from './styles.module.scss'
+import ApiKeyModal from '../ApiKeyModal'
 const sizes = [
   {
     label: 'TB',
@@ -14,7 +14,7 @@ const sizes = [
     label: 'GB',
     value: 'GB'
   }
-];
+]
 
 const Pool = () => {
   const { control, handleSubmit } = useForm({
@@ -22,115 +22,80 @@ const Pool = () => {
       type: 'TB',
       pin: 10
     }
-  });
+  })
 
-  const onSubmit = (data) => {};
+  const onSubmit = (data) => {}
+
+  const [open, setOpen] = useState(true)
+
+  const toggle = () => setOpen((prev) => !prev)
 
   return (
-    <Container>
-      <Box
-        width="100%"
-        height="calc(100vh - 160px)"
-        display="flex"
-        alignItems="center"
-      >
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          style={{ width: '100%', paddingTop: '50px' }}
-        >
-          <Box display="flex" justifyContent="center">
-            <Typography variant="main">Pool Form</Typography>
-          </Box>
-          <Box display="flex" width="100%">
-            <HFTextField
-              control={control}
-              name="name"
-              label="Pool name"
-              placeholder="Enter pool name"
-              required={true}
-              boxProps={{
-                width: '100%'
-              }}
-            />
-          </Box>
-          <Box
-            display="flex"
-            width="100%"
-            alignItems="flex-end"
-            justifyContent="space-between"
-          >
-            <HFTextField
-              control={control}
-              name="size"
-              label="Pool size"
-              type="number"
-              required={true}
-              placeholder="Enter pool size"
-              boxProps={{
-                width: '89%'
-              }}
-            />
-            <HFSelect
-              control={control}
-              name="type"
-              required={true}
-              options={sizes}
-              boxProps={{
-                width: '10%',
-                mb: '2px'
-              }}
-            />
-          </Box>
-          <Box display="flex" width="100%">
-            <HFTextField
-              control={control}
-              name="description"
-              label="Pool description (Optional)"
-              placeholder="Enter pool description"
-              rows={4}
-              multiline={true}
-              boxProps={{
-                width: '100%'
-              }}
-            />
-          </Box>
-          <Box display="flex" width="100%">
-            <HFSelect
-              label="Pin replication"
-              control={control}
-              name="pin"
-              required={true}
-              options={Array(10)
-                .fill('1')
-                .map((_, index) => ({
-                  value: index + 1,
-                  label: index + 1
-                }))}
-              boxProps={{
-                width: '100%'
-              }}
-            />
-          </Box>
-          <Box display="flex" width="100%">
-            <HFTextField
-              control={control}
-              name="estimated"
-              label="Estimated pool price"
-              placeholder="Enter your estimated pool price"
-              required={true}
-              type="number"
-              boxProps={{
-                width: '100%'
-              }}
-            />
-          </Box>
-          <Box display="flex" justifyContent="center" width="100%" mt="60px">
-            <Button type="submit">Submit</Button>
-          </Box>
-        </form>
-      </Box>
-    </Container>
-  );
-};
+    <>
+      <Container>
+        <Box width='100%' display='flex' alignItems='center'>
+          <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+            <Typography component='p' color='#fff' variant='main' mb='22px'>
+              Confirm Subscription
+            </Typography>
+            <div className={styles.elements}>
+              <HFTextField
+                control={control}
+                name='name'
+                label='Pool name'
+                placeholder='Enter pool name'
+                required
+                fullWidth
+              />
+              <HFTextField
+                control={control}
+                name='size'
+                label='Pool size'
+                type='number'
+                required
+                fullWidth
+                placeholder='Enter pool size'
+              />
+              <HFTextField
+                control={control}
+                name='gateway'
+                label='Gateway'
+                fullWidth
+                withCopy
+              />
+              <HFTextField
+                control={control}
+                name='replication'
+                type='number'
+                label='Pin Replication'
+                placeholder='Enter pin replication'
+                fullWidth
+              />
+              <HFTextField
+                control={control}
+                name='price'
+                label='Pool price'
+                placeholder='Enter pool price'
+                fullWidth
+              />
+            </div>
+            <Box
+              display='flex'
+              justifyContent='flex-end'
+              width='100%'
+              height='100%'
+              mt='50px'
+            >
+              <Button variant='contained' color='secondary' type='submit'>
+                Submit
+              </Button>
+            </Box>
+          </form>
+        </Box>
+      </Container>
+      <ApiKeyModal toggle={toggle} open={open} />
+    </>
+  )
+}
 
-export default Pool;
+export default Pool

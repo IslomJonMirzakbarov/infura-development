@@ -1,44 +1,46 @@
-import { Box } from '@mui/material';
-import BasicModal from 'components/BasicModal';
-import HFTextField from 'components/ControlledFormElements/HFTextField';
-import React from 'react';
+import { Box } from '@mui/material'
+import BasicModal from 'components/BasicModal'
+import HFTextField from 'components/ControlledFormElements/HFTextField'
 
 const GatewayModal = ({ open, toggle, onSubmit, handleSubmit, control }) => {
   return (
     <BasicModal
       open={open}
       handleClose={toggle}
-      cancelLabel="Cancel"
-      submitLabel="Continue"
+      cancelLabel='Cancel'
+      submitLabel='Continue'
       onCancel={toggle}
       onSubmit={onSubmit}
+      title='Storage Pool name'
     >
       <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
         <HFTextField
-          label="Gateway name"
-          name="name"
+          name='name'
           control={control}
-          placeholder="Enter gateway name"
-          fullWidth={true}
+          placeholder='Enter gateway name'
+          fullWidth
+          required
+          color='secondary'
         />
 
-        <Box my="69px" ml={2}>
+        <Box>
           <ul
             style={{
               fontWeight: 500,
-              fontSize: 14,
+              fontSize: '12px',
               lineHeight: '21px',
-              color: '#B1B1B1'
+              color: '#959595',
+              listStyle: 'none'
             }}
           >
-            <li>Description of gateway name.</li>
-            <li>What is gateway name?</li>
-            <li>Where can I use it?</li>
+            <li>- Description of gateway name.</li>
+            <li>- What is gateway name?</li>
+            <li>- Where can I use it?</li>
           </ul>
         </Box>
       </form>
     </BasicModal>
-  );
-};
+  )
+}
 
-export default GatewayModal;
+export default GatewayModal

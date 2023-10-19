@@ -9,6 +9,7 @@ import { Controller } from 'react-hook-form'
 import { useState } from 'react'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
+import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg'
 
 const HFTextField = ({
   control,
@@ -23,6 +24,7 @@ const HFTextField = ({
   size = 'medium',
   fullWidth = false,
   type = 'text',
+  withCopy,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -77,29 +79,40 @@ const HFTextField = ({
             fullWidth={fullWidth}
             type={showPassword ? 'text' : type}
             InputProps={{
-              endAdornment: type === 'password' && (
-                <InputAdornment position='end'>
-                  <IconButton
-                    aria-label='toggle password visibility'
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                    edge='end'
-                  >
-                    {showPassword ? (
-                      <VisibilityOff
-                        style={{
-                          color: '#C2C2C2'
-                        }}
-                      />
-                    ) : (
-                      <Visibility
-                        style={{
-                          color: '#C2C2C2'
-                        }}
-                      />
-                    )}
-                  </IconButton>
-                </InputAdornment>
+              endAdornment: (
+                <>
+                  {withCopy && (
+                    <InputAdornment position='end'>
+                      <IconButton aria-label='toggle coppy' edge='end'>
+                        <CopyIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  )}
+                  {type === 'password' && (
+                    <InputAdornment position='end'>
+                      <IconButton
+                        aria-label='toggle password visibility'
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge='end'
+                      >
+                        {showPassword ? (
+                          <VisibilityOff
+                            style={{
+                              color: '#C2C2C2'
+                            }}
+                          />
+                        ) : (
+                          <Visibility
+                            style={{
+                              color: '#C2C2C2'
+                            }}
+                          />
+                        )}
+                      </IconButton>
+                    </InputAdornment>
+                  )}
+                </>
               )
             }}
             {...props}

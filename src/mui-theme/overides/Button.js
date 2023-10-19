@@ -28,9 +28,15 @@ export const MuiButton = {
     containedPrimary: {
       background: 'linear-gradient(97deg, #27E6D6 3.65%, #130FCC 81.9%)',
       '&:hover': {
+        background: '#27E6D6',
+        color: '#fff'
+      }
+    },
+    containedSecondary: {
+      background: '#27E6D6',
+      '&:hover': {
         background: 'linear-gradient(97deg, #27E6D6 3.65%, #130FCC 81.9%)',
-        color: '#fff',
-        opacity: 0.8
+        color: '#fff'
       }
     },
     textPrimary: {
