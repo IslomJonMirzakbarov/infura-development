@@ -1,27 +1,43 @@
 .card {
-  background-color: #fff;
-  box-shadow: 5px 4px 19px rgba(167, 167, 167, 0.15);
   border-radius: 10px;
-  padding: 23px 38px 17px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #1d1d41;
+  padding: 20px;
   display: flex;
-  align-items: center;
   flex-direction: column;
-  justify-content: center;
   transition: 0s ease-in-out all;
   position: relative;
 
+  .text {
+    color: #000;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    margin-top: 17px;
+    height: 78.5px;
+  }
+
+  .priceText {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 23px;
+    margin-top: 44px;
+    height: 68px;
+  }
+
   .title {
     font-size: 15px;
-    line-height: 22.5px;
-    font-weight: 500;
-    color: #292929;
+    font-style: normal;
+    font-weight: 700;
+    color: #fff;
   }
 
   .price {
-    font-weight: 500;
-    font-size: 32px;
-    line-height: 48px;
-    color: #292929;
+    font-size: 45px;
+    font-style: normal;
+    font-weight: 600;
+    color: #fff;
   }
 
   .month {
@@ -34,14 +50,14 @@
   .list {
     margin: 0;
     padding: 0;
-    margin-top: 37px;
+    margin-top: 17px;
     list-style: none;
 
     .item {
+      font-size: 13px;
+      font-style: normal;
       font-weight: 500;
-      font-size: 12px;
-      line-height: 192.5%;
-      color: #cacaca;
+      color: #fff;
       display: flex;
       align-items: center;
       margin: 5px 0;
@@ -50,67 +66,74 @@
         width: 15px;
         height: 15px;
         margin-right: 5px;
+        color: #27e6d6;
       }
     }
   }
 
   button {
-    background-color: #fff;
-    color: var(--primary-color);
-    border: 1px solid var(--primary-color);
-    margin-top: 30px;
-
-    &:hover {
-      color: #fff;
-    }
-
-    &:active .card {
-      background-color: var(--primary-color);
-      color: #fff;
-    }
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.15);
+    margin-top: 18px;
+    border: none;
   }
 
-  button:active div {
-    background-color: var(--primary-color) !important;
-    color: #fff;
-  }
-
-  &:active,
-  &.currentPlan {
-    background-color: var(--primary-color);
-    color: #fff;
-
-    .title,
-    .month,
-    .price,
-    .item {
-      color: #fff;
+  &.isEnterprise {
+    border-radius: 10px;
+    border: 1.3px solid #fff;
+    background-color: #27e6d6;
+    .title {
+      color: #000;
     }
-  }
-
-  &.disabled {
-    background-color: #fff;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 4;
-    }
-
-    .title,
-    .month,
-    .price,
-    .item {
-      color: #cacaca;
-    }
-
     button {
-      border: 1px solid #cacaca;
-      color: #cacaca;
+      background-color: #1d1d41;
+      &:hover {
+        background-color: var(--primary-color);
+      }
     }
   }
+
+  // button:active div {
+  //   background-color: var(--primary-color) !important;
+  //   color: #fff;
+  // }
+
+  // &:active,
+  // &.currentPlan {
+  //   background-color: var(--primary-color);
+  //   color: #fff;
+
+  //   .title,
+  //   .month,
+  //   .price,
+  //   .item {
+  //     color: #fff;
+  //   }
+  // }
+
+  // &.disabled {
+  //   background-color: #fff;
+
+  //   &::after {
+  //     content: '';
+  //     position: absolute;
+  //     top: 0;
+  //     right: 0;
+  //     bottom: 0;
+  //     left: 0;
+  //     z-index: 4;
+  //   }
+
+  //   .title,
+  //   .month,
+  //   .price,
+  //   .item {
+  //     color: #cacaca;
+  //   }
+
+  //   button {
+  //     border: 1px solid #cacaca;
+  //     color: #cacaca;
+  //   }
+  // }
 }
