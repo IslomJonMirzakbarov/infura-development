@@ -1,9 +1,6 @@
 .navbar {
   background-color: #141332 !important;
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 65px;
-  padding-right: 15x;
+  padding: 20px 15px 20px 65px;
   box-shadow: 0 !important;
   border-bottom: none !important;
 
@@ -21,8 +18,9 @@
       align-items: center;
       justify-content: center;
       gap: 55px;
+      list-style-type: none;
 
-      .navBtn {
+      .navBtn a {
         color: #fff;
         text-align: center;
         font-size: 15px;
@@ -30,10 +28,10 @@
         cursor: pointer;
       }
 
-      .navBtn:hover,
+      .navBtn a:hover,
       .navBtn.Mui-hoverVisible:hover {
         color: #27e6d6;
-      } 
+      }
 
       .navHoverBtn {
         cursor: pointer;
@@ -60,6 +58,7 @@
 
       .navBtn {
         color: #fff;
+        background: none;
         text-align: center;
         font-size: 15px;
         font-weight: 500;

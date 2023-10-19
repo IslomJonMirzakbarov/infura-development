@@ -13,12 +13,8 @@ const MainContentLanding = () => {
     <div className={styles.mainContainer}>
       <Box className={styles.smallDescDiv}>
         <Box className={styles.titleSection}>
-          <Typography variant='h1' className={styles.oceanDriveTxt}>
-            OceanDrive
-          </Typography>
-          <Typography variant='h4' className={styles.infuraTxt}>
-            Infura
-          </Typography>
+          <Typography className={styles.oceanDriveTxt}>OceanDrive</Typography>
+          <Typography className={styles.infuraTxt}>Infura</Typography>
         </Box>
 
         <Typography className={styles.description}>

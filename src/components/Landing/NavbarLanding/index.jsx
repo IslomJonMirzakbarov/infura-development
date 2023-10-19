@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { AppBar, Box, Menu, MenuItem, Toolbar, Typography } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import { AppBar, Box, Menu, MenuItem, Toolbar } from '@mui/material'
+import { NavLink, useNavigate } from 'react-router-dom'
 import OceanDriveLogo from 'assets/images/landing/oceandrive.svg'
 import downArrow from 'assets/images/landing/down_arrow.svg'
 import { ReactComponent as WalletIcon } from 'assets/images/landing/wallet.svg'
@@ -24,10 +24,12 @@ const NavbarLanding = () => {
     <AppBar position='static' className={styles.navbar} elevation={0}>
       <Toolbar className={styles.navTool}>
         <img src={OceanDriveLogo} alt='oceandrive' className={styles.logo} />
-        <Box className={styles.navBtnDiv}>
-          <Box className={styles.navBtn}>Pricing</Box>
+        <ul className={styles.navBtnDiv}>
+          <li className={styles.navBtn}>
+            <NavLink>Pricing</NavLink>
+          </li>
 
-          <Box
+          <li
             className={styles.navHoverBtn}
             onMouseEnter={handleOpen}
             onMouseLeave={handleClose}
@@ -46,24 +48,27 @@ const NavbarLanding = () => {
               <MenuItem onClick={handleClose}>Kakaotalk</MenuItem>
               <MenuItem onClick={handleClose}>Telegram</MenuItem>
             </Menu>
-          </Box>
+          </li>
 
-          <Box className={styles.navBtn}>Why OceanDrive's INFURA</Box>
-        </Box>
+          <li className={styles.navBtn}>
+            <NavLink>Why OceanDrive's INFURA</NavLink>
+          </li>
+        </ul>
 
         <Box className={styles.navBtnDiv2}>
-          <Box
-            className={styles.navBtn}
+          <button
+            variant='text'
+            className={classNames(styles.navBtn, styles.button)}
             onClick={() => navigate('/auth/register')}
           >
             sign up
-          </Box>
-          <Box
+          </button>
+          <button
             className={classNames(styles.navBtn, styles.loginBtn)}
             onClick={() => navigate('/auth/login')}
           >
             login
-          </Box>
+          </button>
           <Box
             className={styles.walletDiv}
             onMouseEnter={() => setHovered(true)}

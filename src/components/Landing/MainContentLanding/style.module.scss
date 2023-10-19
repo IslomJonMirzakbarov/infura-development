@@ -12,19 +12,19 @@
 
     .titleSection {
       .oceanDriveTxt {
+        color: #fff;
         font-size: 70px;
+        font-style: normal;
         font-weight: 700;
         line-height: 80px;
-        letter-spacing: 0em;
-        color: #fff;
       }
 
       .infuraTxt {
         font-size: 70px;
         font-weight: 300;
         line-height: 80px;
-        letter-spacing: 0em;
         color: #27e6d6;
+        font-style: normal;
       }
     }
 
@@ -74,7 +74,7 @@
     //   align-items: center;
     // }
 
-    .stats { 
+    .stats {
       .statTitle {
         color: #fff;
         font-size: 15px;
@@ -183,6 +183,7 @@
           border-radius: 12px;
           border: 1px solid rgba(255, 255, 255, 0.3);
           background: #030221;
+          cursor: pointer;
 
           img {
             width: 100%;
