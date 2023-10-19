@@ -3,7 +3,7 @@
   position: relative;
   padding: 70px 70px 370px 70px;
 
-  .smallDescDiv {
+  .smallDesc {
     display: flex;
     align-items: flex-start;
     flex-direction: column;
@@ -11,6 +11,9 @@
     margin-bottom: 58px;
 
     .titleSection {
+      width: 424px;
+      height: 160px;
+
       .oceanDriveTxt {
         color: #fff;
         font-size: 70px;
@@ -32,6 +35,9 @@
       color: #fff;
       font-size: 14px;
       font-weight: 275;
+      line-height: 21px;
+      letter-spacing: 0em;
+      text-align: left;
     }
 
     .goToBtn {

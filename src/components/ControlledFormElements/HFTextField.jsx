@@ -25,6 +25,7 @@ const HFTextField = ({
   fullWidth = false,
   type = 'text',
   withCopy,
+  withRegenerate,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -69,54 +70,85 @@ const HFTextField = ({
           ...rules
         }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
-          <TextField
-            size={size}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            name={name}
-            error={error}
-            helperText={!disabledHelperText && (error?.message ?? ' ')}
-            fullWidth={fullWidth}
-            type={showPassword ? 'text' : type}
-            InputProps={{
-              endAdornment: (
-                <>
-                  {withCopy && (
-                    <InputAdornment position='end'>
-                      <IconButton aria-label='toggle coppy' edge='end'>
-                        <CopyIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  )}
-                  {type === 'password' && (
-                    <InputAdornment position='end'>
-                      <IconButton
-                        aria-label='toggle password visibility'
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge='end'
-                      >
-                        {showPassword ? (
-                          <VisibilityOff
-                            style={{
-                              color: '#C2C2C2'
-                            }}
-                          />
-                        ) : (
-                          <Visibility
-                            style={{
-                              color: '#C2C2C2'
-                            }}
-                          />
-                        )}
-                      </IconButton>
-                    </InputAdornment>
-                  )}
-                </>
-              )
-            }}
-            {...props}
-          />
+          <>
+            <TextField
+              size={size}
+              value={value}
+              onChange={(e) => onChange(e.target.value)}
+              name={name}
+              error={error}
+              helperText={!disabledHelperText && (error?.message ?? ' ')}
+              fullWidth={fullWidth}
+              type={showPassword ? 'text' : type}
+              InputProps={{
+                endAdornment: (
+                  <>
+                    {withCopy && (
+                      <InputAdornment position='end'>
+                        <IconButton aria-label='toggle coppy' edge='end'>
+                          <CopyIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    )}
+                    {type === 'password' && (
+                      <InputAdornment position='end'>
+                        <IconButton
+                          aria-label='toggle password visibility'
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge='end'
+                        >
+                          {showPassword ? (
+                            <VisibilityOff
+                              style={{
+                                color: '#C2C2C2'
+                              }}
+                            />
+                          ) : (
+                            <Visibility
+                              style={{
+                                color: '#C2C2C2'
+                              }}
+                            />
+                          )}
+                        </IconButton>
+                      </InputAdornment>
+                    )}
+                  </>
+                )
+              }}
+              {...props}
+            />
+
+            {withRegenerate && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <InputAdornment position='start'>
+                  <IconButton
+                    aria-label='regenerate'
+                    edge='end'
+                    onClick={withRegenerate}
+                  >
+                    <Typography
+                      style={{
+                        color: '#27E6D6',
+                        cursor: 'pointer',
+                        fontSize: '13px',
+                        lineHeight: '19.5px',
+                        fontWeight: '500'
+                      }}
+                    >
+                      Regenerate
+                    </Typography>
+                  </IconButton>
+                </InputAdornment>
+              </div>
+            )}
+          </>
         )}
       />
     </Box>
