@@ -12,6 +12,9 @@
   justify-content: space-between;
   border-radius: 10px;
   outline: none;
+  &.heightAuto {
+    min-height: auto;
+  }
   .title {
     color: #292929;
     font-size: 22px;

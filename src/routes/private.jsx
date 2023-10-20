@@ -1,12 +1,13 @@
-import MainLayout from 'layouts/MainLayout';
-import { Navigate, useRoutes } from 'react-router-dom';
-import Billing from 'views/Billing';
-import Connect from 'views/Billing/Connect';
-import Deposit from 'views/Billing/Deposit';
-import BillingContainer from 'views/Billing/index.container';
-import Pool from 'views/Billing/Pool';
-import Dashboard from 'views/Dashboard';
-import ProfileContainer from 'views/Profile';
+import MainLayout from 'layouts/MainLayout'
+import { Navigate, useRoutes } from 'react-router-dom'
+import Billing from 'views/Billing'
+import ConfirmSubscription from 'views/Billing/ConfirmSubscription'
+import Connect from 'views/Billing/Connect'
+import Deposit from 'views/Billing/Deposit'
+import BillingContainer from 'views/Billing/index.container'
+import Pool from 'views/Billing/Pool'
+import Dashboard from 'views/Dashboard'
+import ProfileContainer from 'views/Profile'
 
 export const privateRoutes = [
   {
@@ -30,6 +31,10 @@ export const privateRoutes = [
             element: <Billing />
           },
           {
+            path: 'confirm',
+            element: <ConfirmSubscription />
+          },
+          {
             path: 'pool',
             element: <Pool />
           },
@@ -47,11 +52,11 @@ export const privateRoutes = [
   },
   {
     path: '*',
-    element: <Navigate to="/" />
+    element: <Navigate to='/' />
   }
-];
+]
 
 export default function PrivateRoutes() {
-  let element = useRoutes(privateRoutes);
-  return element;
+  let element = useRoutes(privateRoutes)
+  return element
 }

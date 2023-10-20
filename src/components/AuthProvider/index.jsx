@@ -7,7 +7,7 @@ const AuthProvider = () => {
   const { isAuth } = useSelector((store) => store.auth)
   // const isAuth = true
 
-  return !!isAuth ? <PrivateRoutes /> : <PublicRoutes />
+  return !isAuth ? <PrivateRoutes /> : <PublicRoutes />
 }
 
 export default AuthProvider

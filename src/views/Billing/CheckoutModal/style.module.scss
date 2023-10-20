@@ -1,0 +1,88 @@
+.box {
+  .items {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #d1d1d1;
+    .item {
+      padding: 11px;
+      border-radius: 7px;
+      background: #f3f4f6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      p {
+        color: #292929;
+        font-size: 12px;
+        line-height: normal;
+        &:first-child {
+          font-weight: 500;
+        }
+        &:last-child {
+          font-weight: 700;
+        }
+      }
+    }
+  }
+  .price {
+    color: #292929;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: normal;
+  }
+  .notice {
+    height: 140px;
+    padding: 10px 16px;
+    margin: 0 -16px -16px;
+    background: #1d1d41;
+    z-index: -1;
+    border-radius: 0 0 10px 10px;
+    p {
+      font-weight: 500;
+      &:first-child {
+        color: #27e6d6;
+        font-size: 13px;
+        line-height: normal;
+      }
+      &:nth-child(2) {
+        color: #fff;
+        font-size: 10px;
+        line-height: normal;
+      }
+    }
+    .buttons {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      margin-top: 10px;
+      button {
+        &:first-child {
+          padding: 0;
+          border: none;
+          color: #fff;
+          background-color: transparent;
+          font-size: 14px;
+          font-weight: 700;
+          line-height: 150%;
+        }
+      }
+    }
+  }
+  .cycon {
+    p {
+      &:first-child {
+        color: #292929;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: normal;
+      }
+      &:last-child {
+        color: #27e6d6;
+        font-size: 12px;
+        line-height: normal;
+        text-align: right;
+      }
+    }
+  }
+}
