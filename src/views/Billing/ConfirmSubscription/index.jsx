@@ -76,7 +76,12 @@ const ConfirmSubscription = () => {
               height='100%'
               mt='50px'
             >
-              <Button variant='contained' color='secondary' type='submit'>
+              <Button
+                onClick={toggle}
+                variant='contained'
+                color='secondary'
+                type='submit'
+              >
                 Submit
               </Button>
             </Box>

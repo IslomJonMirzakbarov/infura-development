@@ -71,6 +71,7 @@ const NavbarLanding = () => {
           </button>
           <Box
             className={styles.walletDiv}
+            onClick={() => navigate('/main/billing/connect')}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
           >

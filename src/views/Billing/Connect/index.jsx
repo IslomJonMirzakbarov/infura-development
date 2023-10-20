@@ -2,6 +2,7 @@ import React from 'react'
 import { Typography } from '@mui/material'
 import classes from './style.module.scss'
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg'
+import { useNavigate } from 'react-router-dom'
 const wallets = [
   {
     name: 'MetaMask',
@@ -18,6 +19,7 @@ const wallets = [
 ]
 
 const Connect = () => {
+  const navigate = useNavigate()
   return (
     <>
       <div className={classes.form}>
@@ -47,7 +49,7 @@ const Connect = () => {
         </div>
         <ul>
           {wallets.map((wallet) => (
-            <li key={wallet.key}>
+            <li key={wallet.key} onClick={() => navigate('/main/billing/pool')}>
               <div className={classes.content}>
                 <div className={classes.info}>
                   <img src={wallet.img} alt={wallet.name} width={30} />

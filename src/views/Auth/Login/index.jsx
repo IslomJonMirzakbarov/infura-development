@@ -4,10 +4,12 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
+import { useDispatch } from 'react-redux'
+import { authActions } from 'store/auth/auth.slice'
 
 const Login = () => {
   const navigate = useNavigate()
-
+  const dispatch = useDispatch()
   const { control, handleSubmit } = useForm({})
 
   return (
@@ -36,7 +38,12 @@ const Login = () => {
         Forgot password?
       </NavLink>
 
-      <Button className={styles.button} variant='contained' color='primary'>
+      <Button
+        onClick={() => navigate('/main/dashboard')}
+        className={styles.button}
+        variant='contained'
+        color='primary'
+      >
         Login
       </Button>
       <div className={styles.alreadyUser}>
