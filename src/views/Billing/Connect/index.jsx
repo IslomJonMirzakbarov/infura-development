@@ -26,16 +26,16 @@ const Connect = () => {
         <div className={classes.formArea}>
           <div className={classes.wallets}>
             <Typography variant='main' color='#fff' fontWeight={700}>
-              Connect your wallet
+              Connect Wallet
             </Typography>
             <Typography
               variant='standard'
-              fontWeight={500}
+              fontWeight={400}
               mt='8px'
               color='#fff'
             >
-              Connect your wallet to one of the available providers by importing
-              or creating a new one.
+              <span style={{ fontWeight: 700 }}>Connect your wallet</span> one
+              of available <br /> provider by importing or creating new one.
             </Typography>
           </div>
           <div className={classes.metamask}>

@@ -8,8 +8,8 @@ const items = [
     price: 0,
     storage: '100 GB',
     gatewayCount: 1,
-    replication: 1
-    // isCurrentPlan: true
+    replication: 1,
+    isCurrentPlan: true
   },
   // {
   //   name: 'Intro',

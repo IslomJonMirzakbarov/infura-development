@@ -61,13 +61,13 @@ const NavbarLanding = () => {
             className={classNames(styles.navBtn, styles.button)}
             onClick={() => navigate('/auth/register')}
           >
-            sign up
+            Sign up
           </button>
           <button
             className={classNames(styles.navBtn, styles.loginBtn)}
             onClick={() => navigate('/auth/login')}
           >
-            login
+            Login
           </button>
           <Box
             className={styles.walletDiv}
