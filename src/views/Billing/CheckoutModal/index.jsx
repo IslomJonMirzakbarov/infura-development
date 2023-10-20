@@ -13,6 +13,7 @@ const CheckoutModal = ({ open, toggle, onSubmit }) => {
       title='Checkout Confirmation'
       cancelLabel='Cancel'
       withFooter={false}
+      heightAuto
     >
       <Box className={styles.box}>
         <div className={styles.items}>
