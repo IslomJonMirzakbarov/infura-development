@@ -11,7 +11,7 @@ import Connect from 'views/Billing/Connect'
 import Deposit from 'views/Billing/Deposit'
 import BillingContainer from 'views/Billing/index.container'
 import Pool from 'views/Billing/Pool'
-import PoolDetails from 'views/Billing/PoolDetails'
+import ProfileDetails from 'views/Profile/ProfileDetails'
 import Dashboard from 'views/Dashboard'
 import LandingPage from 'views/LandingPage'
 import ProfileContainer from 'views/Profile'
@@ -65,6 +65,10 @@ export const privateRoutes = [
         element: <ProfileContainer />
       },
       {
+        path: 'profile/details',
+        element: <ProfileDetails />
+      },
+      {
         path: 'billing',
         element: <BillingContainer />,
         children: [
@@ -80,10 +84,7 @@ export const privateRoutes = [
             path: 'pool',
             element: <Pool />
           },
-          {
-            path: 'pool/details',
-            element: <PoolDetails />
-          },
+
           {
             path: 'connect',
             element: <Connect />

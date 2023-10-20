@@ -4,7 +4,8 @@ import HFTextField from 'components/ControlledFormElements/HFTextField'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
-import ApiKeyModal from '../ApiKeyModal'
+import ApiKeyModal from '../../Billing/ApiKeyModal'
+import { useNavigate } from 'react-router-dom'
 const sizes = [
   {
     label: 'TB',
@@ -16,7 +17,8 @@ const sizes = [
   }
 ]
 
-const PoolDetails = () => {
+const ProfileDetails = () => {
+  const navigate = useNavigate()
   const { control, handleSubmit } = useForm({
     defaultValues: {
       type: 'TB',
@@ -99,16 +101,21 @@ const PoolDetails = () => {
               height='100%'
               mt='250px'
             >
-              <Button variant='contained' color='secondary' type='submit'>
+              <Button
+                variant='contained'
+                color='secondary'
+                type='submit'
+                onClick={() => navigate('/main/billing')}
+              >
                 Change plan
               </Button>
             </Box>
           </form>
         </Box>
       </Container>
-      <ApiKeyModal toggle={toggle} open={open} />
+      {/* <ApiKeyModal toggle={toggle} open={open} /> */}
     </>
   )
 }
 
-export default PoolDetails
+export default ProfileDetails
