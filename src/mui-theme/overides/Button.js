@@ -32,6 +32,14 @@ export const MuiButton = {
         color: '#fff'
       }
     },
+    containedInfo: {
+      background: 'rgba(255, 255, 255, 0.15)',
+      '&:hover': {
+        background: 'rgba(255, 255, 255, 0.15)',
+        opacity: 0.7,
+        color: '#fff'
+      }
+    },
     containedSecondary: {
       background: '#27E6D6',
       '&:hover': {

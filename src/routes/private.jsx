@@ -15,6 +15,7 @@ import PoolDetails from 'views/Billing/PoolDetails'
 import Dashboard from 'views/Dashboard'
 import LandingPage from 'views/LandingPage'
 import ProfileContainer from 'views/Profile'
+import ConfirmSubscription from 'views/Billing/ConfirmSubscription'
 
 export const privateRoutes = [
   {
@@ -70,6 +71,10 @@ export const privateRoutes = [
           {
             index: true,
             element: <Billing />
+          },
+          {
+            path: 'confirm',
+            element: <ConfirmSubscription />
           },
           {
             path: 'pool',

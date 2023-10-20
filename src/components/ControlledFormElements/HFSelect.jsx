@@ -1,12 +1,15 @@
 import {
   Box,
-  FormControl,
   FormHelperText,
   MenuItem,
   Select,
   Typography
-} from '@mui/material';
-import { Controller } from 'react-hook-form';
+} from '@mui/material'
+import { Controller } from 'react-hook-form'
+import styles from './style.module.scss'
+import classNames from 'classnames'
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 
 const HFSelect = ({
   control,
@@ -22,32 +25,43 @@ const HFSelect = ({
   ...props
 }) => {
   return (
-    <Box display="flex" flexDirection="column" {...boxProps}>
-      <Typography variant="standard" fontWeight={500} mb={1}>
+    <Box display='flex' flexDirection='column' {...boxProps}>
+      <Typography variant='standard' color='#fff' fontWeight={500} mb={1}>
         {label}
+        {required && <span style={{ color: '#27E6D6' }}> *</span>}
       </Typography>
       <Controller
         control={control}
         name={name}
-        defaultValue=""
+        defaultValue=''
         rules={{
           required: required ? 'This is required field' : false,
           ...rules
         }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
-          <FormControl style={{ width }}>
-            {/* <InputLabel size="small">{label}</InputLabel> */}
+          <>
             <Select
               value={value || ''}
-              size="small"
+              size='large'
               error={error}
               inputProps={{ placeholder }}
               fullWidth
               onChange={(e) => {
-                onChange(e.target.value);
+                onChange(e.target.value)
               }}
-              {...props}
+              className={styles.select}
               label={null}
+              {...props}
+              MenuProps={{
+                MenuListProps: {
+                  className: classNames(styles.menu, 'menu-list')
+                },
+                PaperProps: {
+                  style: {
+                    borderRadius: '7px'
+                  }
+                }
+              }}
             >
               {options?.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
@@ -58,11 +72,11 @@ const HFSelect = ({
             {!disabledHelperText && (
               <FormHelperText error>{error?.message ?? ' '}</FormHelperText>
             )}
-          </FormControl>
+          </>
         )}
-      ></Controller>
+      />
     </Box>
-  );
-};
+  )
+}
 
-export default HFSelect;
+export default HFSelect

@@ -36,7 +36,8 @@ export const MuiInput = {
             }
           },
           '& input': {
-            color: '#fff',
+            color: '#000',
+            caretColor: '#000',
             '&::placeholder': {
               color: '#7D8890;'
             }

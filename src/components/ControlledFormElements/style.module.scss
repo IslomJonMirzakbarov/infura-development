@@ -1,12 +1,29 @@
-@use "/src/scss/colors";
+// @use '/src/scss/colors';
 
 .tag {
   padding: 0 10px;
-  background-color: colors.$borders;
+  // background-color: colors.$borders;
   border-radius: 6px;
 }
 
 .placeholder {
-  color: #909EAB;
+  color: #909eab;
   font-weight: 400;
+}
+
+.select {
+  svg {
+    color: #fff;
+  }
+}
+.menu {
+  background-color: #1d1d41;
+  padding: 0 !important;
+  li {
+    padding: 16px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: normal;
+  }
 }
