@@ -5,12 +5,12 @@ import { ReactComponent as ProfileIcon } from 'assets/icons/profileq.svg'
 import { ReactComponent as GridIcon } from 'assets/icons/grid.svg'
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
 import { NavLink } from 'react-router-dom'
-import { ReactComponent as ExitIcon } from 'assets/icons/exit.svg'
+import logout from 'assets/images/logout.png'
 import { useDispatch } from 'react-redux'
 import { authActions } from 'store/auth/auth.slice'
 import { useState } from 'react'
 import BasicModal from 'components/BasicModal'
-import { Box, Typography } from '@mui/material'
+import { Box, Button, Typography } from '@mui/material'
 
 const items = [
   {
@@ -43,30 +43,51 @@ export default function Sidebar() {
 
   return (
     <div className={styles.sidebar}>
-      <BasicModal
-        open={open}
-        handleClose={toggle}
-        onCancel={toggle}
-        onSubmit={handleLogout}
-      >
+      {open && (
         <Box
+          position='fixed'
+          top='0'
+          right='0'
+          left='0'
+          bottom='0'
           display='flex'
           justifyContent='center'
           alignItems='center'
           flexDirection='column'
-          width='100%'
+          zIndex='999'
+          gap='30px'
+          style={{
+            background: '#141332'
+          }}
         >
-          <ExitIcon />
           <Typography
-            fontSize='16px'
-            lineHeight='24px'
-            color='#292929'
-            mt='62px'
+            fontSize='18px'
+            textAlign='center'
+            lineHeight='26px'
+            color='white'
+            fontWeight='700'
           >
-            Are you sure you want to log out?
+            Are you sure <br /> you want to log out?
           </Typography>
+          <img
+            src={logout}
+            alt='logout'
+            width='133'
+            height='133'
+            style={{
+              objectFit: 'contain'
+            }}
+          />
+          <Box display='flex' mt='20px' gap='30px'>
+            <Button onClick={toggle} variant='contained' color='info'>
+              Cancel
+            </Button>
+            <Button onClick={toggle} variant='contained' color='primary'>
+              Yes
+            </Button>
+          </Box>
         </Box>
-      </BasicModal>
+      )}
       <div>
         <div className={styles.header}>
           <NavLink to='/'>
