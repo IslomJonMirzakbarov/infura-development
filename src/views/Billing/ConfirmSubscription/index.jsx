@@ -5,8 +5,10 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
 import ApiKeyModal from '../ApiKeyModal'
+import { useNavigate } from 'react-router-dom'
 
 const ConfirmSubscription = () => {
+  const navigate = useNavigate()
   const { control, handleSubmit } = useForm({
     defaultValues: {
       type: 'TB',
@@ -19,6 +21,8 @@ const ConfirmSubscription = () => {
   const [open, setOpen] = useState(false)
 
   const toggle = () => setOpen((prev) => !prev)
+
+  const handleApiSubmit = () => navigate('/main/profile')
 
   return (
     <>
@@ -88,7 +92,7 @@ const ConfirmSubscription = () => {
           </form>
         </Box>
       </Container>
-      <ApiKeyModal toggle={toggle} open={open} />
+      <ApiKeyModal toggle={toggle} open={open} onSubmit={handleApiSubmit} />
     </>
   )
 }

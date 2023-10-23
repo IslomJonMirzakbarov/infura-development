@@ -9,7 +9,8 @@ const items = [
     storage: '100 GB',
     gatewayCount: 1,
     replication: 1,
-    isCurrentPlan: true
+    isCurrentPlan: true,
+    disabled: true
   },
   // {
   //   name: 'Intro',

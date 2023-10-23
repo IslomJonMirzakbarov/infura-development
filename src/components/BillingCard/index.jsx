@@ -58,7 +58,11 @@ const BillingCard = ({
       )}
 
       <Button onClick={handleSelect}>
-        {isEnterprise ? 'Customize' : 'Select'}
+        {isEnterprise
+          ? 'Customize'
+          : isCurrentPlan
+          ? 'Your current plan'
+          : 'Select'}
       </Button>
     </Box>
   )
