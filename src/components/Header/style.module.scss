@@ -6,6 +6,7 @@
   @include align-items-center;
   gap: 16px;
   position: relative;
+  overflow: hidden;
 
   .headerBg {
     z-index: 1;
@@ -70,7 +71,7 @@
   .svgsContainer {
     width: calc(100% - 280px);
     height: 100%;
-    z-index: 3;
+    z-index: 2;
     position: relative;
 
     .headerDots {
