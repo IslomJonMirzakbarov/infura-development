@@ -25,4 +25,11 @@
     display: flex;
     cursor: pointer;
   }
+
+  .logo,
+  .blurImgR,
+  .blurImgL {
+    user-select: none;
+    outline: none;
+  }
 }
