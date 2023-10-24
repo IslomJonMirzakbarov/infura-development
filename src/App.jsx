@@ -5,21 +5,26 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import AuthProvider from 'components/AuthProvider'
 import { Toaster } from 'react-hot-toast'
 import { StylesProvider } from '@mui/styles'
+import { persistor } from 'store'
 
 const queryClient = new QueryClient()
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <StylesProvider injectFirst>
-        <BrowserRouter>
-          <QueryClientProvider client={queryClient}>
-            <AuthProvider />
-            <Toaster position='top-right' />
-          </QueryClientProvider>
-        </BrowserRouter>
-      </StylesProvider>
-    </ThemeProvider>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        <ThemeProvider theme={theme}>
+          <StylesProvider injectFirst>
+            <BrowserRouter>
+              <QueryClientProvider client={queryClient}>
+                <AuthProvider />
+                <Toaster position='top-right' />
+              </QueryClientProvider>
+            </BrowserRouter>
+          </StylesProvider>
+        </ThemeProvider>
+      </PersistGate>
+    </Provider>
   )
 }
 
