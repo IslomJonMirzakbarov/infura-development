@@ -1,16 +1,32 @@
 import { Button } from '@mui/material'
 import styles from './style.module.scss'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
+import { useConfirmCodeMutation } from 'services/auth.service'
+import authStore from 'store/auth.store'
 
 const ConfirmationCode = () => {
   const navigate = useNavigate()
-
-  const { control, handleSubmit } = useForm({})
+  const location = useLocation()
+  const { control, handleSubmit } = useForm()
+  const { mutate } = useConfirmCodeMutation()
+  const onSubmit = (data) => {
+    mutate(
+      {
+        ...data,
+        email: location.state.email
+      },
+      {
+        onSuccess: () => {
+          authStore.login()
+        }
+      }
+    )
+  }
 
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className={styles.title}>Confirmation Code</h1>
       <HFTextField
         fullWidth

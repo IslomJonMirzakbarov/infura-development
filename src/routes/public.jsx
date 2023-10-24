@@ -52,7 +52,9 @@ export const publicRoutes = [
   }
 ]
 
-export default function PublicRoutes() {
+const PublicRoutes = () => {
   let element = useRoutes(publicRoutes)
   return element
 }
+
+export default PublicRoutes
