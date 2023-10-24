@@ -1,13 +1,12 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
 import PrivateRoutes from 'routes/private'
 import PublicRoutes from 'routes/public'
+import authStore from 'store/auth.store'
+import { observer } from 'mobx-react-lite'
 
 const AuthProvider = () => {
-  const { isAuth } = useSelector((store) => store.auth)
-  // const isAuth = true
+  const { isAuth } = authStore
 
-  return <PrivateRoutes />
+  return isAuth ? <PrivateRoutes /> : <PublicRoutes />
 }
 
-export default AuthProvider
+export default observer(AuthProvider)

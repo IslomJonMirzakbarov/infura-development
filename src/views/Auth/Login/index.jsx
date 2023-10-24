@@ -4,16 +4,29 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
-import { useDispatch } from 'react-redux'
-import { authActions } from 'store/auth/auth.slice'
+import { useLoginMutation } from 'services/auth.service'
+import authStore from 'store/auth.store'
 
 const Login = () => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const { control, handleSubmit } = useForm({})
+  const { control, handleSubmit } = useForm()
+  const { mutate } = useLoginMutation()
+
+  const onSubmit = (data) => {
+    mutate(data, {
+      onSuccess: (res) => {
+        authStore.login(res.payload)
+      },
+      onError: (error) => {
+        if (error.status === 401) {
+          navigate('/auth/register')
+        }
+      }
+    })
+  }
 
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className={styles.title}>Login</h1>
       <HFTextField
         fullWidth
@@ -39,7 +52,7 @@ const Login = () => {
       </NavLink>
 
       <Button
-        onClick={() => navigate('/main/dashboard')}
+        type='submit'
         className={styles.button}
         variant='contained'
         color='primary'
