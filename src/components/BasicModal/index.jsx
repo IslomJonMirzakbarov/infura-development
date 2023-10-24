@@ -16,6 +16,7 @@ const BasicModal = ({
   heightAuto = false,
   children
 }) => {
+  const isLoader = submitLabel === 'loader'
   return (
     <Modal open={open} onClose={handleClose}>
       <Box
@@ -24,8 +25,10 @@ const BasicModal = ({
         })}
       >
         <Box className={styles.content}>
-          <CloseIcon className={styles.close} onClick={handleClose} />
-          <p className={styles.title}>{title}</p>
+          {!isLoader && (
+            <CloseIcon className={styles.close} onClick={handleClose} />
+          )}
+          {!isLoader && <p className={styles.title}>{title}</p>}
           {children}
         </Box>
 
@@ -38,9 +41,11 @@ const BasicModal = ({
             ) : (
               <div />
             )}
-            <Button variant='contained' color='primary' onClick={onSubmit}>
-              {submitLabel}
-            </Button>
+            {!isLoader && (
+              <Button variant='contained' color='primary' onClick={onSubmit}>
+                {submitLabel}
+              </Button>
+            )}
           </Box>
         )}
       </Box>
