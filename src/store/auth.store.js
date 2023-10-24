@@ -21,7 +21,6 @@ class Store {
   }
 
   login(data) {
-    console.log('data===>', data)
     this.isAuth = true
     this.userData = data.user
     this.token = data.token

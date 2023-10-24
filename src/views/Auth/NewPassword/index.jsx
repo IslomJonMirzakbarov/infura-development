@@ -6,9 +6,10 @@ import { useForm } from 'react-hook-form'
 
 const NewPassword = () => {
   const navigate = useNavigate()
-  const { control, handleSubmit } = useForm({})
+  const { control, handleSubmit } = useForm()
+  const onSubmit = () => {}
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className={styles.title}>Create a new password</h1>
       <HFTextField
         fullWidth

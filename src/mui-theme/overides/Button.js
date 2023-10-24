@@ -30,6 +30,13 @@ export const MuiButton = {
       '&:hover': {
         background: '#27E6D6',
         color: '#fff'
+      },
+      '& .MuiCircularProgress-root': {
+        width: '20px!important',
+        height: '20px!important'
+      },
+      '& .MuiCircularProgress-svg': {
+        color: '#fff'
       }
     },
     containedInfo: {

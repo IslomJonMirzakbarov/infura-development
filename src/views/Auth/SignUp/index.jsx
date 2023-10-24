@@ -1,20 +1,24 @@
-import { Button } from '@mui/material'
 import styles from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
 import { useRegisterMutation } from 'services/auth.service'
+import { LoadingButton } from '@mui/lab'
 
 const Signup = () => {
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm()
-  const { mutate } = useRegisterMutation()
+  const { mutate, isLoading } = useRegisterMutation()
 
   const onSubmit = (data) => {
     mutate(data, {
       onSuccess: () => {
-        navigate('/confirm-code')
+        navigate('/auth/confirm-code', {
+          state: {
+            email: data.email
+          }
+        })
       }
     })
   }
@@ -39,15 +43,23 @@ const Signup = () => {
         placeholder='Enter your password'
         required
         type='password'
+        rules={{
+          pattern: {
+            value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
+            message:
+              'Password must be have minimum 8 characters, at least one number, one letter and one special character'
+          }
+        }}
       />
-      <Button
+      <LoadingButton
         type='submit'
         className={styles.button}
         variant='contained'
         color='primary'
+        loading={isLoading}
       >
         Sign up
-      </Button>
+      </LoadingButton>
       <div className={styles.alreadyUser}>
         Already have an account?
         <span onClick={() => navigate('/auth/login')}>
