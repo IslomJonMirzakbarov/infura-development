@@ -6,12 +6,13 @@ import downArrow from 'assets/images/landing/down_arrow.svg'
 import { ReactComponent as WalletIcon } from 'assets/images/landing/wallet.svg'
 import styles from './style.module.scss'
 import classNames from 'classnames'
+import authStore from 'store/auth.store'
 
 const NavbarLanding = () => {
   const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null)
   const [hovered, setHovered] = useState(false)
-
+  const { isAuth } = authStore
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget)
   }
@@ -56,19 +57,23 @@ const NavbarLanding = () => {
         </ul>
 
         <Box className={styles.navBtnDiv2}>
-          <button
-            variant='text'
-            className={classNames(styles.navBtn, styles.button)}
-            onClick={() => navigate('/auth/register')}
-          >
-            Sign up
-          </button>
-          <button
-            className={classNames(styles.navBtn, styles.loginBtn)}
-            onClick={() => navigate('/auth/login')}
-          >
-            Login
-          </button>
+          {!isAuth && (
+            <>
+              <button
+                variant='text'
+                className={classNames(styles.navBtn, styles.button)}
+                onClick={() => navigate('/auth/register')}
+              >
+                Sign up
+              </button>
+              <button
+                className={classNames(styles.navBtn, styles.loginBtn)}
+                onClick={() => navigate('/auth/login')}
+              >
+                Login
+              </button>
+            </>
+          )}
           <Box
             className={styles.walletDiv}
             onClick={() => navigate('/main/billing/connect')}
