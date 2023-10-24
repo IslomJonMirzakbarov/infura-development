@@ -23,32 +23,6 @@ export const privateRoutes = [
     element: <LandingPage />
   },
   {
-    path: '/auth',
-    element: <AuthLayout />,
-    children: [
-      {
-        path: 'login',
-        element: <Login />
-      },
-      {
-        path: 'register',
-        element: <Signup />
-      },
-      {
-        path: 'confirm-code',
-        element: <ConfirmationCode />
-      },
-      {
-        path: 'reset-password',
-        element: <ResetPassword />
-      },
-      {
-        path: 'create-new-password',
-        element: <NewPassword />
-      }
-    ]
-  },
-  {
     path: '/main',
     element: <MainLayout />,
     children: [
@@ -103,7 +77,9 @@ export const privateRoutes = [
   }
 ]
 
-export default function PrivateRoutes() {
+const PrivateRoutes = () => {
   let element = useRoutes(privateRoutes)
   return element
 }
+
+export default PrivateRoutes

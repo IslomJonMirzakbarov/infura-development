@@ -12,7 +12,7 @@ export const { actions: authActions, reducer: authReducer } = createSlice({
     user: null
   },
   reducers: {
-    login: (state) => {
+    login: (state, { payload }) => {
       state.isAuth = true
     },
     logout: (state) => {

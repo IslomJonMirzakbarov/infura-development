@@ -1,19 +1,32 @@
-import { Button } from '@mui/material'
 import styles from '../SignUp/style.module.scss'
 import { NavLink, useNavigate } from 'react-router-dom'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
-import { useDispatch } from 'react-redux'
-import { authActions } from 'store/auth/auth.slice'
+import { useLoginMutation } from 'services/auth.service'
+import authStore from 'store/auth.store'
+import { LoadingButton } from '@mui/lab'
 
 const Login = () => {
   const navigate = useNavigate()
-  const dispatch = useDispatch()
-  const { control, handleSubmit } = useForm({})
+  const { control, handleSubmit } = useForm()
+  const { mutate, isLoading } = useLoginMutation()
+
+  const onSubmit = (data) => {
+    mutate(data, {
+      onSuccess: (res) => {
+        authStore.login(res.payload)
+      },
+      onError: (error) => {
+        if (error.status === 401) {
+          navigate('/auth/register')
+        }
+      }
+    })
+  }
 
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className={styles.title}>Login</h1>
       <HFTextField
         fullWidth
@@ -32,20 +45,29 @@ const Login = () => {
         placeholder='Enter your password'
         required
         type='password'
+        minLength='8'
+        rules={{
+          pattern: {
+            value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
+            message:
+              'Password must be have minimum 8 characters, at least one number, one letter and one special character'
+          }
+        }}
       />
 
       <NavLink to='/auth/reset-password' className={styles.forgot}>
         Forgot password?
       </NavLink>
 
-      <Button
-        onClick={() => navigate('/main/dashboard')}
+      <LoadingButton
+        type='submit'
         className={styles.button}
         variant='contained'
         color='primary'
+        loading={isLoading}
       >
         Login
-      </Button>
+      </LoadingButton>
       <div className={styles.alreadyUser}>
         Don't have an account?{'  '}
         <span onClick={() => navigate('/auth/register')}>

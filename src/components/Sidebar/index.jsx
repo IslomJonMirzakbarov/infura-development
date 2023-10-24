@@ -6,8 +6,6 @@ import { ReactComponent as GridIcon } from 'assets/icons/grid.svg'
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
 import { NavLink } from 'react-router-dom'
 import logout from 'assets/images/logout.png'
-import { useDispatch } from 'react-redux'
-import { authActions } from 'store/auth/auth.slice'
 import { useState } from 'react'
 import BasicModal from 'components/BasicModal'
 import { Box, Button, Typography } from '@mui/material'
@@ -31,15 +29,11 @@ const items = [
 ]
 
 export default function Sidebar() {
-  const dispatch = useDispatch()
-
   const [open, setOpen] = useState(false)
 
   const toggle = () => setOpen((prev) => !prev)
 
-  const handleLogout = () => {
-    dispatch(authActions.logout())
-  }
+  const handleLogout = () => {}
 
   return (
     <div className={styles.sidebar}>

@@ -54,7 +54,7 @@ const HFTextField = ({
         name={name}
         defaultValue=''
         rules={{
-          required: required ? `Enter your ${name}` : false,
+          required: required ? 'This field is required.' : false,
           ...(minLength && {
             minLength: {
               value: minLength,
