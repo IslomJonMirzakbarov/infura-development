@@ -2,7 +2,7 @@ import axios from 'axios'
 import authStore from 'store/auth.store'
 
 const httpRequest = axios.create({
-  baseURL: 'https://api.oceandrive.network/api/v1/',
+  baseURL: 'https://api.oceandrive.network/',
   timeout: 100000
 })
 

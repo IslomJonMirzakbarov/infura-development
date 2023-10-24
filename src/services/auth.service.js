@@ -2,9 +2,9 @@ import { useMutation } from 'react-query'
 import httpRequest from './httpRequest'
 
 const authService = {
-  login: async (data) => httpRequest.post('auth/login', data),
-  register: async (data) => httpRequest.post('auth/register', data),
-  confirmCode: async (data) => httpRequest.post('auth/confirm', data)
+  login: async (data) => httpRequest.post('api/v1/auth/login', data),
+  register: async (data) => httpRequest.post('api/v1/auth/register', data),
+  confirmCode: async (data) => httpRequest.post('api/v1/auth/confirm', data)
 }
 
 export const useLoginMutation = (mutationSettings) => {
