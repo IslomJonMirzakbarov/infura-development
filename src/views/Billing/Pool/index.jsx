@@ -7,6 +7,7 @@ import styles from './styles.module.scss'
 import ApiKeyModal from '../ApiKeyModal'
 import HFSelect from 'components/ControlledFormElements/HFSelect'
 import CheckoutModal from '../CheckoutModal'
+import LoaderModal from '../LoaderModal'
 const sizes = [
   {
     label: '20',
@@ -40,13 +41,20 @@ const Pool = () => {
   const onSubmit = () => {
     setOpen(false)
     setOpen2(true)
+    setOpen3(false)
+    setTimeout(() => {
+      setOpen2(false)
+      setOpen3(true)
+    }, 1000)
   }
 
   const [open, setOpen] = useState(false)
   const [open2, setOpen2] = useState(false)
+  const [open3, setOpen3] = useState(false)
 
   const toggle = () => setOpen((prev) => !prev)
   const toggle2 = () => setOpen2((prev) => !prev)
+  const toggle3 = () => setOpen3((prev) => !prev)
 
   return (
     <>
@@ -123,11 +131,12 @@ const Pool = () => {
         </Box>
       </Container>
       <CheckoutModal toggle={toggle} open={open} onSubmit={onSubmit} />
+      <LoaderModal title='Loading' toggle={toggle2} open={open2} />
       <ApiKeyModal
         title='Transaction successfully
 complete'
-        toggle={toggle2}
-        open={open2}
+        toggle={toggle3}
+        open={open3}
       />
     </>
   )
