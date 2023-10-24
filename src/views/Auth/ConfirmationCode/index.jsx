@@ -1,16 +1,16 @@
-import { Button } from '@mui/material'
 import styles from './style.module.scss'
 import { useLocation, useNavigate } from 'react-router-dom'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { useConfirmCodeMutation } from 'services/auth.service'
-import authStore from 'store/auth.store'
+import { LoadingButton } from '@mui/lab'
 
 const ConfirmationCode = () => {
-  const navigate = useNavigate()
   const location = useLocation()
+  const navigate = useNavigate()
   const { control, handleSubmit } = useForm()
-  const { mutate } = useConfirmCodeMutation()
+  const { mutate, isLoading } = useConfirmCodeMutation()
+
   const onSubmit = (data) => {
     mutate(
       {
@@ -18,8 +18,8 @@ const ConfirmationCode = () => {
         email: location.state.email
       },
       {
-        onSuccess: () => {
-          authStore.login()
+        onSuccess: (res) => {
+          navigate('/auth/login')
         }
       }
     )
@@ -30,15 +30,21 @@ const ConfirmationCode = () => {
       <h1 className={styles.title}>Confirmation Code</h1>
       <HFTextField
         fullWidth
-        name='code'
+        name='otp'
         label='Enter confirmation code'
         control={control}
+        required
         placeholder='Please enter code'
-        type='email'
+        type='number'
       />
-      <Button variant='contained' color='primary'>
+      <LoadingButton
+        type='submit'
+        variant='contained'
+        color='primary'
+        loading={isLoading}
+      >
         Confirm
-      </Button>
+      </LoadingButton>
     </form>
   )
 }
