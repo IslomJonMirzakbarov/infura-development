@@ -1,86 +1,72 @@
-import React, { useState } from 'react'
-import { Button, InputLabel, TextField } from '@material-ui/core'
-import rightB from 'assets/images/signup/right-bottom.svg'
-import leftT from 'assets/images/signup/left-top.svg'
-import forwardIcon from 'assets/images/signup/forward-icon.svg'
-import oceanDriveLogo from 'assets/images/signup/oceandrive.svg'
 import styles from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
-import { IconButton, InputAdornment } from '@mui/material'
-import { Visibility, VisibilityOff } from '@material-ui/icons'
+import HFTextField from 'components/ControlledFormElements/HFTextField'
+import { useForm } from 'react-hook-form'
+import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
+import { useRegisterMutation } from 'services/auth.service'
+import { LoadingButton } from '@mui/lab'
 
 const Signup = () => {
   const navigate = useNavigate()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false) // New state
+  const { control, handleSubmit } = useForm()
+  const { mutate, isLoading } = useRegisterMutation()
 
-  const handleTogglePassword = () => {
-    setShowPassword(!showPassword)
+  const onSubmit = (data) => {
+    mutate(data, {
+      onSuccess: () => {
+        navigate('/auth/confirm-code', {
+          state: {
+            email: data.email
+          }
+        })
+      }
+    })
   }
 
   return (
-    <div className={styles.container}>
-      <img src={rightB} alt='right-bottom-img' className={styles.blurImgR} />
-      <img src={leftT} alt='right-bottom-img' className={styles.blurImgL} />
-      <img
-        src={oceanDriveLogo}
-        alt='oceandrive-logo'
-        className={styles.oceanDriveLogo}
+    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+      <h1 className={styles.title}>Create an account</h1>
+      <HFTextField
+        fullWidth
+        name='email'
+        label='ID Email'
+        control={control}
+        placeholder='Enter your email'
+        required
+        type='email'
       />
-      <form className={styles.form}>
-        <h1 className={styles.title}>Create an account</h1>
-        <div className={styles.inputDiv}>
-          <InputLabel className={styles.inputLabel}>
-            ID Email <span>*</span>
-          </InputLabel>
-          <TextField
-            type='email'
-            variant='outlined'
-            placeholder='Enter your email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.inputDiv}>
-          <InputLabel className={styles.inputLabel}>
-            Password <span>*</span>
-          </InputLabel>
-          <TextField
-            type={showPassword ? 'text' : 'password'}
-            variant='outlined'
-            placeholder='Enter your password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={styles.input}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton onClick={handleTogglePassword}>
-                    {showPassword ? (
-                      <VisibilityOff color='#C2C2C2;' />
-                    ) : (
-                      <Visibility color='#C2C2C2;' />
-                    )}
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-          />
-        </div>
-
-        <Button variant='contained' color='primary' className={styles.button}>
-          Sign up
-        </Button>
-        <div className={styles.alreadyUser}>
-          Already have an account?{'  '}
-          <span onClick={() => navigate('/login')}>
-            Log In <img src={forwardIcon} alt='forward-icon' />
-          </span>
-        </div>
-      </form>
-    </div>
+      <HFTextField
+        fullWidth
+        name='password'
+        label='Password'
+        control={control}
+        placeholder='Enter your password'
+        required
+        type='password'
+        rules={{
+          pattern: {
+            value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
+            message:
+              'Password must be have minimum 8 characters, at least one number, one letter and one special character'
+          }
+        }}
+      />
+      <LoadingButton
+        type='submit'
+        className={styles.button}
+        variant='contained'
+        color='primary'
+        loading={isLoading}
+      >
+        Sign up
+      </LoadingButton>
+      <div className={styles.alreadyUser}>
+        Already have an account?
+        <span onClick={() => navigate('/auth/login')}>
+          Log In <ForwardIcon />
+        </span>
+      </div>
+    </form>
   )
 }
 

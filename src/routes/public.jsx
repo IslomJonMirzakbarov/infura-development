@@ -1,6 +1,8 @@
+import AuthLayout from 'layouts/AuthLayout'
 import { Navigate, useRoutes } from 'react-router-dom'
+import ConfirmationCode from 'views/Auth/ConfirmationCode'
 import Login from 'views/Auth/Login'
-import Reset from 'views/Auth/Reset'
+import NewPassword from 'views/Auth/NewPassword'
 import ResetPassword from 'views/Auth/ResetPassword'
 import Signup from 'views/Auth/SignUp'
 import LandingPage from 'views/LandingPage'
@@ -13,16 +15,30 @@ export const publicRoutes = [
         element: <LandingPage />
       },
       {
-        path: 'login',
-        element: <Login />
-      },
-      {
-        path: 'register',
-        element: <Signup />
-      },
-      {
-        path: 'reset',
-        element: <Reset />
+        path: '/auth',
+        element: <AuthLayout />,
+        children: [
+          {
+            path: 'login',
+            element: <Login />
+          },
+          {
+            path: 'register',
+            element: <Signup />
+          },
+          {
+            path: 'confirm-code',
+            element: <ConfirmationCode />
+          },
+          {
+            path: 'reset-password',
+            element: <ResetPassword />
+          },
+          {
+            path: 'create-new-password',
+            element: <NewPassword />
+          }
+        ]
       }
     ]
   },
@@ -36,7 +52,9 @@ export const publicRoutes = [
   }
 ]
 
-export default function PublicRoutes() {
+const PublicRoutes = () => {
   let element = useRoutes(publicRoutes)
   return element
 }
+
+export default PublicRoutes

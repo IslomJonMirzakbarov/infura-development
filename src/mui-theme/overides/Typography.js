@@ -9,9 +9,9 @@ export const MuiTypography = {
       fontWeight: 600
     },
     main: {
-      fontSize: '20px',
+      fontSize: '22px',
       lineHeight: '30px!important',
-      fontWeight: 600
+      fontWeight: 700
     }
   }
-};
+}

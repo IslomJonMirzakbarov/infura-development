@@ -1,0 +1,105 @@
+.navbar {
+  background-color: #141332 !important;
+  padding: 20px 15px 20px 65px;
+  box-shadow: 0 !important;
+  border-bottom: none !important;
+
+  .navTool {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .logo {
+      cursor: pointer;
+    }
+
+    .navBtnDiv {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 55px;
+      list-style-type: none;
+
+      .navBtn a {
+        color: #fff;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .navBtn a:hover,
+      .navBtn.Mui-hoverVisible:hover {
+        color: #27e6d6;
+      }
+
+      .navHoverBtn {
+        cursor: pointer;
+        p {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: #fff;
+          text-align: center;
+          font-size: 15px;
+          font-weight: 500;
+          padding-top: 7px;
+          padding-bottom: 7px;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .navBtnDiv2 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+
+      .navBtn {
+        color: #fff;
+        background: none;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+      }
+
+      .button {
+        margin-right: 5px;
+      }
+
+      .navBtn:hover,
+      .navBtn.Mui-hoverVisible:hover {
+        color: #27e6d6;
+      }
+
+      .loginBtn {
+        width: 170px;
+        border-radius: 8px;
+        border: 1px solid #fff;
+        background: #030221;
+        padding: 10px 60px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .loginBtn:hover,
+      .loginBtn.Mui-hoverVisible:hover {
+        color: #27e6d6;
+      }
+
+      .walletDiv {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 7px;
+        background: #2e303c;
+        cursor: pointer;
+      }
+    }
+  }
+}

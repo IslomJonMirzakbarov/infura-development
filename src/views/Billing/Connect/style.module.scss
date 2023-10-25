@@ -1,114 +1,84 @@
 .form {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-
-  .formArea {
+  width: 100%;
+  padding: 35px;
+  ul {
+    list-style: none;
+    margin: 50px auto;
+    padding: 0;
     display: flex;
-    margin: 0 auto;
-    min-height: 30vh;
-    align-items: flex-start;
-    width: 100%;
-
-    .wallets {
-      margin: auto 0;
-      display: flex;
-      align-items: center;
-      flex-direction: column;
-      width: 100%;
-
-      ul {
-        list-style: none;
-        margin: 50px 0;
-        padding: 0;
-
-        li {
-          position: relative;
-          z-index: 2;
-          width: 750px;
-          transition: all 0.4s ease-in-out;
-          margin: 15px;
-
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+    li {
+      position: relative;
+      z-index: 2;
+      width: 546px;
+      transition: all 0.4s ease-in-out;
+      .content {
+        padding: 12px 21px;
+        display: flex;
+        height: 100%;
+        align-items: center;
+        justify-content: space-between;
+        border-radius: 7px;
+        border: 1px solid #4d5377;
+        background: #1d1d41;
+        cursor: pointer;
+        .info {
+          display: flex;
+          align-items: center;
+          img {
+            transition: all 0.4s ease-in-out;
+          }
           p {
-            color: #b1b1b1;
-            transition: all 0.4s ease-in-out;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            line-height: normal;
+            margin-left: 30px;
           }
-
-          .content {
-            padding: 12px 21px;
-            display: flex;
-            height: 100%;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #fff;
-            border-radius: 6px;
-            cursor: pointer;
-          }
-
-          .overlay {
-            position: absolute;
-            z-index: -2;
-            top: -1px;
-            left: -1px;
-            width: calc(100% + 2px);
-            height: calc(100% + 2px);
-            background: #dedede;
-            border-radius: 7px;
-            transition: all 0.4s ease-in-out;
-          }
-
-          &:hover {
-            box-shadow: 8px 8px 25px 6px rgba(0, 0, 0, 0.1);
-
-            .overlay {
-              background: var(--primary-color);
-            }
-
-            p {
-              color: var(--primary-color);
-            }
-            .info {
-              img {
-                transform: scale(1.1);
-              }
-            }
-          }
-          &:first-child {
-            border-radius: 4px;
-          }
-
-          .info {
-            display: flex;
-            align-items: center;
-
-            img {
-              transition: all 0.4s ease-in-out;
-            }
-            span {
-              margin-left: 30px;
-              margin-top: 0;
-              font-weight: 900;
-            }
-          }
+        }
+        span {
+          color: #3bfec4;
+          font-size: 15px;
+          font-weight: 600;
         }
       }
     }
-    .formRow {
-      .label {
-        font-weight: 600;
-        margin-bottom: 12px;
+  }
+  .formArea {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    .wallets {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .metamask {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      img {
+        width: 25.606px;
+        height: 25.606px;
+        max-width: 25.606px;
+        max-height: 25.606px;
+        object-fit: contain;
       }
-      margin-bottom: 20px;
+      svg {
+        cursor: pointer;
+      }
+      button {
+        border-radius: 10px;
+        background: #2e303c;
+        padding: 16px 42px;
+        border: none;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: normal;
+      }
     }
   }
-
-  .buttonsArea {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
-  }
-}
-
-.checkboxLabel {
-  //   color: colors.$grey;
 }

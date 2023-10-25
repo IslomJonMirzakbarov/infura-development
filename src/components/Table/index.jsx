@@ -1,14 +1,22 @@
-import classNames from 'classnames';
-import CopyButton from 'components/CopyButton';
-import styles from './style.module.scss';
+import classNames from 'classnames'
+import CopyButton from 'components/CopyButton'
+import styles from './style.module.scss'
+import { useNavigate } from 'react-router-dom'
 
 export default function Table({
   columns,
   data,
   withBorderRadiusBottom,
-  isLoading
+  isLoading,
+  name = ''
 }) {
-  if (isLoading) return <></>;
+  const navigate = useNavigate()
+  if (isLoading) return <></>
+  const handleRowClick = () => {
+    if (name === 'profileTable') {
+      navigate('/main/profile/details')
+    }
+  }
 
   return (
     <div
@@ -16,7 +24,7 @@ export default function Table({
         [styles.withBorderRadiusBottom]: withBorderRadiusBottom
       })}
     >
-      <table border="0">
+      <table border='0'>
         <thead>
           <tr>
             {columns?.map((item) => (
@@ -26,7 +34,7 @@ export default function Table({
         </thead>
         <tbody>
           {data?.map((item, index) => (
-            <tr key={index}>
+            <tr key={index} onClick={handleRowClick}>
               {columns?.map((value) =>
                 value.key === 'id' ? (
                   <td>
@@ -41,5 +49,5 @@ export default function Table({
         </tbody>
       </table>
     </div>
-  );
+  )
 }

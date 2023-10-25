@@ -1,19 +1,20 @@
 @import 'styles/unit';
 
 .sidebar {
-  width: 250px;
+  width: 290px;
+  padding: 30px;
   height: 100vh;
-  background: var(--secondary-color);
+  background: transparent;
   overflow: auto;
-  color: #969bbf;
+  color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
   .header {
-    padding: 43px 23px 74px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    margin-bottom: 53px;
 
     a svg {
       width: 128px;
@@ -24,41 +25,27 @@
     nav {
       ul {
         li {
+          list-style-type: none;
           a {
-            height: 56px;
+            width: 230px;
+            height: 55px;
             @include align-items-center;
-            font-weight: 500;
-            font-size: 15px;
-            line-height: 150%;
-            column-gap: 15px;
-            padding: 17px 24px;
-            color: #969bbf;
+            padding: 17px 13px;
+            column-gap: 16px;
             position: relative;
             transition: 0.4s ease-in-out all;
-            .activeBorder {
-              display: none;
-              width: 4px;
-              position: absolute;
-              left: 0;
-              top: calc(50% - 10px);
-              height: 20px;
-              background: #27e6d6;
-            }
-            &:hover {
-              .activeBorder {
-                display: none !important;
-              }
-            }
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 150%;
             &:hover,
             &.active {
-              color: #fff;
-              background-color: #262f71;
-              .activeBorder {
-                display: block;
-              }
+              border-radius: 10px;
+              background: rgba(255, 255, 255, 0.15);
+              color: #27e6d6;
               svg {
                 path {
-                  fill: #fff;
+                  fill: #27e6d6;
                 }
               }
             }
@@ -68,6 +55,7 @@
     }
   }
   .footer {
+    padding: 0 12px 5px;
     .dropFile {
       height: 55px;
       @include justify-content-center;
@@ -97,9 +85,6 @@
       }
     }
     .logout {
-      height: 55px;
-      padding: 16px 20px;
-      background: #0e42e5;
       font-weight: 600;
       font-size: 15px;
       line-height: 150%;

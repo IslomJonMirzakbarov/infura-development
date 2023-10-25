@@ -1,0 +1,25 @@
+.text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 7px;
+  padding: 16px 13px;
+  background: #141332;
+  p {
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  svg {
+    cursor: pointer;
+  }
+}
+
+.loader {
+  margin-top: 80px;
+  p {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 600;
+  }
+}
