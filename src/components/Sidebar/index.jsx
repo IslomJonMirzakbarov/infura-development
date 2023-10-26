@@ -5,10 +5,8 @@ import { ReactComponent as ProfileIcon } from 'assets/icons/profileq.svg'
 import { ReactComponent as GridIcon } from 'assets/icons/grid.svg'
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
 import { NavLink } from 'react-router-dom'
-import logout from 'assets/images/logout.png'
 import { useState } from 'react'
-import BasicModal from 'components/BasicModal'
-import { Box, Button, Typography } from '@mui/material'
+import LogoutModal from 'components/LogoutModal'
 
 const items = [
   {
@@ -33,55 +31,9 @@ export default function Sidebar() {
 
   const toggle = () => setOpen((prev) => !prev)
 
-  const handleLogout = () => {}
-
   return (
     <div className={styles.sidebar}>
-      {open && (
-        <Box
-          position='fixed'
-          top='0'
-          right='0'
-          left='0'
-          bottom='0'
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
-          flexDirection='column'
-          zIndex='999'
-          gap='30px'
-          style={{
-            background: '#141332'
-          }}
-        >
-          <Typography
-            fontSize='18px'
-            textAlign='center'
-            lineHeight='26px'
-            color='white'
-            fontWeight='700'
-          >
-            Are you sure <br /> you want to log out?
-          </Typography>
-          <img
-            src={logout}
-            alt='logout'
-            width='133'
-            height='133'
-            style={{
-              objectFit: 'contain'
-            }}
-          />
-          <Box display='flex' mt='20px' gap='30px'>
-            <Button onClick={toggle} variant='contained' color='info'>
-              Cancel
-            </Button>
-            <Button onClick={toggle} variant='contained' color='primary'>
-              Yes
-            </Button>
-          </Box>
-        </Box>
-      )}
+      {open && <LogoutModal toggle={toggle} />}
       <div>
         <div className={styles.header}>
           <NavLink to='/'>
