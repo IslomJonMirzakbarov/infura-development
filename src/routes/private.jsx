@@ -73,7 +73,7 @@ export const privateRoutes = [
   },
   {
     path: '*',
-    element: <Navigate to='/' />
+    element: <Navigate to='/main/dashboard' />
   }
 ]
 
