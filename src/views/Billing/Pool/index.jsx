@@ -8,6 +8,8 @@ import ApiKeyModal from '../ApiKeyModal'
 import HFSelect from 'components/ControlledFormElements/HFSelect'
 import CheckoutModal from '../CheckoutModal'
 import LoaderModal from '../LoaderModal'
+import authStore from 'store/auth.store'
+import { usePoolCreateMutation } from 'services/pool.service'
 const sizes = [
   {
     label: '20',
@@ -37,6 +39,23 @@ const Pool = () => {
       pin: 10
     }
   })
+  const { mutate, isLoading } = usePoolCreateMutation()
+
+  // const onSubmit = (data) => {
+  //   mutate(data, {
+  //     onSuccess: (res) => {
+  //       authStore.login(res.payload)
+  //     },
+  //     onError: (error) => {
+  //       if (error.status === 401) {
+  //         navigate('/auth/register')
+  //       }
+  //     }
+  //   })
+  // }
+
+  
+  // console.log(authStore.token.access_token.token)
 
   const onSubmit = () => {
     setOpen(false)
