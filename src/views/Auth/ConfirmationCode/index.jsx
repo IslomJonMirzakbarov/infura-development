@@ -4,7 +4,7 @@ import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { useConfirmCodeMutation } from 'services/auth.service'
 import { LoadingButton } from '@mui/lab'
-
+import toast from 'react-hot-toast'
 const ConfirmationCode = () => {
   const location = useLocation()
   const navigate = useNavigate()
@@ -20,6 +20,7 @@ const ConfirmationCode = () => {
       {
         onSuccess: (res) => {
           navigate('/auth/login')
+          toast.success('Successfully registred!')
         }
       }
     )

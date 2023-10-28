@@ -2,7 +2,15 @@ import { Box } from '@mui/material'
 import BasicModal from 'components/BasicModal'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 
-const GatewayModal = ({ open, toggle, onSubmit, handleSubmit, control }) => {
+const GatewayModal = ({
+  open,
+  toggle,
+  onSubmit,
+  control,
+  error,
+  isLoading
+}) => {
+  console.log('error: ', error)
   return (
     <BasicModal
       open={open}
@@ -12,16 +20,29 @@ const GatewayModal = ({ open, toggle, onSubmit, handleSubmit, control }) => {
       onCancel={toggle}
       onSubmit={onSubmit}
       title='Storage Pool name'
+      isLoading={isLoading}
     >
-      <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+      <form onSubmit={onSubmit} style={{ width: '100%' }}>
         <HFTextField
           name='name'
           control={control}
-          placeholder='Enter gateway name'
+          placeholder='Enter pool name'
           fullWidth
           required
           color='secondary'
         />
+
+        {error && (
+          <p
+            style={{
+              color: 'red',
+              margin: '-20px 0 14px 10px',
+              fontSize: '14px'
+            }}
+          >
+            {error}
+          </p>
+        )}
 
         <Box>
           <ul

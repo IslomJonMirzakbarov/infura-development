@@ -2,7 +2,9 @@ import { Box, Button } from '@mui/material'
 import BasicModal from 'components/BasicModal'
 import styles from './style.module.scss'
 
-const CheckoutModal = ({ open, toggle, onSubmit }) => {
+const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
+  console.log('formData: ', formData)
+
   return (
     <BasicModal
       open={open}
@@ -19,19 +21,21 @@ const CheckoutModal = ({ open, toggle, onSubmit }) => {
         <div className={styles.items}>
           <div className={styles.item}>
             <p>Pool Name</p>
-            <p>DEXPO</p>
+            <p>{formData?.pool_name}</p>
           </div>
           <div className={styles.item}>
             <p>Pool Size</p>
-            <p>10 TB</p>
+            <p>
+              {formData?.pool_size?.value} {formData?.pool_size?.unit}
+            </p>
           </div>
           <div className={styles.item}>
             <p>Pin Replication</p>
-            <p>10</p>
+            <p>{formData?.pin_replication}</p>
           </div>
           <div className={styles.item}>
             <p>Period</p>
-            <p>2 months</p>
+            <p>{formData?.pool_period}</p>
           </div>
         </div>
         <Box
@@ -41,8 +45,8 @@ const CheckoutModal = ({ open, toggle, onSubmit }) => {
         >
           <p className={styles.price}>Estimated Pool Price</p>
           <Box className={styles.cycon}>
-            <p>100,000 CYCON</p>
-            <p> 560,000원</p>
+            <p>{formData?.pool_price}</p>
+            {/* <p> 560,000원</p> */}
           </Box>
         </Box>
         <Box className={styles.notice}>

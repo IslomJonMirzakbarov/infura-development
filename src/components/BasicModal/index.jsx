@@ -14,7 +14,8 @@ const BasicModal = ({
   withFooter = true,
   title,
   heightAuto = false,
-  children
+  children,
+  isLoading = false
 }) => {
   const isLoader = submitLabel === 'loader'
   return (
@@ -42,7 +43,12 @@ const BasicModal = ({
               <div />
             )}
             {!isLoader && (
-              <Button variant='contained' color='primary' onClick={onSubmit}>
+              <Button
+                disabled={isLoading}
+                variant='contained'
+                color='primary'
+                onClick={onSubmit}
+              >
                 {submitLabel}
               </Button>
             )}
