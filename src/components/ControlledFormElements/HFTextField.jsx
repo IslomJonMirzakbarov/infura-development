@@ -69,7 +69,7 @@ const HFTextField = ({
           }),
           ...rules
         }}
-        render={({ field: { onChange, value }, fieldState: { error } }) => (
+        render={({ field: { onChange, value  }, fieldState: { error } }) => (
           <>
             <TextField
               size={size}
