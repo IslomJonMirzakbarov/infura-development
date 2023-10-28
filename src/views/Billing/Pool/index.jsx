@@ -9,6 +9,7 @@ import HFSelect from 'components/ControlledFormElements/HFSelect'
 import CheckoutModal from '../CheckoutModal'
 import LoaderModal from '../LoaderModal'
 import { usePoolCreateMutation } from 'services/pool.service'
+import { useNavigate } from 'react-router-dom'
 const sizes = [
   {
     label: '20',
@@ -37,6 +38,7 @@ const months = [
 ]
 
 const Pool = () => {
+  const navigate = useNavigate()
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       unit: 'GB'
@@ -184,6 +186,7 @@ const Pool = () => {
       />
       <LoaderModal title='Loading' toggle={toggle2} open={open2} />
       <ApiKeyModal
+        onSubmit={() => navigate('/main/billing')}
         poolAddress={poolAddress}
         title='Transaction successfully
 complete'
