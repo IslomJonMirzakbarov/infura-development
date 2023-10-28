@@ -28,7 +28,17 @@ const HFSelect = ({
     <Box display='flex' flexDirection='column' {...boxProps}>
       <Typography variant='standard' color='#fff' fontWeight={500} mb={1}>
         {label}
-        {required && <span style={{ color: '#27E6D6' }}> *</span>}
+        {required && (
+          <span
+            style={{
+              color: '#27E6D6',
+              visibility: name === 'unit' && 'hidden'
+            }}
+          >
+            {' '}
+            *
+          </span>
+        )}
       </Typography>
       <Controller
         control={control}

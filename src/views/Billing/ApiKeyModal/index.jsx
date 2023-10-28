@@ -3,7 +3,7 @@ import BasicModal from 'components/BasicModal'
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg'
 import styles from './style.module.scss'
 
-const ApiKeyModal = ({ open, toggle, title, onSubmit }) => {
+const ApiKeyModal = ({ open, toggle, title, onSubmit, poolAddress }) => {
   return (
     <BasicModal
       open={open}
@@ -14,7 +14,7 @@ const ApiKeyModal = ({ open, toggle, title, onSubmit }) => {
       title={title || 'Your API key'}
     >
       <Box className={styles.text}>
-        <p>f2aa6f1c48e66fdd537d</p>
+        <p>{poolAddress}</p>
         <CopyIcon />
       </Box>
     </BasicModal>
