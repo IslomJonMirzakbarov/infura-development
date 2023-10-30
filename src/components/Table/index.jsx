@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import CopyButton from 'components/CopyButton'
 import styles from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
+import formatTime from 'utils/formatTime'
 
 export default function Table({
   columns,
@@ -12,9 +13,9 @@ export default function Table({
 }) {
   const navigate = useNavigate()
   if (isLoading) return <></>
-  const handleRowClick = () => {
+  const handleRowClick = (id) => {
     if (name === 'profileTable') {
-      navigate('/main/profile/details')
+      navigate(`/main/profile/details/${id}`)
     }
   }
 
@@ -34,12 +35,22 @@ export default function Table({
         </thead>
         <tbody>
           {data?.map((item, index) => (
-            <tr key={index} onClick={handleRowClick}>
+            <tr key={index} onClick={() => handleRowClick(item?.id)}>
               {columns?.map((value) =>
                 value.key === 'id' ? (
                   <td>
                     <CopyButton tx={item[value.key]} />
                   </td>
+                ) : value.key === 'domain' ? (
+                  <td>
+                    <div className={styles.column}>
+                      public.oceandrive.network
+                    </div>
+                  </td>
+                ) : value.key === 'access' ? (
+                  <td>Open</td>
+                ) : value.key === 'created_at' ? (
+                  <td>{formatTime(item[value.key].Time)}</td>
                 ) : (
                   <td>{item[value.key]}</td>
                 )

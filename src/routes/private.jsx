@@ -39,7 +39,7 @@ export const privateRoutes = [
         element: <ProfileContainer />
       },
       {
-        path: 'profile/details',
+        path: 'profile/details/:id',
         element: <ProfileDetails />
       },
       {

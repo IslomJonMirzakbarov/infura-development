@@ -13,7 +13,7 @@ const headColumns = [
     title: 'Domain'
   },
   {
-    key: 'pool_name',
+    key: 'name',
     title: 'Pool Name '
   },
   {
@@ -21,7 +21,7 @@ const headColumns = [
     title: 'Access'
   },
   {
-    key: 'created',
+    key: 'created_at',
     title: 'Created'
   }
 ]
@@ -44,20 +44,20 @@ const downloadData = [
   }
 ]
 
-export const mockUploadedData = [
-  {
-    domain: <div className={styles.column}>public.oceandrive.network</div>,
-    pool_name: 'DEXPO',
-    access: 'Open',
-    created: '2023.02.20 17:23'
-  },
-  {
-    domain: <div className={styles.column}>public.oceandrive.network</div>,
-    pool_name: 'DEXPO',
-    access: 'Open',
-    created: '2023.02.20 17:23'
-  }
-]
+// export const mockUploadedData = [
+//   {
+//     domain: <div className={styles.column}>public.oceandrive.network</div>,
+//     pool_name: 'DEXPO',
+//     access: 'Open',
+//     created: '2023.02.20 17:23'
+//   },
+//   {
+//     domain: <div className={styles.column}>public.oceandrive.network</div>,
+//     pool_name: 'DEXPO',
+//     access: 'Open',
+//     created: '2023.02.20 17:23'
+//   }
+// ]
 
 const tabs = ['Gateway']
 
@@ -78,7 +78,7 @@ export default function ProfileContainer() {
       handleChange={handleChange}
       tabs={tabs}
       value={value}
-      data={mockUploadedData}
+      // data={mockUploadedData}
       downloadData={downloadData}
       headColumns={headColumns}
       setViewTable={setViewTable}

@@ -5,7 +5,8 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
 import ApiKeyModal from '../../Billing/ApiKeyModal'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useGetPoolById } from 'services/pool.service'
 const sizes = [
   {
     label: 'TB',
@@ -18,6 +19,9 @@ const sizes = [
 ]
 
 const ProfileDetails = () => {
+  const { id } = useParams()
+  const { data, isLoading } = useGetPoolById({ id })
+  console.log('data: ', data)
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -53,15 +57,18 @@ const ProfileDetails = () => {
                 placeholder='Enter pool name'
                 required
                 fullWidth
+                value={data?.Name}
+                readOnly={true}
               />
               <HFTextField
                 control={control}
                 name='size'
                 label='Pool size'
-                type='number'
                 required
                 fullWidth
                 placeholder='Enter pool size'
+                value={`${data?.PoolSize?.Value}${data?.PoolSize?.Unit}`}
+                readOnly={true}
               />
               <HFTextField
                 control={control}

@@ -5,9 +5,9 @@ import Tabs from 'components/Tabs'
 import styles from './style.module.scss'
 import Container from 'components/Container'
 import Product from 'components/Product'
+import { useGetPools } from 'services/pool.service'
 
 export default function Profile({
-  data,
   downloadData,
   value,
   tabs,
@@ -16,6 +16,7 @@ export default function Profile({
   viewTable,
   setViewTable
 }) {
+  const { data: pools, isLoading, error } = useGetPools()
   return (
     <>
       <Header title='Profile' />
@@ -37,7 +38,7 @@ export default function Profile({
         {viewTable ? (
           <>
             {value === 0 && (
-              <Table name='profileTable' columns={headColumns} data={data} />
+              <Table name='profileTable' columns={headColumns} data={pools} />
             )}
             {/* {value === 1 && (
               <div className={styles.downloads}>
