@@ -26,6 +26,7 @@ const HFTextField = ({
   type = 'text',
   withCopy,
   withRegenerate,
+  readOnly = false,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState(false)
@@ -69,7 +70,7 @@ const HFTextField = ({
           }),
           ...rules
         }}
-        render={({ field: { onChange, value  }, fieldState: { error } }) => (
+        render={({ field: { onChange, value }, fieldState: { error } }) => (
           <>
             <TextField
               size={size}
@@ -81,6 +82,7 @@ const HFTextField = ({
               fullWidth={fullWidth}
               type={showPassword ? 'text' : type}
               InputProps={{
+                readOnly: readOnly,
                 endAdornment: (
                   <>
                     {withCopy && (
