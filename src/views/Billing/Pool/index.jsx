@@ -10,6 +10,8 @@ import CheckoutModal from '../CheckoutModal'
 import LoaderModal from '../LoaderModal'
 import { usePoolCreateMutation } from 'services/pool.service'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from 'react-query'
+import { truncateJWT } from 'utils/utilFuncs'
 const sizes = [
   {
     label: '20',
@@ -39,6 +41,7 @@ const months = [
 
 const Pool = () => {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       unit: 'GB'
@@ -80,9 +83,10 @@ const Pool = () => {
     mutate(formData, {
       onSuccess: (res) => {
         console.log('res: ', res)
-        setPoolAddress(res?.pool_address)
+        setPoolAddress(res?.access_token?.token)
         setOpen2(false)
         setOpen3(true)
+        queryClient.invalidateQueries('pools')
       },
       onError: (error) => {
         setOpen2(false)
