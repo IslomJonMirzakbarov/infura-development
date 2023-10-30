@@ -83,6 +83,12 @@ const HFTextField = ({
               type={showPassword ? 'text' : type}
               InputProps={{
                 readOnly: readOnly,
+                ...(readOnly && {
+                  sx: {
+                    boxShadow: 'none',
+                    border: 'none'
+                  }
+                }),
                 endAdornment: (
                   <>
                     {withCopy && (

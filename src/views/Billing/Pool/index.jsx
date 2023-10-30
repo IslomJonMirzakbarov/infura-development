@@ -12,6 +12,7 @@ import { usePoolCreateMutation } from 'services/pool.service'
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 import { truncateJWT } from 'utils/utilFuncs'
+import poolStore from 'store/pool.store'
 const sizes = [
   {
     label: '20',
@@ -84,6 +85,7 @@ const Pool = () => {
       onSuccess: (res) => {
         console.log('res: ', res)
         setPoolAddress(res?.access_token?.token)
+        poolStore.addPool({ id: res?.id, token: res?.access_token?.token })
         setOpen2(false)
         setOpen3(true)
         queryClient.invalidateQueries('pools')
