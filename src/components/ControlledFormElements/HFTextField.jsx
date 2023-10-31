@@ -47,7 +47,9 @@ const HFTextField = ({
       {label && (
         <Typography color='white' variant='standard' fontWeight={500} mb={1}>
           {label}
-          {required && <span style={{ color: '#27E6D6' }}> *</span>}
+          {required && !readOnly && (
+            <span style={{ color: '#27E6D6' }}> *</span>
+          )}
         </Typography>
       )}
       <Controller
@@ -83,12 +85,6 @@ const HFTextField = ({
               type={showPassword ? 'text' : type}
               InputProps={{
                 readOnly: readOnly,
-                ...(readOnly && {
-                  sx: {
-                    boxShadow: 'none',
-                    border: 'none'
-                  }
-                }),
                 endAdornment: (
                   <>
                     {withCopy && (
