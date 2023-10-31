@@ -8,11 +8,15 @@ import ApiKeyModal from '../ApiKeyModal'
 import HFSelect from 'components/ControlledFormElements/HFSelect'
 import CheckoutModal from '../CheckoutModal'
 import LoaderModal from '../LoaderModal'
-import { usePoolCreateMutation } from 'services/pool.service'
-import { useLocation, useNavigate } from 'react-router-dom'
+import {
+  usePoolCheckMutation,
+  usePoolCreateMutation
+} from 'services/pool.service'
+import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 import { truncateJWT } from 'utils/utilFuncs'
 import poolStore from 'store/pool.store'
+import useDebounce from 'hooks/useDebounce'
 const sizes = [
   {
     label: '20',
@@ -42,25 +46,40 @@ const months = [
 
 const Pool = () => {
   const navigate = useNavigate()
-  const location = useLocation()
   const queryClient = useQueryClient()
-  const { control, handleSubmit, formState, reset } = useForm({
+  const { control, handleSubmit, formState, watch } = useForm({
     defaultValues: {
       unit: 'GB'
     }
   })
+
+  const { mutate: checkPool, isLoading: isCheckLoading } =
+    usePoolCheckMutation()
+  const poolName = watch('name')
+  const debouncedPoolName = useDebounce(poolName, 500)
+  useEffect(() => {
+    if (debouncedPoolName) {
+      checkPool(
+        { pool_name: debouncedPoolName },
+        {
+          onSuccess: (res) => {
+            console.log('res: ', res?.success)
+          },
+          onError: (error) => {
+            console.log('error: ', error?.data?.message)
+          }
+        }
+      )
+    }
+  }, [debouncedPoolName])
+
   const { mutate, isLoading } = usePoolCreateMutation()
+
   const [formData, setFormData] = useState(null)
   const [poolAddress, setPoolAddress] = useState(null)
   const [open, setOpen] = useState(false)
   const [open2, setOpen2] = useState(false)
   const [open3, setOpen3] = useState(false)
-
-  useEffect(() => {
-    reset({
-      name: location.state?.poolName
-    })
-  }, [location.state?.poolName])
 
   const toggle = () => setOpen((prev) => !prev)
   const toggle2 = () => setOpen2((prev) => !prev)
@@ -112,7 +131,7 @@ const Pool = () => {
         <Box width='100%' display='flex' alignItems='center'>
           <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
             <Typography component='p' color='#fff' variant='main' mb='22px'>
-              Pool From
+              Pool Form
             </Typography>
             <div className={styles.elements}>
               <HFTextField
@@ -122,7 +141,6 @@ const Pool = () => {
                 placeholder='Enter pool name'
                 required
                 fullWidth
-                disabled
               />
               <div style={{ display: 'flex', gap: '6px' }}>
                 <HFTextField
