@@ -60,7 +60,6 @@ const Pool = () => {
   const toggle3 = () => setOpen3((prev) => !prev)
 
   const onSubmit = (data) => {
-    console.log('formState: ', formState)
     const formData = {
       pool_name: data.name,
       pool_period: parseInt(data.period),

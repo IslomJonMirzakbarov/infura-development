@@ -12,13 +12,17 @@ const Billing = () => {
   const { mutate } = usePoolCheckMutation()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+  const [item, setItem] = useState(null)
   const [success, setSuccess] = useState(null)
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const toggle = () => setOpen((prev) => !prev)
+  const toggle = () => {
+    setOpen((prev) => !prev)
+  }
 
   const onSelect = (data) => {
+    setItem(data)
     toggle()
   }
 
@@ -27,17 +31,21 @@ const Billing = () => {
     setIsLoading(true)
     mutate(formData, {
       onSuccess: (res) => {
-        console.log('res: ', res)
         setSuccess(res?.success)
         setIsLoading(false)
-        navigate('/main/billing/pool')
+        if (item.isFree) {
+          navigate('/main/billing/confirm', {
+            state: {
+              poolName: data.name
+            }
+          })
+        } else {
+          navigate('/main/billing/pool')
+        }
       },
       onError: (error) => {
-        // console.log('error: ', error)
         setIsLoading(false)
         setError(error?.data?.message)
-        if (error.status === 401) {
-        }
       }
     })
   }
