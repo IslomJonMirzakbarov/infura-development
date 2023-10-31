@@ -30,6 +30,7 @@ const HFTextField = ({
   readOnly = false,
   ...props
 }) => {
+  const { value, disabled } = props
   const [showPassword, setShowPassword] = useState(false)
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
@@ -41,7 +42,11 @@ const HFTextField = ({
   const [copied, setCopied] = useState(false)
 
   const handleCopy = (tx) => {
-    navigator.clipboard.writeText(tx)
+    if (readOnly || disabled) {
+      navigator.clipboard.writeText(value)
+    } else {
+      navigator.clipboard.writeText(tx)
+    }
     setCopied(true)
   }
 

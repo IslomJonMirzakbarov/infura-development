@@ -60,6 +60,7 @@ const ProfileDetails = () => {
                 fullWidth
                 value={isLoading ? '' : data?.name}
                 readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
@@ -71,6 +72,7 @@ const ProfileDetails = () => {
                   isLoading ? '' : `${data?.size?.value}${data?.size?.unit}`
                 }
                 readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
@@ -80,6 +82,7 @@ const ProfileDetails = () => {
                 withCopy
                 value={'https://public.oceandrive.network '}
                 readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
@@ -89,6 +92,7 @@ const ProfileDetails = () => {
                 fullWidth
                 value={isLoading ? '' : `${data?.pin_replication}`}
                 readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
@@ -97,6 +101,7 @@ const ProfileDetails = () => {
                 fullWidth
                 value={isLoading ? '' : `${data?.price}`}
                 readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
@@ -108,6 +113,7 @@ const ProfileDetails = () => {
                 withRegenerate={handleRegenerate}
                 value={isLoading ? '' : apiKey}
                 readOnly={true}
+                disabled
               />
             </div>
             <Box

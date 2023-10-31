@@ -40,7 +40,11 @@ const Billing = () => {
             }
           })
         } else {
-          navigate('/main/billing/pool')
+          navigate('/main/billing/pool', {
+            state: {
+              poolName: data.name
+            }
+          })
         }
       },
       onError: (error) => {

@@ -11,13 +11,17 @@ import {
   usePoolCreateMutation
 } from 'services/pool.service'
 import poolStore from 'store/pool.store'
+import LoaderModal from '../LoaderModal'
 
 const ConfirmSubscription = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const { control, handleSubmit, reset } = useForm()
   const [poolAddress, setPoolAddress] = useState('')
+  const [open2, setOpen2] = useState(false)
   const { mutate, isLoading } = usePoolCreateMutation()
+
+  const toggle2 = () => setOpen2((prev) => !prev)
 
   const onSubmit = (data) => {
     const formData = {
@@ -30,6 +34,7 @@ const ConfirmSubscription = () => {
         unit: 'GB'
       }
     }
+    setOpen2(true)
     mutate(formData, {
       onSuccess: (res) => {
         setPoolAddress(res?.access_token?.token)
@@ -39,6 +44,7 @@ const ConfirmSubscription = () => {
         items[0].disabled = true
         poolStore.changeBillingItems(items)
         toggle()
+        setOpen2(false)
       }
     })
   }
@@ -75,6 +81,7 @@ const ConfirmSubscription = () => {
                 placeholder='Enter pool name'
                 required
                 fullWidth
+                disabled
               />
               <HFTextField
                 control={control}
@@ -93,6 +100,7 @@ const ConfirmSubscription = () => {
                 fullWidth
                 withCopy
                 disabled
+                value='https://public.oceandrive.network'
               />
               <HFTextField
                 control={control}
@@ -126,6 +134,7 @@ const ConfirmSubscription = () => {
           </form>
         </Box>
       </Container>
+      <LoaderModal title='Loading' toggle={toggle2} open={open2} />
       <ApiKeyModal
         toggle={toggle}
         open={open}
