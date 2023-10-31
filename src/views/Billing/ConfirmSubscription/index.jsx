@@ -1,28 +1,63 @@
 import { Box, Button, Typography } from '@mui/material'
 import Container from 'components/Container'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
 import ApiKeyModal from '../ApiKeyModal'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
+import {
+  usePoolCheckMutation,
+  usePoolCreateMutation
+} from 'services/pool.service'
+import poolStore from 'store/pool.store'
 
 const ConfirmSubscription = () => {
   const navigate = useNavigate()
-  const { control, handleSubmit } = useForm({
-    defaultValues: {
-      type: 'TB',
-      pin: 10
-    }
-  })
+  const location = useLocation()
+  const { control, handleSubmit, reset } = useForm()
+  const [poolAddress, setPoolAddress] = useState('')
+  const { mutate, isLoading } = usePoolCreateMutation()
 
-  const onSubmit = (data) => {}
+  const onSubmit = (data) => {
+    const formData = {
+      pool_name: data.pool_name,
+      pool_period: 1,
+      pool_price: 'free',
+      pin_replication: 1,
+      pool_size: {
+        value: 1,
+        unit: 'GB'
+      }
+    }
+    mutate(formData, {
+      onSuccess: (res) => {
+        setPoolAddress(res?.access_token?.token)
+        poolStore.addPool({ id: res?.id, token: res?.access_token?.token })
+        const items = [...poolStore.billingItems]
+        items[0].isCurrentPlan = true
+        items[0].disabled = true
+        poolStore.changeBillingItems(items)
+        toggle()
+      }
+    })
+  }
 
   const [open, setOpen] = useState(false)
 
   const toggle = () => setOpen((prev) => !prev)
 
   const handleApiSubmit = () => navigate('/main/profile')
+
+  useEffect(() => {
+    reset({
+      pool_name: location.state?.poolName,
+      pool_size: '1 GB',
+      gateway: 'https://public.oceandrive.network',
+      pin_replication: 1,
+      pool_price: 'Free'
+    })
+  }, [])
 
   return (
     <>
@@ -35,7 +70,7 @@ const ConfirmSubscription = () => {
             <div className={styles.elements}>
               <HFTextField
                 control={control}
-                name='name'
+                name='pool_name'
                 label='Pool name'
                 placeholder='Enter pool name'
                 required
@@ -43,12 +78,13 @@ const ConfirmSubscription = () => {
               />
               <HFTextField
                 control={control}
-                name='size'
+                name='pool_size'
                 label='Pool size'
-                type='number'
+                type='text'
                 required
                 fullWidth
                 placeholder='Enter pool size'
+                disabled
               />
               <HFTextField
                 control={control}
@@ -56,21 +92,24 @@ const ConfirmSubscription = () => {
                 label='Gateway'
                 fullWidth
                 withCopy
+                disabled
               />
               <HFTextField
                 control={control}
-                name='replication'
+                name='pin_replication'
                 type='number'
                 label='Pin Replication'
                 placeholder='Enter pin replication'
                 fullWidth
+                disabled
               />
               <HFTextField
                 control={control}
-                name='price'
+                name='pool_price'
                 label='Pool price'
                 placeholder='Enter pool price'
                 fullWidth
+                disabled
               />
             </div>
             <Box
@@ -80,19 +119,19 @@ const ConfirmSubscription = () => {
               height='100%'
               mt='50px'
             >
-              <Button
-                onClick={toggle}
-                variant='contained'
-                color='secondary'
-                type='submit'
-              >
+              <Button variant='contained' color='secondary' type='submit'>
                 Submit
               </Button>
             </Box>
           </form>
         </Box>
       </Container>
-      <ApiKeyModal toggle={toggle} open={open} onSubmit={handleApiSubmit} />
+      <ApiKeyModal
+        toggle={toggle}
+        open={open}
+        poolAddress={poolAddress}
+        onSubmit={handleApiSubmit}
+      />
     </>
   )
 }

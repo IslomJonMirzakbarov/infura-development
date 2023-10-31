@@ -3,6 +3,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  Tooltip,
   Typography
 } from '@mui/material'
 import { Controller } from 'react-hook-form'
@@ -35,6 +36,13 @@ const HFTextField = ({
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault()
+  }
+
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = (tx) => {
+    navigator.clipboard.writeText(tx)
+    setCopied(true)
   }
 
   return (
@@ -93,9 +101,18 @@ const HFTextField = ({
                   <>
                     {withCopy && (
                       <InputAdornment position='end'>
-                        <IconButton aria-label='toggle coppy' edge='end'>
-                          <CopyIcon />
-                        </IconButton>
+                        <Tooltip
+                          title={copied ? 'Copied!' : 'Copy to clipboard'}
+                          placement='top-start'
+                        >
+                          <IconButton
+                            onClick={() => handleCopy(value)}
+                            aria-label='toggle coppy'
+                            edge='end'
+                          >
+                            <CopyIcon />
+                          </IconButton>
+                        </Tooltip>
                       </InputAdornment>
                     )}
                     {type === 'password' && (
