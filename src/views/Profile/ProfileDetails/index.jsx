@@ -7,6 +7,7 @@ import styles from './styles.module.scss'
 import ApiKeyModal from '../../Billing/ApiKeyModal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
+import poolStore from 'store/pool.store'
 const sizes = [
   {
     label: 'TB',
@@ -21,7 +22,6 @@ const sizes = [
 const ProfileDetails = () => {
   const { id } = useParams()
   const { data, isLoading } = useGetPoolById({ id })
-  console.log('data: ', data)
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -29,6 +29,8 @@ const ProfileDetails = () => {
       pin: 10
     }
   })
+  const pools = poolStore.pools
+  const apiKey = pools.find((pool) => pool.id === id)?.token
 
   const onSubmit = (data) => {}
 
@@ -54,11 +56,11 @@ const ProfileDetails = () => {
                 control={control}
                 name='name'
                 label='Pool name'
-                placeholder='Enter pool name'
                 required
                 fullWidth
-                value={data?.Name}
+                value={isLoading ? '' : data?.name}
                 readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
@@ -66,9 +68,11 @@ const ProfileDetails = () => {
                 label='Pool size'
                 required
                 fullWidth
-                placeholder='Enter pool size'
-                value={`${data?.PoolSize?.Value}${data?.PoolSize?.Unit}`}
+                value={
+                  isLoading ? '' : `${data?.size?.value}${data?.size?.unit}`
+                }
                 readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
@@ -76,29 +80,40 @@ const ProfileDetails = () => {
                 label='Gateway'
                 fullWidth
                 withCopy
+                value={'https://public.oceandrive.network '}
+                readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
                 name='replication'
                 type='number'
                 label='Pin Replication'
-                placeholder='Enter pin replication'
                 fullWidth
+                value={isLoading ? '' : `${data?.pin_replication}`}
+                readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
                 name='price'
                 label='Pool price'
-                placeholder='Enter pool price'
                 fullWidth
+                value={isLoading ? '' : `${data?.price}`}
+                readOnly={true}
+                disabled
               />
               <HFTextField
                 control={control}
                 name='api_key'
+                type='password'
                 label='API Key'
                 fullWidth
                 withCopy
                 withRegenerate={handleRegenerate}
+                value={isLoading ? '' : apiKey}
+                readOnly={true}
+                disabled
               />
             </div>
             <Box

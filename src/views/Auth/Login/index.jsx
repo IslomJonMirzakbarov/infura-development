@@ -18,7 +18,7 @@ const Login = () => {
         authStore.login(res.payload)
       },
       onError: (error) => {
-        if (error.status === 401) {
+        if (error.status === 404) {
           navigate('/auth/register')
         }
       }

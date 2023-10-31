@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@mui/material'
 import Container from 'components/Container'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
 import ApiKeyModal from '../ApiKeyModal'
@@ -9,9 +9,10 @@ import HFSelect from 'components/ControlledFormElements/HFSelect'
 import CheckoutModal from '../CheckoutModal'
 import LoaderModal from '../LoaderModal'
 import { usePoolCreateMutation } from 'services/pool.service'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 import { truncateJWT } from 'utils/utilFuncs'
+import poolStore from 'store/pool.store'
 const sizes = [
   {
     label: '20',
@@ -41,8 +42,9 @@ const months = [
 
 const Pool = () => {
   const navigate = useNavigate()
+  const location = useLocation()
   const queryClient = useQueryClient()
-  const { control, handleSubmit, formState } = useForm({
+  const { control, handleSubmit, formState, reset } = useForm({
     defaultValues: {
       unit: 'GB'
     }
@@ -54,12 +56,17 @@ const Pool = () => {
   const [open2, setOpen2] = useState(false)
   const [open3, setOpen3] = useState(false)
 
+  useEffect(() => {
+    reset({
+      name: location.state?.poolName
+    })
+  }, [location.state?.poolName])
+
   const toggle = () => setOpen((prev) => !prev)
   const toggle2 = () => setOpen2((prev) => !prev)
   const toggle3 = () => setOpen3((prev) => !prev)
 
   const onSubmit = (data) => {
-    console.log('formState: ', formState)
     const formData = {
       pool_name: data.name,
       pool_period: parseInt(data.period),
@@ -84,6 +91,7 @@ const Pool = () => {
       onSuccess: (res) => {
         console.log('res: ', res)
         setPoolAddress(res?.access_token?.token)
+        poolStore.addPool({ id: res?.id, token: res?.access_token?.token })
         setOpen2(false)
         setOpen3(true)
         queryClient.invalidateQueries('pools')
@@ -114,6 +122,7 @@ const Pool = () => {
                 placeholder='Enter pool name'
                 required
                 fullWidth
+                disabled
               />
               <div style={{ display: 'flex', gap: '6px' }}>
                 <HFTextField
@@ -157,6 +166,7 @@ const Pool = () => {
               <HFTextField
                 control={control}
                 name='price'
+                type='number'
                 label='Estimated Pool price in CYCON'
                 placeholder='Enter pool price'
                 required

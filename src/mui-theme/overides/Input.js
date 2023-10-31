@@ -7,8 +7,15 @@ export const MuiInput = {
         padding: '15px',
         color: '#fff',
         '&::placeholder': {
-          color: '#fff;'
+          color: '#fff'
+        },
+        '&.Mui-disabled ': {
+          '-webkit-text-fill-color': '#fff',
+          opacity: 0.6
         }
+        // '&::disabled': {
+        //   color: '#fff'
+        // }
       },
       root: {
         transition: '0.4s ease-in-out all',
@@ -59,9 +66,10 @@ export const MuiInput = {
           }
         },
         '&.Mui-disabled ': {
-          background: '#F3F3F3',
+          background: 'rgba(255, 255, 255, 0.15)',
+          opacity: 0.6,
           '& .MuiOutlinedInput-notchedOutline': {
-            border: '1.5px solid #E8E8E8'
+            border: '1.5px solid #5C5A64'
           }
         },
         '&.Mui-focused': {

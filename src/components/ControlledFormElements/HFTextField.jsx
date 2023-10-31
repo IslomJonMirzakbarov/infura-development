@@ -3,6 +3,7 @@ import {
   IconButton,
   InputAdornment,
   TextField,
+  Tooltip,
   Typography
 } from '@mui/material'
 import { Controller } from 'react-hook-form'
@@ -29,12 +30,24 @@ const HFTextField = ({
   readOnly = false,
   ...props
 }) => {
+  const { value, disabled } = props
   const [showPassword, setShowPassword] = useState(false)
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
 
   const handleMouseDownPassword = (event) => {
     event.preventDefault()
+  }
+
+  const [copied, setCopied] = useState(false)
+
+  const handleCopy = (tx) => {
+    if (readOnly || disabled) {
+      navigator.clipboard.writeText(value)
+    } else {
+      navigator.clipboard.writeText(tx)
+    }
+    setCopied(true)
   }
 
   return (
@@ -47,7 +60,9 @@ const HFTextField = ({
       {label && (
         <Typography color='white' variant='standard' fontWeight={500} mb={1}>
           {label}
-          {required && <span style={{ color: '#27E6D6' }}> *</span>}
+          {required && !readOnly && (
+            <span style={{ color: '#27E6D6' }}> *</span>
+          )}
         </Typography>
       )}
       <Controller
@@ -87,9 +102,18 @@ const HFTextField = ({
                   <>
                     {withCopy && (
                       <InputAdornment position='end'>
-                        <IconButton aria-label='toggle coppy' edge='end'>
-                          <CopyIcon />
-                        </IconButton>
+                        <Tooltip
+                          title={copied ? 'Copied!' : 'Copy to clipboard'}
+                          placement='top-start'
+                        >
+                          <IconButton
+                            onClick={() => handleCopy(value)}
+                            aria-label='toggle coppy'
+                            edge='end'
+                          >
+                            <CopyIcon />
+                          </IconButton>
+                        </Tooltip>
                       </InputAdornment>
                     )}
                     {type === 'password' && (
