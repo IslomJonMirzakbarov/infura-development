@@ -30,13 +30,14 @@ const GatewayModal = ({
           fullWidth
           required
           color='secondary'
+          minLength={5}
         />
 
         {error && (
           <p
             style={{
               color: 'red',
-              margin: '-20px 0 14px 10px',
+              margin: '-20px 0 5px 10px',
               fontSize: '14px'
             }}
           >

@@ -52,6 +52,7 @@ const Pool = () => {
       unit: 'GB'
     }
   })
+  const [propError, setPropError] = useState('')
 
   const { mutate: checkPool, isLoading: isCheckLoading } =
     usePoolCheckMutation()
@@ -64,9 +65,18 @@ const Pool = () => {
         {
           onSuccess: (res) => {
             console.log('res: ', res?.success)
+            setPropError('')
           },
           onError: (error) => {
             console.log('error: ', error?.data?.message)
+            if (
+              error?.data?.message ===
+              "code=400, message=Key: 'CheckPoolReq.PoolName' Error:Field validation for 'PoolName' failed on the 'min' tag"
+            ) {
+              setPropError('Please enter at least 5 characters.')
+            } else {
+              setPropError(error?.data?.message)
+            }
           }
         }
       )
@@ -134,14 +144,28 @@ const Pool = () => {
               Pool Form
             </Typography>
             <div className={styles.elements}>
-              <HFTextField
-                control={control}
-                name='name'
-                label='Pool name'
-                placeholder='Enter pool name'
-                required
-                fullWidth
-              />
+              <div>
+                <HFTextField
+                  control={control}
+                  name='name'
+                  label='Pool name'
+                  placeholder='Enter pool name'
+                  required
+                  fullWidth
+                  minLength={5}
+                />
+                {propError && (
+                  <p
+                    style={{
+                      color: 'red',
+                      margin: '-20px 0 5px 10px',
+                      fontSize: '14px'
+                    }}
+                  >
+                    {propError}
+                  </p>
+                )}
+              </div>
               <div style={{ display: 'flex', gap: '6px' }}>
                 <HFTextField
                   control={control}
@@ -218,7 +242,7 @@ const Pool = () => {
       />
       <LoaderModal title='Loading' toggle={toggle2} open={open2} />
       <ApiKeyModal
-        onSubmit={() => navigate('/main/billing')}
+        onSubmit={() => navigate('/main/profile')}
         poolAddress={poolAddress}
         title='Transaction successfully
 complete'

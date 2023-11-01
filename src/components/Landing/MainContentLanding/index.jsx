@@ -5,9 +5,13 @@ import styles from './style.module.scss'
 import Stats from './Stats'
 import Features from './Features'
 import WhatsNew from './WhatsNew'
+import authStore from 'store/auth.store'
 
 const MainContentLanding = () => {
   const navigate = useNavigate()
+  const token = authStore?.token?.access_token
+  const goToClick = () =>
+    token ? navigate('/main/dashboard') : navigate('/auth/login')
 
   return (
     <div className={styles.mainContainer}>
@@ -24,10 +28,7 @@ const MainContentLanding = () => {
           sustainable growth.
         </Typography>
 
-        <Button
-          className={styles.goToBtn}
-          onClick={() => navigate('/main/dashboard')}
-        >
+        <Button className={styles.goToBtn} onClick={goToClick}>
           Go to dashboard
         </Button>
       </Box>

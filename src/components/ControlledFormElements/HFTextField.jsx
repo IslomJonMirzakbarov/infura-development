@@ -74,7 +74,7 @@ const HFTextField = ({
           ...(minLength && {
             minLength: {
               value: minLength,
-              message: 'Password should be at least 8 characters long'
+              message: `${name} should be at least ${minLength} characters`
             }
           }),
           ...(pattern && {

@@ -8,7 +8,12 @@ const httpRequest = axios.create({
 })
 
 const errorHandler = (error, hooks) => {
-  if (error?.response?.data?.message) {
+  if (
+    error?.response?.data?.message &&
+    error?.response?.data?.message !==
+      "code=400, message=Key: 'CheckPoolReq.PoolName' Error:Field validation for 'PoolName' failed on the 'min' tag" &&
+    error?.response?.data?.message !== 'pool already exists'
+  ) {
     toast.error(capitalizeFirstLetter(error.response.data.message))
   }
 
