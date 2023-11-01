@@ -30,7 +30,7 @@ const HFTextField = ({
   readOnly = false,
   ...props
 }) => {
-  const { value, disabled } = props
+  const { value, disabled, placeholder } = props
   const [showPassword, setShowPassword] = useState(false)
 
   const handleClickShowPassword = () => setShowPassword((show) => !show)
@@ -74,7 +74,10 @@ const HFTextField = ({
           ...(minLength && {
             minLength: {
               value: minLength,
-              message: `${name} should be at least ${minLength} characters`
+              message:
+                placeholder === 'Enter pool name'
+                  ? `Pool name should be at least ${minLength} characters`
+                  : `${name} should be at least ${minLength} characters`
             }
           }),
           ...(pattern && {

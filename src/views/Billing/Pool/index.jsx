@@ -150,16 +150,16 @@ const Pool = () => {
                   name='name'
                   label='Pool name'
                   placeholder='Enter pool name'
-                  required
+                  required={!propError}
                   fullWidth
-                  minLength={5}
                 />
                 {propError && (
                   <p
                     style={{
-                      color: 'red',
+                      color: '#d32f2f',
                       margin: '-20px 0 5px 10px',
-                      fontSize: '14px'
+                      fontSize: '0.75rem',
+                      fontWeight: '400'
                     }}
                   >
                     {propError}
