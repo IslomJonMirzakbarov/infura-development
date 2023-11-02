@@ -65,6 +65,7 @@ const Billing = () => {
         onSubmit={handleSubmit(onSubmit)}
         control={control}
         isLoading={isLoading}
+        setError={setError}
       />
       <CardsContainer onSelect={onSelect} />
     </Container>

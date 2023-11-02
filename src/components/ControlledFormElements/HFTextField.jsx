@@ -28,6 +28,7 @@ const HFTextField = ({
   withCopy,
   withRegenerate,
   readOnly = false,
+  setError,
   ...props
 }) => {
   const { value, disabled, placeholder } = props
@@ -93,7 +94,10 @@ const HFTextField = ({
             <TextField
               size={size}
               value={value}
-              onChange={(e) => onChange(e.target.value)}
+              onChange={(e) => {
+                onChange(e.target.value)
+                setError(null)
+              }}
               name={name}
               error={error}
               helperText={!disabledHelperText && (error?.message ?? ' ')}

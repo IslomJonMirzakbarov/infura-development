@@ -8,7 +8,8 @@ const GatewayModal = ({
   onSubmit,
   control,
   error,
-  isLoading
+  isLoading,
+  setError
 }) => {
   console.log('error: ', error)
   return (
@@ -31,6 +32,7 @@ const GatewayModal = ({
           required={!error}
           color='secondary'
           minLength={!error ? 5 : 0}
+          setError={setError}
         />
 
         {error && (
