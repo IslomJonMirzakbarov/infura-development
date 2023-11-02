@@ -30,7 +30,7 @@ const GatewayModal = ({
           fullWidth
           required={!error}
           color='secondary'
-          minLength={5}
+          minLength={!error ? 5 : 0}
         />
 
         {error && (
