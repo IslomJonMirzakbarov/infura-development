@@ -1,9 +1,32 @@
 import { Box, Button } from '@mui/material'
 import BasicModal from 'components/BasicModal'
 import styles from './style.module.scss'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
   console.log('formData: ', formData)
+  const [price, setPrice] = useState(null)
+
+  const handlePrice = async () => {
+    try {
+      const res = await axios.get(
+        'https://mainnetapi.dexpo.world/api/home/conPrice'
+      )
+      if (res?.data) {
+        // dispatch(setPriceeUSD(res?.data.data?.price_usd))
+        // dispatch(setPriceKrw(res?.data.data?.price_krw))
+        console.log('price: ', res?.data.data?.price_krw)
+        setPrice(res?.data.data?.price_krw)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    handlePrice()
+  }, [])
 
   return (
     <BasicModal
@@ -35,7 +58,10 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
           </div>
           <div className={styles.item}>
             <p>Period</p>
-            <p>{formData?.pool_period}</p>
+            <p>
+              {formData?.pool_period}{' '}
+              {formData?.pool_period === 1 ? 'month' : 'months'}
+            </p>
           </div>
         </div>
         <Box
@@ -45,8 +71,11 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
         >
           <p className={styles.price}>Estimated Pool Price</p>
           <Box className={styles.cycon}>
-            <p>{formData?.pool_price}</p>
-            {/* <p> 560,000원</p> */}
+            <p>{formData?.pool_price} CYCON</p>
+            <p>
+              {price && Math.round(formData?.pool_price * price)}
+              {price && '원'}
+            </p>
           </Box>
         </Box>
         <Box className={styles.notice}>
