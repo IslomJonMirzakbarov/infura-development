@@ -28,7 +28,7 @@ const GatewayModal = ({
           control={control}
           placeholder='Enter pool name'
           fullWidth
-          required
+          required={!error}
           color='secondary'
           minLength={5}
         />
