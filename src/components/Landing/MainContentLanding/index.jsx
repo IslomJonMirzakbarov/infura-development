@@ -6,6 +6,7 @@ import Stats from './Stats'
 import Features from './Features'
 import WhatsNew from './WhatsNew'
 import authStore from 'store/auth.store'
+import InfoSection from './InfoSection'
 
 const MainContentLanding = () => {
   const navigate = useNavigate()
@@ -36,6 +37,8 @@ const MainContentLanding = () => {
       <Stats />
 
       <Features />
+
+      <InfoSection />
 
       <WhatsNew />
     </div>
