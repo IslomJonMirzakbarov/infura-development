@@ -1,0 +1,12 @@
+.container {
+  background: #141332;
+  width: 100%;
+  height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+
+  .navBar {
+    position: relative;
+    z-index: 3;
+  }
+}

@@ -22,6 +22,7 @@ export const privateRoutes = [
     path: '/',
     element: <LandingPage />
   },
+
   {
     path: '/main',
     element: <MainLayout />,
