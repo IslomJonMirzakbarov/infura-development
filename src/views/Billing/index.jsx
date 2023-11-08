@@ -2,61 +2,90 @@ import React from 'react'
 import Container from 'components/Container'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
-import Table from '@material-ui/core/Table'
-import TableBody from '@material-ui/core/TableBody'
-import TableCell from '@material-ui/core/TableCell'
-import TableContainer from '@material-ui/core/TableContainer'
-import TableHead from '@material-ui/core/TableHead'
-import TableRow from '@material-ui/core/TableRow'
 import styles from './style.module.scss'
+import classNames from 'classnames'
+import Table from 'components/Table'
+
+const headColumns = [
+  {
+    key: 'date',
+    title: 'Date'
+  },
+  {
+    key: 'price',
+    title: 'Pool price'
+  },
+  {
+    key: 'status',
+    title: 'Status'
+  },
+  {
+    key: 'plan',
+    title: 'Plan'
+  }
+]
+
+export const mockUploadedData = [
+  {
+    date: <div className={styles.column}>Oct 10, 2023</div>,
+    price: '$0.00',
+    status: 'Paid',
+    plan: 'Free plan'
+  },
+  {
+    date: <div className={styles.column}>Oct 10, 2023</div>,
+    price: '$0.00',
+    status: 'Paid',
+    plan: 'Free plan'
+  },
+  {
+    date: <div className={styles.column}>Oct 10, 2023</div>,
+    price: '$0.00',
+    status: 'Paid',
+    plan: 'Free plan'
+  },
+  {
+    date: <div className={styles.column}>Oct 10, 2023</div>,
+    price: '$0.00',
+    status: 'Paid',
+    plan: 'Free plan'
+  },
+  {
+    date: <div className={styles.column}>Oct 10, 2023</div>,
+    price: '$0.00',
+    status: 'Paid',
+    plan: 'Free plan'
+  }
+]
 
 const Billing = () => {
-  const invoiceData = [
-    { date: 'Oct 10, 2023', amount: '$0.00', status: 'Paid', plan: 'Free plan' }
-  ]
-
   return (
     <Container maxWidth={true}>
       <div className={styles.billingContainer}>
         <Paper className={styles.paper}>
-          <Typography variant='h6' className={styles.title}>
+          <h2 className={classNames(styles.title, styles.title1)}>
             Current Plan
-          </Typography>
-          <Typography variant='subtitle1'>Free plan</Typography>
-          <Typography variant='h5'>$0.00 per month</Typography>
-          <Typography variant='body2'>
-            Your plan renews on November 9, 2023
-          </Typography>
+          </h2>
+          <div className={styles.planBox}>
+            <Typography variant='subtitle1' className={styles.subtitle1}>
+              Free plan
+            </Typography>
+            <Typography variant='h5' className={styles.h5}>
+              $0.00 per month
+            </Typography>
+            <Typography variant='body2' className={styles.body2}>
+              Your plan renews on November 9, 2023
+            </Typography>
+          </div>
         </Paper>
 
         <Paper className={styles.paper}>
-          <Typography variant='h6' className={styles.title}>
-            Invoice History
-          </Typography>
-          <TableContainer>
-            <Table className={styles.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Date</TableCell>
-                  <TableCell align='right'>Amount</TableCell>
-                  <TableCell align='right'>Status</TableCell>
-                  <TableCell align='right'>Plan</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {invoiceData.map((row, index) => (
-                  <TableRow key={index}>
-                    <TableCell component='th' scope='row'>
-                      {row.date}
-                    </TableCell>
-                    <TableCell align='right'>{row.amount}</TableCell>
-                    <TableCell align='right'>{row.status}</TableCell>
-                    <TableCell align='right'>{row.plan}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <h2 className={styles.title}>Invoice History</h2>
+          <Table
+            name='billingTable'
+            columns={headColumns}
+            data={mockUploadedData}
+          />
         </Paper>
       </div>
     </Container>
