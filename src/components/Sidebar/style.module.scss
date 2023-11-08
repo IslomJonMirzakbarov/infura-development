@@ -43,8 +43,13 @@
               border-radius: 10px;
               background: rgba(255, 255, 255, 0.15);
               color: #27e6d6;
+              // svg {
+              //   path {
+              //     fill: #27e6d6;
+              //   }
+              // }
               svg {
-                path {
+                path:first-of-type {
                   fill: #27e6d6;
                 }
               }

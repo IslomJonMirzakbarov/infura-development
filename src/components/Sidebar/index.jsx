@@ -3,6 +3,7 @@ import { ReactComponent as Logo } from 'assets/logos/logoV2.svg'
 import { ReactComponent as BillingIcon } from 'assets/icons/billing.svg'
 import { ReactComponent as ProfileIcon } from 'assets/icons/profileq.svg'
 import { ReactComponent as GridIcon } from 'assets/icons/grid.svg'
+import { ReactComponent as PricingIcon } from 'assets/icons/pricing.svg'
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
 import { NavLink } from 'react-router-dom'
 import { useState } from 'react'
@@ -13,6 +14,11 @@ const items = [
     title: 'Dashboard',
     icon: <GridIcon />,
     path: '/main/dashboard'
+  },
+  {
+    title: 'Pricing',
+    icon: <PricingIcon />,
+    path: '/main/pricing'
   },
   {
     title: 'Billing',
