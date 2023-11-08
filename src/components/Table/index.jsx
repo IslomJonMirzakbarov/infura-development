@@ -26,14 +26,20 @@ export default function Table({
       })}
     >
       <table border='0'>
-        <thead>
-          <tr>
-            {columns?.map((item) => (
-              <th key={item.key}>{item.title}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
+        {name !== 'billingTable' && (
+          <thead>
+            <tr>
+              {columns?.map((item) => (
+                <th key={item.key}>{item.title}</th>
+              ))}
+            </tr>
+          </thead>
+        )}
+        <tbody
+          className={classNames({
+            [styles.withBorder]: name === 'billingTable'
+          })}
+        >
           {data?.length > 0 &&
             data?.map((item, index) => (
               <tr key={index} onClick={() => handleRowClick(item?.id)}>
