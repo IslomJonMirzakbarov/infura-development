@@ -1,73 +1,64 @@
+import React from 'react'
 import Container from 'components/Container'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import CardsContainer from './CardsContainer'
-import GatewayModal from './GatewayModal'
-import { useNavigate } from 'react-router-dom'
-import { usePoolCheckMutation } from 'services/pool.service'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
+import Table from '@material-ui/core/Table'
+import TableBody from '@material-ui/core/TableBody'
+import TableCell from '@material-ui/core/TableCell'
+import TableContainer from '@material-ui/core/TableContainer'
+import TableHead from '@material-ui/core/TableHead'
+import TableRow from '@material-ui/core/TableRow'
+import styles from './style.module.scss'
 
 const Billing = () => {
-  const { control, handleSubmit } = useForm()
-  const { mutate } = usePoolCheckMutation()
-  const navigate = useNavigate()
-  const [open, setOpen] = useState(false)
-  const [item, setItem] = useState(null)
-  const [success, setSuccess] = useState(null)
-  const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-
-  const toggle = () => {
-    setOpen((prev) => !prev)
-  }
-
-  const onSelect = (data) => {
-    console.log('data: ', data.name)
-    if (data.name === 'Enterprise') {
-      navigate('/main/billing/pool')
-    } else {
-      setItem(data)
-      toggle()
-    }
-  }
-
-  const onSubmit = (data) => {
-    const formData = { pool_name: data.name }
-    setIsLoading(true)
-    mutate(formData, {
-      onSuccess: (res) => {
-        setSuccess(res?.success)
-        setIsLoading(false)
-        if (item.isFree) {
-          navigate('/main/billing/confirm', {
-            state: {
-              poolName: data.name
-            }
-          })
-        } else {
-          navigate('/main/billing/pool')
-        }
-      },
-      onError: (error) => {
-        setIsLoading(false)
-        setError(error?.data?.message)
-      }
-    })
-  }
+  const invoiceData = [
+    { date: 'Oct 10, 2023', amount: '$0.00', status: 'Paid', plan: 'Free plan' }
+  ]
 
   return (
     <Container maxWidth={true}>
-      <GatewayModal
-        error={error}
-        open={open}
-        cancelLabel='Cancel'
-        submitLabel='Continue'
-        toggle={toggle}
-        onSubmit={handleSubmit(onSubmit)}
-        control={control}
-        isLoading={isLoading}
-        setError={setError}
-      />
-      <CardsContainer onSelect={onSelect} />
+      <div className={styles.billingContainer}>
+        <Paper className={styles.paper}>
+          <Typography variant='h6' className={styles.title}>
+            Current Plan
+          </Typography>
+          <Typography variant='subtitle1'>Free plan</Typography>
+          <Typography variant='h5'>$0.00 per month</Typography>
+          <Typography variant='body2'>
+            Your plan renews on November 9, 2023
+          </Typography>
+        </Paper>
+
+        <Paper className={styles.paper}>
+          <Typography variant='h6' className={styles.title}>
+            Invoice History
+          </Typography>
+          <TableContainer>
+            <Table className={styles.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Date</TableCell>
+                  <TableCell align='right'>Amount</TableCell>
+                  <TableCell align='right'>Status</TableCell>
+                  <TableCell align='right'>Plan</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {invoiceData.map((row, index) => (
+                  <TableRow key={index}>
+                    <TableCell component='th' scope='row'>
+                      {row.date}
+                    </TableCell>
+                    <TableCell align='right'>{row.amount}</TableCell>
+                    <TableCell align='right'>{row.status}</TableCell>
+                    <TableCell align='right'>{row.plan}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Paper>
+      </div>
     </Container>
   )
 }

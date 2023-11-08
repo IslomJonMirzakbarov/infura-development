@@ -17,6 +17,7 @@ export default function Profile({
   setViewTable
 }) {
   const { data: pools, isLoading, error } = useGetPools()
+  console.log('pools: ', pools)
   return (
     <>
       <Header title='Profile' />
@@ -38,7 +39,11 @@ export default function Profile({
         {viewTable ? (
           <>
             {value === 0 && (
-              <Table name='profileTable' columns={headColumns} data={pools} />
+              <Table
+                name='profileTable'
+                columns={headColumns}
+                data={pools?.payload?.pools}
+              />
             )}
             {/* {value === 1 && (
               <div className={styles.downloads}>

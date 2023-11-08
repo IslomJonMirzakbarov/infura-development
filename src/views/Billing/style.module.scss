@@ -1,0 +1,18 @@
+.billingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; // Adjust the gap as needed
+}
+
+.paper {
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin-bottom: 10px;
+}
+
+.table {
+  min-width: 650px;
+}

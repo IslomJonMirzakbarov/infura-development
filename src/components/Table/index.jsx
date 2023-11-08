@@ -34,29 +34,30 @@ export default function Table({
           </tr>
         </thead>
         <tbody>
-          {data?.map((item, index) => (
-            <tr key={index} onClick={() => handleRowClick(item?.id)}>
-              {columns?.map((value) =>
-                value.key === 'id' ? (
-                  <td>
-                    <CopyButton tx={item[value.key]} />
-                  </td>
-                ) : value.key === 'domain' ? (
-                  <td>
-                    <div className={styles.column}>
-                      public.oceandrive.network
-                    </div>
-                  </td>
-                ) : value.key === 'access' ? (
-                  <td>Open</td>
-                ) : value.key === 'created_at' ? (
-                  <td>{formatTime(item[value.key].Time)}</td>
-                ) : (
-                  <td>{item[value.key]}</td>
-                )
-              )}
-            </tr>
-          ))}
+          {data?.length > 0 &&
+            data?.map((item, index) => (
+              <tr key={index} onClick={() => handleRowClick(item?.id)}>
+                {columns?.map((value) =>
+                  value.key === 'id' ? (
+                    <td>
+                      <CopyButton tx={item[value.key]} />
+                    </td>
+                  ) : value.key === 'domain' ? (
+                    <td>
+                      <div className={styles.column}>
+                        public.oceandrive.network
+                      </div>
+                    </td>
+                  ) : value.key === 'access' ? (
+                    <td>Open</td>
+                  ) : value.key === 'created_at' ? (
+                    <td>{formatTime(item['updated_at'])}</td>
+                  ) : (
+                    <td>{item[value.key]}</td>
+                  )
+                )}
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>
