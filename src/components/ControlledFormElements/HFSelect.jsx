@@ -32,7 +32,8 @@ const HFSelect = ({
           <span
             style={{
               color: '#27E6D6',
-              visibility: name === 'unit' && 'hidden'
+              visibility:
+                (name === 'unit' || name === 'dashboardPool') && 'hidden'
             }}
           >
             {' '}
@@ -55,6 +56,35 @@ const HFSelect = ({
               size='large'
               error={error}
               inputProps={{ placeholder }}
+              renderValue={(selected) =>
+                name === 'dashboardPool' ? (
+                  <Box
+                    component='span'
+                    sx={{ display: 'flex', alignItems: 'center' }}
+                  >
+                    <Typography
+                      component='span'
+                      variant='subtitle1'
+                      fontSize={14}
+                      color='#27e6d6'
+                      fontWeight={700}
+                    >
+                      Pool
+                    </Typography>
+                    <Box component='span' sx={{ width: 21 }} />
+                    <Typography
+                      component='span'
+                      variant='subtitle1'
+                      fontSize={15}
+                      fontWeight={500}
+                    >
+                      {selected}
+                    </Typography>
+                  </Box>
+                ) : (
+                  selected
+                )
+              }
               fullWidth
               onChange={(e) => {
                 onChange(e.target.value)
