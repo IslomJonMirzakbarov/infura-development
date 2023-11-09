@@ -56,35 +56,43 @@ const HFSelect = ({
               size='large'
               error={error}
               inputProps={{ placeholder }}
-              renderValue={(selected) =>
-                name === 'dashboardPool' ? (
-                  <Box
-                    component='span'
-                    sx={{ display: 'flex', alignItems: 'center' }}
-                  >
-                    <Typography
+              renderValue={(selected) => {
+                if (name === 'dashboardPool') {
+                  const selectedOption = options.find(
+                    (option) => option.value === selected
+                  )
+                  const displayLabel = selectedOption
+                    ? selectedOption.label
+                    : ''
+
+                  return (
+                    <Box
                       component='span'
-                      variant='subtitle1'
-                      fontSize={14}
-                      color='#27e6d6'
-                      fontWeight={700}
+                      sx={{ display: 'flex', alignItems: 'center' }}
                     >
-                      Pool
-                    </Typography>
-                    <Box component='span' sx={{ width: 21 }} />
-                    <Typography
-                      component='span'
-                      variant='subtitle1'
-                      fontSize={15}
-                      fontWeight={500}
-                    >
-                      {selected}
-                    </Typography>
-                  </Box>
-                ) : (
-                  selected
-                )
-              }
+                      <Typography
+                        component='span'
+                        variant='subtitle1'
+                        fontSize={14}
+                        color='#27e6d6'
+                        fontWeight={700}
+                      >
+                        Pool
+                      </Typography>
+                      <Box component='span' sx={{ width: 21 }} />
+                      <Typography
+                        component='span'
+                        variant='subtitle1'
+                        fontSize={15}
+                        fontWeight={500}
+                      >
+                        {displayLabel}
+                      </Typography>
+                    </Box>
+                  )
+                }
+                return selected
+              }}
               fullWidth
               onChange={(e) => {
                 onChange(e.target.value)
@@ -93,13 +101,23 @@ const HFSelect = ({
               label={null}
               {...props}
               MenuProps={{
-                MenuListProps: {
-                  className: classNames(styles.menu, 'menu-list')
+                anchorOrigin: {
+                  vertical: 'bottom',
+                  horizontal: 'left'
                 },
+                transformOrigin: {
+                  vertical: 'top',
+                  horizontal: 'left'
+                },
+                getContentAnchorEl: null,
                 PaperProps: {
                   style: {
+                    maxHeight: '400px',
                     borderRadius: '7px'
                   }
+                },
+                MenuListProps: {
+                  className: classNames(styles.menu, 'menu-list')
                 }
               }}
             >

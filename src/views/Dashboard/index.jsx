@@ -5,25 +5,42 @@ import { Box, Button, Typography } from '@mui/material'
 import HFSelect from 'components/ControlledFormElements/HFSelect'
 import { useForm } from 'react-hook-form'
 import DashboardBarChart from 'components/BarChart'
-
-const pools = [
-  { label: 'DEXPO POOL', value: 'DEXPO POOL' },
-  { label: 'OCEANDRIVE', value: 'OCEANDRIVE' }
-]
-
-const poolInfo = {
-  PoolSize: '500GB',
-  RemainingStorage: '10GB',
-  SubscribedNodes: '10',
-  UploadedFiles: '12'
-}
+import { useNavigate } from 'react-router-dom'
+import { useGetPoolById, useGetPools } from 'services/pool.service'
 
 const Dashboard = () => {
+  const navigate = useNavigate()
   const { control, handleSubmit, formState, watch } = useForm({
     defaultValues: {
       dashboardPool: 'ALL'
     }
   })
+
+  const selectedPoolId = watch('dashboardPool')
+
+  const { data, isLoading, error } = useGetPools()
+  const { data: poolData, isLoading: isPoolLoading } = useGetPoolById({
+    id: selectedPoolId
+  })
+
+  const poolInfo = {
+    PoolSize:
+      !isPoolLoading && poolData
+        ? `${poolData.size.value}${poolData.size.unit}`
+        : '...',
+    RemainingStorage: '10GB',
+    SubscribedNodes: '10',
+    UploadedFiles: '12'
+  }
+
+  const pools = data?.payload?.pools.map((pool) => ({
+    label: pool?.name,
+    value: pool?.id
+  }))
+
+  if (pools) {
+    pools.unshift({ label: 'ALL', value: 'ALL' })
+  }
 
   const infoBoxes = Object.entries(poolInfo).map(([key, value]) => (
     <Typography key={key} fontSize={12} fontWeight={700} color='#fff'>
@@ -34,7 +51,12 @@ const Dashboard = () => {
   return (
     <Container maxWidth={true}>
       <Box className={styles.createBtnBox}>
-        <Button className={styles.createBtn} disableElevation color='primary'>
+        <Button
+          className={styles.createBtn}
+          disableElevation
+          color='primary'
+          onClick={() => navigate('/main/pricing')}
+        >
           <span>+</span> Create Storage
         </Button>
         <Typography className={styles.nodes}>
@@ -57,6 +79,7 @@ const Dashboard = () => {
             style={{ width: '222px' }}
             options={pools}
           />
+
           <Typography color='#fff' fontSize={13} fontWeight={500} mt={4}>
             Current Plan: Free/Change your plan
           </Typography>
