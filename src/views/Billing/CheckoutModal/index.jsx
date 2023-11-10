@@ -3,6 +3,7 @@ import BasicModal from 'components/BasicModal'
 import styles from './style.module.scss'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { formatNumberWithCommas } from 'utils/utilFuncs'
 
 const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
   console.log('formData: ', formData)
@@ -71,9 +72,12 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
         >
           <p className={styles.price}>Estimated Pool Price</p>
           <Box className={styles.cycon}>
-            <p>{formData?.pool_price} CYCON</p>
+            <p>{formatNumberWithCommas(formData?.pool_price)} CYCON</p>
             <p>
-              {price && Math.round(formData?.pool_price * price)}
+              {price &&
+                formatNumberWithCommas(
+                  Math.round(formData?.pool_price * price)
+                )}
               {price && '원'}
             </p>
           </Box>

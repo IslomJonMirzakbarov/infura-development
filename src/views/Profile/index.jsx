@@ -21,6 +21,10 @@ const headColumns = [
     title: 'Access'
   },
   {
+    key: 'price',
+    title: 'Price'
+  },
+  {
     key: 'created_at',
     title: 'Created'
   }

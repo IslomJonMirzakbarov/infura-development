@@ -24,23 +24,23 @@ export const stats = [
 export const features = [
   [
     {
-      title: 'Storage Capacity',
-      text: 'OceanDrive provides secure, <br/> distributed storage solutions that eliminate <br/> the risk of a single, centralized server.'
+      title: 'Connect to Decentralized Storage ',
+      text: "Unlike traditional centralized storage systems, OceanDrive <br/> is decentralized. This means that your data isn't <br/> stored in a single, vulnerable location but is distributed across <br/> multiple nodes within the network. This decentralization reduces <br/> the risk of data loss or unauthorized access. Even if one node <br/> goes offline, your data remains accessible from other nodes."
     },
     {
-      title: 'Content sharing ',
-      text: 'Free or paid media content can be uploaded <br/> and downloaded. Provides the ability to share, <br/> sell, and resell digital assets (music, art, etc.).'
+      title: 'Cost',
+      text: "Save big on storage costs with OceanDrive Infura. We harness <br/> the untapped storage resources of our network, bringing you a <br/> cost-effective storage solution that doesn't break the bank."
     }
   ],
   { middleIcon: 'middleIcon' },
   [
     {
       title: 'Global Storage Connection',
-      text: 'Integrate storage from all computers <br/> around the world to create a vast network <br/> of storage resources.'
+      text: "OceanDrive builds bridges around the globe, connecting your <br/> data seamlessly. Whether you're online or offline, your data is just <br/> a click away, no matter where you are in the world."
     },
     {
-      title: 'Reward System',
-      text: 'All users share the available space on their <br/> personal PC and receive rewards.'
+      title: 'Security',
+      text: "At OceanDrive Network, your data's safety is paramount. <br/> We employ cutting-edge encryption and decentralized <br/> storage, ensuring that your files are shielded from <br/> unauthorized access at all times. Your peace of mind is our priority."
     }
   ]
 ]

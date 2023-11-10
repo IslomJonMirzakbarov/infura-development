@@ -48,7 +48,7 @@ const BillingCard = ({ onSelect, item, isFree }) => {
         {item.isEnterprise
           ? 'Customize'
           : item.isCurrentPlan
-          ? 'Your current plan'
+          ? 'Selected plan'
           : 'Select'}
       </Button>
     </Box>

@@ -22,6 +22,7 @@ const Dashboard = () => {
   const { data: poolData, isLoading: isPoolLoading } = useGetPoolById({
     id: selectedPoolId
   })
+  console.log('pools: ', data)
 
   const poolInfo = {
     PoolSize:

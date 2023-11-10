@@ -3,6 +3,7 @@ import CopyButton from 'components/CopyButton'
 import styles from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import formatTime from 'utils/formatTime'
+import { formatNumberWithCommas } from 'utils/utilFuncs'
 
 export default function Table({
   columns,
@@ -58,6 +59,16 @@ export default function Table({
                     <td>Open</td>
                   ) : value.key === 'created_at' ? (
                     <td>{formatTime(item['updated_at'])}</td>
+                  ) : value.key === 'price' ? (
+                    <td
+                      title={
+                        item[value.key] !== 'free'
+                          ? formatNumberWithCommas(item[value.key])
+                          : ''
+                      }
+                    >
+                      {item[value.key] === 'free' ? 'Free' : 'Paid'}
+                    </td>
                   ) : (
                     <td>{item[value.key]}</td>
                   )
