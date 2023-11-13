@@ -42,7 +42,7 @@
       z-index: 3;
 
       h4 {
-        color: #fff;
+        color: var(--base-white);
         font-size: 12px;
         font-weight: 700;
         line-height: 150%;
@@ -54,7 +54,7 @@
         gap: 16px;
 
         p {
-          color: #fff;
+          color: var(--base-white);
           font-size: 15px;
           font-weight: 500;
           line-height: 150%;

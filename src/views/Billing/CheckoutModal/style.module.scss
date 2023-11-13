@@ -41,12 +41,12 @@
     p {
       font-weight: 500;
       &:first-child {
-        color: #27e6d6;
+        color: var(--main);
         font-size: 13px;
         line-height: normal;
       }
       &:nth-child(2) {
-        color: #fff;
+        color: var(--base-white);
         font-size: 10px;
         line-height: normal;
       }
@@ -60,7 +60,7 @@
         &:first-child {
           padding: 0;
           border: none;
-          color: #fff;
+          color: var(--base-white);
           background-color: transparent;
           font-size: 14px;
           font-weight: 700;
@@ -78,7 +78,7 @@
         line-height: normal;
       }
       &:last-child {
-        color: #27e6d6;
+        color: var(--main);
         font-size: 12px;
         line-height: normal;
         text-align: right;

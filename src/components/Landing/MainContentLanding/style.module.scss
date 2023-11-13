@@ -15,7 +15,7 @@
       height: 160px;
 
       .oceanDriveTxt {
-        color: #fff;
+        color: var(--base-white);
         font-size: 70px;
         font-style: normal;
         font-weight: 700;
@@ -26,13 +26,13 @@
         font-size: 70px;
         font-weight: 300;
         line-height: 80px;
-        color: #27e6d6;
+        color: var(--main);
         font-style: normal;
       }
     }
 
     .description {
-      color: #fff;
+      color: var(--base-white);
       font-size: 14px;
       font-weight: 275;
       line-height: 21px;
@@ -45,7 +45,7 @@
       height: 45px;
       border-radius: 8px;
       background: #16d9c9;
-      color: #fff;
+      color: var(--base-white);
       text-align: center;
       font-size: 15px;
       font-weight: 600;
@@ -68,7 +68,7 @@
     margin-bottom: 160px;
 
     .titleNS {
-      color: #fff;
+      color: var(--base-white);
       font-size: 40px;
       font-weight: 700;
       line-height: 50px;
@@ -82,7 +82,7 @@
 
     .stats {
       .statTitle {
-        color: #fff;
+        color: var(--base-white);
         font-size: 15px;
         font-weight: 700;
         margin-bottom: 13px;
@@ -104,7 +104,7 @@
           position: absolute;
           top: 25px;
           left: 17px;
-          color: #fff;
+          color: var(--base-white);
           font-size: 35px;
           font-weight: 500;
         }
@@ -113,7 +113,7 @@
           position: absolute;
           bottom: 4px;
           right: 12px;
-          color: #fff;
+          color: var(--base-white);
           text-align: right;
           font-size: 15px;
           font-weight: 500;
@@ -136,14 +136,14 @@
       height: 262.29px;
 
       .featureTitle {
-        color: #fff;
+        color: var(--base-white);
         text-align: right;
         font-size: 18px;
         font-weight: 700;
         margin-bottom: 8px;
       }
       .featureText {
-        color: #fff;
+        color: var(--base-white);
         text-align: right;
         font-size: 14px;
         font-weight: 275;
@@ -163,7 +163,7 @@
 
   .whatsNewContainer {
     h5 {
-      color: #fff;
+      color: var(--base-white);
       font-size: 40px;
       font-weight: 700;
       line-height: 50px;
@@ -202,14 +202,14 @@
             padding: 20px;
 
             h6 {
-              color: #fff;
+              color: var(--base-white);
               font-size: 14px;
               font-weight: 700;
               margin-bottom: 9px;
             }
 
             p {
-              color: #fff;
+              color: var(--base-white);
               font-size: 12px;
               font-weight: 400;
               line-height: 17px;

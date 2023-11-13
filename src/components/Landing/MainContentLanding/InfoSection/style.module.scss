@@ -2,7 +2,7 @@
   margin-bottom: 202px;
 
   .header {
-    color: #fff;
+    color: var(--base-white);
     font-size: 40px;
     font-weight: 700;
     line-height: 50px; /* 125% */
@@ -14,7 +14,7 @@
     line-height: 21px;
     letter-spacing: 0em;
     text-align: left;
-    color: #fff;
+    color: var(--base-white);
   }
 
   .options {
@@ -27,7 +27,7 @@
 
       li {
         transition: color 0.1s ease, transform 0.1s ease;
-        color: #fff;
+        color: var(--base-white);
         font-size: 15px;
         font-style: normal;
         font-weight: 700;
@@ -76,7 +76,7 @@
     }
 
     .desc {
-      color: #fff;
+      color: var(--base-white);
       font-size: 14px;
       font-style: normal;
       font-weight: 500;

@@ -6,7 +6,7 @@
   height: 100vh;
   background: transparent;
   overflow: auto;
-  color: #fff;
+  color: var(--base-white);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -34,7 +34,7 @@
             column-gap: 16px;
             position: relative;
             transition: 0.4s ease-in-out all;
-            color: #fff;
+            color: var(--base-white);
             font-size: 15px;
             font-weight: 600;
             line-height: 150%;
@@ -42,7 +42,7 @@
             &.active {
               border-radius: 10px;
               background: rgba(255, 255, 255, 0.15);
-              color: #27e6d6;
+              color: var(--main);
               // svg {
               //   path {
               //     fill: #27e6d6;

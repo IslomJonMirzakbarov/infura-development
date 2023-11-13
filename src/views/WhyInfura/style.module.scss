@@ -7,7 +7,7 @@
 }
 
 .title {
-  color: #fff;
+  color: var(--base-white);
   font-size: 70px;
   font-style: normal;
   font-weight: 700;
@@ -36,7 +36,7 @@
     }
 
     .heading {
-      color: #fff;
+      color: var(--base-white);
       font-size: 18px;
       font-style: normal;
       font-weight: 700;
@@ -44,7 +44,7 @@
     }
 
     .bodyText {
-      color: #fff;
+      color: var(--base-white);
       font-size: 14px;
       font-style: normal;
       font-weight: 275;

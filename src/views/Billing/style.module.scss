@@ -27,7 +27,7 @@
   }
 
   .h5 {
-    color: #fff;
+    color: var(--base-white);
     font-size: 22px;
     font-style: normal;
     font-weight: 700;
@@ -36,7 +36,7 @@
   }
 
   .body2 {
-    color: #fff;
+    color: var(--base-white);
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -45,7 +45,7 @@
 }
 
 .title {
-  color: #fff;
+  color: var(--base-white);
   font-size: 22px;
   font-style: normal;
   font-weight: 700;

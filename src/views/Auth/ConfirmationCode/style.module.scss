@@ -5,13 +5,27 @@
   z-index: 100;
   width: 470px;
   .title {
-    color: #fff;
+    color: var(--base-white);
     text-align: center;
     font-size: 40px;
     font-style: normal;
     font-weight: 700;
-    line-height: 50px; /* 125% */
+    line-height: 50px;
     margin-bottom: 67px;
+  }
+  .resend {
+    width: 100%;
+
+    p {
+      color: var(--base-white);
+      font-size: 12px;
+      margin-left: 10px;
+      a {
+        color: var(--main);
+        text-decoration-line: underline;
+        cursor: pointer;
+      }
+    }
   }
   button {
     margin-top: 100px;
