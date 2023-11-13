@@ -55,6 +55,13 @@
           line-height: 150%;
         }
       }
+      tr {
+        & {
+          td:nth-child(3) {
+            color: #27e6d6;
+          }
+        }
+      }
     }
 
     .withBorder {

@@ -34,7 +34,7 @@ const Dashboard = () => {
     UploadedFiles: '12'
   }
 
-  const pools = data?.payload?.pools.map((pool) => ({
+  const pools = data?.payload?.pools?.map((pool) => ({
     label: pool?.name,
     value: pool?.id
   }))

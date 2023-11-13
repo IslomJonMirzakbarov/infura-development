@@ -4,24 +4,25 @@ import HFTextField from 'components/ControlledFormElements/HFTextField'
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
-import ApiKeyModal from '../../Billing/ApiKeyModal'
+// import ApiKeyModal from '../../Billing/ApiKeyModal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
-import poolStore from 'store/pool.store'
-const sizes = [
-  {
-    label: 'TB',
-    value: 'TB'
-  },
-  {
-    label: 'GB',
-    value: 'GB'
-  }
-]
+// import poolStore from 'store/pool.store'
+// const sizes = [
+//   {
+//     label: 'TB',
+//     value: 'TB'
+//   },
+//   {
+//     label: 'GB',
+//     value: 'GB'
+//   }
+// ]
 
 const ProfileDetails = () => {
   const { id } = useParams()
   const { data, isLoading } = useGetPoolById({ id })
+  console.log('details: ', data)
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -29,8 +30,8 @@ const ProfileDetails = () => {
       pin: 10
     }
   })
-  const pools = poolStore.pools
-  const apiKey = pools.find((pool) => pool.id === id)?.token
+  // const pools = poolStore.pools
+  // const apiKey = pools.find((pool) => pool.id === id)?.token
 
   const onSubmit = (data) => {}
 
@@ -111,7 +112,7 @@ const ProfileDetails = () => {
                 fullWidth
                 withCopy
                 withRegenerate={handleRegenerate}
-                value={isLoading ? '' : apiKey}
+                value={isLoading ? '' : data?.token}
                 readOnly={true}
                 disabled
               />
