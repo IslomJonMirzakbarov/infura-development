@@ -7,6 +7,7 @@ import styles from './styles.module.scss'
 // import ApiKeyModal from '../../Billing/ApiKeyModal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
+import { formatNumberWithCommas } from 'utils/utilFuncs'
 // import poolStore from 'store/pool.store'
 // const sizes = [
 //   {
@@ -100,7 +101,9 @@ const ProfileDetails = () => {
                 name='price'
                 label='Pool price'
                 fullWidth
-                value={isLoading ? '' : `${data?.price}`}
+                value={
+                  isLoading ? '' : `${formatNumberWithCommas(data?.price)}`
+                }
                 readOnly={true}
                 disabled
               />
@@ -128,7 +131,7 @@ const ProfileDetails = () => {
                 variant='contained'
                 color='secondary'
                 type='submit'
-                onClick={() => navigate('/main/billing')}
+                onClick={() => navigate('/main/pricing')}
               >
                 Change plan
               </Button>
