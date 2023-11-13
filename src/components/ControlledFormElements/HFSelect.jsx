@@ -57,6 +57,9 @@ const HFSelect = ({
               error={error}
               inputProps={{ placeholder }}
               renderValue={(selected) => {
+                if (name === 'period') {
+                  return `${selected} ${selected === 1 ? 'month' : 'months'}`
+                }
                 if (name === 'dashboardPool') {
                   const selectedOption = options.find(
                     (option) => option.value === selected

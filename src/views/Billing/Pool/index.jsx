@@ -39,7 +39,7 @@ const months = [
     value: 1
   },
   {
-    label: '2 month',
+    label: '2 months',
     value: 2
   }
 ]

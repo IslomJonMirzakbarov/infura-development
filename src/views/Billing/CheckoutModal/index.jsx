@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react'
 import { formatNumberWithCommas } from 'utils/utilFuncs'
 
 const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
-  console.log('formData: ', formData)
   const [price, setPrice] = useState(null)
 
   const handlePrice = async () => {
