@@ -25,12 +25,12 @@ export default function Header({ title }) {
         <div className={styles.walletTxt}>
           <h4>My Account</h4>
           <div>
-            <p>abcd@gmail.com</p>
+            <p>{userData?.email}</p>
             <Tooltip
               title={copied ? 'Copied!' : 'Copy to clipboard'}
               placement='top-start'
             >
-              <CopyIcon onClick={() => handleCopy('abcd@gmail.com')} />
+              <CopyIcon onClick={() => handleCopy(userData?.email)} />
             </Tooltip>
           </div>
           <div>

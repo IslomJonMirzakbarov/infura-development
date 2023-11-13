@@ -24,9 +24,9 @@
     align-items: center;
     justify-content: center;
     gap: 16px;
-    width: 280px;
     height: 100%;
     z-index: 3;
+    padding-left: 35px;
 
     .logoContainer {
       width: 71.193px;
@@ -64,38 +64,6 @@
           cursor: pointer;
         }
       }
-    }
-  }
-
-  .svgsContainer {
-    width: calc(100% - 280px);
-    height: 100%;
-    z-index: 1;
-    position: relative;
-
-    .headerDots {
-      position: absolute;
-      left: 0;
-      top: 3px;
-    }
-
-    .headerGlobusS {
-      position: absolute;
-      right: 350px;
-      bottom: 15px;
-    }
-
-    .headerGlobusM {
-      position: absolute;
-      right: 188px;
-      top: -1px;
-    }
-
-    .headerGlobusL {
-      position: absolute;
-      right: 0px;
-      bottom: -10px;
-      rotate: -90deg;
     }
   }
 }
