@@ -99,7 +99,7 @@ const ProfileDetails = () => {
               <HFTextField
                 control={control}
                 name='price'
-                label='Pool price'
+                label='Pool price in CYCON'
                 fullWidth
                 value={
                   isLoading ? '' : `${formatNumberWithCommas(data?.price)}`

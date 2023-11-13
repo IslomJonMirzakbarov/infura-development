@@ -40,9 +40,8 @@ const ConfirmSubscription = () => {
         setPoolAddress(res?.access_token?.token)
         poolStore.addPool({ id: res?.id, token: res?.access_token?.token })
         const items = [...poolStore.billingItems]
-        items[0].isCurrentPlan = true
-        items[0].disabled = true
         poolStore.changeBillingItems(items)
+        poolStore.setSelected(true)
         toggle()
         setOpen2(false)
       }
@@ -114,7 +113,7 @@ const ConfirmSubscription = () => {
               <HFTextField
                 control={control}
                 name='pool_price'
-                label='Pool price'
+                label='Pool price in CYCON'
                 placeholder='Enter pool price'
                 fullWidth
                 disabled

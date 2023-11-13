@@ -3,25 +3,13 @@ import BillingCard from 'components/BillingCard'
 import React from 'react'
 import poolStore from 'store/pool.store'
 
-// const items = [
-//   {
-//     name: 'Free',
-//     price: 0,
-//     storage: '100 GB',
-//     gatewayCount: 1,
-//     replication: 1,
-//     isFree: true
-//   },
-//   {
-//     name: 'Enterprise',
-//     text: 'This plan is custom plan for who wants to offer custom packaging. Feel free to contact us.',
-//     priceText: 'Get apersonalized plan',
-//     isEnterprise: true
-//   }
-// ]
-
 const CardsContainer = ({ onSelect }) => {
+  const isSelected = poolStore.isSelected
   const items = poolStore.billingItems
+  if (isSelected) {
+    items[0].isCurrentPlan = true
+    items[0].disabled = true
+  }
   return (
     <>
       <Grid container spacing={2}>

@@ -7,7 +7,7 @@ class Store {
 
     makePersistable(this, {
       name: 'poolStore',
-      properties: ['pools'],
+      properties: ['pools', 'isSelected'],
       storage: window.localStorage
     })
   }
@@ -30,9 +30,13 @@ class Store {
     }
   ]
   pools = []
+  isSelected = false
 
   addPool(value) {
     this.pools.push(value)
+  }
+  setSelected(value) {
+    this.isSelected = value
   }
   changeBillingItems(value) {
     this.billingItems = value
