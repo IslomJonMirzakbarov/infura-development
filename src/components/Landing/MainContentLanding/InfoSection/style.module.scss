@@ -26,12 +26,17 @@
       gap: 50px;
 
       li {
+        transition: color 0.1s ease, transform 0.1s ease;
         color: #fff;
         font-size: 15px;
         font-style: normal;
         font-weight: 700;
         line-height: normal;
         cursor: pointer;
+
+        &:hover {
+          color: var(--main, #27e6d6);
+        }
       }
 
       .activeOption {

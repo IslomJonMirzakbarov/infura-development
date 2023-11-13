@@ -36,7 +36,7 @@ const optionsData = {
 const InfoSection = () => {
   const [selectedOption, setSelectedOption] = useState(optionsData.worldwide)
 
-  const handleOptionClick = (optionKey) => {
+  const handleOptionHover = (optionKey) => {
     setSelectedOption(optionsData[optionKey])
   }
   return (
@@ -68,7 +68,7 @@ const InfoSection = () => {
             {Object.keys(optionsData).map((key) => (
               <li
                 key={key}
-                onClick={() => handleOptionClick(key)}
+                onMouseEnter={() => handleOptionHover(key)}
                 className={
                   selectedOption.title === optionsData[key].title
                     ? styles.activeOption
