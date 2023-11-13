@@ -10,5 +10,8 @@ export function truncateJWT(token, length) {
 }
 
 export const formatNumberWithCommas = (x) => {
+  if (x === null || x === undefined) {
+    return ''
+  }
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 }
