@@ -6,6 +6,8 @@ import styles from './style.module.scss'
 import Container from 'components/Container'
 import Product from 'components/Product'
 import { useGetPools } from 'services/pool.service'
+import { useEffect } from 'react'
+import poolStore from 'store/pool.store'
 
 export default function Profile({
   downloadData,
@@ -17,6 +19,13 @@ export default function Profile({
   setViewTable
 }) {
   const { data: pools, isLoading, error } = useGetPools()
+  const poolCount = pools?.payload?.count
+  useEffect(() => {
+    poolStore.setPoolCount(poolCount)
+    if (poolCount === 0) {
+      poolStore.setSelected(false)
+    }
+  }, [])
   console.log('pools: ', pools)
   return (
     <>

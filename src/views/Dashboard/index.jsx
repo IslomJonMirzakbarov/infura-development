@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Container from 'components/Container'
 import styles from './style.module.scss'
 import { Box, Button, Typography } from '@mui/material'
@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import DashboardBarChart from 'components/BarChart'
 import { useNavigate } from 'react-router-dom'
 import { useGetPoolById, useGetPools } from 'services/pool.service'
+import poolStore from 'store/pool.store'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -38,6 +39,14 @@ const Dashboard = () => {
     label: pool?.name,
     value: pool?.id
   }))
+
+  const poolCount = data?.payload?.count
+  useEffect(() => {
+    poolStore.setPoolCount(poolCount)
+    if (poolCount === 0) {
+      poolStore.setSelected(false)
+    }
+  }, [])
 
   if (pools) {
     pools.unshift({ label: 'ALL', value: 'ALL' })
