@@ -10,7 +10,6 @@ export default function Header({ title }) {
   const navigate = useNavigate()
   const [copied, setCopied] = useState(false)
   const userData = authStore.userData
-  console.log('userData: ', userData)
 
   const handleCopy = (tx) => {
     navigator.clipboard.writeText(tx)

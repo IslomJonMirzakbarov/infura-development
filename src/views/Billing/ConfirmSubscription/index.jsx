@@ -38,12 +38,15 @@ const ConfirmSubscription = () => {
     mutate(formData, {
       onSuccess: (res) => {
         setPoolAddress(res?.access_token?.token)
-        poolStore.addPool({ id: res?.id, token: res?.access_token?.token })
         const items = [...poolStore.billingItems]
         poolStore.changeBillingItems(items)
         poolStore.setSelected(true)
         toggle()
         setOpen2(false)
+      },
+      onError: (err) => {
+        console.log('confirmErr: ', err)
+        poolStore.setSelected(false)
       }
     })
   }

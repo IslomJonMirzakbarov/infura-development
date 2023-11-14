@@ -5,17 +5,21 @@ import poolStore from 'store/pool.store'
 
 const CardsContainer = ({ onSelect }) => {
   const { isSelected, billingItems, poolCount } = poolStore
-  const isSelectedPool = isSelected
   const items = billingItems
   const isDisabled = poolCount > 2
-  console.log('isDisabled: ', isDisabled)
-  if (isSelectedPool) {
+  if (isSelected) {
     items[0].isCurrentPlan = true
     items[0].disabled = true
+  } else {
+    items[0].isCurrentPlan = false
+    items[0].disabled = false
   }
   if (isDisabled) {
     items[0].disabled = true
     items[1].disabled = true
+  } else {
+    items[0].disabled = false
+    items[1].disabled = false
   }
   return (
     <>

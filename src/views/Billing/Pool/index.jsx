@@ -120,7 +120,6 @@ const Pool = () => {
       onSuccess: (res) => {
         console.log('res: ', res)
         setPoolAddress(res?.access_token?.token)
-        poolStore.addPool({ id: res?.id, token: res?.access_token?.token })
         setOpen2(false)
         setOpen3(true)
         queryClient.invalidateQueries('pools')

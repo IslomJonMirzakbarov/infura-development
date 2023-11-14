@@ -17,8 +17,12 @@ export const usePoolCreateMutation = (mutationSettings) => {
 export const useGetPools = (mutationSettings) => {
   return useQuery('pools', poolService.getPools, mutationSettings)
 }
-export const useGetPoolById = ({ id }) => {
+export const useGetPoolById = ({ id, enabled = true }) => {
   return useQuery(`get-pool-${id}`, () => poolService.getPoolById(id), {
-    enabled: !!id
+    enabled: enabled && !!id
   })
+}
+
+export const useConditionalPoolById = (id) => {
+  return useGetPoolById({ id, enabled: id !== 'ALL' })
 }
