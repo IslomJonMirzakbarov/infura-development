@@ -5,7 +5,10 @@ const useWallet = () => {
     if (typeof window.ethereum !== 'undefined') {
       return await getAccount(type)
     } else {
-      //window.open(process.env.REACT_APP_METAMASK_DOWNLOAD_URL, '_blank')
+      window.open(
+        'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
+        '_blank'
+      )
     }
   }
 
