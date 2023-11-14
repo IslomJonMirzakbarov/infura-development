@@ -10,7 +10,7 @@
     .list {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      background-color: #fff;
+      background-color: var(--base-white);
       border-radius: 7px;
       border: 1px solid #e9e9e9;
       .item {
@@ -65,7 +65,7 @@
         .desc {
           height: 131px;
           padding: 7px 40px 22px 11px;
-          background-color: #fff;
+          background-color: var(--base-white);
           color: #7d8890;
           border-radius: 7px;
           margin-top: 4px;
@@ -96,7 +96,7 @@
           padding: 6px 16px;
           @include align-items-center;
           justify-content: space-between;
-          background-color: #fff;
+          background-color: var(--base-white);
           p {
             font-weight: 500;
             font-size: 13px;

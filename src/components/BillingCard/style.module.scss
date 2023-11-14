@@ -18,7 +18,7 @@
   }
 
   .priceText {
-    color: #fff;
+    color: var(--base-white);
     font-size: 22px;
     font-weight: 700;
     line-height: 23px;
@@ -30,14 +30,14 @@
     font-size: 15px;
     font-style: normal;
     font-weight: 700;
-    color: #fff;
+    color: var(--base-white);
   }
 
   .price {
     font-size: 45px;
     font-style: normal;
     font-weight: 600;
-    color: #fff;
+    color: var(--base-white);
   }
 
   .month {
@@ -57,7 +57,7 @@
       font-size: 13px;
       font-style: normal;
       font-weight: 500;
-      color: #fff;
+      color: var(--base-white);
       display: flex;
       align-items: center;
       margin: 5px 0;
@@ -66,7 +66,7 @@
         width: 15px;
         height: 15px;
         margin-right: 5px;
-        color: #27e6d6;
+        color: var(--main);
       }
     }
   }
@@ -81,7 +81,7 @@
   &.isEnterprise {
     border-radius: 10px;
     border: 1.3px solid #fff;
-    background-color: #27e6d6;
+    background-color: var(--main);
     .title {
       color: #000;
     }
@@ -95,24 +95,24 @@
 
   // button:active div {
   //   background-color: var(--primary-color) !important;
-  //   color: #fff;
+  //   color: var(--base-white);
   // }
 
   // &:active,
   // &.currentPlan {
   //   background-color: var(--primary-color);
-  //   color: #fff;
+  //   color: var(--base-white);
 
   //   .title,
   //   .month,
   //   .price,
   //   .item {
-  //     color: #fff;
+  //     color: var(--base-white);
   //   }
   // }
 
   // &.disabled {
-  //   background-color: #fff;
+  //   background-color: var(--base-white);
 
   //   &::after {
   //     content: '';

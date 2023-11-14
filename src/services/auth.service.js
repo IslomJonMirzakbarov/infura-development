@@ -6,6 +6,7 @@ const authService = {
   logout: async (data) => httpRequest.post('api/v1/auth/logout', data),
   register: async (data) => httpRequest.post('api/v1/auth/register', data),
   confirmCode: async (data) => httpRequest.post('api/v1/auth/confirm', data),
+  resend: async (data) => httpRequest.post('api/v1/auth/resend-otp', data),
   forgotPassword: async (data) =>
     httpRequest.post('api/v1/auth/reset-password', data),
   resetPassword: async (data) =>
@@ -34,4 +35,8 @@ export const useForgotPasswordMutation = (mutationSettings) => {
 
 export const useResetPasswordMutation = (mutationSettings) => {
   return useMutation(authService.resetPassword, mutationSettings)
+}
+
+export const useResendSms = (mutationSettings) => {
+  return useMutation(authService.resend, mutationSettings)
 }

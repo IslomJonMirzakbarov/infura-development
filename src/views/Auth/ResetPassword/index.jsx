@@ -16,8 +16,8 @@ const ResetPassword = () => {
     mutate(data, {
       onSuccess: () => {
         toast.success('We sent a token to your email to reset your password.', {
-  duration: 5000, // 5 seconds
-})
+          duration: 5000 // 5 seconds
+        })
       }
     })
   }

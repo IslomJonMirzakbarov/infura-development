@@ -15,7 +15,7 @@
       background: #0e42e5 !important;
 
       svg {
-        color: #fff;
+        color: var(--base-white);
       }
 
       &.simple {
@@ -25,7 +25,7 @@
       }
 
       span {
-        color: #fff;
+        color: var(--base-white);
       }
     }
   }
@@ -38,7 +38,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff;
+    background-color: var(--base-white);
     color: #000;
     border-radius: 6px;
     padding: 10px;
@@ -52,7 +52,7 @@
 
     &.hasValue {
       background-color: #151c52;
-      color: #fff;
+      color: var(--base-white);
     }
 
     &.simple {
@@ -90,7 +90,7 @@
 
     &.dark {
       background-color: #000;
-      color: #fff;
+      color: var(--base-white);
     }
 
     span {
