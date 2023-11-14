@@ -5,11 +5,13 @@ import CardsContainer from './CardsContainer'
 import GatewayModal from './GatewayModal'
 import { useNavigate } from 'react-router-dom'
 import { usePoolCheckMutation } from 'services/pool.service'
+import walletStore from 'store/wallet.store'
 
 const Billing = () => {
   const { control, handleSubmit, clearErrors } = useForm()
   const { mutate } = usePoolCheckMutation()
   const navigate = useNavigate()
+  const walletAddress = walletStore.address
   const [open, setOpen] = useState(false)
   const [item, setItem] = useState(null)
   const [success, setSuccess] = useState(null)
@@ -22,8 +24,10 @@ const Billing = () => {
 
   const onSelect = (data) => {
     console.log('data: ', data.name)
-    if (data.name === 'Enterprise') {
+    if (data.name === 'Enterprise' && walletAddress) {
       navigate('/main/billing/pool')
+    } else if (data.name === 'Enterprise' && !walletAddress) {
+      navigate('/main/billing/connect')
     } else {
       setItem(data)
       toggle()

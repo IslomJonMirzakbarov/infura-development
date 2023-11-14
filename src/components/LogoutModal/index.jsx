@@ -3,6 +3,7 @@ import { Box, Button, Typography } from '@mui/material'
 import { useLogoutMutation } from 'services/auth.service'
 import authStore from 'store/auth.store'
 import { LoadingButton } from '@mui/lab'
+import walletStore from 'store/wallet.store'
 
 export default function LogoutModal({ toggle }) {
   const { mutate, isLoading } = useLogoutMutation()
@@ -16,6 +17,7 @@ export default function LogoutModal({ toggle }) {
       {
         onSuccess: () => {
           authStore.logout()
+          walletStore.logout()
           toggle()
         }
       }

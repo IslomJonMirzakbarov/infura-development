@@ -5,11 +5,14 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import headerBg from 'assets/images/profile/header_bg_m.png'
 import authStore from 'store/auth.store'
+import walletStore from 'store/wallet.store'
+import { truncateWalletAddress } from 'utils/utilFuncs'
 
 export default function Header({ title }) {
   const navigate = useNavigate()
   const [copied, setCopied] = useState(false)
   const userData = authStore.userData
+  const walletAddress = walletStore.address
 
   const handleCopy = (tx) => {
     navigator.clipboard.writeText(tx)
@@ -32,15 +35,17 @@ export default function Header({ title }) {
               <CopyIcon onClick={() => handleCopy(userData?.email)} />
             </Tooltip>
           </div>
-          <div>
-            <p>0x45c5…e79e</p>
-            <Tooltip
-              title={copied ? 'Copied!' : 'Copy to clipboard'}
-              placement='top-start'
-            >
-              <CopyIcon onClick={() => handleCopy('0x45c5…e79e')} />
-            </Tooltip>
-          </div>
+          {walletAddress && (
+            <div>
+              <p>{truncateWalletAddress(walletAddress)}</p>
+              <Tooltip
+                title={copied ? 'Copied!' : 'Copy to clipboard'}
+                placement='top-start'
+              >
+                <CopyIcon onClick={() => handleCopy(walletAddress)} />
+              </Tooltip>
+            </div>
+          )}
         </div>
       </div>
     </header>
