@@ -5,13 +5,14 @@ import { useForm } from 'react-hook-form'
 import { useConfirmCodeMutation, useResendSms } from 'services/auth.service'
 import { LoadingButton } from '@mui/lab'
 import toast from 'react-hot-toast'
+import { CircularProgress } from '@mui/material'
 
 const ConfirmationCode = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm()
   const { mutate, isLoading } = useConfirmCodeMutation()
-  const { mutate: resend } = useResendSms()
+  const { mutate: resend, isLoading: isLoader } = useResendSms()
 
   const onSubmit = (data) => {
     mutate(
@@ -36,7 +37,9 @@ const ConfirmationCode = () => {
       },
       {
         onSuccess: () => {
-          toast.success('We sent an OTP to your email for verification.')
+          toast.success('We sent an OTP to your email for verification.', {
+            duration: 6000
+          })
         }
       }
     )
@@ -56,7 +59,14 @@ const ConfirmationCode = () => {
       />
       <div className={styles.resend}>
         <p>
-          Didn’t receive a code? <a onClick={onResend}>Resend</a>
+          Didn’t receive a code?{' '}
+          <span>
+            {isLoader ? (
+              <CircularProgress size='15px' color='inherit' />
+            ) : (
+              <a onClick={onResend}>Resend</a>
+            )}
+          </span>
         </p>
       </div>
       <LoadingButton
