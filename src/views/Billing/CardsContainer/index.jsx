@@ -7,16 +7,23 @@ const CardsContainer = ({ onSelect }) => {
   const { isSelected, billingItems, poolCount } = poolStore
   const items = billingItems
   const isDisabled = poolCount > 2
-  if (isSelected) {
+
+  if (isDisabled && isSelected) {
     items[0].isCurrentPlan = true
     items[0].disabled = true
-  } else {
+    items[1].disabled = true
+  } else if (!isDisabled && isSelected) {
+    items[0].isCurrentPlan = true
+    items[0].disabled = true
+    items[1].disabled = false
+  } else if (isDisabled && !isSelected) {
     items[0].isCurrentPlan = false
-    items[0].disabled = false
-  }
-  if (isDisabled) {
     items[0].disabled = true
     items[1].disabled = true
+  } else if (!isDisabled && !isSelected) {
+    items[0].isCurrentPlan = false
+    items[0].disabled = false
+    items[1].disabled = false
   }
   return (
     <>
