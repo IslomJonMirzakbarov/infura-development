@@ -14,8 +14,6 @@ import {
 } from 'services/pool.service'
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
-import { truncateJWT } from 'utils/utilFuncs'
-import poolStore from 'store/pool.store'
 import useDebounce from 'hooks/useDebounce'
 const sizes = [
   {
@@ -151,6 +149,7 @@ const Pool = () => {
                   placeholder='Enter pool name'
                   required={!propError}
                   fullWidth
+                  minLength={5}
                 />
                 {propError && (
                   <p

@@ -28,7 +28,8 @@ const HFTextField = ({
   withCopy,
   withRegenerate,
   readOnly = false,
-  setError,
+  serverError,
+  setServerError,
   ...props
 }) => {
   const { value, disabled, placeholder } = props
@@ -96,7 +97,9 @@ const HFTextField = ({
               value={value}
               onChange={(e) => {
                 onChange(e.target.value)
-                setError(null)
+                if (serverError && name === 'name') {
+                  setServerError(null)
+                }
               }}
               name={name}
               error={error}

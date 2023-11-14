@@ -17,9 +17,6 @@ const CardsContainer = ({ onSelect }) => {
   if (isDisabled) {
     items[0].disabled = true
     items[1].disabled = true
-  } else {
-    items[0].disabled = false
-    items[1].disabled = false
   }
   return (
     <>

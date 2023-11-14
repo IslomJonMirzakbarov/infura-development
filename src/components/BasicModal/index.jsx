@@ -3,6 +3,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import { Box, Button, Modal } from '@mui/material'
 import styles from './style.module.scss'
 import classNames from 'classnames'
+import { LoadingButton } from '@mui/lab'
 
 const BasicModal = ({
   open,
@@ -43,14 +44,15 @@ const BasicModal = ({
               <div />
             )}
             {!isLoader && (
-              <Button
-                disabled={isLoading}
+              <LoadingButton
+                type='submit'
                 variant='contained'
                 color='primary'
+                loading={isLoading}
                 onClick={onSubmit}
               >
                 {submitLabel}
-              </Button>
+              </LoadingButton>
             )}
           </Box>
         )}

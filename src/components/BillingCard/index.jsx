@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import React from 'react'
 import styles from './style.module.scss'
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
 import classNames from 'classnames'
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded'
 
@@ -48,7 +47,7 @@ const BillingCard = ({ onSelect, item, isFree }) => {
         {item.isEnterprise
           ? 'Customize'
           : item.isCurrentPlan
-          ? 'Selected plan'
+          ? 'Selected Plan'
           : 'Select'}
       </Button>
     </Box>

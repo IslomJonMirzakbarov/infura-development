@@ -7,13 +7,13 @@ import { useNavigate } from 'react-router-dom'
 import { usePoolCheckMutation } from 'services/pool.service'
 
 const Billing = () => {
-  const { control, handleSubmit } = useForm()
+  const { control, handleSubmit, clearErrors } = useForm()
   const { mutate } = usePoolCheckMutation()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
   const [item, setItem] = useState(null)
   const [success, setSuccess] = useState(null)
-  const [error, setError] = useState(null)
+  const [serverError, setServerError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
 
   const toggle = () => {
@@ -49,7 +49,7 @@ const Billing = () => {
       },
       onError: (error) => {
         setIsLoading(false)
-        setError(error?.data?.message)
+        setServerError(error?.data?.message)
       }
     })
   }
@@ -57,7 +57,7 @@ const Billing = () => {
   return (
     <Container maxWidth={true}>
       <GatewayModal
-        error={error}
+        serverError={serverError}
         open={open}
         cancelLabel='Cancel'
         submitLabel='Continue'
@@ -65,7 +65,7 @@ const Billing = () => {
         onSubmit={handleSubmit(onSubmit)}
         control={control}
         isLoading={isLoading}
-        setError={setError}
+        setServerError={setServerError}
       />
       <CardsContainer onSelect={onSelect} />
     </Container>

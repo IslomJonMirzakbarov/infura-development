@@ -7,11 +7,10 @@ const GatewayModal = ({
   toggle,
   onSubmit,
   control,
-  error,
   isLoading,
-  setError
+  serverError,
+  setServerError
 }) => {
-  console.log('error: ', error)
   return (
     <BasicModal
       open={open}
@@ -29,13 +28,14 @@ const GatewayModal = ({
           control={control}
           placeholder='Enter pool name'
           fullWidth
-          required={!error}
+          required={!serverError}
           color='secondary'
-          minLength={!error ? 5 : 0}
-          setError={setError}
+          minLength={!serverError ? 5 : 0}
+          serverError={serverError}
+          setServerError={setServerError}
         />
 
-        {error && (
+        {serverError && (
           <p
             style={{
               color: 'red',
@@ -43,7 +43,7 @@ const GatewayModal = ({
               fontSize: '14px'
             }}
           >
-            {error}
+            {serverError}
           </p>
         )}
 
