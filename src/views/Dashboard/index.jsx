@@ -6,7 +6,11 @@ import HFSelect from 'components/ControlledFormElements/HFSelect'
 import { useForm } from 'react-hook-form'
 import DashboardBarChart from 'components/BarChart'
 import { useNavigate } from 'react-router-dom'
-import { useGetPoolById, useGetPools } from 'services/pool.service'
+import {
+  useConditionalPoolById,
+  useGetPoolById,
+  useGetPools
+} from 'services/pool.service'
 import poolStore from 'store/pool.store'
 
 const Dashboard = () => {
@@ -20,10 +24,8 @@ const Dashboard = () => {
   const selectedPoolId = watch('dashboardPool')
 
   const { data, isLoading, error } = useGetPools()
-  const { data: poolData, isLoading: isPoolLoading } = useGetPoolById({
-    id: selectedPoolId
-  })
-  console.log('pools: ', data)
+  const { data: poolData, isLoading: isPoolLoading } =
+    useConditionalPoolById(selectedPoolId)
 
   const poolInfo = {
     PoolSize:
@@ -35,22 +37,28 @@ const Dashboard = () => {
     UploadedFiles: '12'
   }
 
-  const pools = data?.payload?.pools?.map((pool) => ({
-    label: pool?.name,
-    value: pool?.id
-  }))
-
   const poolCount = data?.payload?.count
+  let pools = [{ label: poolCount === 0 ? '0' : 'ALL', value: 'ALL' }]
+
+  const freePool = data?.payload?.pools?.find((pool) => pool.price === 'free')
   useEffect(() => {
     poolStore.setPoolCount(poolCount)
-    if (poolCount === 0) {
+    if (freePool) {
+      poolStore.setSelected(true)
+    } else {
       poolStore.setSelected(false)
     }
-  }, [])
+  }, [freePool, poolCount])
 
-  if (pools) {
-    pools.unshift({ label: 'ALL', value: 'ALL' })
+  if (data?.payload?.pools) {
+    pools = pools.concat(
+      data.payload.pools.map((pool) => ({
+        label: pool.name,
+        value: pool.id
+      }))
+    )
   }
+  const isSelectDisabled = pools[0].label === '0'
 
   const infoBoxes = Object.entries(poolInfo).map(([key, value]) => (
     <Typography key={key} fontSize={12} fontWeight={700} color='#fff'>
@@ -88,6 +96,7 @@ const Dashboard = () => {
             required
             style={{ width: '222px' }}
             options={pools}
+            disabled={isSelectDisabled}
           />
 
           <Typography color='#fff' fontSize={13} fontWeight={500} mt={4}>

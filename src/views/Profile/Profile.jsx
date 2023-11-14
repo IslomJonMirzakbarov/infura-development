@@ -19,14 +19,17 @@ export default function Profile({
   setViewTable
 }) {
   const { data: pools, isLoading, error } = useGetPools()
+  const freePool = pools?.payload?.pools?.find((pool) => pool.price === 'free')
   const poolCount = pools?.payload?.count
   useEffect(() => {
     poolStore.setPoolCount(poolCount)
-    if (poolCount === 0) {
+    if (freePool) {
+      poolStore.setSelected(true)
+    } else {
       poolStore.setSelected(false)
     }
-  }, [])
-  console.log('pools: ', pools)
+  }, [freePool, poolCount])
+
   return (
     <>
       <Header title='Profile' />
