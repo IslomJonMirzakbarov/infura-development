@@ -1,41 +1,54 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useMutation, useQuery } from 'react-query';
-
-const { api } = window;
+import walletStore from 'store/wallet.store'
 
 const useWallet = () => {
-  const [mnemonics, setMnemonics] = useState();
+  const connectWallet = async (type) => {
+    if (typeof window.ethereum !== 'undefined') {
+      return await getAccount(type)
+    } else {
+      //window.open(process.env.REACT_APP_METAMASK_DOWNLOAD_URL, '_blank')
+    }
+  }
 
-  const { data: result } = useQuery('GENERATE_MNEMONICS', async () => {
-    const data = await api.generateMnemonics();
+  const getAccountsByType = async (walletType) => {
+    let accounts
 
-    return data;
-  });
+    try {
+      if (walletType === 'metamask')
+        accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts'
+        })
+      if (walletType === 'kaikas') accounts = await window.klaytn.enable()
 
-  useEffect(() => {
-    if (!mnemonics) setMnemonics(result);
-  }, [result]);
+      return accounts
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-  const { mutate: createWallet } = useMutation(async (mnmcs) => {
-    const data = await api.createWalletAddress(mnmcs);
+  const getAccount = async (type) => {
+    try {
+      const accounts = await getAccountsByType(type)
+      const account = accounts[0]
 
-    return data;
-  });
+      walletStore.setWallet({
+        type,
+        address: account
+      })
+      return true
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
-  const { mutate: createWalletByPrivateKey } = useMutation(async (privKey) => {
-    const data = await api.importAccountByPrivateKey(privKey);
-
-    return data;
-  });
-
-  const normalized = useMemo(() => mnemonics?.data.split(' '), [mnemonics]);
+  const hanldeLogout = () => {
+    walletStore.logout()
+    setTimeout(() => window.location.replace('/main/billing/connect'), 300)
+  }
 
   return {
-    mnemonics: normalized,
-    stringifiedMnemonics: mnemonics?.data,
-    createWallet,
-    createWalletByPrivateKey
-  };
-};
+    connectWallet,
+    hanldeLogout
+  }
+}
 
-export default useWallet;
+export default useWallet

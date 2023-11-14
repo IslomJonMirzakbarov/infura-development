@@ -1,0 +1,18 @@
+@import 'styles/unit';
+
+.popover {
+  width: 193px;
+  .item {
+    @include align-items-center;
+    column-gap: 7px;
+    padding: 14.5px 10px;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 21px;
+    color: #fff;
+    background: #1d1d41;
+    border: 1px solid #4d5377;
+    border-radius: 7px;
+  }
+}
