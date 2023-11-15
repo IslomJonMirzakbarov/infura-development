@@ -8,6 +8,8 @@ import styles from './styles.module.scss'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
 import { formatNumberWithCommas } from 'utils/utilFuncs'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
 // import poolStore from 'store/pool.store'
 // const sizes = [
 //   {
@@ -54,7 +56,7 @@ const ProfileDetails = () => {
               Details
             </Typography>
             <div className={styles.elements}>
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='name'
                 label='Pool name'
@@ -64,7 +66,7 @@ const ProfileDetails = () => {
                 readOnly={true}
                 disabled
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='size'
                 label='Pool size'
@@ -76,7 +78,7 @@ const ProfileDetails = () => {
                 readOnly={true}
                 disabled
               />
-              <HFTextField
+              <CopyField
                 control={control}
                 name='gateway'
                 label='Gateway'
@@ -86,7 +88,7 @@ const ProfileDetails = () => {
                 readOnly={true}
                 disabled
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='replication'
                 type='number'
@@ -96,7 +98,7 @@ const ProfileDetails = () => {
                 readOnly={true}
                 disabled
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='price'
                 label='Pool price in CYCON'

@@ -6,6 +6,7 @@ import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
 import { useForgotPasswordMutation } from 'services/auth.service'
 import toast from 'react-hot-toast'
 import { LoadingButton } from '@mui/lab'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 
 const ResetPassword = () => {
   const navigate = useNavigate()
@@ -28,7 +29,7 @@ const ResetPassword = () => {
       <p className={styles.text}>
         Enter your email address below and we will send you a reset link
       </p>
-      <HFTextField
+      <BasicTextField
         fullWidth
         name='email'
         label='ID Email'

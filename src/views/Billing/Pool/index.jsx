@@ -1,6 +1,5 @@
 import { Box, Button, Typography } from '@mui/material'
 import Container from 'components/Container'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
@@ -15,6 +14,7 @@ import {
 import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 import useDebounce from 'hooks/useDebounce'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 const sizes = [
   {
     label: '20',
@@ -142,7 +142,7 @@ const Pool = () => {
             </Typography>
             <div className={styles.elements}>
               <div>
-                <HFTextField
+                <BasicTextField
                   control={control}
                   name='name'
                   label='Pool name'
@@ -165,7 +165,7 @@ const Pool = () => {
                 )}
               </div>
               <div style={{ display: 'flex', gap: '6px' }}>
-                <HFTextField
+                <BasicTextField
                   control={control}
                   name='size'
                   label='Pool size'
@@ -203,7 +203,7 @@ const Pool = () => {
                 options={months}
               />
 
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='price'
                 type='number'

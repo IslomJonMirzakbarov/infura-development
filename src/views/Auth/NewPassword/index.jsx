@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import { useResetPasswordMutation } from 'services/auth.service'
 import { LoadingButton } from '@mui/lab'
 import toast from 'react-hot-toast'
+import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 
 const NewPassword = () => {
   const navigate = useNavigate()
@@ -35,7 +36,7 @@ const NewPassword = () => {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className={styles.title}>Create a new password</h1>
-      <HFTextField
+      <PasswordField
         fullWidth
         name='new_password'
         label='New password'
@@ -51,7 +52,7 @@ const NewPassword = () => {
           }
         }}
       />
-      <HFTextField
+      <PasswordField
         fullWidth
         name='confirm_password'
         label='Confirm password'

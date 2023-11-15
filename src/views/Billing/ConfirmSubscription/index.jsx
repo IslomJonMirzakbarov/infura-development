@@ -12,6 +12,8 @@ import {
 } from 'services/pool.service'
 import poolStore from 'store/pool.store'
 import LoaderModal from '../LoaderModal'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
 
 const ConfirmSubscription = () => {
   const navigate = useNavigate()
@@ -76,7 +78,7 @@ const ConfirmSubscription = () => {
               Confirm Subscription
             </Typography>
             <div className={styles.elements}>
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='pool_name'
                 label='Pool name'
@@ -85,7 +87,7 @@ const ConfirmSubscription = () => {
                 fullWidth
                 disabled
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='pool_size'
                 label='Pool size'
@@ -95,7 +97,7 @@ const ConfirmSubscription = () => {
                 placeholder='Enter pool size'
                 disabled
               />
-              <HFTextField
+              <CopyField
                 control={control}
                 name='gateway'
                 label='Gateway'
@@ -104,7 +106,7 @@ const ConfirmSubscription = () => {
                 disabled
                 value='https://public.oceandrive.network'
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='pin_replication'
                 type='number'
@@ -113,7 +115,7 @@ const ConfirmSubscription = () => {
                 fullWidth
                 disabled
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='pool_price'
                 label='Pool price in CYCON'

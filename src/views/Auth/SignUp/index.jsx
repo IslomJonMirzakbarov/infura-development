@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form'
 import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
 import { useRegisterMutation } from 'services/auth.service'
 import { LoadingButton } from '@mui/lab'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 
 const Signup = () => {
   const navigate = useNavigate()
@@ -26,7 +28,7 @@ const Signup = () => {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className={styles.title}>Create an account</h1>
-      <HFTextField
+      <BasicTextField
         fullWidth
         name='email'
         label='ID Email'
@@ -35,7 +37,7 @@ const Signup = () => {
         required
         type='email'
       />
-      <HFTextField
+      <PasswordField
         fullWidth
         name='password'
         label='Password'
