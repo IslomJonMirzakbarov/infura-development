@@ -1,21 +1,21 @@
 export const stats = [
   {
+    statTitle: 'Connected Nodes',
+    statNum: 735,
+    statCap: 'M'
+  },
+  {
     statTitle: 'Storage Capacity',
     statNum: 1.22,
     statCap: 'Exabyte (EB)'
   },
   {
-    statTitle: 'Total Storage  Providers',
-    statNum: 372,
-    statCap: 'K'
-  },
-  {
-    statTitle: 'Total data stored',
+    statTitle: 'Stored Data ',
     statNum: 1.34,
     statCap: 'Petabyte (PB) '
   },
   {
-    statTitle: 'Total Replication',
+    statTitle: 'Created Pools',
     statNum: 456,
     statCap: 'M'
   }
