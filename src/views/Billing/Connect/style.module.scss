@@ -31,7 +31,7 @@
             transition: all 0.4s ease-in-out;
           }
           p {
-            color: #fff;
+            color: var(--base-white);
             font-size: 15px;
             font-weight: 700;
             line-height: normal;
@@ -74,7 +74,7 @@
         background: #2e303c;
         padding: 16px 42px;
         border: none;
-        color: #fff;
+        color: var(--base-white);
         font-size: 15px;
         font-weight: 600;
         line-height: normal;

@@ -24,7 +24,12 @@ const NavbarLanding = () => {
   return (
     <AppBar position='static' className={styles.navbar} elevation={0}>
       <Toolbar className={styles.navTool}>
-        <img src={OceanDriveLogo} alt='oceandrive' className={styles.logo} />
+        <img
+          src={OceanDriveLogo}
+          alt='oceandrive'
+          className={styles.logo}
+          onClick={() => navigate('/')}
+        />
         <ul className={styles.navBtnDiv}>
           <li className={styles.navBtn}>
             <NavLink>Pricing</NavLink>
@@ -52,7 +57,16 @@ const NavbarLanding = () => {
           </li>
 
           <li className={styles.navBtn}>
-            <NavLink>Why OceanDrive's INFURA</NavLink>
+            <NavLink
+              to='/why-infura'
+              style={({ isActive }) => {
+                return {
+                  color: isActive ? '#27E6D6' : ''
+                }
+              }}
+            >
+              Why OceanDrive's INFURA
+            </NavLink>
           </li>
         </ul>
 

@@ -10,13 +10,15 @@ import { LoadingButton } from '@mui/lab'
 const ResetPassword = () => {
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm({})
-  const { mutateAsync, isLoading } = useForgotPasswordMutation()
+  const { mutate, isLoading } = useForgotPasswordMutation()
 
   const onSubmit = (data) => {
-    toast.promise(mutateAsync(data), {
-      loading: 'Sending...',
-      success: <p>We sent an token to your email to reset your password.</p>,
-      error: <p>User not found</p>
+    mutate(data, {
+      onSuccess: () => {
+        toast.success('We sent a token to your email to reset your password.', {
+          duration: 5000 // 5 seconds
+        })
+      }
     })
   }
 

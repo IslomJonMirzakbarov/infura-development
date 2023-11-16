@@ -7,6 +7,7 @@ import NewPassword from 'views/Auth/NewPassword'
 import ResetPassword from 'views/Auth/ResetPassword'
 import Signup from 'views/Auth/SignUp'
 import Billing from 'views/Billing'
+import Pricing from 'views/Billing/pricing'
 import Connect from 'views/Billing/Connect'
 import Deposit from 'views/Billing/Deposit'
 import BillingContainer from 'views/Billing/index.container'
@@ -16,11 +17,23 @@ import Dashboard from 'views/Dashboard'
 import LandingPage from 'views/LandingPage'
 import ProfileContainer from 'views/Profile'
 import ConfirmSubscription from 'views/Billing/ConfirmSubscription'
+import LandingLayout from 'layouts/LandingLayout'
+import WhyInfura from 'views/WhyInfura'
 
 export const privateRoutes = [
   {
     path: '/',
-    element: <LandingPage />
+    element: <LandingLayout />,
+    children: [
+      {
+        index: true,
+        element: <LandingPage />
+      },
+      {
+        path: 'why-infura',
+        element: <WhyInfura />
+      }
+    ]
   },
   {
     path: '/main',
@@ -39,8 +52,22 @@ export const privateRoutes = [
         element: <ProfileContainer />
       },
       {
-        path: 'profile/details',
+        path: 'profile/details/:id',
         element: <ProfileDetails />
+      },
+      {
+        path: 'pricing',
+        element: <BillingContainer />,
+        children: [
+          {
+            index: true,
+            element: <Pricing />
+          },
+          {
+            path: 'confirm',
+            element: <ConfirmSubscription />
+          }
+        ]
       },
       {
         path: 'billing',
@@ -73,7 +100,7 @@ export const privateRoutes = [
   },
   {
     path: '*',
-    element: <Navigate to='/' />
+    element: <Navigate to='/main/dashboard' />
   }
 ]
 

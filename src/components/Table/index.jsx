@@ -2,6 +2,8 @@ import classNames from 'classnames'
 import CopyButton from 'components/CopyButton'
 import styles from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
+import formatTime from 'utils/formatTime'
+import { formatNumberWithCommas } from 'utils/utilFuncs'
 
 export default function Table({
   columns,
@@ -12,9 +14,9 @@ export default function Table({
 }) {
   const navigate = useNavigate()
   if (isLoading) return <></>
-  const handleRowClick = () => {
+  const handleRowClick = (id) => {
     if (name === 'profileTable') {
-      navigate('/main/profile/details')
+      navigate(`/main/profile/details/${id}`)
     }
   }
 
@@ -25,27 +27,54 @@ export default function Table({
       })}
     >
       <table border='0'>
-        <thead>
-          <tr>
-            {columns?.map((item) => (
-              <th key={item.key}>{item.title}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {data?.map((item, index) => (
-            <tr key={index} onClick={handleRowClick}>
-              {columns?.map((value) =>
-                value.key === 'id' ? (
-                  <td>
-                    <CopyButton tx={item[value.key]} />
-                  </td>
-                ) : (
-                  <td>{item[value.key]}</td>
-                )
-              )}
+        {name !== 'billingTable' && (
+          <thead>
+            <tr>
+              {columns?.map((item) => (
+                <th key={item.key}>{item.title}</th>
+              ))}
             </tr>
-          ))}
+          </thead>
+        )}
+        <tbody
+          className={classNames({
+            [styles.withBorder]: name === 'billingTable'
+          })}
+        >
+          {data?.length > 0 &&
+            data?.map((item, index) => (
+              <tr key={index} onClick={() => handleRowClick(item?.id)}>
+                {columns?.map((value) =>
+                  value.key === 'id' ? (
+                    <td>
+                      <CopyButton tx={item[value.key]} />
+                    </td>
+                  ) : value.key === 'domain' ? (
+                    <td>
+                      <div className={styles.column}>
+                        public.oceandrive.network
+                      </div>
+                    </td>
+                  ) : value.key === 'access' ? (
+                    <td>Open</td>
+                  ) : value.key === 'created_at' ? (
+                    <td>{formatTime(item['updated_at'])}</td>
+                  ) : value.key === 'price' ? (
+                    <td
+                      title={
+                        item[value.key] !== 'free'
+                          ? formatNumberWithCommas(item[value.key])
+                          : ''
+                      }
+                    >
+                      {item[value.key] === 'free' ? 'Free' : 'Paid'}
+                    </td>
+                  ) : (
+                    <td>{item[value.key]}</td>
+                  )
+                )}
+              </tr>
+            ))}
         </tbody>
       </table>
     </div>

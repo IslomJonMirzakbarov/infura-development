@@ -1,0 +1,54 @@
+.whyInfuraContainer {
+  padding: 75px;
+}
+
+.mainGrid {
+  max-width: 100%;
+}
+
+.title {
+  color: var(--base-white);
+  font-size: 70px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 80px; /* 114.286% */
+  margin-bottom: 64px !important;
+
+  span {
+    color: var(--main, #27e6d6);
+  }
+}
+
+.contentSection {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr);
+  column-gap: 57px;
+  row-gap: 54px;
+
+  .paper {
+    background-color: #141332;
+    border: none;
+    box-shadow: none;
+    padding-right: 80px;
+
+    svg {
+      margin-bottom: 6px;
+    }
+
+    .heading {
+      color: var(--base-white);
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+
+    .bodyText {
+      color: var(--base-white);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 275;
+      line-height: normal;
+    }
+  }
+}

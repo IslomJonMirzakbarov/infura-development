@@ -1,0 +1,58 @@
+.billingContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 34px;
+}
+
+.paper {
+  background: #141332 !important;
+  padding: 20px;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.planBox {
+  height: 104.692px;
+  border-radius: 10px;
+  background: #1d1d41;
+  padding: 11px;
+
+  .subtitle1 {
+    color: var(--main, #27e6d6);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-bottom: 5px;
+  }
+
+  .h5 {
+    color: var(--base-white);
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-bottom: 5px;
+  }
+
+  .body2 {
+    color: var(--base-white);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+}
+
+.title {
+  color: var(--base-white);
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  margin-bottom: 15px;
+}
+
+.title1 {
+  margin-bottom: 22px !important;
+}

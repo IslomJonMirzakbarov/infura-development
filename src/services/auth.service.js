@@ -3,14 +3,22 @@ import httpRequest from './httpRequest'
 
 const authService = {
   login: async (data) => httpRequest.post('api/v1/auth/login', data),
+  logout: async (data) => httpRequest.post('api/v1/auth/logout', data),
   register: async (data) => httpRequest.post('api/v1/auth/register', data),
   confirmCode: async (data) => httpRequest.post('api/v1/auth/confirm', data),
+  resend: async (data) => httpRequest.post('api/v1/auth/resend-otp', data),
   forgotPassword: async (data) =>
-    httpRequest.post('api/v1/auth/forgot-password', data)
+    httpRequest.post('api/v1/auth/reset-password', data),
+  resetPassword: async (data) =>
+    httpRequest.patch('api/v1/auth/reset-password', data)
 }
 
 export const useLoginMutation = (mutationSettings) => {
   return useMutation(authService.login, mutationSettings)
+}
+
+export const useLogoutMutation = (mutationSettings) => {
+  return useMutation(authService.logout, mutationSettings)
 }
 
 export const useRegisterMutation = (mutationSettings) => {
@@ -23,4 +31,12 @@ export const useConfirmCodeMutation = (mutationSettings) => {
 
 export const useForgotPasswordMutation = (mutationSettings) => {
   return useMutation(authService.forgotPassword, mutationSettings)
+}
+
+export const useResetPasswordMutation = (mutationSettings) => {
+  return useMutation(authService.resetPassword, mutationSettings)
+}
+
+export const useResendSms = (mutationSettings) => {
+  return useMutation(authService.resend, mutationSettings)
 }

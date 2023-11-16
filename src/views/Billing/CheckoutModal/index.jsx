@@ -1,8 +1,33 @@
 import { Box, Button } from '@mui/material'
 import BasicModal from 'components/BasicModal'
 import styles from './style.module.scss'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { formatNumberWithCommas } from 'utils/utilFuncs'
 
-const CheckoutModal = ({ open, toggle, onSubmit }) => {
+const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
+  const [price, setPrice] = useState(null)
+
+  const handlePrice = async () => {
+    try {
+      const res = await axios.get(
+        'https://mainnetapi.dexpo.world/api/home/conPrice'
+      )
+      if (res?.data) {
+        // dispatch(setPriceeUSD(res?.data.data?.price_usd))
+        // dispatch(setPriceKrw(res?.data.data?.price_krw))
+        console.log('price: ', res?.data.data?.price_krw)
+        setPrice(res?.data.data?.price_krw)
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  useEffect(() => {
+    handlePrice()
+  }, [])
+
   return (
     <BasicModal
       open={open}
@@ -19,19 +44,24 @@ const CheckoutModal = ({ open, toggle, onSubmit }) => {
         <div className={styles.items}>
           <div className={styles.item}>
             <p>Pool Name</p>
-            <p>DEXPO</p>
+            <p>{formData?.pool_name}</p>
           </div>
           <div className={styles.item}>
             <p>Pool Size</p>
-            <p>10 TB</p>
+            <p>
+              {formData?.pool_size?.value} {formData?.pool_size?.unit}
+            </p>
           </div>
           <div className={styles.item}>
             <p>Pin Replication</p>
-            <p>10</p>
+            <p>{formData?.pin_replication}</p>
           </div>
           <div className={styles.item}>
             <p>Period</p>
-            <p>2 months</p>
+            <p>
+              {formData?.pool_period}{' '}
+              {formData?.pool_period === 1 ? 'month' : 'months'}
+            </p>
           </div>
         </div>
         <Box
@@ -41,8 +71,14 @@ const CheckoutModal = ({ open, toggle, onSubmit }) => {
         >
           <p className={styles.price}>Estimated Pool Price</p>
           <Box className={styles.cycon}>
-            <p>100,000 CYCON</p>
-            <p> 560,000원</p>
+            <p>{formatNumberWithCommas(formData?.pool_price)} CYCON</p>
+            <p>
+              {price &&
+                formatNumberWithCommas(
+                  Math.round(formData?.pool_price * price)
+                )}
+              {price && '원'}
+            </p>
           </Box>
         </Box>
         <Box className={styles.notice}>

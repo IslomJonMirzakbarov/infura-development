@@ -1,5 +1,6 @@
 import axios from 'axios'
 import authStore from 'store/auth.store'
+import toast from 'react-hot-toast'
 
 const httpRequest = axios.create({
   baseURL: 'https://api.oceandrive.network/',
@@ -7,6 +8,15 @@ const httpRequest = axios.create({
 })
 
 const errorHandler = (error, hooks) => {
+  if (
+    error?.response?.data?.message &&
+    error?.response?.data?.message !==
+      "code=400, message=Key: 'CheckPoolReq.PoolName' Error:Field validation for 'PoolName' failed on the 'min' tag" &&
+    error?.response?.data?.message !== 'pool already exists'
+  ) {
+    toast.error(capitalizeFirstLetter(error.response.data.message))
+  }
+
   if (error?.response?.status === 401) {
     authStore.logout()
   }
@@ -17,7 +27,7 @@ const errorHandler = (error, hooks) => {
 httpRequest.interceptors.request.use((config) => {
   const token = authStore?.token?.access_token?.token
   if (token) {
-    config.headers.Authorization = token
+    config.headers.Authorization = `Bearer ${token}`
   }
 
   config.headers['X-Conun-Service'] = 'infura'
@@ -28,3 +38,7 @@ httpRequest.interceptors.request.use((config) => {
 httpRequest.interceptors.response.use((response) => response.data, errorHandler)
 
 export default httpRequest
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1)
+}

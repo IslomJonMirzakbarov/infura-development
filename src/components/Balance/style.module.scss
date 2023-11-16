@@ -9,7 +9,7 @@
   padding: 0 20px;
   @include align-items-center;
   justify-content: space-between;
-  background-color: #fff;
+  background-color: var(--base-white);
   p {
     font-weight: 600;
     font-size: 25px;

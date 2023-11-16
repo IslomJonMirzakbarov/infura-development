@@ -4,14 +4,15 @@ import { ReactComponent as CopyIcon } from 'assets/icons/copyV2.svg'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import headerBg from 'assets/images/profile/header_bg_m.png'
-import headerDots from 'assets/images/profile/header_dots.svg'
-import headerGlobusS from 'assets/images/profile/header_globus_s.svg'
-import headerGlobusM from 'assets/images/profile/header_globus_m.svg'
-import headerGlobusL from 'assets/images/profile/header_globus_l.svg'
+import authStore from 'store/auth.store'
+import walletStore from 'store/wallet.store'
+import { truncateWalletAddress } from 'utils/utilFuncs'
 
 export default function Header({ title }) {
   const navigate = useNavigate()
   const [copied, setCopied] = useState(false)
+  const userData = authStore.userData
+  const walletAddress = walletStore.address
 
   const handleCopy = (tx) => {
     navigator.clipboard.writeText(tx)
@@ -24,25 +25,29 @@ export default function Header({ title }) {
       <div className={styles.walletLogoContainer}>
         <div className={styles.logoContainer}></div>
         <div className={styles.walletTxt}>
-          <h4>My wallet address</h4>
+          <h4>My Account</h4>
           <div>
-            <p>0x45c5…e79e</p>
+            <p>{userData?.email}</p>
             <Tooltip
               title={copied ? 'Copied!' : 'Copy to clipboard'}
               placement='top-start'
             >
-              <CopyIcon onClick={() => handleCopy('0x45c5…e79e')} />
+              <CopyIcon onClick={() => handleCopy(userData?.email)} />
             </Tooltip>
           </div>
+          {walletAddress && (
+            <div>
+              <p>{truncateWalletAddress(walletAddress)}</p>
+              <Tooltip
+                title={copied ? 'Copied!' : 'Copy to clipboard'}
+                placement='top-start'
+              >
+                <CopyIcon onClick={() => handleCopy(walletAddress)} />
+              </Tooltip>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* <div className={styles.svgsContainer}>
-        <img src={headerDots} alt='' className={styles.headerDots} />
-        <img src={headerGlobusS} alt='' className={styles.headerGlobusS} />
-        <img src={headerGlobusM} alt='' className={styles.headerGlobusM} />
-        <img src={headerGlobusL} width={135} alt='' className={styles.headerGlobusL} />
-      </div> */}
     </header>
   )
 }

@@ -1,24 +1,55 @@
-import { Button } from '@mui/material'
 import styles from '../SignUp/style.module.scss'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
+import { useResetPasswordMutation } from 'services/auth.service'
+import { LoadingButton } from '@mui/lab'
+import toast from 'react-hot-toast'
 
 const NewPassword = () => {
   const navigate = useNavigate()
-  const { control, handleSubmit } = useForm()
-  const onSubmit = () => {}
+  const { control, handleSubmit, setError } = useForm()
+  const { mutate, isLoading } = useResetPasswordMutation()
+  const [searchParams] = useSearchParams()
+  const onSubmit = (data) => {
+    if (data.new_password !== data.confirm_password) {
+      setError('confirm_password', {
+        type: 'custom',
+        message: 'Password mismatch'
+      })
+      return
+    }
+    mutate(
+      {
+        ...data,
+        token: searchParams.get('token')
+      },
+      {
+        onSuccess: () => {
+          toast.success('Password successfully changed!')
+          navigate('/auth/login')
+        }
+      }
+    )
+  }
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className={styles.title}>Create a new password</h1>
       <HFTextField
         fullWidth
-        name='password'
+        name='new_password'
         label='New password'
         control={control}
         placeholder='Enter new password'
         required
         type='password'
+        rules={{
+          pattern: {
+            value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
+            message:
+              'Password must be have minimum 8 characters, at least one number, one letter and one special character'
+          }
+        }}
       />
       <HFTextField
         fullWidth
@@ -28,10 +59,23 @@ const NewPassword = () => {
         placeholder='Enter new password'
         required
         type='password'
+        rules={{
+          pattern: {
+            value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
+            message:
+              'Password must be have minimum 8 characters, at least one number, one letter and one special character'
+          }
+        }}
       />
-      <Button className={styles.button} variant='contained' color='primary'>
+      <LoadingButton
+        loading={isLoading}
+        className={styles.button}
+        variant='contained'
+        color='primary'
+        type='submit'
+      >
         Submit
-      </Button>
+      </LoadingButton>
     </form>
   )
 }

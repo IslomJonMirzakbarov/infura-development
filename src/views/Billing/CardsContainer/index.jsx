@@ -1,48 +1,36 @@
 import { Grid } from '@mui/material'
 import BillingCard from 'components/BillingCard'
 import React from 'react'
-
-const items = [
-  {
-    name: 'Free',
-    price: 0,
-    storage: '100 GB',
-    gatewayCount: 1,
-    replication: 1,
-    isCurrentPlan: true,
-    disabled: true
-  },
-  // {
-  //   name: 'Intro',
-  //   price: 50,
-  //   storage: '1 TB',
-  //   gatewayCount: 3,
-  //   replication: 3
-  //   // disabled: true
-  // },
-  // {
-  //   name: 'Popular',
-  //   price: 100,
-  //   storage: '10 TB',
-  //   gatewayCount: 5,
-  //   replication: 10
-  //   // disabled: true
-  // },
-  {
-    name: 'Enterprise',
-    text: 'This plan is custom plan for who wants to offer custom packaging. Feel free to contact us.',
-    priceText: 'Get apersonalized plan',
-    isEnterprise: true
-  }
-]
+import poolStore from 'store/pool.store'
 
 const CardsContainer = ({ onSelect }) => {
+  const { isSelected, billingItems, poolCount } = poolStore
+  const items = billingItems
+  const isDisabled = poolCount > 2
+
+  if (isDisabled && isSelected) {
+    items[0].isCurrentPlan = true
+    items[0].disabled = true
+    items[1].disabled = true
+  } else if (!isDisabled && isSelected) {
+    items[0].isCurrentPlan = true
+    items[0].disabled = true
+    items[1].disabled = false
+  } else if (isDisabled && !isSelected) {
+    items[0].isCurrentPlan = false
+    items[0].disabled = true
+    items[1].disabled = true
+  } else if (!isDisabled && !isSelected) {
+    items[0].isCurrentPlan = false
+    items[0].disabled = false
+    items[1].disabled = false
+  }
   return (
     <>
       <Grid container spacing={2}>
         {items.map((item, key) => (
           <Grid item lg={3}>
-            <BillingCard key={key} {...item} onSelect={onSelect} />
+            <BillingCard key={item.name} item={item} onSelect={onSelect} />
           </Grid>
         ))}
       </Grid>

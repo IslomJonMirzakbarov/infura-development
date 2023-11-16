@@ -1,0 +1,32 @@
+.createBtnBox {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 65px;
+
+  .createBtn {
+    width: 222.841px;
+    height: 55px;
+    border-radius: 10px;
+    background: var(--main, #27e6d6);
+    color: #000;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 500;
+
+    span {
+      position: absolute;
+      left: 13px;
+      color: #141332;
+      text-align: center;
+      font-size: 30px;
+      font-weight: 275;
+    }
+  }
+
+  .nodes {
+    color: var(--base-white);
+    font-size: 13px;
+    font-weight: 500;
+  }
+}

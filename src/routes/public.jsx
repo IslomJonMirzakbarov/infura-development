@@ -1,4 +1,5 @@
 import AuthLayout from 'layouts/AuthLayout'
+import LandingLayout from 'layouts/LandingLayout'
 import { Navigate, useRoutes } from 'react-router-dom'
 import ConfirmationCode from 'views/Auth/ConfirmationCode'
 import Login from 'views/Auth/Login'
@@ -6,13 +7,28 @@ import NewPassword from 'views/Auth/NewPassword'
 import ResetPassword from 'views/Auth/ResetPassword'
 import Signup from 'views/Auth/SignUp'
 import LandingPage from 'views/LandingPage'
+import WhyInfura from 'views/WhyInfura'
 
 export const publicRoutes = [
   {
     children: [
       {
         path: '/',
-        element: <LandingPage />
+        element: <LandingLayout />,
+        children: [
+          {
+            index: true,
+            element: <LandingPage />
+          },
+          {
+            path: 'why-infura',
+            element: <WhyInfura />
+          }
+        ]
+      },
+      {
+        path: '/why-infura',
+        element: <WhyInfura />
       },
       {
         path: '/auth',
@@ -35,7 +51,7 @@ export const publicRoutes = [
             element: <ResetPassword />
           },
           {
-            path: 'create-new-password',
+            path: 'new-password',
             element: <NewPassword />
           }
         ]

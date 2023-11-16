@@ -5,9 +5,14 @@ import styles from './style.module.scss'
 import Stats from './Stats'
 import Features from './Features'
 import WhatsNew from './WhatsNew'
+import authStore from 'store/auth.store'
+import InfoSection from './InfoSection'
 
 const MainContentLanding = () => {
   const navigate = useNavigate()
+  const token = authStore?.token?.access_token
+  const goToClick = () =>
+    token ? navigate('/main/dashboard') : navigate('/auth/login')
 
   return (
     <div className={styles.mainContainer}>
@@ -18,16 +23,14 @@ const MainContentLanding = () => {
         </Box>
 
         <Typography className={styles.description}>
-          OceanDrive is a decentralized storage platform that <br /> utilizes
-          unused storage space among network participants <br /> to connect the
-          global online and offline <br /> economy and provide a model for
-          sustainable growth.
+          OceanDrive Infura is the bridge to a world seamlessly connected
+          through <br /> decentralized storage solutions. Our innovative
+          platform leverages the latent <br /> potential of unused storage space
+          across our global network of participants, <br /> creating a web of
+          connectivity that transcends online and offline boundaries.
         </Typography>
 
-        <Button
-          className={styles.goToBtn}
-          onClick={() => navigate('/main/dashboard')}
-        >
+        <Button className={styles.goToBtn} onClick={goToClick}>
           Go to dashboard
         </Button>
       </Box>
@@ -35,6 +38,8 @@ const MainContentLanding = () => {
       <Stats />
 
       <Features />
+
+      <InfoSection />
 
       <WhatsNew />
     </div>

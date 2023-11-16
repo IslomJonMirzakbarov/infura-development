@@ -21,7 +21,7 @@
       list-style-type: none;
 
       .navBtn a {
-        color: #fff;
+        color: var(--base-white);
         text-align: center;
         font-size: 15px;
         font-weight: 500;
@@ -30,7 +30,7 @@
 
       .navBtn a:hover,
       .navBtn.Mui-hoverVisible:hover {
-        color: #27e6d6;
+        color: var(--main);
       }
 
       .navHoverBtn {
@@ -39,7 +39,7 @@
           display: flex;
           align-items: center;
           gap: 6px;
-          color: #fff;
+          color: var(--base-white);
           text-align: center;
           font-size: 15px;
           font-weight: 500;
@@ -57,7 +57,7 @@
       gap: 10px;
 
       .navBtn {
-        color: #fff;
+        color: var(--base-white);
         background: none;
         text-align: center;
         font-size: 15px;
@@ -71,7 +71,7 @@
 
       .navBtn:hover,
       .navBtn.Mui-hoverVisible:hover {
-        color: #27e6d6;
+        color: var(--main);
       }
 
       .loginBtn {
@@ -87,7 +87,7 @@
 
       .loginBtn:hover,
       .loginBtn.Mui-hoverVisible:hover {
-        color: #27e6d6;
+        color: var(--main);
       }
 
       .walletDiv {
@@ -102,4 +102,8 @@
       }
     }
   }
+}
+
+.navLinkActive {
+  color: yellow;
 }
