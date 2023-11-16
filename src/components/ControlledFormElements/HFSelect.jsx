@@ -56,7 +56,21 @@ const HFSelect = ({
               size='large'
               error={error}
               inputProps={{ placeholder }}
+              displayEmpty
               renderValue={(selected) => {
+                if (selected === '') {
+                  return (
+                    <p
+                      style={{
+                        color: '#979797',
+                        fontSize: '15px',
+                        fontWeight: '400'
+                      }}
+                    >
+                      {placeholder}
+                    </p>
+                  )
+                }
                 if (name === 'period') {
                   return `${selected} ${selected === 1 ? 'month' : 'months'}`
                 }
@@ -124,6 +138,11 @@ const HFSelect = ({
                 }
               }}
             >
+              {/* {placeholder && (
+                <MenuItem disabled value=''>
+                  {placeholder}
+                </MenuItem>
+              )} */}
               {options?.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
                   {option.label}

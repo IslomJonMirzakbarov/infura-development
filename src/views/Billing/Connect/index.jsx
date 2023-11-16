@@ -86,8 +86,9 @@ const Connect = () => {
               mt='8px'
               color='#fff'
             >
-              <span style={{ fontWeight: 700 }}>Connect your wallet</span> one
-              of available <br /> provider by importing or creating new one.
+              <span style={{ fontWeight: 700 }}>Connect your wallet</span> to
+              one of the available <br /> providers by importing or creating a
+              new one.
             </Typography>
           </div>
           <div className={classes.metamask}>

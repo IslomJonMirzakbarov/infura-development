@@ -197,7 +197,7 @@ const Pool = () => {
                 control={control}
                 name='period'
                 label='Period'
-                placeholder='Select period'
+                placeholder='Select a time period'
                 fullWidth
                 required
                 options={months}

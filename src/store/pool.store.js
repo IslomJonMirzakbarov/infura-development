@@ -24,7 +24,7 @@ class Store {
     },
     {
       name: 'Enterprise',
-      text: 'This plan is custom plan for who wants to offer custom packaging. Feel free to contact us.',
+      text: 'This plan is a custom plan for those who want custom packaging. Feel free to contact us. ',
       priceText: 'Get apersonalized plan',
       isEnterprise: true
     }

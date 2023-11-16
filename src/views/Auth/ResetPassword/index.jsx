@@ -32,7 +32,7 @@ const ResetPassword = () => {
       <BasicTextField
         fullWidth
         name='email'
-        label='ID Email'
+        label='Email'
         control={control}
         placeholder='Enter your email'
         required
@@ -48,7 +48,7 @@ const ResetPassword = () => {
         Submit
       </LoadingButton>
       <div className={styles.alreadyUser}>
-        Already have ID and password
+        Already have email and password
         <span onClick={() => navigate('/auth/login')}>
           Back to Login <ForwardIcon />
         </span>

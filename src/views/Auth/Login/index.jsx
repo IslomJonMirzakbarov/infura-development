@@ -33,7 +33,7 @@ const Login = () => {
       <BasicTextField
         fullWidth
         name='email'
-        label='ID Email'
+        label='Email'
         control={control}
         placeholder='Enter your email'
         required

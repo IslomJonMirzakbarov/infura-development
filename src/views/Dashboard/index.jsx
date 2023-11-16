@@ -77,9 +77,7 @@ const Dashboard = () => {
         >
           <span>+</span> Create Storage
         </Button>
-        <Typography className={styles.nodes}>
-          Nodes are available : 99
-        </Typography>
+        <Typography className={styles.nodes}>Nodes available : 99</Typography>
       </Box>
 
       <Box className={styles.chartHolder}>
