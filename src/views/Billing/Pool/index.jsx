@@ -15,6 +15,10 @@ import { useNavigate } from 'react-router-dom'
 import { useQueryClient } from 'react-query'
 import useDebounce from 'hooks/useDebounce'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import useMetaMask from 'hooks/useMetaMask'
+import ApproveModal from './ApproveModal'
+import toast from 'react-hot-toast'
+import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
 const sizes = [
   {
     label: '20',
@@ -50,12 +54,15 @@ const Pool = () => {
       unit: 'GB'
     }
   })
+  const { createPool, checkAllowance, makeApprove } = useMetaMask()
   const [propError, setPropError] = useState('')
-
+  const [openApprove, setOpenApprove] = useState(false)
+  const [txHash, setTxHash] = useState(null)
   const { mutate: checkPool, isLoading: isCheckLoading } =
     usePoolCheckMutation()
   const poolName = watch('name')
   const debouncedPoolName = useDebounce(poolName, 500)
+
   useEffect(() => {
     if (debouncedPoolName) {
       checkPool(
@@ -110,26 +117,62 @@ const Pool = () => {
     }
   }
 
-  const submitCheckout = () => {
-    setOpen(false)
-    setOpen2(true)
+  const onConfirmApprove = async () => {
+    try {
+      setOpen2(true)
+      setOpenApprove(false)
+      await makeApprove()
+      await submitCheckout()
+    } catch (e) {
+      setOpenApprove(false)
+      toast.error(getRPCErrorMessage(e))
+    }
+  }
 
-    mutate(formData, {
-      onSuccess: (res) => {
-        console.log('res: ', res)
-        setPoolAddress(res?.access_token?.token)
-        setOpen2(false)
-        setOpen3(true)
-        queryClient.invalidateQueries('pools')
-      },
-      onError: (error) => {
-        setOpen2(false)
-        console.log('error: ', error)
-        if (error.status === 401) {
-          // navigate('/auth/register')
-        }
+  const submitCheckout = async () => {
+    try {
+      const allowance = await checkAllowance()
+      const numericAllowance = Number(allowance)
+      if (numericAllowance < formData.pool_price) {
+        setOpen(false)
+        setOpenApprove(true)
+        return
       }
-    })
+      setOpen2(true)
+      const pool_size =
+        formData.pool_size.unit === 'GB'
+          ? formData.pool_size.value
+          : formData.pool_size.value * 1024
+
+      const result = await createPool({
+        ...formData,
+        pool_size
+      })
+      setTxHash(result.transactionHash)
+      setOpen(false)
+      mutate(
+        { ...formData, tx_hash: result.transactionHash },
+        {
+          onSuccess: (res) => {
+            console.log('res: ', res)
+            setPoolAddress(res?.access_token?.token)
+            setOpen2(false)
+            setOpen3(true)
+            queryClient.invalidateQueries('pools')
+          },
+          onError: (error) => {
+            setOpen2(false)
+            console.log('error: ', error)
+            if (error.status === 401) {
+              // navigate('/auth/register')
+            }
+          }
+        }
+      )
+    } catch (e) {
+      setOpen2(false)
+      toast.error(getRPCErrorMessage(e))
+    }
   }
 
   return (
@@ -238,12 +281,21 @@ const Pool = () => {
         open={open}
         onSubmit={submitCheckout}
       />
+      <ApproveModal
+        onConfirmApprove={onConfirmApprove}
+        open={openApprove}
+        title='CYCON'
+        handleClose={() => setOpenApprove(false)}
+        desc='Please approve the CYCON token to proceed.'
+        img='https://swap.conun.io/static/cycon.svg'
+      />
       <LoaderModal title='Loading' toggle={toggle2} open={open2} />
       <ApiKeyModal
         onSubmit={() => navigate('/main/profile')}
         poolAddress={poolAddress}
         title='Transaction successfully
 complete'
+        txHash={txHash}
         toggle={toggle3}
         open={open3}
       />
