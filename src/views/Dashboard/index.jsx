@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import Container from 'components/Container'
 import styles from './style.module.scss'
 import { Box, Button, Typography } from '@mui/material'
@@ -6,11 +6,7 @@ import HFSelect from 'components/ControlledFormElements/HFSelect'
 import { useForm } from 'react-hook-form'
 import DashboardBarChart from 'components/BarChart'
 import { useNavigate } from 'react-router-dom'
-import {
-  useConditionalPoolById,
-  useGetPoolById,
-  useGetPools
-} from 'services/pool.service'
+import { useDashboard } from 'services/pool.service'
 import poolStore from 'store/pool.store'
 
 const Dashboard = () => {
@@ -23,24 +19,25 @@ const Dashboard = () => {
 
   const selectedPoolId = watch('dashboardPool')
 
-  const { data, isLoading, error } = useGetPools()
-  const { data: poolData, isLoading: isPoolLoading } =
-    useConditionalPoolById(selectedPoolId)
+  const { data, isLoading, error } = useDashboard()
+  console.log('dashboard: ', data)
 
-  const poolInfo = {
-    PoolSize:
-      !isPoolLoading && poolData
-        ? `${poolData.size.value}${poolData.size.unit}`
-        : '...',
-    RemainingStorage: '10GB',
-    SubscribedNodes: '10',
-    UploadedFiles: '12'
-  }
+  const poolData = useMemo(() => {
+    return selectedPoolId === 'ALL'
+      ? data?.all
+      : data?.pools?.find((pool) => pool.id === selectedPoolId)
+  }, [data, selectedPoolId])
 
-  const poolCount = data?.payload?.count
-  let pools = [{ label: poolCount === 0 ? '0' : 'ALL', value: 'ALL' }]
+  const poolCount = data?.pools?.length
+  console.log('poolCount: ', poolCount)
+  let pools = [
+    {
+      label: poolCount === 0 || poolCount === undefined ? '0' : 'ALL',
+      value: 'ALL'
+    }
+  ]
 
-  const freePool = data?.payload?.pools?.find((pool) => pool.price === 'free')
+  const freePool = data?.pools?.find((pool) => pool.price === 'free')
   useEffect(() => {
     poolStore.setPoolCount(poolCount)
     if (freePool) {
@@ -50,15 +47,32 @@ const Dashboard = () => {
     }
   }, [freePool, poolCount])
 
-  if (data?.payload?.pools) {
+  if (data?.pools) {
     pools = pools.concat(
-      data.payload.pools.map((pool) => ({
+      data.pools.map((pool) => ({
         label: pool.name,
         value: pool.id
       }))
     )
   }
+
   const isSelectDisabled = pools[0].label === '0'
+
+  const defaultPoolInfo = {
+    PoolSize: '0',
+    RemainingStorage: '0',
+    SubscribedNodes: '0',
+    UploadedFiles: '0'
+  }
+
+  const poolInfo = isSelectDisabled
+    ? defaultPoolInfo
+    : {
+        PoolSize: poolData?.total_size || '...',
+        RemainingStorage: poolData?.remaining_size || '...',
+        SubscribedNodes: poolData?.subscribers_count.toString() || '0',
+        UploadedFiles: poolData?.uploaded_files_count.toString() || '0'
+      }
 
   const infoBoxes = Object.entries(poolInfo).map(([key, value]) => (
     <Typography key={key} fontSize={12} fontWeight={700} color='#fff'>
@@ -77,7 +91,9 @@ const Dashboard = () => {
         >
           <span>+</span> Create Storage
         </Button>
-        <Typography className={styles.nodes}>Nodes available : 99</Typography>
+        <Typography className={styles.nodes}>
+          Nodes available : {data?.available_nodes_count}
+        </Typography>
       </Box>
 
       <Box className={styles.chartHolder}>
@@ -115,7 +131,10 @@ const Dashboard = () => {
           >
             {infoBoxes}
           </Box>
-          <DashboardBarChart />
+          <DashboardBarChart
+            upload={poolData?.uploaded_files_count}
+            download={0}
+          />
           <Box padding='16px 12px'>
             <Box display='flex' alignItems='center' gap='8px' mb='5px'>
               <Box width={13} height={13} backgroundColor='#27e6d6' />

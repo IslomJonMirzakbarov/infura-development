@@ -5,6 +5,7 @@ const poolService = {
   check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
   create: async (data) => httpRequest.post('infura/api/v1/pools', data),
   getPools: async () => httpRequest.get('infura/api/v1/pools'),
+  getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`)
 }
 
@@ -16,6 +17,9 @@ export const usePoolCreateMutation = (mutationSettings) => {
 }
 export const useGetPools = (mutationSettings) => {
   return useQuery('pools', poolService.getPools, mutationSettings)
+}
+export const useDashboard = (mutationSettings) => {
+  return useQuery('dashboard', poolService.getDashboard, mutationSettings)
 }
 export const useGetPoolById = ({ id, enabled = true }) => {
   return useQuery(`get-pool-${id}`, () => poolService.getPoolById(id), {
