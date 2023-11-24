@@ -24,27 +24,27 @@ export const months = [
     value: 1
   },
   {
-    label: '2 month',
+    label: '2 months',
     value: 2
   },
   {
-    label: '3 month',
+    label: '3 months',
     value: 3
   },
   {
-    label: '4 month',
+    label: '4 months',
     value: 4
   },
   {
-    label: '5 month',
+    label: '5 months',
     value: 5
   },
   {
-    label: '6 month',
+    label: '6 months',
     value: 6
   },
   {
-    label: '7 month',
+    label: '7 months',
     value: 7
   },
   {
