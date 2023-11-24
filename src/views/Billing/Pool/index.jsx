@@ -19,32 +19,7 @@ import useMetaMask from 'hooks/useMetaMask'
 import ApproveModal from './ApproveModal'
 import toast from 'react-hot-toast'
 import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
-const sizes = [
-  {
-    label: '20',
-    value: 20
-  },
-  {
-    label: '30',
-    value: 30
-  }
-]
-
-const units = [
-  { label: 'GB', value: 'GB' },
-  { label: 'TB', value: 'TB' }
-]
-
-const months = [
-  {
-    label: '1 month',
-    value: 1
-  },
-  {
-    label: '2 months',
-    value: 2
-  }
-]
+import { months, sizes, units } from './poolData'
 
 const Pool = () => {
   const navigate = useNavigate()
@@ -249,11 +224,16 @@ const Pool = () => {
               <BasicTextField
                 control={control}
                 name='price'
-                type='number'
                 label='Estimated Pool price in CYCON'
                 placeholder='Enter pool price'
                 required
                 fullWidth
+                type='number'
+                rules={{
+                  validate: (value) =>
+                    value >= 1000 ||
+                    'The minimum price should be greater than 1000'
+                }}
               />
             </div>
             <Box

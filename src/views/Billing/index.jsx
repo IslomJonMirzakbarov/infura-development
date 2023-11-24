@@ -14,6 +14,10 @@ const headColumns = [
     title: 'Date'
   },
   {
+    key: 'pool_name',
+    title: 'Pool Name'
+  },
+  {
     key: 'invoice_price',
     title: 'Pool price'
   },
@@ -34,6 +38,7 @@ export const mockUploadedData = [
         Jul 25, 2023 <InvoiceRoute />
       </div>
     ),
+    pool_name: 'demo pool1',
     invoice_price: '$50.00',
     status: 'Paid',
     plan: 'Custom plan'
@@ -41,19 +46,10 @@ export const mockUploadedData = [
   {
     date: (
       <div className={styles.column}>
-        Aug 10, 2023 <InvoiceRoute />
-      </div>
-    ),
-    invoice_price: '$0.00',
-    status: 'Free',
-    plan: 'Free plan'
-  },
-  {
-    date: (
-      <div className={styles.column}>
         Oct 10, 2023 <InvoiceRoute />
       </div>
     ),
+    pool_name: 'demo pool2',
     invoice_price: '$78.00',
     status: 'Paid',
     plan: 'Custom plan'
@@ -64,6 +60,7 @@ export const mockUploadedData = [
         Nov 10, 2023 <InvoiceRoute />
       </div>
     ),
+    pool_name: 'demo pool3',
     invoice_price: '$110.00',
     status: 'Paid',
     plan: 'Custom plan'
@@ -74,7 +71,7 @@ const Billing = () => {
   return (
     <Container maxWidth={true}>
       <div className={styles.billingContainer}>
-        <Paper className={styles.paper}>
+        {/* <Paper className={styles.paper}>
           <h2 className={classNames(styles.title, styles.title1)}>
             Current Plan
           </h2>
@@ -89,7 +86,7 @@ const Billing = () => {
               Your plan renews on November 9, 2023
             </Typography>
           </div>
-        </Paper>
+        </Paper> */}
 
         <Paper className={styles.paper}>
           <h2 className={styles.title}>Invoice History</h2>
