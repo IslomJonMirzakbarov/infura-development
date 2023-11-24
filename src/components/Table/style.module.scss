@@ -95,6 +95,16 @@
           }
         }
       }
+      tr {
+        & {
+          td:nth-child(4) {
+            color: var(--main);
+          }
+          td:nth-child(3) {
+            color: var(--base-white);
+          }
+        }
+      }
     }
   }
 }
