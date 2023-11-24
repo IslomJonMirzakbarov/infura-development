@@ -69,7 +69,7 @@ export default function LogoutModal({ toggle }) {
           variant='contained'
           color='primary'
         >
-          Yes
+          Confirm
         </LoadingButton>
       </Box>
     </Box>

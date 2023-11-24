@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Tooltip, Typography } from '@mui/material'
 import classes from './style.module.scss'
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg'
@@ -8,6 +8,8 @@ import walletStore from 'store/wallet.store'
 import ProfilePopup from './ProfilePopup'
 import toast from 'react-hot-toast'
 import { observer } from 'mobx-react-lite'
+import useMetaMask from 'hooks/useMetaMask'
+import WarningRoundedIcon from '@mui/icons-material/WarningRounded'
 
 const walletType = {
   metamask:
@@ -38,7 +40,8 @@ const Connect = () => {
   const [isCopy, setIsCopy] = useState(false)
   const { address, type } = walletStore
   const [anchorEl, setAnchorEl] = useState(null)
-
+  const { checkCurrentNetwork, onChangeNetwork } = useMetaMask()
+  const [networkError, setNetworkError] = useState(false)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
   }
@@ -47,12 +50,36 @@ const Connect = () => {
     setAnchorEl(null)
   }
 
+  useEffect(() => {
+    const asyncFn = async () => {
+      if (address) {
+        const result = await checkCurrentNetwork()
+        if (result === 'error') setNetworkError(true)
+      }
+    }
+    asyncFn()
+  }, [address])
+
+  const handleChangeNetwork = async (e) => {
+    e.preventDefault()
+    const res = await onChangeNetwork()
+    if (res === 'success') {
+      navigate('/main/billing/pool')
+      setNetworkError(false)
+    }
+  }
+
   const handleConnectWallet = async (walletType) => {
     toast.promise(
       connectWallet(walletType),
       {
         loading: 'Connection...',
-        success: <b>Successful connection to MetaMask wallet.</b>,
+        success: (
+          <b>
+            Successful connection to{' '}
+            {walletType === 'metamask' ? 'MetaMask' : 'Kaikas'} wallet.
+          </b>
+        ),
         error: <b>Connection error.</b>
       },
       {
@@ -60,7 +87,10 @@ const Connect = () => {
       }
     )
 
-    navigate('/main/billing/pool')
+    const result = await checkCurrentNetwork()
+
+    if (result === 'error') setNetworkError(true)
+    else navigate('/main/billing/pool')
   }
 
   const handleCopy = useCallback(() => {
@@ -86,8 +116,9 @@ const Connect = () => {
               mt='8px'
               color='#fff'
             >
-              <span style={{ fontWeight: 700 }}>Connect your wallet</span> one
-              of available <br /> provider by importing or creating new one.
+              <span style={{ fontWeight: 700 }}>Connect your wallet</span> to
+              one of the available <br /> providers by importing or creating a
+              new one.
             </Typography>
           </div>
           <div className={classes.metamask}>
@@ -129,6 +160,18 @@ const Connect = () => {
             </li>
           ))}
         </ul>
+        {!!networkError && (
+          <div className={classes.warning} id='switch'>
+            <WarningRoundedIcon />
+            <p>
+              Switch to{' '}
+              <a href='#' onClick={handleChangeNetwork}>
+                Klaytn Mainnet
+              </a>{' '}
+              to start the pool create.
+            </p>
+          </div>
+        )}
       </div>
       <ProfilePopup
         anchorEl={anchorEl}

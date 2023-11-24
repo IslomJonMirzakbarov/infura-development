@@ -85,6 +85,14 @@
           td:nth-child(3) {
             color: var(--main);
           }
+          td:first-child {
+            div {
+              display: flex;
+              align-items: center;
+              justify-content: flex-start;
+              gap: 12px;
+            }
+          }
         }
       }
     }

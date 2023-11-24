@@ -5,6 +5,8 @@ import Typography from '@material-ui/core/Typography'
 import styles from './style.module.scss'
 import classNames from 'classnames'
 import Table from 'components/Table'
+import EventIcon from '@material-ui/icons/Event'
+import { ReactComponent as InvoiceRoute } from 'assets/icons/invoice_routing.svg'
 
 const headColumns = [
   {
@@ -12,7 +14,7 @@ const headColumns = [
     title: 'Date'
   },
   {
-    key: 'price',
+    key: 'invoice_price',
     title: 'Pool price'
   },
   {
@@ -27,34 +29,44 @@ const headColumns = [
 
 export const mockUploadedData = [
   {
-    date: <div className={styles.column}>Oct 10, 2023</div>,
-    price: '$0.00',
+    date: (
+      <div className={styles.column}>
+        Jul 25, 2023 <InvoiceRoute />
+      </div>
+    ),
+    invoice_price: '$50.00',
     status: 'Paid',
+    plan: 'Custom plan'
+  },
+  {
+    date: (
+      <div className={styles.column}>
+        Aug 10, 2023 <InvoiceRoute />
+      </div>
+    ),
+    invoice_price: '$0.00',
+    status: 'Free',
     plan: 'Free plan'
   },
   {
-    date: <div className={styles.column}>Oct 10, 2023</div>,
-    price: '$0.00',
+    date: (
+      <div className={styles.column}>
+        Oct 10, 2023 <InvoiceRoute />
+      </div>
+    ),
+    invoice_price: '$78.00',
     status: 'Paid',
-    plan: 'Free plan'
+    plan: 'Custom plan'
   },
   {
-    date: <div className={styles.column}>Oct 10, 2023</div>,
-    price: '$0.00',
+    date: (
+      <div className={styles.column}>
+        Nov 10, 2023 <InvoiceRoute />
+      </div>
+    ),
+    invoice_price: '$110.00',
     status: 'Paid',
-    plan: 'Free plan'
-  },
-  {
-    date: <div className={styles.column}>Oct 10, 2023</div>,
-    price: '$0.00',
-    status: 'Paid',
-    plan: 'Free plan'
-  },
-  {
-    date: <div className={styles.column}>Oct 10, 2023</div>,
-    price: '$0.00',
-    status: 'Paid',
-    plan: 'Free plan'
+    plan: 'Custom plan'
   }
 ]
 

@@ -6,6 +6,8 @@ import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
 import { useLoginMutation } from 'services/auth.service'
 import authStore from 'store/auth.store'
 import { LoadingButton } from '@mui/lab'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -28,16 +30,16 @@ const Login = () => {
   return (
     <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
       <h1 className={styles.title}>Login</h1>
-      <HFTextField
+      <BasicTextField
         fullWidth
         name='email'
-        label='ID Email'
+        label='Email'
         control={control}
         placeholder='Enter your email'
         required
         type='email'
       />
-      <HFTextField
+      <PasswordField
         fullWidth
         name='password'
         label='Password'

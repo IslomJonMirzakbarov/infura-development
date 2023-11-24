@@ -1,5 +1,6 @@
 import { Box } from '@mui/material'
 import BasicModal from 'components/BasicModal'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import HFTextField from 'components/ControlledFormElements/HFTextField'
 
 const GatewayModal = ({
@@ -23,7 +24,7 @@ const GatewayModal = ({
       isLoading={isLoading}
     >
       <form onSubmit={onSubmit} style={{ width: '100%' }}>
-        <HFTextField
+        <BasicTextField
           name='name'
           control={control}
           placeholder='Enter pool name'
