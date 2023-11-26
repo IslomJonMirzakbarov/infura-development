@@ -7,7 +7,7 @@ import styles from './styles.module.scss'
 // import ApiKeyModal from '../../Billing/ApiKeyModal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
-import { formatNumberWithCommas } from 'utils/utilFuncs'
+import { formatNumberWithCommas, truncateJWT } from 'utils/utilFuncs'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
 // import poolStore from 'store/pool.store'
@@ -26,6 +26,8 @@ const ProfileDetails = () => {
   const { id } = useParams()
   const { data, isLoading } = useGetPoolById({ id })
   console.log('details: ', data)
+  const txHash =
+    '0x3f85259ebb1dfe210fe484f252b69ff4818f89a0d1bbb8788be0d7d9f1185f4f'
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -33,6 +35,7 @@ const ProfileDetails = () => {
       pin: 10
     }
   })
+
   // const pools = poolStore.pools
   // const apiKey = pools.find((pool) => pool.id === id)?.token
 
@@ -98,17 +101,39 @@ const ProfileDetails = () => {
                 readOnly={true}
                 disabled
               />
-              <BasicTextField
-                control={control}
-                name='price'
-                label='Pool price in CYCON'
-                fullWidth
-                value={
-                  isLoading ? '' : `${formatNumberWithCommas(data?.price)}`
-                }
-                readOnly={true}
-                disabled
-              />
+              <Box>
+                <BasicTextField
+                  control={control}
+                  name='price'
+                  label='Pool price in CYCON'
+                  fullWidth
+                  value={
+                    isLoading ? '' : `${formatNumberWithCommas(data?.price)}`
+                  }
+                  readOnly={true}
+                  disabled
+                />
+
+                {txHash && (
+                  <Box className={styles.txHash}>
+                    <Typography
+                      color='white'
+                      variant='standard'
+                      fontWeight={500}
+                      mb={1}
+                    >
+                      Tx hash
+                    </Typography>
+                    <a
+                      href={`https://baobab.scope.klaytn.com/tx/${txHash}`}
+                      target='_blank'
+                    >
+                      <p>{txHash}</p>
+                    </a>
+                  </Box>
+                )}
+              </Box>
+
               <HFTextField
                 control={control}
                 name='api_key'
