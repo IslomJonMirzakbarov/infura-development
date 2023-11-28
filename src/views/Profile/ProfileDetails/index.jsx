@@ -26,8 +26,7 @@ const ProfileDetails = () => {
   const { id } = useParams()
   const { data, isLoading } = useGetPoolById({ id })
   console.log('details: ', data)
-  const txHash =
-    '0x3f85259ebb1dfe210fe484f252b69ff4818f89a0d1bbb8788be0d7d9f1185f4f'
+
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm({
     defaultValues: {
@@ -114,7 +113,7 @@ const ProfileDetails = () => {
                   disabled
                 />
 
-                {txHash && (
+                {data?.tx_hash && (
                   <Box className={styles.txHash}>
                     <Typography
                       color='white'
@@ -125,10 +124,10 @@ const ProfileDetails = () => {
                       Tx hash
                     </Typography>
                     <a
-                      href={`https://baobab.scope.klaytn.com/tx/${txHash}`}
+                      href={`https://baobab.scope.klaytn.com/tx/${data.tx_hash}`}
                       target='_blank'
                     >
-                      <p>{txHash}</p>
+                      <p>{data.tx_hash}</p>
                     </a>
                   </Box>
                 )}
