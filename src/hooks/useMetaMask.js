@@ -19,6 +19,21 @@ const CYCON_CONTRACT_ADDRESS = '0xaa5542ABBd8047Df38231818c49d23A47c930Ed2'
 const useMetaMask = () => {
   const { address } = walletStore
 
+  let web3
+
+  const initializeProvider = async () => {
+    if (window.ethereum) {
+      try {
+        await window.ethereum.request({ method: 'eth_requestAccounts' })
+        web3 = new Web3(window.ethereum)
+      } catch (error) {
+        console.error('Error connecting to MetaMask:', error)
+      }
+    } else {
+      console.log('No Ethereum provider found. Install MetaMask.')
+    }
+  }
+
   const checkCurrentNetwork = async () => {
     const chainId = await window.web3.currentProvider.request({
       method: 'eth_chainId'
@@ -139,7 +154,8 @@ const useMetaMask = () => {
     onChangeNetwork,
     createPool,
     makeApprove,
-    checkAllowance
+    checkAllowance,
+    initializeProvider
   }
 }
 
