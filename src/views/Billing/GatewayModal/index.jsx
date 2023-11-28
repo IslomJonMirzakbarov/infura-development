@@ -48,7 +48,7 @@ const GatewayModal = ({
           </p>
         )}
 
-        <Box>
+        {/* <Box>
           <ul
             style={{
               fontWeight: 500,
@@ -62,7 +62,7 @@ const GatewayModal = ({
             <li>- What is gateway name?</li>
             <li>- Where can I use it?</li>
           </ul>
-        </Box>
+        </Box> */}
       </form>
     </BasicModal>
   )

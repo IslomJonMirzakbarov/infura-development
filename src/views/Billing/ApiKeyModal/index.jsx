@@ -28,6 +28,16 @@ const ApiKeyModal = ({
       onSubmit={onSubmit}
       title={title || 'Your API key'}
     >
+      {txHash && (
+        <p className={styles.txHash}>
+          <a
+            href={`https://baobab.scope.klaytn.com/tx/${txHash}`}
+            target='_blank'
+          >
+            {truncateJWT(txHash, 20)}
+          </a>
+        </p>
+      )}
       <p className={styles.title}>Api key</p>
       <Box className={styles.text}>
         {poolAddress && <p>{truncateJWT(poolAddress, 20)}</p>}
@@ -38,15 +48,6 @@ const ApiKeyModal = ({
           <CopyIcon onClick={() => handleCopy(poolAddress)} />
         </Tooltip>
       </Box>
-      {txHash && (
-        <a
-          href={`https://baobab.scope.klaytn.com/tx/${txHash}`}
-          className={styles.txHash}
-          target='_blank'
-        >
-          <p>{truncateJWT(txHash, 20)}</p>
-        </a>
-      )}
     </BasicModal>
   )
 }
