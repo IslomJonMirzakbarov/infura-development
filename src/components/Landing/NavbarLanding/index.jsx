@@ -22,7 +22,7 @@ const NavbarLanding = () => {
   }
 
   return (
-    <AppBar position='static' className={styles.navbar} elevation={0}>
+    <AppBar position='fixed' className={styles.navbar} elevation={0}>
       <Toolbar className={styles.navTool}>
         <img
           src={OceanDriveLogo}
