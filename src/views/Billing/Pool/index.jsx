@@ -105,6 +105,7 @@ const Pool = () => {
 
   const submitCheckout = async () => {
     try {
+      setOpen(false)
       const allowance = await checkAllowance()
       const numericAllowance = Number(allowance)
       if (numericAllowance < formData.pool_price) {
@@ -123,7 +124,6 @@ const Pool = () => {
         pool_size
       })
       setTxHash(result.transactionHash)
-      setOpen(false)
       mutate(
         { ...formData, tx_hash: result.transactionHash },
         {

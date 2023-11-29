@@ -66,7 +66,7 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
         </div>
         <Box
           display='flex'
-          padding='10px 0 31px'
+          padding='10px 0 16px'
           justifyContent='space-between'
         >
           <p className={styles.price}>Estimated Pool Price</p>
