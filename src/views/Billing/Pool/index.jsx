@@ -45,7 +45,7 @@ const Pool = () => {
   const debouncedPoolName = useDebounce(poolName, 500)
 
   useEffect(() => {
-    if (debouncedPoolName) {
+    if (debouncedPoolName && poolName.length > 4 && poolName.length < 21) {
       checkPool(
         { pool_name: debouncedPoolName },
         {
@@ -55,14 +55,7 @@ const Pool = () => {
           },
           onError: (error) => {
             console.log('error: ', error?.data?.message)
-            if (
-              error?.data?.message ===
-              "code=400, message=Key: 'CheckPoolReq.PoolName' Error:Field validation for 'PoolName' failed on the 'min' tag"
-            ) {
-              setPropError('Please enter at least 5 characters.')
-            } else {
-              setPropError(error?.data?.message)
-            }
+            setPropError(error?.data?.message)
           }
         }
       )
@@ -174,6 +167,12 @@ const Pool = () => {
                   required={!propError}
                   fullWidth
                   minLength={5}
+                  rules={{
+                    maxLength: {
+                      value: 20,
+                      message: `Maximum length should be 20 characters`
+                    }
+                  }}
                 />
                 {propError && (
                   <p
