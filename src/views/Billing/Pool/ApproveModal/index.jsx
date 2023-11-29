@@ -1,6 +1,6 @@
 import { Button, Dialog } from '@mui/material'
 import styles from './style.module.scss'
-import CancelIcon from '@mui/icons-material/Cancel'
+import CloseIcon from '@mui/icons-material/Close'
 
 export default function ApproveModal({
   open,
@@ -17,7 +17,7 @@ export default function ApproveModal({
       aria-describedby='alert-dialog-slide-description'
     >
       <div className={styles.box}>
-        <CancelIcon className={styles.close} onClick={handleClose} />
+        <CloseIcon className={styles.close} onClick={handleClose} />
         <h6>OceanDrive</h6>
         <div className={styles.img}>
           <img src={img} alt={title} />

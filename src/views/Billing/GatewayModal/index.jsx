@@ -20,7 +20,7 @@ const GatewayModal = ({
       submitLabel='Continue'
       onCancel={toggle}
       onSubmit={onSubmit}
-      title='Storage Pool name'
+      title='Storage Pool Name'
       isLoading={isLoading}
     >
       <form onSubmit={onSubmit} style={{ width: '100%' }}>

@@ -38,7 +38,7 @@ const ApiKeyModal = ({
           </a>
         </p>
       )}
-      <p className={styles.title}>Api key</p>
+      <p className={styles.title}>API Key</p>
       <Box className={styles.text}>
         {poolAddress && <p>{truncateJWT(poolAddress, 20)}</p>}
         <Tooltip
