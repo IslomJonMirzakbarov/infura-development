@@ -26,3 +26,10 @@ export function truncateWalletAddress(address, length = 8) {
 
   return `${prefix}…${suffix}`
 }
+
+export const getShortenedPoolName = (poolName) => {
+  if (poolName && poolName.length > 12) {
+    return poolName.substring(0, 12) + '...'
+  }
+  return poolName
+}

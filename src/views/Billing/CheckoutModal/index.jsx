@@ -3,7 +3,7 @@ import BasicModal from 'components/BasicModal'
 import styles from './style.module.scss'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { formatNumberWithCommas } from 'utils/utilFuncs'
+import { formatNumberWithCommas, getShortenedPoolName } from 'utils/utilFuncs'
 
 const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
   const [price, setPrice] = useState(null)
@@ -27,13 +27,6 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
   useEffect(() => {
     handlePrice()
   }, [])
-
-  const getShortenedPoolName = (poolName) => {
-    if (poolName && poolName.length > 12) {
-      return poolName.substring(0, 12) + '...'
-    }
-    return poolName
-  }
 
   return (
     <BasicModal

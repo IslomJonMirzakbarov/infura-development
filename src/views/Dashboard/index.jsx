@@ -8,6 +8,7 @@ import DashboardBarChart from 'components/BarChart'
 import { useNavigate } from 'react-router-dom'
 import { useDashboard } from 'services/pool.service'
 import poolStore from 'store/pool.store'
+import { getShortenedPoolName } from 'utils/utilFuncs'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -50,7 +51,7 @@ const Dashboard = () => {
   if (data?.pools) {
     pools = pools.concat(
       data.pools.map((pool) => ({
-        label: pool.name,
+        label: getShortenedPoolName(pool.name),
         value: pool.id
       }))
     )

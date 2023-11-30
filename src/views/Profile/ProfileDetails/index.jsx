@@ -9,6 +9,7 @@ import { useGetPoolById } from 'services/pool.service'
 import { formatNumberWithCommas } from 'utils/utilFuncs'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
+import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 
 const ProfileDetails = () => {
   const { id } = useParams()
@@ -122,7 +123,7 @@ const ProfileDetails = () => {
                 )}
               </Box>
 
-              <HFTextField
+              <PasswordField
                 control={control}
                 name='api_key'
                 type='password'
@@ -132,6 +133,7 @@ const ProfileDetails = () => {
                 withRegenerate={handleRegenerate}
                 readOnly={true}
                 disabled
+                value={data?.token}
               />
             </div>
             <Box
