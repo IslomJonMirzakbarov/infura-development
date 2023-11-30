@@ -14,9 +14,14 @@ export default function Table({
 }) {
   const navigate = useNavigate()
   if (isLoading) return <></>
-  const handleRowClick = (id) => {
+  const handleRowClick = (row) => {
     if (name === 'profileTable') {
-      navigate(`/main/profile/details/${id}`)
+      navigate(`/main/profile/details/${row.id}`)
+    }
+
+    if (name === 'billingTable' && row.txHash) {
+      // window.location.href = `https://klaytnscope.com/tx/${row.txHash}`
+      window.open(`https://klaytnscope.com/tx/${row.txHash}`, '_blank')
     }
   }
 
@@ -43,7 +48,7 @@ export default function Table({
         >
           {data?.length > 0 &&
             data?.map((item, index) => (
-              <tr key={index} onClick={() => handleRowClick(item?.id)}>
+              <tr key={index} onClick={() => handleRowClick(item)}>
                 {columns?.map((value) =>
                   value.key === 'id' ? (
                     <td>

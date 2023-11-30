@@ -28,6 +28,13 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
     handlePrice()
   }, [])
 
+  const getShortenedPoolName = (poolName) => {
+    if (poolName && poolName.length > 12) {
+      return poolName.substring(0, 12) + '...'
+    }
+    return poolName
+  }
+
   return (
     <BasicModal
       open={open}
@@ -44,7 +51,7 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
         <div className={styles.items}>
           <div className={styles.item}>
             <p>Pool Name</p>
-            <p>{formData?.pool_name}</p>
+            <p>{getShortenedPoolName(formData?.pool_name)}</p>
           </div>
           <div className={styles.item}>
             <p>Pool Size</p>
