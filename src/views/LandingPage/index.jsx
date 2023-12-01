@@ -3,13 +3,16 @@ import globusIcon from 'assets/images/landing/globus.svg'
 import styles from './style.module.scss'
 import MainContentLanding from 'components/Landing/MainContentLanding'
 import FooterLanding from 'components/Landing/FooterLanding'
+import { useStats } from 'services/pool.service'
 
 const LandingPage = () => {
+  const { data, isLoading, error } = useStats()
+  console.log('data: ', data);
   return (
     <>
       <img src={globusIcon} alt='' className={styles.globusIcon} />
 
-      <MainContentLanding />
+      <MainContentLanding stats={data}/>
 
       <FooterLanding />
     </>

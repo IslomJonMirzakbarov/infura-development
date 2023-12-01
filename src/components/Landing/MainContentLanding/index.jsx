@@ -8,7 +8,7 @@ import WhatsNew from './WhatsNew'
 import authStore from 'store/auth.store'
 import InfoSection from './InfoSection'
 
-const MainContentLanding = () => {
+const MainContentLanding = ({ stats }) => {
   const navigate = useNavigate()
   const token = authStore?.token?.access_token
   const goToClick = () =>
@@ -35,7 +35,7 @@ const MainContentLanding = () => {
         </Button>
       </Box>
 
-      <Stats />
+      <Stats stats={stats} />
 
       <Features />
 

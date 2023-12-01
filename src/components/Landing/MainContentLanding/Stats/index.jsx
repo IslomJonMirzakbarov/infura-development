@@ -1,9 +1,37 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
 import styles from '../style.module.scss'
-import { stats } from '../data'
+import { formatStatNumber } from 'utils/utilFuncs'
 
-const Stats = () => {
+const Stats = ({ statsData }) => {
+  const mockStats = {
+    connected_nodes_count: 735,
+    storage_capacity: 1.22,
+    stored_data: 1.34,
+    pools_count: 456
+  }
+  const stats = [
+    {
+      statTitle: 'Connected Nodes',
+      statNum: mockStats?.connected_nodes_count,
+      statCap: 'M'
+    },
+    {
+      statTitle: 'Storage Capacity',
+      statNum: mockStats?.storage_capacity,
+      statCap: 'Exabyte (EB)'
+    },
+    {
+      statTitle: 'Stored Data ',
+      statNum: mockStats?.stored_data,
+      statCap: 'Petabyte (PB) '
+    },
+    {
+      statTitle: 'Created Pools',
+      statNum: mockStats?.pools_count,
+      statCap: 'M'
+    }
+  ]
   return (
     <Box className={styles.statsDiv}>
       <Typography
@@ -16,23 +44,32 @@ const Stats = () => {
       </Typography>
 
       {/* <div className={styles.statBoxesHolder}> */}
-      {stats.map((stat) => (
-        <Box className={styles.stats}>
-          <Typography className={styles.statTitle}>{stat.statTitle}</Typography>
-          <Box className={styles.statBox}>
-            <Typography
-              variant='subtitle1'
-              color='white'
-              className={styles.statNum}
-            >
-              {stat.statNum}
+      {stats.map((stat) => {
+        const formattedStat = formatStatNumber(stat.statNum)
+        return (
+          <Box className={styles.stats} key={stat.statTitle}>
+            <Typography className={styles.statTitle}>
+              {stat.statTitle}
             </Typography>
-            <Typography variant='body2' color='gray' className={styles.statCap}>
-              {stat.statCap}
-            </Typography>
+            <Box className={styles.statBox}>
+              <Typography
+                variant='subtitle1'
+                color='white'
+                className={styles.statNum}
+              >
+                {formattedStat.value}
+              </Typography>
+              <Typography
+                variant='body2'
+                color='gray'
+                className={styles.statCap}
+              >
+                {formattedStat.cap || stat.statCap}
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-      ))}
+        )
+      })}
       {/* </div> */}
     </Box>
   )

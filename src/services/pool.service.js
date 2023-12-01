@@ -7,6 +7,7 @@ const poolService = {
   getPools: async () => httpRequest.get('infura/api/v1/pools'),
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
+  getStats: async () => httpRequest.get('infura/api/v1/stats'),
   getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`)
 }
 
@@ -24,6 +25,9 @@ export const useDashboard = (mutationSettings) => {
 }
 export const useInvoice = (mutationSettings) => {
   return useQuery('invoices', poolService.getInvoices, mutationSettings)
+}
+export const useStats = (mutationSettings) => {
+  return useQuery('stats', poolService.getStats, mutationSettings)
 }
 export const useGetPoolById = ({ id, enabled = true }) => {
   return useQuery(`get-pool-${id}`, () => poolService.getPoolById(id), {

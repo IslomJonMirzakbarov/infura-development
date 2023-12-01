@@ -33,3 +33,21 @@ export const getShortenedPoolName = (poolName) => {
   }
   return poolName
 }
+
+export function formatStatNumber(num) {
+  if (num >= 1e18) {
+    return { value: (num / 1e18).toFixed(1), cap: 'Exabyte (EB)' } // Exabytes
+  } else if (num >= 1e15) {
+    return { value: (num / 1e15).toFixed(1), cap: 'Petabyte (PB)' } // Petabytes
+  } else if (num >= 1e12) {
+    return { value: (num / 1e12).toFixed(1), cap: 'TB' } // Terabytes
+  } else if (num >= 1e9) {
+    return { value: (num / 1e9).toFixed(1), cap: 'GB' } // Gigabytes
+  } else if (num >= 1e6) {
+    return { value: (num / 1e6).toFixed(1), cap: 'M' } // Millions
+  } else if (num >= 1e3) {
+    return { value: (num / 1e3).toFixed(1), cap: 'K' } // Thousands
+  } else {
+    return { value: num, cap: '' } // Numbers less than 1000
+  }
+}
