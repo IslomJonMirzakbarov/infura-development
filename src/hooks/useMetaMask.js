@@ -1,13 +1,8 @@
-import { useState } from 'react'
-import toast from 'react-hot-toast'
 import walletStore from 'store/wallet.store'
 import ERC20_ABI from 'utils/ABI/ERC20ABI'
 import REWARD_ABI from 'utils/ABI/REWARD_ABI'
-import eToNumber from 'utils/eToNumber'
-import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
 import Web3 from 'web3'
 
-//const web3 = new Web3(Web3.givenProvider)
 export const web3 = new Web3(Web3.givenProvider)
 
 const KLAYTN_CHAIN_ID = '0x3e9'

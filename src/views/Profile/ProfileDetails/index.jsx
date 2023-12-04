@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from '@mui/material'
 import Container from 'components/Container'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -13,10 +12,6 @@ import PasswordField from 'components/ControlledFormElements/HFSimplified/Passwo
 
 const ProfileDetails = () => {
   const { id } = useParams()
-  const { data, isLoading } = useGetPoolById({ id })
-  console.log('details: ', data)
-
-  const navigate = useNavigate()
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       name: '',
@@ -27,18 +22,22 @@ const ProfileDetails = () => {
       api_key: ''
     }
   })
-
-  useEffect(() => {
-    if (data && !isLoading) {
-      reset({
-        name: data?.name,
-        size: `${data?.size?.value}${data?.size?.unit}`,
-        replication: data?.pin_replication,
-        price: `${formatNumberWithCommas(data?.price)}`,
-        api_key: data?.token
-      })
+  const { data } = useGetPoolById({
+    id,
+    queryProps: {
+      onSuccess: (res) => {
+        reset({
+          name: res?.name,
+          size: `${res?.size?.value}${res?.size?.unit}`,
+          replication: res?.pin_replication,
+          price: `${formatNumberWithCommas(res?.price)}`,
+          api_key: res?.token
+        })
+      }
     }
-  }, [data, isLoading, reset])
+  })
+
+  const navigate = useNavigate()
 
   const onSubmit = (data) => {}
 

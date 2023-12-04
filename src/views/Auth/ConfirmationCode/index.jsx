@@ -1,6 +1,5 @@
 import styles from './style.module.scss'
 import { useLocation, useNavigate } from 'react-router-dom'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { useConfirmCodeMutation, useResendSms } from 'services/auth.service'
 import { LoadingButton } from '@mui/lab'

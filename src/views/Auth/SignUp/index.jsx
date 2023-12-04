@@ -1,6 +1,5 @@
 import styles from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
 import { useRegisterMutation } from 'services/auth.service'

@@ -1,7 +1,5 @@
-import { Box } from '@mui/material'
 import BasicModal from 'components/BasicModal'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
 
 const GatewayModal = ({
   open,
@@ -47,22 +45,6 @@ const GatewayModal = ({
             {serverError}
           </p>
         )}
-
-        {/* <Box>
-          <ul
-            style={{
-              fontWeight: 500,
-              fontSize: '12px',
-              lineHeight: '21px',
-              color: '#959595',
-              listStyle: 'none'
-            }}
-          >
-            <li>- Description of gateway name.</li>
-            <li>- What is gateway name?</li>
-            <li>- Where can I use it?</li>
-          </ul>
-        </Box> */}
       </form>
     </BasicModal>
   )

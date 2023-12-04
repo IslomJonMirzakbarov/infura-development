@@ -12,7 +12,7 @@ import { getShortenedPoolName } from 'utils/utilFuncs'
 
 const Dashboard = () => {
   const navigate = useNavigate()
-  const { control, handleSubmit, formState, watch } = useForm({
+  const { control, watch } = useForm({
     defaultValues: {
       dashboardPool: 'ALL'
     }
@@ -20,7 +20,7 @@ const Dashboard = () => {
 
   const selectedPoolId = watch('dashboardPool')
 
-  const { data, isLoading, error } = useDashboard()
+  const { data } = useDashboard()
   console.log('dashboard: ', data)
 
   const poolData = useMemo(() => {

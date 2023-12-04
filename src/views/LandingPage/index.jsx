@@ -6,13 +6,13 @@ import FooterLanding from 'components/Landing/FooterLanding'
 import { useStats } from 'services/pool.service'
 
 const LandingPage = () => {
-  const { data, isLoading, error } = useStats()
-  console.log('data: ', data);
+  const { data } = useStats()
+  console.log('data: ', data)
   return (
     <>
       <img src={globusIcon} alt='' className={styles.globusIcon} />
 
-      <MainContentLanding stats={data}/>
+      <MainContentLanding stats={data} />
 
       <FooterLanding />
     </>

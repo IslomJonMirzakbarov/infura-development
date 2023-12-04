@@ -8,7 +8,7 @@ import { usePoolCheckMutation } from 'services/pool.service'
 import walletStore from 'store/wallet.store'
 
 const Billing = () => {
-  const { control, handleSubmit, clearErrors } = useForm()
+  const { control, handleSubmit } = useForm()
   const { mutate } = usePoolCheckMutation()
   const navigate = useNavigate()
   const walletAddress = walletStore.address

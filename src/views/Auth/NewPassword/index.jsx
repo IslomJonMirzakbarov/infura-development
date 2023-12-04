@@ -1,6 +1,5 @@
 import styles from '../SignUp/style.module.scss'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { useResetPasswordMutation } from 'services/auth.service'
 import { LoadingButton } from '@mui/lab'

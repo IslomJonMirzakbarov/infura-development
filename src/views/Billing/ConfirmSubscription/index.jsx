@@ -1,15 +1,11 @@
 import { Box, Button, Typography } from '@mui/material'
 import Container from 'components/Container'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
 import ApiKeyModal from '../ApiKeyModal'
 import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  usePoolCheckMutation,
-  usePoolCreateMutation
-} from 'services/pool.service'
+import { usePoolCreateMutation } from 'services/pool.service'
 import poolStore from 'store/pool.store'
 import LoaderModal from '../LoaderModal'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
@@ -21,7 +17,7 @@ const ConfirmSubscription = () => {
   const { control, handleSubmit, reset } = useForm()
   const [poolAddress, setPoolAddress] = useState('')
   const [open2, setOpen2] = useState(false)
-  const { mutate, isLoading } = usePoolCreateMutation()
+  const { mutate } = usePoolCreateMutation()
 
   const toggle2 = () => setOpen2((prev) => !prev)
 

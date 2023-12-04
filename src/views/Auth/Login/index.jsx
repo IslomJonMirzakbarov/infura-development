@@ -1,6 +1,5 @@
 import styles from '../SignUp/style.module.scss'
 import { NavLink, useNavigate } from 'react-router-dom'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
 import { useForm } from 'react-hook-form'
 import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
 import { useLoginMutation } from 'services/auth.service'

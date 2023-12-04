@@ -1,7 +1,5 @@
 import Header from 'components/Header'
-import ProfileCard from 'components/ProfileCard'
 import Table from 'components/Table'
-import Tabs from 'components/Tabs'
 import styles from './style.module.scss'
 import Container from 'components/Container'
 import Product from 'components/Product'
@@ -18,7 +16,7 @@ export default function Profile({
   viewTable,
   setViewTable
 }) {
-  const { data: pools, isLoading, error } = useGetPools()
+  const { data: pools } = useGetPools()
   const freePool = pools?.payload?.pools?.find((pool) => pool.price === 'free')
   const poolCount = pools?.payload?.count
   useEffect(() => {
@@ -35,17 +33,6 @@ export default function Profile({
       <Header title='Profile' />
 
       <Container>
-        {/* <ProfileCard /> */}
-        {/* <Tabs
-          tabs={tabs}
-          handleChange={handleChange}
-          value={value}
-          className={styles.tab}
-          setViewTable={setViewTable}
-          viewTable={viewTable}
-          hideFilter={true}
-        /> */}
-
         <h2 className={styles.tableTitle}>Gateway</h2>
 
         {viewTable ? (
@@ -57,21 +44,6 @@ export default function Profile({
                 data={pools?.payload?.pools}
               />
             )}
-            {/* {value === 1 && (
-              <div className={styles.downloads}>
-                <Table
-                  columns={[
-                    {
-                      key: 'queue',
-                      title: 'Downloads Queue'
-                    }
-                  ]}
-                  data={downloadData}
-                />
-                <Table columns={headColumns} data={data} />
-              </div>
-            )} */}
-            {/* {value === 2 && <Table columns={headColumns} data={data} />} */}
           </>
         ) : (
           <div className={styles.list}>

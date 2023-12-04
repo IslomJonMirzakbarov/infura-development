@@ -29,9 +29,11 @@ export const useInvoice = (mutationSettings) => {
 export const useStats = (mutationSettings) => {
   return useQuery('stats', poolService.getStats, mutationSettings)
 }
-export const useGetPoolById = ({ id, enabled = true }) => {
+export const useGetPoolById = ({ id, enabled = true, queryProps }) => {
   return useQuery(`get-pool-${id}`, () => poolService.getPoolById(id), {
-    enabled: enabled && !!id
+    enabled: enabled && !!id,
+    ...queryProps,
+    
   })
 }
 

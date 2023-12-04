@@ -7,7 +7,6 @@ import Table from 'components/Table'
 import { ReactComponent as InvoiceRoute } from 'assets/icons/invoice_routing.svg'
 import { useInvoice } from 'services/pool.service'
 import { formatNumberWithCommas } from 'utils/utilFuncs'
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney'
 import { ReactComponent as SmallCycon } from 'assets/icons/small_cycon.svg'
 
 const headColumns = [
@@ -33,34 +32,8 @@ const headColumns = [
   }
 ]
 
-const mockupData = [
-  {
-    date: (
-      <div className={styles.column}>
-        {new Date().toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric'
-        })}{' '}
-        <InvoiceRoute />
-      </div>
-    ),
-    txHash: 'fdlsafksdklfadj0xpfdskajfl',
-    pool_name: 'dfemlfdsfld',
-    invoice_price: (
-      <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-        <SmallCycon />
-        {formatNumberWithCommas(1000)}
-      </div>
-    ),
-    status: 'Paid',
-    plan: 'Custom plan'
-  }
-]
-
 const Billing = () => {
-  const { data, isLoading, error } = useInvoice()
-  console.log('dashboard: ', data)
+  const { data } = useInvoice()
 
   let transformedData = []
   if (data && data.invoices && data.invoices.length > 0) {

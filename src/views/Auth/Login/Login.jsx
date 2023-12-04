@@ -7,7 +7,6 @@ import { Box, Button, Typography } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { authActions } from 'store/auth/auth.slice'
 import useAuth from 'hooks/useAuth'
-import { useMutation } from 'react-query'
 import { useState } from 'react'
 
 export default function OldLogin() {
