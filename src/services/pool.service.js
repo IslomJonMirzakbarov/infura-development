@@ -23,8 +23,11 @@ export const useGetPools = (mutationSettings) => {
 export const useDashboard = (mutationSettings) => {
   return useQuery('dashboard', poolService.getDashboard, mutationSettings)
 }
-export const useInvoice = (mutationSettings) => {
-  return useQuery('invoices', poolService.getInvoices, mutationSettings)
+export const useInvoice = (querySettings = {}) => {
+  return useQuery('invoices', poolService.getInvoices, {
+    cacheTime: 20000,
+    ...querySettings
+  })
 }
 export const useStats = (mutationSettings) => {
   return useQuery('stats', poolService.getStats, mutationSettings)
@@ -32,8 +35,7 @@ export const useStats = (mutationSettings) => {
 export const useGetPoolById = ({ id, enabled = true, queryProps }) => {
   return useQuery(`get-pool-${id}`, () => poolService.getPoolById(id), {
     enabled: enabled && !!id,
-    ...queryProps,
-    
+    ...queryProps
   })
 }
 
