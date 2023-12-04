@@ -20,8 +20,9 @@ export default function Table({
     }
 
     if (name === 'billingTable' && row.txHash) {
-      // window.location.href = `https://klaytnscope.com/tx/${row.txHash}`
-      window.open(`https://klaytnscope.com/tx/${row.txHash}`, '_blank')
+      // https://baobab.scope.klaytn.com
+      // https://klaytnscope.com
+      window.open(`https://baobab.scope.klaytn.com/tx/${row.txHash}`, '_blank')
     }
   }
 

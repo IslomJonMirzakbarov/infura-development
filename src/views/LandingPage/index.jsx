@@ -7,7 +7,6 @@ import { useStats } from 'services/pool.service'
 
 const LandingPage = () => {
   const { data } = useStats()
-  console.log('data: ', data)
   return (
     <>
       <img src={globusIcon} alt='' className={styles.globusIcon} />

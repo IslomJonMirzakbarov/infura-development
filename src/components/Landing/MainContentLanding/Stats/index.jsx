@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material'
 import styles from '../style.module.scss'
 import { formatStatNumber } from 'utils/utilFuncs'
 
-const Stats = ({ statsData }) => {
+const Stats = ({ stats: statsData }) => {
   const mockStats = {
     connected_nodes_count: 735,
     storage_capacity: 1.22,
@@ -13,23 +13,23 @@ const Stats = ({ statsData }) => {
   const stats = [
     {
       statTitle: 'Connected Nodes',
-      statNum: mockStats?.connected_nodes_count,
-      statCap: 'M'
+      statNum: statsData?.connected_nodes_count,
+      statCap: ''
     },
     {
       statTitle: 'Storage Capacity',
-      statNum: mockStats?.storage_capacity,
-      statCap: 'Exabyte (EB)'
+      statNum: statsData?.storage_capacity,
+      statCap: ''
     },
     {
       statTitle: 'Stored Data ',
-      statNum: mockStats?.stored_data,
-      statCap: 'Petabyte (PB) '
+      statNum: statsData?.stored_data,
+      statCap: ''
     },
     {
       statTitle: 'Created Pools',
-      statNum: mockStats?.pools_count,
-      statCap: 'M'
+      statNum: statsData?.pools_count,
+      statCap: ''
     }
   ]
   return (

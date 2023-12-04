@@ -33,11 +33,11 @@ const headColumns = [
 ]
 
 const Billing = () => {
-  const { data } = useInvoice()
-
+  const { data, isLoading } = useInvoice()
+  console.log('billing: ', data)
   let transformedData = []
   if (data && data.invoices && data.invoices.length > 0) {
-    transformedData = data?.map((item) => ({
+    transformedData = data?.invoices?.map((item) => ({
       date: (
         <div className={styles.column}>
           {new Date(item.transaction_date).toLocaleDateString('en-US', {
@@ -77,6 +77,8 @@ const Billing = () => {
               columns={headColumns}
               data={transformedData}
             />
+          ) : isLoading ? (
+            ''
           ) : (
             <Typography
               variant='body1'
