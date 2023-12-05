@@ -8,6 +8,9 @@ import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
 import { NavLink } from 'react-router-dom'
 import { useState } from 'react'
 import LogoutModal from 'components/LogoutModal'
+import { useDashboard } from 'services/pool.service'
+
+import { useNavigate } from 'react-router-dom'
 
 const items = [
   {
@@ -34,15 +37,25 @@ const items = [
 
 export default function Sidebar() {
   const [open, setOpen] = useState(false)
+  const { isLoading } = useDashboard()
+  const navigate = useNavigate()
 
   const toggle = () => setOpen((prev) => !prev)
+
+  const handleNavigation = (path, event) => {
+    if (isLoading) {
+      event.preventDefault()
+    } else {
+      navigate(path)
+    }
+  }
 
   return (
     <div className={styles.sidebar}>
       {open && <LogoutModal toggle={toggle} />}
       <div>
         <div className={styles.header}>
-          <NavLink to='/'>
+          <NavLink to='/' onClick={(e) => handleNavigation('/', e)}>
             <Logo style={{ width: 128, fontSize: 128 }} />
           </NavLink>
         </div>
@@ -56,6 +69,7 @@ export default function Sidebar() {
                       navData.isActive ? styles.active : ''
                     }
                     to={item.path}
+                    onClick={(e) => handleNavigation(item.path, e)}
                   >
                     {item.icon}
                     {item.title}
