@@ -1,7 +1,7 @@
 import { Box, Button, Typography } from '@mui/material'
 import Container from 'components/Container'
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import styles from './styles.module.scss'
 import ApiKeyModal from '../ApiKeyModal'
 import HFSelect from 'components/ControlledFormElements/HFSelect'
@@ -25,7 +25,7 @@ import walletStore from 'store/wallet.store'
 const Pool = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { control, handleSubmit, formState, watch } = useForm({
+  const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       unit: 'GB'
     }
@@ -41,7 +41,11 @@ const Pool = () => {
   const [txHash, setTxHash] = useState(null)
   const { mutate: checkPool, isLoading: isCheckLoading } =
     usePoolCheckMutation()
-  const poolName = watch('name')
+  const poolName = useWatch({
+    control,
+    name: 'name'
+  })
+
   const debouncedPoolName = useDebounce(poolName, 500)
 
   useEffect(() => {
@@ -133,25 +137,26 @@ const Pool = () => {
         pool_size
       })
       setTxHash(result.transactionHash)
-      mutate(
-        { ...formData, tx_hash: result.transactionHash },
-        {
-          onSuccess: (res) => {
-            console.log('res: ', res)
-            setPoolAddress(res?.access_token?.token)
-            setOpen2(false)
-            setOpen3(true)
-            queryClient.invalidateQueries('pools')
-          },
-          onError: (error) => {
-            setOpen2(false)
-            console.log('error: ', error)
-            if (error.status === 401) {
-              // navigate('/auth/register')
+      if (result.transactionHash)
+        mutate(
+          { ...formData, tx_hash: result.transactionHash },
+          {
+            onSuccess: (res) => {
+              console.log('res: ', res)
+              setPoolAddress(res?.access_token?.token)
+              setOpen2(false)
+              setOpen3(true)
+              queryClient.invalidateQueries('pools')
+            },
+            onError: (error) => {
+              setOpen2(false)
+              console.log('error: ', error)
+              if (error.status === 401) {
+                // navigate('/auth/register')
+              }
             }
           }
-        }
-      )
+        )
     } catch (e) {
       setOpen2(false)
       toast.error(getRPCErrorMessage(e))

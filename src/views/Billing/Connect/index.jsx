@@ -75,10 +75,10 @@ const Connect = () => {
       {
         loading: 'Connection...',
         success: (
-          <b>
+          <span>
             Successful connection to{' '}
-            {walletType === 'metamask' ? 'MetaMask' : 'Kaikas'} wallet.
-          </b>
+            <b>{walletType === 'metamask' ? 'MetaMask' : 'Kaikas'} </b>wallet.
+          </span>
         ),
         error: <b>Connection error.</b>
       },
