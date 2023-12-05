@@ -4,7 +4,7 @@ import toast from 'react-hot-toast'
 import { refreshToken } from 'services/auth.service'
 
 const httpRequest = axios.create({
-  baseURL: 'https://api.oceandrive.network/',
+  baseURL: process.env.REACT_APP_BASE_URL,
   timeout: 100000
 })
 

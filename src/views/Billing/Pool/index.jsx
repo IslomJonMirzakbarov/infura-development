@@ -20,6 +20,7 @@ import ApproveModal from './ApproveModal'
 import toast from 'react-hot-toast'
 import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
 import { months, sizes, units } from './poolData'
+import walletStore from 'store/wallet.store'
 
 const Pool = () => {
   const navigate = useNavigate()
@@ -29,12 +30,11 @@ const Pool = () => {
       unit: 'GB'
     }
   })
-  const { createPool, checkAllowance, makeApprove, initializeProvider } =
-    useMetaMask()
+  const { createPool, checkAllowance, makeApprove } = useMetaMask()
 
-  useEffect(() => {
-    initializeProvider()
-  }, [initializeProvider])
+  // useEffect(() => {
+  //   initializeProvider()
+  // }, [initializeProvider])
 
   const [propError, setPropError] = useState('')
   const [openApprove, setOpenApprove] = useState(false)
@@ -62,7 +62,16 @@ const Pool = () => {
     }
   }, [debouncedPoolName])
 
-  const { mutate, isLoading } = usePoolCreateMutation()
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        walletStore.logout()
+        navigate('/main/billing/connect')
+      })
+    }
+  }, [])
+
+  const { mutate } = usePoolCreateMutation()
 
   const [formData, setFormData] = useState(null)
   const [poolAddress, setPoolAddress] = useState(null)

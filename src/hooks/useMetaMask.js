@@ -3,31 +3,33 @@ import ERC20_ABI from 'utils/ABI/ERC20ABI'
 import REWARD_ABI from 'utils/ABI/REWARD_ABI'
 import Web3 from 'web3'
 
-export const web3 = new Web3(Web3.givenProvider)
+const web3 = new Web3(Web3.givenProvider)
 
-const KLAYTN_CHAIN_ID = '0x3e9'
-const KLAYTN_BRIDGE_ADDRESS = '0xfdC48Bb197303855D7C33dAa5Ba7c8EA6917d407'
+const KLAYTN_CHAIN_ID = process.env.REACT_APP_KLAYTN_CHAIN_ID
+const KLAYTN_BRIDGE_ADDRESS =
+  process.env.REACT_APP_KLAYTN_BRIDGE_CONTRACT_ADDRESS
 const approveAmount =
   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 
-const CYCON_CONTRACT_ADDRESS = '0xaa5542ABBd8047Df38231818c49d23A47c930Ed2'
+const CYCON_CONTRACT_ADDRESS = process.env.REACT_APP_CYCON_CONTRACT_ADDRESS
+
 const useMetaMask = () => {
   const { address } = walletStore
 
-  let web3
+  // let web3
 
-  const initializeProvider = async () => {
-    if (window.ethereum) {
-      try {
-        await window.ethereum.request({ method: 'eth_requestAccounts' })
-        web3 = new Web3(window.ethereum)
-      } catch (error) {
-        console.error('Error connecting to MetaMask:', error)
-      }
-    } else {
-      console.log('No Ethereum provider found. Install MetaMask.')
-    }
-  }
+  // const initializeProvider = async () => {
+  //   if (window.ethereum) {
+  //     try {
+  //       await window.ethereum.request({ method: 'eth_requestAccounts' })
+  //       web3 = new Web3(window.ethereum)
+  //     } catch (error) {
+  //       console.error('Error connecting to MetaMask:', error)
+  //     }
+  //   } else {
+  //     console.log('No Ethereum provider found. Install MetaMask.')
+  //   }
+  // }
 
   const checkCurrentNetwork = async () => {
     const chainId = await window.web3.currentProvider.request({
@@ -100,13 +102,13 @@ const useMetaMask = () => {
         params: [
           {
             chainName: 'Klaytn Testnet Baobab',
-            chainId: web3.utils.toHex('0x3e9'),
+            chainId: web3.utils.toHex(KLAYTN_CHAIN_ID),
             nativeCurrency: {
               name: 'KLAY',
               decimals: 18,
               symbol: 'KLAY'
             },
-            rpcUrls: ['https://api.baobab.klaytn.net:8651']
+            rpcUrls: [process.env.REACT_APP_KLAYTN_RPC_URL]
           }
         ]
       })
@@ -149,8 +151,8 @@ const useMetaMask = () => {
     onChangeNetwork,
     createPool,
     makeApprove,
-    checkAllowance,
-    initializeProvider
+    checkAllowance
+    //initializeProvider
   }
 }
 
