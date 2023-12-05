@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material'
+import { Box, Grid, Typography } from '@mui/material'
 import BillingCard from 'components/BillingCard'
 import React from 'react'
 import poolStore from 'store/pool.store'
@@ -34,6 +34,11 @@ const CardsContainer = ({ onSelect }) => {
           </Grid>
         ))}
       </Grid>
+      {isDisabled && (
+        <Typography fontSize='18px' color='red' margin='18px' fontWeight='bold'>
+          You have reached the maximum limit for 'Pool Creation'
+        </Typography>
+      )}
     </>
   )
 }
