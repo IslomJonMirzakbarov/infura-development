@@ -15,7 +15,6 @@ class Store {
   type = null
 
   setWallet(value) {
-    console.log('value', value)
     this.address = value.address
     this.type = value.type
   }
