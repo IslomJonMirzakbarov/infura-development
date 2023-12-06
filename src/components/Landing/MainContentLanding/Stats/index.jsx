@@ -1,37 +1,32 @@
 import React from 'react'
 import { Box, Typography } from '@mui/material'
 import styles from '../style.module.scss'
-import { formatStatNumber } from 'utils/utilFuncs'
+import { formatStatStorageNumber, formatStatNumber } from 'utils/utilFuncs'
 
 const Stats = ({ stats: statsData }) => {
-  const mockStats = {
-    connected_nodes_count: 735,
-    storage_capacity: 1.22,
-    stored_data: 1.34,
-    pools_count: 456
-  }
   const stats = [
     {
       statTitle: 'Connected Nodes',
-      statNum: statsData?.connected_nodes_count,
-      statCap: ''
+      statNum: statsData?.connected_nodes_count ?? 0,
+      formatFunction: formatStatNumber
     },
     {
       statTitle: 'Storage Capacity',
-      statNum: statsData?.storage_capacity,
-      statCap: ''
+      statNum: statsData ? statsData.storage_capacity * 1e9 : 0,
+      formatFunction: formatStatStorageNumber
     },
     {
-      statTitle: 'Stored Data ',
-      statNum: statsData?.stored_data,
-      statCap: ''
+      statTitle: 'Stored Data',
+      statNum: statsData ? statsData.stored_data * 1e9 : 0,
+      formatFunction: formatStatStorageNumber
     },
     {
       statTitle: 'Created Pools',
-      statNum: statsData?.pools_count,
-      statCap: ''
+      statNum: statsData?.pools_count ?? 0,
+      formatFunction: formatStatNumber
     }
   ]
+
   return (
     <Box className={styles.statsDiv}>
       <Typography
@@ -43,9 +38,8 @@ const Stats = ({ stats: statsData }) => {
         OceanDrive's <br /> Network Stats
       </Typography>
 
-      {/* <div className={styles.statBoxesHolder}> */}
       {stats.map((stat) => {
-        const formattedStat = formatStatNumber(stat.statNum)
+        const formattedStat = stat.formatFunction(stat.statNum)
         return (
           <Box className={styles.stats} key={stat.statTitle}>
             <Typography className={styles.statTitle}>
@@ -64,13 +58,12 @@ const Stats = ({ stats: statsData }) => {
                 color='gray'
                 className={styles.statCap}
               >
-                {formattedStat.cap || stat.statCap}
+                {formattedStat.cap}
               </Typography>
             </Box>
           </Box>
         )
       })}
-      {/* </div> */}
     </Box>
   )
 }

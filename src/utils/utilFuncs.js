@@ -34,7 +34,7 @@ export const getShortenedPoolName = (poolName) => {
   return poolName
 }
 
-export function formatStatNumber(num) {
+export function formatStatStorageNumber(num) {
   if (num >= 1e18) {
     return { value: (num / 1e18).toFixed(1), cap: 'Exabyte (EB)' } // Exabytes
   } else if (num >= 1e15) {
@@ -44,10 +44,28 @@ export function formatStatNumber(num) {
   } else if (num >= 1e9) {
     return { value: (num / 1e9).toFixed(1), cap: 'GB' } // Gigabytes
   } else if (num >= 1e6) {
-    return { value: (num / 1e6).toFixed(1), cap: 'M' } // Millions
+    return { value: (num / 1e6).toFixed(1), cap: 'MB' } // Millions
   } else if (num >= 1e3) {
-    return { value: (num / 1e3).toFixed(1), cap: 'K' } // Thousands
+    return { value: (num / 1e3).toFixed(1), cap: 'KB' } // Thousands
   } else {
-    return { value: num, cap: '' } // Numbers less than 1000
+    return { value: num, cap: 'B' } // Numbers less than 1000
+  }
+}
+
+export function formatStatNumber(num) {
+  if (num >= 1e18) {
+    return { value: (num / 1e18).toFixed(1), cap: 'Exa (E)' }
+  } else if (num >= 1e15) {
+    return { value: (num / 1e15).toFixed(1), cap: 'Peta (P)' }
+  } else if (num >= 1e12) {
+    return { value: (num / 1e12).toFixed(1), cap: 'T' }
+  } else if (num >= 1e9) {
+    return { value: (num / 1e9).toFixed(1), cap: 'G' }
+  } else if (num >= 1e6) {
+    return { value: (num / 1e6).toFixed(1), cap: 'M' }
+  } else if (num >= 1e3) {
+    return { value: (num / 1e3).toFixed(1), cap: 'K' }
+  } else {
+    return { value: num, cap: '' }
   }
 }
