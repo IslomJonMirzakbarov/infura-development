@@ -16,20 +16,20 @@ const CYCON_CONTRACT_ADDRESS = process.env.REACT_APP_CYCON_CONTRACT_ADDRESS
 const useMetaMask = () => {
   const { address } = walletStore
 
-  // let web3
+  let web3
 
-  // const initializeProvider = async () => {
-  //   if (window.ethereum) {
-  //     try {
-  //       await window.ethereum.request({ method: 'eth_requestAccounts' })
-  //       web3 = new Web3(window.ethereum)
-  //     } catch (error) {
-  //       console.error('Error connecting to MetaMask:', error)
-  //     }
-  //   } else {
-  //     console.log('No Ethereum provider found. Install MetaMask.')
-  //   }
-  // }
+  const initializeProvider = async () => {
+    if (window.ethereum) {
+      try {
+        await window.ethereum.request({ method: 'eth_requestAccounts' })
+        web3 = new Web3(window.ethereum)
+      } catch (error) {
+        console.error('Error connecting to MetaMask:', error)
+      }
+    } else {
+      console.log('No Ethereum provider found. Install MetaMask.')
+    }
+  }
 
   const checkCurrentNetwork = async () => {
     const chainId = await window.web3.currentProvider.request({
@@ -151,8 +151,8 @@ const useMetaMask = () => {
     onChangeNetwork,
     createPool,
     makeApprove,
-    checkAllowance
-    //initializeProvider
+    checkAllowance,
+    initializeProvider
   }
 }
 

@@ -30,11 +30,12 @@ const Pool = () => {
       unit: 'GB'
     }
   })
-  const { createPool, checkAllowance, makeApprove } = useMetaMask()
+  const { createPool, checkAllowance, makeApprove, initializeProvider } =
+    useMetaMask()
 
-  // useEffect(() => {
-  //   initializeProvider()
-  // }, [initializeProvider])
+  useEffect(() => {
+    initializeProvider()
+  }, [initializeProvider])
 
   const [propError, setPropError] = useState('')
   const [openApprove, setOpenApprove] = useState(false)
