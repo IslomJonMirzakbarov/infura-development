@@ -2,6 +2,7 @@ import axios from 'axios'
 import authStore from 'store/auth.store'
 import toast from 'react-hot-toast'
 import { refreshToken } from 'services/auth.service'
+import modalStore from 'store/modal.store'
 
 const httpRequest = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -17,6 +18,10 @@ const errorHandler = async (error, hooks) => {
     error?.response?.data?.message !== 'pool already exists'
   ) {
     toast.error(capitalizeFirstLetter(error.response.data.message))
+  }
+
+  if (error?.response?.status === 500) {
+    modalStore.setOpenServerError(true)
   }
 
   if (
