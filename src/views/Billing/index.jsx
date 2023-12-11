@@ -34,7 +34,6 @@ const headColumns = [
 
 const Billing = () => {
   const { data, isLoading } = useInvoice()
-  console.log('billing: ', data)
   let transformedData = []
   if (data && data.invoices && data.invoices.length > 0) {
     transformedData = data?.invoices?.map((item) => ({
