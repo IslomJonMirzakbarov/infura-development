@@ -22,7 +22,10 @@ export default function Table({
     if (name === 'billingTable' && row.txHash) {
       // https://baobab.scope.klaytn.com
       // https://klaytnscope.com
-      window.open(`https://baobab.scope.klaytn.com/tx/${row.txHash}`, '_blank')
+      window.open(
+        `${process.env.REACT_APP_KLAYTN_SCOPE}/tx/${row.txHash}`,
+        '_blank'
+      )
     }
   }
 
