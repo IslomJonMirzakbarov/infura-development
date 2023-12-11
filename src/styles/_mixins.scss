@@ -1,0 +1,38 @@
+$screen-sm-min: 640px;
+$screen-md-min: 768px;
+$screen-lg-min: 1024px;
+$screen-xl-min: 1280px;
+
+@mixin sm {
+  @media (max-width: #{$screen-sm-min}) {
+    @content;
+  }
+}
+
+@mixin md {
+  @media (max-width: #{$screen-md-min}) {
+    @content;
+  }
+}
+
+@mixin lg {
+  @media (max-width: #{$screen-lg-min}) {
+    @content;
+  }
+}
+
+@mixin align-items-center {
+  display: flex;
+  align-items: center;
+}
+
+@mixin justify-content-center {
+  display: flex;
+  justify-content: center;
+}
+
+@mixin element-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

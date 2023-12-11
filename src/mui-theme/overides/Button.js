@@ -5,7 +5,6 @@ export const MuiButton = {
       lineHeight: 'normal',
       fontWeigth: 700,
       color: '#fff',
-      height: 55,
       minWidth: 150,
       transition: 'all 0.25s ease-in-out',
       textTransform: 'none',
@@ -22,8 +21,12 @@ export const MuiButton = {
     },
     outlined: {
       backgroundColor: 'transparent',
-      border: '1px solid #0E42E5',
-      color: '#0E42E5'
+      border: '1px solid #FFF',
+      color: '#fff',
+      '&:hover': {
+        border: '1px solid #FFF',
+        color: '#27E6D6'
+      }
     },
     containedPrimary: {
       background: 'linear-gradient(97deg, #27E6D6 3.65%, #130FCC 81.9%)',
@@ -60,13 +63,21 @@ export const MuiButton = {
         backgroundColor: '#0433AA'
       }
     },
+    unstyled: {
+      '&:hover': {
+        background: 'transparent',
+        color: '#27E6D6'
+      }
+    },
     sizeMedium: {
-      padding: '11.5px 28px'
+      padding: '11.5px 28px',
+      height: 55
     },
     sizeSmall: {
-      padding: '7px 13px',
-      fontSize: '12px',
-      lineHeight: '18px'
+      padding: '11px 13px',
+      fontSize: '15px',
+      lineHeight: 'normal',
+      height: 45
     }
   }
 }

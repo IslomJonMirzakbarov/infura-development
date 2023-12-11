@@ -1,104 +1,124 @@
 import React, { useState } from 'react'
-import { AppBar, Box, Menu, MenuItem, Toolbar } from '@mui/material'
+import { Box, Button, Container, Menu, MenuItem, Tooltip } from '@mui/material'
 import { NavLink, useNavigate } from 'react-router-dom'
-import OceanDriveLogo from 'assets/images/landing/oceandrive.svg'
-import downArrow from 'assets/images/landing/down_arrow.svg'
 import { ReactComponent as WalletIcon } from 'assets/images/landing/wallet.svg'
+import { ReactComponent as Logo } from 'assets/images/landing/oceandrive.svg'
+import { ReactComponent as ArrowDownIcon } from 'assets/images/landing/down_arrow.svg'
 import styles from './style.module.scss'
-import classNames from 'classnames'
 import authStore from 'store/auth.store'
+import walletStore from 'store/wallet.store'
+import classNames from 'classnames'
+import { truncateWalletAddress } from 'utils/utilFuncs'
+import Hamburger from 'hamburger-react'
+import MobileMenu from './MobileMenu'
 
 const NavbarLanding = () => {
   const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null)
-  const [hovered, setHovered] = useState(false)
   const { isAuth } = authStore
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget)
   }
+  const [isOpen, setOpen] = useState(false)
+  const onClose = () => {
+    setOpen(false)
+  }
+  const { address } = walletStore
 
   const handleClose = () => {
     setAnchorEl(null)
   }
 
   return (
-    <AppBar position='fixed' className={styles.navbar} elevation={0}>
-      <Toolbar className={styles.navTool}>
-        <img
-          src={OceanDriveLogo}
-          alt='oceandrive'
-          className={styles.logo}
-          onClick={() => navigate('/')}
-        />
-        <ul className={styles.navBtnDiv}>
-          <li className={styles.navBtn}>
-            <NavLink>Pricing</NavLink>
-          </li>
+    <>
+      <header className={styles.header}>
+        <Container className={styles.container}>
+          <NavLink onClick={onClose} to='/' className={styles.logo}>
+            <Logo />
+          </NavLink>
+          <nav>
+            <ul>
+              <li>
+                <NavLink to='/'>Pricing</NavLink>
+              </li>
 
-          <li
-            className={styles.navHoverBtn}
-            onMouseEnter={handleOpen}
-            onMouseLeave={handleClose}
-          >
-            <p>
-              Support <img src={downArrow} alt='downArrow' />
-            </p>
-            <Menu
-              id='support-menu'
-              anchorEl={anchorEl}
-              keepMounted
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              onMouseLeave={handleClose}
-            >
-              <MenuItem onClick={handleClose}>Kakaotalk</MenuItem>
-              <MenuItem onClick={handleClose}>Telegram</MenuItem>
-            </Menu>
-          </li>
+              <li onMouseEnter={handleOpen} onMouseLeave={handleClose}>
+                <p>
+                  Support <ArrowDownIcon />
+                </p>
+                <Menu
+                  id='support-menu'
+                  anchorEl={anchorEl}
+                  keepMounted
+                  open={Boolean(anchorEl)}
+                  onClose={handleClose}
+                  onMouseLeave={handleClose}
+                >
+                  <MenuItem onClick={handleClose}>Kakaotalk</MenuItem>
+                  <MenuItem onClick={handleClose}>Telegram</MenuItem>
+                </Menu>
+              </li>
 
-          <li className={styles.navBtn}>
-            <NavLink
-              to='/why-infura'
-              style={({ isActive }) => {
-                return {
-                  color: isActive ? '#27E6D6' : ''
-                }
-              }}
-            >
-              Why OceanDrive's INFURA
-            </NavLink>
-          </li>
-        </ul>
+              <li>
+                <NavLink
+                  to='/why-infura'
+                  style={({ isActive }) => {
+                    return {
+                      color: isActive ? '#27E6D6' : ''
+                    }
+                  }}
+                >
+                  Why OceanDrive's INFURA
+                </NavLink>
+              </li>
+            </ul>
+          </nav>
 
-        <Box className={styles.navBtnDiv2}>
-          {!isAuth && (
-            <>
-              <button
-                variant='text'
-                className={classNames(styles.navBtn, styles.button)}
-                onClick={() => navigate('/auth/register')}
+          <Box className={styles.buttons}>
+            {!isAuth && (
+              <>
+                <Button
+                  className={styles.signup}
+                  variant='unstyled'
+                  onClick={() => navigate('/auth/register')}
+                >
+                  Sign up
+                </Button>
+                <Button
+                  variant='outlined'
+                  onClick={() => navigate('/auth/login')}
+                  size='small'
+                  className={styles.login}
+                >
+                  Login
+                </Button>
+              </>
+            )}
+
+            <Tooltip title={address ? truncateWalletAddress(address) : ''}>
+              <Box
+                className={classNames(styles.wallet, {
+                  [styles.connected]: address
+                })}
+                onClick={() => navigate('/main/billing/connect')}
               >
-                Sign up
-              </button>
-              <button
-                className={classNames(styles.navBtn, styles.loginBtn)}
-                onClick={() => navigate('/auth/login')}
-              >
-                Login
-              </button>
-            </>
-          )}
-          <Box
-            className={styles.walletDiv}
-            onClick={() => navigate('/main/billing/connect')}
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-          >
-            <WalletIcon fill={hovered ? '#27E6D6' : 'white'} />
+                <WalletIcon />
+              </Box>
+            </Tooltip>
+            <Box className={styles.burgerBtn}>
+              <Hamburger
+                size={20}
+                rounded
+                color='#fff'
+                toggled={isOpen}
+                toggle={setOpen}
+              />
+            </Box>
           </Box>
-        </Box>
-      </Toolbar>
-    </AppBar>
+        </Container>
+      </header>
+      <MobileMenu isOpen={isOpen} onClose={onClose} />
+    </>
   )
 }
 
