@@ -3,6 +3,10 @@
   position: relative;
   padding: 70px 70px 370px 70px;
 
+  @media (max-width: 600px) {
+    padding: 42px 25px 113px;
+  }
+
   .smallDesc {
     display: flex;
     align-items: flex-start;
@@ -10,9 +14,19 @@
     gap: 28px;
     margin-bottom: 58px;
 
+    @media (max-width: 600px) {
+      gap: 10px;
+      margin-bottom: 45px;
+    }
+
     .titleSection {
       width: 424px;
       height: 160px;
+
+      @media (max-width: 600px) {
+        width: 170px;
+        height: 70px;
+      }
 
       .oceanDriveTxt {
         color: var(--base-white);
@@ -20,6 +34,13 @@
         font-style: normal;
         font-weight: 700;
         line-height: 80px;
+
+        @media (max-width: 600px) {
+          font-size: 28px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 35px;
+        }
       }
 
       .infuraTxt {
@@ -28,6 +49,13 @@
         line-height: 80px;
         color: var(--main);
         font-style: normal;
+
+        @media (max-width: 600px) {
+          font-size: 28px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 35px;
+        }
       }
     }
 
@@ -38,6 +66,17 @@
       line-height: 21px;
       letter-spacing: 0em;
       text-align: left;
+
+      @media (max-width: 600px) {
+        margin-bottom: 43px;
+        font-size: 14px;
+        line-height: normal;
+        width: 328px;
+
+        .mobileHide {
+          display: none;
+        }
+      }
     }
 
     .goToBtn {
@@ -50,6 +89,13 @@
       font-size: 15px;
       font-weight: 600;
       white-space: nowrap;
+
+      @media (max-width: 600px) {
+        width: 180px;
+        height: 55px;
+        border-radius: 10px;
+        white-space: nowrap;
+      }
     }
   }
 
@@ -67,25 +113,50 @@
     opacity: 0.9;
     margin-bottom: 160px;
 
+    @media (max-width: 600px) {
+      padding: 24px 50px 45px 62.5px;
+      flex-direction: column;
+      width: calc(100% + 50px);
+      margin-left: -25px;
+      height: max-content;
+      border-radius: 12px 12px 0px 0px;
+      align-items: center;
+      opacity: 1;
+      margin-bottom: 18px;
+    }
+
     .titleNS {
       color: var(--base-white);
       font-size: 40px;
       font-weight: 700;
       line-height: 50px;
+
+      @media (max-width: 600px) {
+        font-size: 28px;
+        line-height: 35px;
+        margin-bottom: 32px;
+        text-align: center;
+      }
     }
 
-    // .statBoxesHolder {
-    //   display: flex;
-    //   gap: 45px;
-    //   align-items: center;
-    // }
-
     .stats {
+      @media (max-width: 600px) {
+        margin-bottom: 30px;
+
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+
       .statTitle {
         color: var(--base-white);
         font-size: 15px;
         font-weight: 700;
         margin-bottom: 13px;
+
+        @media (max-width: 600px) {
+          text-align: center;
+        }
       }
 
       .statBox {
@@ -100,6 +171,11 @@
         );
         position: relative;
 
+        @media (max-width: 600px) {
+          width: 290px;
+          height: 160px;
+        }
+
         .statNum {
           position: absolute;
           top: 25px;
@@ -107,6 +183,12 @@
           color: var(--base-white);
           font-size: 35px;
           font-weight: 500;
+
+          @media (max-width: 600px) {
+            top: 20px;
+            left: 20px;
+            font-size: 48px;
+          }
         }
 
         .statCap {
@@ -118,6 +200,12 @@
           font-size: 15px;
           font-weight: 500;
           line-height: 30px;
+
+          @media (max-width: 600px) {
+            bottom: 20px;
+            right: 20px;
+            font-size: 20px;
+          }
         }
       }
     }
@@ -129,11 +217,35 @@
     align-items: center;
     margin-bottom: 202px;
 
+    @media (max-width: 600px) {
+      flex-direction: column;
+      align-items: center;
+      gap: 71px;
+      height: max-content;
+      margin-bottom: 150px;
+    }
+
+    .middleIcon {
+      @media (max-width: 600px) {
+        order: -1;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        margin-bottom: -50px;
+      }
+    }
+
     .featureCol {
       display: flex;
       flex-direction: column;
       gap: 65px;
       height: 262.29px;
+
+      @media (max-width: 600px) {
+        width: 100%;
+        gap: 71px;
+        height: max-content;
+      }
 
       .featureTitle {
         color: var(--base-white);
@@ -141,21 +253,44 @@
         font-size: 18px;
         font-weight: 700;
         margin-bottom: 8px;
+
+        @media (max-width: 600px) {
+          text-align: center;
+          font-size: 24px;
+          max-width: 284px;
+          margin-left: 35px;
+          margin-bottom: 20px;
+        }
       }
       .featureText {
         color: var(--base-white);
         text-align: right;
         font-size: 14px;
         font-weight: 275;
+
+        @media (max-width: 600px) {
+          text-align: center;
+          font-size: 15px;
+        }
       }
 
       &:nth-of-type(3) {
         gap: 128.2px;
+        @media (max-width: 600px) {
+          gap: 71px;
+        }
         .featureTitle {
           text-align: left;
+          @media (max-width: 600px) {
+            text-align: center;
+            gap: 0;
+          }
         }
         .featureText {
           text-align: left;
+          @media (max-width: 600px) {
+            text-align: center;
+          }
         }
       }
     }
@@ -168,6 +303,13 @@
       font-weight: 700;
       line-height: 50px;
       margin-bottom: 75px;
+
+      @media (max-width: 600px) {
+        font-size: 28px;
+        line-height: 35px;
+        margin-bottom: 25px;
+        text-align: center;
+      }
     }
 
     .itemsContainer {
@@ -175,6 +317,10 @@
       align-items: center;
       justify-content: center;
       gap: 66px;
+
+      @media (max-width: 600px) {
+        gap: 10px;
+      }
 
       .arrow {
         cursor: pointer;
@@ -185,6 +331,11 @@
         justify-content: space-around;
         gap: 25px;
 
+        @media (max-width: 600px) {
+          width: 100vw;
+          flex-direction: row;
+        }
+
         .item {
           width: 287.998px;
           height: 435px;
@@ -193,6 +344,11 @@
           background: #030221;
           cursor: pointer;
 
+          @media (max-width: 600px) {
+            width: 246px;
+            height: max-content;
+          }
+
           img {
             width: 100%;
             height: auto;
@@ -200,6 +356,10 @@
 
           .titleDesc {
             padding: 20px;
+
+            @media (max-width: 600px) {
+              padding: 12px;
+            }
 
             h6 {
               color: var(--base-white);

@@ -6,11 +6,23 @@
   justify-content: space-between;
   align-items: center;
 
+  @media (max-width: 600px) {
+    padding: 35px 27px 50px;
+    align-items: center;
+    gap: 80px;
+    flex-direction: column;
+  }
+
   .descTitle {
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: 11px;
+
+    @media (max-width: 600px) {
+      align-items: center;
+      gap: 15px;
+    }
 
     .desc {
       color: var(--base-white);
@@ -40,5 +52,14 @@
       justify-content: center;
       cursor: pointer;
     }
+  }
+
+  .reserved {
+    color: #fff;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 22px;
+    margin-top: -45px;
   }
 }

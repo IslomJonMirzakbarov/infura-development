@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Grid } from '@mui/material'
+import { Box, Grid, useMediaQuery } from '@mui/material'
 import styles from './style.module.scss'
 import { ReactComponent as WorldwideIcon } from 'assets/images/landing/worldwide.svg'
 import { ReactComponent as EmpowerIcon } from 'assets/images/landing/empower.svg'
@@ -33,8 +33,20 @@ const optionsData = {
   }
 }
 
+const formatDescription = (description, isMobile) => {
+  if (isMobile) {
+    return description.replace(/<br\s*\/?>/gi, ' ')
+  }
+  return description
+}
+
 const InfoSection = () => {
   const [selectedOption, setSelectedOption] = useState(optionsData.worldwide)
+  const isMobile = useMediaQuery('(max-width:600px)')
+
+  const handleOptionSelect = (optionKey) => {
+    setSelectedOption(optionsData[optionKey])
+  }
 
   const handleOptionHover = (optionKey) => {
     setSelectedOption(optionsData[optionKey])
@@ -52,23 +64,27 @@ const InfoSection = () => {
           <p
             className={styles.description}
             dangerouslySetInnerHTML={{
-              __html: `
+              __html: formatDescription(
+                `
       Your business by providing a robust and secure decentralized storage
       and synchronization platform. <br /> We help you work efficiently,
       deliver content seamlessly, and foster innovation across the globe,
       ensuring <br /> your data is accessible and protected wherever you
       go.
-    `
+    `,
+                isMobile
+              )
             }}
           />
         </Grid>
 
         <Grid item xs={12} className={styles.options}>
           <ul>
-            {Object.keys(optionsData).map((key) => (
+            {Object.keys(optionsData).map((key, index) => (
               <li
                 key={key}
                 onMouseEnter={() => handleOptionHover(key)}
+                onClick={() => handleOptionSelect(key)}
                 className={
                   selectedOption.title === optionsData[key].title
                     ? styles.activeOption
@@ -77,7 +93,11 @@ const InfoSection = () => {
               >
                 <p
                   className={styles.text}
-                  dangerouslySetInnerHTML={{ __html: optionsData[key].title }}
+                  dangerouslySetInnerHTML={{
+                    __html: `${isMobile ? `0${index + 1} ` : ''}${
+                      optionsData[key].title
+                    }`
+                  }}
                 />
               </li>
             ))}
@@ -98,7 +118,9 @@ const InfoSection = () => {
             />
             <p
               className={styles.desc}
-              dangerouslySetInnerHTML={{ __html: selectedOption.description }}
+              dangerouslySetInnerHTML={{
+                __html: formatDescription(selectedOption.description, isMobile)
+              }}
             />
           </Box>
         </Grid>
