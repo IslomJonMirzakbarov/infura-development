@@ -3,11 +3,8 @@ import ERC20_ABI from 'utils/ABI/ERC20ABI'
 import REWARD_ABI from 'utils/ABI/REWARD_ABI'
 import Web3 from 'web3'
 
-const web3 = new Web3(Web3.givenProvider)
-
 const KLAYTN_CHAIN_ID = process.env.REACT_APP_KLAYTN_CHAIN_ID
-const KLAYTN_BRIDGE_ADDRESS =
-  process.env.REACT_APP_KLAYTN_BRIDGE_CONTRACT_ADDRESS
+const REWARD_CONTRACT_ADDRESS = process.env.REACT_APP_REWARD_CONTRACT
 const approveAmount =
   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 
@@ -49,7 +46,7 @@ const useMetaMask = () => {
     pin_replication,
     pool_period
   }) => {
-    const contract = new web3.eth.Contract(REWARD_ABI, KLAYTN_BRIDGE_ADDRESS)
+    const contract = new web3.eth.Contract(REWARD_ABI, REWARD_CONTRACT_ADDRESS)
 
     const price = web3.utils.toWei(String(pool_price), 'ether')
 
@@ -73,13 +70,13 @@ const useMetaMask = () => {
     const contract = new web3.eth.Contract(ERC20_ABI, CYCON_CONTRACT_ADDRESS)
 
     const gasLimit = await contract.methods
-      .approve(KLAYTN_BRIDGE_ADDRESS, approveAmount)
+      .approve(REWARD_CONTRACT_ADDRESS, approveAmount)
       .estimateGas({
         from: address
       })
 
     const approve = await contract.methods
-      .approve(KLAYTN_BRIDGE_ADDRESS, approveAmount)
+      .approve(REWARD_CONTRACT_ADDRESS, approveAmount)
       .send({
         from: address,
         gas: gasLimit
@@ -90,7 +87,7 @@ const useMetaMask = () => {
   const checkAllowance = async () => {
     const contract = new web3.eth.Contract(ERC20_ABI, CYCON_CONTRACT_ADDRESS)
     const allowance = await contract.methods
-      .allowance(address, KLAYTN_BRIDGE_ADDRESS)
+      .allowance(address, REWARD_CONTRACT_ADDRESS)
       .call()
     return allowance
   }
