@@ -6,6 +6,7 @@ import { LoadingButton } from '@mui/lab'
 import toast from 'react-hot-toast'
 import { CircularProgress } from '@mui/material'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import PageTransition from 'components/PageTransition'
 
 const ConfirmationCode = () => {
   const location = useLocation()
@@ -46,38 +47,40 @@ const ConfirmationCode = () => {
   }
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-      <h1 className={styles.title}>Confirmation Code</h1>
-      <BasicTextField
-        fullWidth
-        name='otp'
-        label='Enter confirmation code'
-        control={control}
-        required
-        placeholder='Please enter code'
-        type='number'
-      />
-      <div className={styles.resend}>
-        <p>
-          Didn’t receive a code?{' '}
-          <span>
-            {isLoader ? (
-              <CircularProgress size='15px' color='inherit' />
-            ) : (
-              <a onClick={onResend}>Resend</a>
-            )}
-          </span>
-        </p>
-      </div>
-      <LoadingButton
-        type='submit'
-        variant='contained'
-        color='primary'
-        loading={isLoading}
-      >
-        Confirm
-      </LoadingButton>
-    </form>
+    <PageTransition>
+      <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+        <h1 className={styles.title}>Confirmation Code</h1>
+        <BasicTextField
+          fullWidth
+          name='otp'
+          label='Enter confirmation code'
+          control={control}
+          required
+          placeholder='Please enter code'
+          type='number'
+        />
+        <div className={styles.resend}>
+          <p>
+            Didn’t receive a code?{' '}
+            <span>
+              {isLoader ? (
+                <CircularProgress size='15px' color='inherit' />
+              ) : (
+                <a onClick={onResend}>Resend</a>
+              )}
+            </span>
+          </p>
+        </div>
+        <LoadingButton
+          type='submit'
+          variant='contained'
+          color='primary'
+          loading={isLoading}
+        >
+          Confirm
+        </LoadingButton>
+      </form>
+    </PageTransition>
   )
 }
 

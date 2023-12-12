@@ -13,7 +13,9 @@ export default function AuthLayout() {
       <div className={styles.logo} onClick={() => navigate('/')}>
         <Logo />
       </div>
-      <Outlet />
+      <div className={styles.form}>
+        <Outlet />
+      </div>
     </div>
   )
 }

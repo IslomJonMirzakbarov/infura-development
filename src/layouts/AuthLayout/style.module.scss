@@ -16,11 +16,13 @@
     position: absolute;
     bottom: -500px;
     right: -400px;
+    z-index: 0;
   }
   .blurImgL {
     position: absolute;
     top: -500px;
     left: -400px;
+    z-index: 0;
   }
   .logo {
     position: absolute;
@@ -32,6 +34,10 @@
       position: static;
       z-index: 9;
     }
+  }
+
+  .form {
+    z-index: 1;
   }
 
   .logo,
