@@ -3,12 +3,13 @@ export const MuiButton = {
     root: {
       fontSize: '14px',
       lineHeight: 'normal',
-      fontWeigth: 700,
+      fontWeight: '700',
       color: '#fff',
       minWidth: 150,
       transition: 'all 0.25s ease-in-out',
       textTransform: 'none',
       borderRadius: '10px',
+      boxShadow: 'none',
       '&.Mui-disabled': {
         backgroundColor: '#858585',
         color: '#000'
@@ -44,6 +45,10 @@ export const MuiButton = {
     },
     containedInfo: {
       background: 'rgba(255, 255, 255, 0.15)',
+      '@media (max-width: 600px)': {
+        background: 'rgba(77, 77, 77, 0.15)',
+        color: '#545454'
+      },
       '&:hover': {
         background: 'rgba(255, 255, 255, 0.15)',
         opacity: 0.7,
