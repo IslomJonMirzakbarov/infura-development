@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import walletStore from 'store/wallet.store'
 import ERC20_ABI from 'utils/ABI/ERC20ABI'
 import REWARD_ABI from 'utils/ABI/REWARD_ABI'
@@ -13,20 +14,26 @@ const CYCON_CONTRACT_ADDRESS = process.env.REACT_APP_CYCON_CONTRACT_ADDRESS
 const useMetaMask = () => {
   const { address } = walletStore
 
-  let web3
+  const [web3, setWeb3] = useState(null)
 
-  const initializeProvider = async () => {
-    if (window.ethereum) {
+  useEffect(() => {
+    const initWeb3 = async () => {
       try {
-        await window.ethereum.request({ method: 'eth_requestAccounts' })
-        web3 = new Web3(window.ethereum)
+        if (window.ethereum) {
+          const web3Instance = new Web3(window.ethereum)
+          setWeb3(web3Instance)
+        } else {
+          console.error(
+            'MetaMask not detected! Please install MetaMask to use this application.'
+          )
+        }
       } catch (error) {
-        console.error('Error connecting to MetaMask:', error)
+        console.error('Error initializing Web3:', error)
       }
-    } else {
-      console.log('No Ethereum provider found. Install MetaMask.')
     }
-  }
+
+    initWeb3()
+  }, [])
 
   const checkCurrentNetwork = async () => {
     const chainId = await window.web3.currentProvider.request({
@@ -148,8 +155,7 @@ const useMetaMask = () => {
     onChangeNetwork,
     createPool,
     makeApprove,
-    checkAllowance,
-    initializeProvider
+    checkAllowance
   }
 }
 
