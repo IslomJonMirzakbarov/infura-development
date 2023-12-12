@@ -1,11 +1,20 @@
 .infoSection {
   margin-bottom: 202px;
 
+  @media (max-width: 600px) {
+    margin-bottom: 147px;
+  }
+
   .header {
     color: var(--base-white);
     font-size: 40px;
     font-weight: 700;
     line-height: 50px; /* 125% */
+
+    @media (max-width: 600px) {
+      font-size: 28px;
+      line-height: 35px;
+    }
   }
 
   .description {
@@ -20,10 +29,18 @@
   .options {
     margin-top: 45px;
     margin-bottom: 5px;
+    overflow-x: auto;
     ul {
       list-style-type: none;
       display: flex;
       gap: 50px;
+
+      @media (max-width: 600px) {
+        width: max-content;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+      }
 
       li {
         transition: color 0.1s ease, transform 0.1s ease;
@@ -56,15 +73,42 @@
     padding: 26px 35px;
     position: relative;
 
+    @media (max-width: 600px) {
+      height: 340px;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.1) 0.04%,
+        rgba(255, 255, 255, 0) 99.96%
+      );
+      padding: 20px;
+    }
+
     div {
       position: absolute;
       bottom: 25px;
       right: 216px;
+
+      @media (max-width: 600px) {
+        position: absolute;
+        bottom: -20px;
+        right: 14px;
+
+        svg {
+          width: 164.996px;
+          height: 160.496px;
+        }
+      }
     }
 
     .specialIcon {
       bottom: -35px;
       right: 180px !important;
+
+      @media (max-width: 600px) {
+        position: absolute;
+        bottom: -20px;
+        right: 14px !important;
+      }
     }
 
     .title {
@@ -73,6 +117,11 @@
       font-style: normal;
       font-weight: 700;
       line-height: normal;
+
+      @media (max-width: 600px) {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
     }
 
     .desc {

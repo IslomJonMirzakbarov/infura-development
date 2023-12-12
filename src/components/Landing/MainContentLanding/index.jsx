@@ -24,10 +24,12 @@ const MainContentLanding = ({ stats }) => {
 
         <Typography className={styles.description}>
           OceanDrive Infura is the bridge to a world seamlessly connected
-          through <br /> decentralized storage solutions. Our innovative
-          platform leverages the latent <br /> potential of unused storage space
-          across our global network of participants, <br /> creating a web of
-          connectivity that transcends online and offline boundaries.
+          through <br className={styles.mobileHide} /> decentralized storage
+          solutions. Our innovative platform leverages the latent{' '}
+          <br className={styles.mobileHide} /> potential of unused storage space
+          across our global network of participants,{' '}
+          <br className={styles.mobileHide} /> creating a web of connectivity
+          that transcends online and offline boundaries.
         </Typography>
 
         <Button className={styles.goToBtn} onClick={goToClick}>
