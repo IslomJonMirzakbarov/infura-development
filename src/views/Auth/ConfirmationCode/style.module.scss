@@ -6,6 +6,11 @@
   align-items: center;
   z-index: 100;
   width: 470px;
+  @include sm {
+    width: 100%;
+    margin-top: 77px;
+    padding: 0 25px;
+  }
   .title {
     color: var(--base-white);
     text-align: center;
@@ -14,9 +19,17 @@
     font-weight: 700;
     line-height: 50px;
     margin-bottom: 67px;
+    @include sm {
+      font-size: 20px;
+      line-height: 50px;
+      margin-bottom: 75px;
+    }
   }
   .resend {
     width: 100%;
+    @include sm {
+      margin-top: -10px;
+    }
     p {
       color: var(--base-white);
       font-size: 12px;
