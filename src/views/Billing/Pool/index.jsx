@@ -21,6 +21,7 @@ import toast from 'react-hot-toast'
 import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
 import { months, sizes, units } from './poolData'
 import walletStore from 'store/wallet.store'
+import PageTransition from 'components/PageTransition'
 
 const Pool = () => {
   const navigate = useNavigate()
@@ -160,7 +161,7 @@ const Pool = () => {
   }
 
   return (
-    <>
+    <PageTransition>
       <Container>
         <Box width='100%' display='flex' alignItems='center'>
           <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
@@ -294,7 +295,7 @@ complete'
         toggle={toggle3}
         open={open3}
       />
-    </>
+    </PageTransition>
   )
 }
 

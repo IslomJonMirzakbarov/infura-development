@@ -10,6 +10,7 @@ import toast from 'react-hot-toast'
 import { observer } from 'mobx-react-lite'
 import useMetaMask from 'hooks/useMetaMask'
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded'
+import PageTransition from 'components/PageTransition'
 
 const walletType = {
   metamask:
@@ -103,7 +104,7 @@ const Connect = () => {
   }, [])
 
   return (
-    <>
+    <PageTransition>
       <div className={classes.form}>
         <div className={classes.formArea}>
           <div className={classes.wallets}>
@@ -178,7 +179,7 @@ const Connect = () => {
         handleClose={handleClose}
         hanldeLogout={hanldeLogout}
       />
-    </>
+    </PageTransition>
   )
 }
 

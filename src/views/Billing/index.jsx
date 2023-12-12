@@ -8,6 +8,7 @@ import { ReactComponent as InvoiceRoute } from 'assets/icons/invoice_routing.svg
 import { useInvoice } from 'services/pool.service'
 import { formatNumberWithCommas } from 'utils/utilFuncs'
 import { ReactComponent as SmallCycon } from 'assets/icons/small_cycon.svg'
+import PageTransition from 'components/PageTransition'
 
 const headColumns = [
   {
@@ -66,29 +67,31 @@ const Billing = () => {
     }))
   }
   return (
-    <Container maxWidth={true}>
-      <div className={styles.billingContainer}>
-        <Paper className={styles.paper}>
-          <h2 className={styles.title}>Invoice History</h2>
-          {transformedData.length > 0 ? (
-            <Table
-              name='billingTable'
-              columns={headColumns}
-              data={transformedData}
-            />
-          ) : isLoading ? (
-            ''
-          ) : (
-            <Typography
-              variant='body1'
-              style={{ margin: '20px', color: '#fff' }}
-            >
-              No invoice data available.
-            </Typography>
-          )}
-        </Paper>
-      </div>
-    </Container>
+    <PageTransition>
+      <Container maxWidth={true}>
+        <div className={styles.billingContainer}>
+          <Paper className={styles.paper}>
+            <h2 className={styles.title}>Invoice History</h2>
+            {transformedData.length > 0 ? (
+              <Table
+                name='billingTable'
+                columns={headColumns}
+                data={transformedData}
+              />
+            ) : isLoading ? (
+              ''
+            ) : (
+              <Typography
+                variant='body1'
+                style={{ margin: '20px', color: '#fff' }}
+              >
+                No invoice data available.
+              </Typography>
+            )}
+          </Paper>
+        </div>
+      </Container>
+    </PageTransition>
   )
 }
 

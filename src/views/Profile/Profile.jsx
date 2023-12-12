@@ -6,6 +6,7 @@ import Product from 'components/Product'
 import { useGetPools } from 'services/pool.service'
 import { useEffect } from 'react'
 import poolStore from 'store/pool.store'
+import PageTransition from 'components/PageTransition'
 
 export default function Profile({
   downloadData,
@@ -29,7 +30,7 @@ export default function Profile({
   }, [freePool, poolCount])
 
   return (
-    <>
+    <PageTransition>
       <Header title='Profile' />
 
       <Container>
@@ -55,6 +56,6 @@ export default function Profile({
           </div>
         )}
       </Container>
-    </>
+    </PageTransition>
   )
 }

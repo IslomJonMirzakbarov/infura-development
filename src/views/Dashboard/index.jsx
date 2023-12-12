@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom'
 import { useDashboard } from 'services/pool.service'
 import poolStore from 'store/pool.store'
 import { getShortenedPoolName } from 'utils/utilFuncs'
+import PageTransition from 'components/PageTransition'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -82,77 +83,79 @@ const Dashboard = () => {
     </Typography>
   ))
   return (
-    <Container maxWidth={true}>
-      <Box className={styles.createBtnBox}>
-        <Button
-          className={styles.createBtn}
-          disableElevation
-          color='primary'
-          onClick={() => navigate('/main/pricing')}
-        >
-          <span>+</span> Create Storage
-        </Button>
-        <Typography className={styles.nodes}>
-          Nodes available : {data?.available_nodes_count}
-        </Typography>
-      </Box>
-
-      <Box className={styles.chartHolder}>
-        <Box
-          className={styles.chartHead}
-          display='flex'
-          alignItems='center'
-          gap='21px'
-        >
-          <HFSelect
-            control={control}
-            name='dashboardPool'
-            placeholder='Select pool'
-            required
-            style={{ width: '222px' }}
-            options={pools}
-            disabled={isSelectDisabled}
-          />
-
-          <Typography color='#fff' fontSize={13} fontWeight={500} mt={4}>
-            Current Plan: Free/Change your plan
+    <PageTransition>
+      <Container maxWidth={true}>
+        <Box className={styles.createBtnBox}>
+          <Button
+            className={styles.createBtn}
+            disableElevation
+            color='primary'
+            onClick={() => navigate('/main/pricing')}
+          >
+            <span>+</span> Create Storage
+          </Button>
+          <Typography className={styles.nodes}>
+            Nodes available : {data?.available_nodes_count}
           </Typography>
         </Box>
 
-        <div className={styles.chartBody}>
+        <Box className={styles.chartHolder}>
           <Box
-            width='100%'
-            height='40px'
-            backgroundColor='rgba(255, 255, 255, 0.15);'
-            borderRadius='7px 7px 0px 0px'
+            className={styles.chartHead}
             display='flex'
             alignItems='center'
-            paddingLeft='11px'
-            gap='33px'
+            gap='21px'
           >
-            {infoBoxes}
+            <HFSelect
+              control={control}
+              name='dashboardPool'
+              placeholder='Select pool'
+              required
+              style={{ width: '222px' }}
+              options={pools}
+              disabled={isSelectDisabled}
+            />
+
+            <Typography color='#fff' fontSize={13} fontWeight={500} mt={4}>
+              Current Plan: Free/Change your plan
+            </Typography>
           </Box>
-          <DashboardBarChart
-            upload={poolData?.uploaded_files_count}
-            download={0}
-          />
-          <Box padding='16px 12px'>
-            <Box display='flex' alignItems='center' gap='8px' mb='5px'>
-              <Box width={13} height={13} backgroundColor='#27e6d6' />
-              <Typography color='#fff' fontSize={12} fontWeight={500}>
-                Upload
-              </Typography>
+
+          <div className={styles.chartBody}>
+            <Box
+              width='100%'
+              height='40px'
+              backgroundColor='rgba(255, 255, 255, 0.15);'
+              borderRadius='7px 7px 0px 0px'
+              display='flex'
+              alignItems='center'
+              paddingLeft='11px'
+              gap='33px'
+            >
+              {infoBoxes}
             </Box>
-            <Box display='flex' alignItems='center' gap='8px'>
-              <Box width={13} height={13} backgroundColor='#4131CA' />
-              <Typography color='#fff' fontSize={12} fontWeight={500}>
-                Download
-              </Typography>
+            <DashboardBarChart
+              upload={poolData?.uploaded_files_count}
+              download={0}
+            />
+            <Box padding='16px 12px'>
+              <Box display='flex' alignItems='center' gap='8px' mb='5px'>
+                <Box width={13} height={13} backgroundColor='#27e6d6' />
+                <Typography color='#fff' fontSize={12} fontWeight={500}>
+                  Upload
+                </Typography>
+              </Box>
+              <Box display='flex' alignItems='center' gap='8px'>
+                <Box width={13} height={13} backgroundColor='#4131CA' />
+                <Typography color='#fff' fontSize={12} fontWeight={500}>
+                  Download
+                </Typography>
+              </Box>
             </Box>
-          </Box>
-        </div>
-      </Box>
-    </Container>
+          </div>
+        </Box>
+      </Container>
+    </PageTransition>
   )
 }
 
