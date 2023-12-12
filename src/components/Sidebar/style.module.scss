@@ -41,15 +41,15 @@
       position: relative;
       .burgerBtn {
         display: flex;
-        // border: 1px solid yellow;
         width: 50px;
       }
 
       a svg {
         width: auto;
         height: auto;
-        max-width: 128px;
-        max-height: 38px;
+        max-width: 104px;
+        max-height: 30px;
+        margin-top: 8px;
       }
     }
 

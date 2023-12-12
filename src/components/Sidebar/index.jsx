@@ -67,7 +67,10 @@ export default function Sidebar() {
         <div>
           <div className={styles.header}>
             <NavLink to='/' onClick={(e) => handleNavigation('/', e)}>
-              <Logo style={{ width: 128, fontSize: 128 }} />
+              <Logo
+                style={{ width: 128, fontSize: 128 }}
+                className={styles.logo}
+              />
             </NavLink>
             <Box className={styles.burgerBtn}>
               <Hamburger
