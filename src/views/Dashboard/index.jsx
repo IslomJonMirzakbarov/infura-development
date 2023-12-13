@@ -8,7 +8,11 @@ import DashboardBarChart from 'components/BarChart'
 import { useNavigate } from 'react-router-dom'
 import { useDashboard } from 'services/pool.service'
 import poolStore from 'store/pool.store'
-import { getShortenedPoolName } from 'utils/utilFuncs'
+import {
+  formatStatNumber,
+  formatStatStorageNumber,
+  getShortenedPoolName
+} from 'utils/utilFuncs'
 import PageTransition from 'components/PageTransition'
 
 const Dashboard = () => {
@@ -76,15 +80,30 @@ const Dashboard = () => {
         UploadedFiles: poolData?.uploaded_files_count.toString() || '0'
       }
 
-  const infoBoxes = Object.entries(poolInfo).map(([key, value]) => (
-    <Typography key={key} fontSize={12} fontWeight={700} color='#fff'>
-      {key.replace(/([A-Z])/g, ' $1')}:{' '}
-      <span style={{ fontWeight: '300' }}>{value}</span>
-    </Typography>
-  ))
+  const infoBoxes = Object.entries(poolInfo).map(([key, value]) => {
+    let displayValue
+    if (key === 'PoolSize' || key === 'RemainingStorage') {
+      const num = parseFloat(value) * 1e9
+      displayValue =
+        formatStatStorageNumber(num).value +
+        '' +
+        formatStatStorageNumber(num).cap
+    } else {
+      const num = parseInt(value, 10)
+      displayValue =
+        formatStatNumber(num).value + ' ' + formatStatNumber(num).cap
+    }
+
+    return (
+      <Typography key={key} fontSize={12} fontWeight={700} color='#fff'>
+        {key.replace(/([A-Z])/g, ' $1')}:{' '}
+        <span style={{ fontWeight: '300' }}>{displayValue}</span>
+      </Typography>
+    )
+  })
   return (
     <PageTransition>
-      <Container maxWidth={true}>
+      <Container maxWidth={true} className={styles.container}>
         <Box className={styles.createBtnBox}>
           <Button
             className={styles.createBtn}
@@ -116,7 +135,13 @@ const Dashboard = () => {
               disabled={isSelectDisabled}
             />
 
-            <Typography color='#fff' fontSize={13} fontWeight={500} mt={4}>
+            <Typography
+              color='#fff'
+              fontSize={13}
+              fontWeight={500}
+              mt={4}
+              className={styles.planTxt}
+            >
               Current Plan: Free/Change your plan
             </Typography>
           </Box>
