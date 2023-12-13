@@ -1,7 +1,19 @@
+@import 'styles/mixins';
+
 .form {
   width: 100%;
   padding: 35px;
+  @include sm {
+    padding: 25px;
+  }
 
+  .mobileText {
+    display: none;
+    @include sm {
+      display: block;
+      margin-top: 28px;
+    }
+  }
   .warning {
     font-size: 14px;
     line-height: 21px;
@@ -33,6 +45,9 @@
       z-index: 2;
       width: 546px;
       transition: all 0.4s ease-in-out;
+      @include sm {
+        width: 100%;
+      }
       .content {
         padding: 12px 21px;
         display: flex;
@@ -69,21 +84,45 @@
     display: flex;
     width: 100%;
     justify-content: space-between;
+    @include sm {
+      align-items: center;
+    }
     .wallets {
       display: flex;
       flex-direction: column;
+
+      span {
+        &:first-child {
+          @include sm {
+            font-size: 18px;
+            line-height: 26px;
+          }
+        }
+        &:last-child {
+          @include sm {
+            display: none;
+          }
+        }
+      }
     }
 
     .metamask {
       display: flex;
       align-items: center;
       gap: 12px;
+
       img {
-        width: 25.606px;
-        height: 25.606px;
-        max-width: 25.606px;
-        max-height: 25.606px;
+        width: 25px;
+        height: 25px;
+        max-width: 25px;
+        max-height: 25px;
         object-fit: contain;
+        @include sm {
+          max-width: 20px;
+          max-height: 20px;
+          width: 20px;
+          height: 20px;
+        }
       }
       svg {
         cursor: pointer;
@@ -97,6 +136,9 @@
         font-size: 15px;
         font-weight: 600;
         line-height: normal;
+        @include sm {
+          padding: 12px 13px;
+        }
       }
     }
   }
