@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { usePoolCheckMutation } from 'services/pool.service'
 import walletStore from 'store/wallet.store'
 import PageTransition from 'components/PageTransition'
+import styles from './style.module.scss'
 
 const Billing = () => {
   const { control, handleSubmit } = useForm()
@@ -61,7 +62,7 @@ const Billing = () => {
 
   return (
     <PageTransition>
-      <Container maxWidth={true}>
+      <Container maxWidth={true} className={styles.container}>
         <GatewayModal
           serverError={serverError}
           open={open}

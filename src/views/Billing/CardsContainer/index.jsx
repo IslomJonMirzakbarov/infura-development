@@ -35,7 +35,17 @@ const CardsContainer = ({ onSelect }) => {
         ))}
       </Grid>
       {isDisabled && (
-        <Typography fontSize='18px' color='red' margin='18px' fontWeight='bold'>
+        <Typography
+          fontSize='18px'
+          color='red'
+          margin='18px'
+          fontWeight='bold'
+          sx={{
+            '@media (max-width: 600px)': {
+              fontSize: '14px'
+            }
+          }}
+        >
           You have reached the maximum limit for 'Pool Creation'
         </Typography>
       )}

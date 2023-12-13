@@ -3,18 +3,13 @@ import React from 'react'
 import styles from './style.module.scss'
 import classNames from 'classnames'
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded'
-import MobileBillingCard from './MobileBillingCard'
 
-const BillingCard = ({ onSelect, item, isFree }) => {
+export default function MobileBillingCard({ onSelect, item, isFree }) {
   const handleSelect = () => {
     if (item.isCurrentPlan) return
     onSelect(item)
   }
-  const isMobile = useMediaQuery('(max-width:600px)')
-
-  return isMobile ? (
-    <MobileBillingCard onSelect={onSelect} item={item} isFree={isFree} />
-  ) : (
+  return (
     <Box
       className={classNames(styles.card, {
         [styles.currentPlan]: item.isCurrentPlan,
@@ -24,38 +19,41 @@ const BillingCard = ({ onSelect, item, isFree }) => {
     >
       <Typography className={styles.title}>{item.name}</Typography>
       {item.isEnterprise ? (
-        <p className={styles.text}>{item.text}</p>
+        <div className={styles.enterpriseBox}>
+          <p className={styles.priceText}>Personalized plan</p>
+          <p className={styles.text}>
+            Feel free to contact us for any questions.
+          </p>
+        </div>
       ) : (
         <ul className={styles.list}>
           <li className={styles.item}>
-            <VerifiedRoundedIcon /> {item.storage} storage
+            <Box
+              display='flex'
+              alignItems='center'
+              mt='44px'
+              className={styles.priceBox}
+            >
+              <span className={styles.price}>${item.price}</span>
+              <span className={styles.month}>/month</span>
+            </Box>
           </li>
           <li className={styles.item}>
-            <VerifiedRoundedIcon /> {item.gatewayCount} gateway
+            <VerifiedRoundedIcon /> {item.storage} storage
           </li>
           <li className={styles.item}>
             <VerifiedRoundedIcon /> {item.replication} pin replication
           </li>
         </ul>
       )}
-      {item.isEnterprise ? (
-        <p className={styles.priceText}>{item.priceText}</p>
-      ) : (
-        <Box display='flex' alignItems='center' mt='44px'>
-          <span className={styles.price}>${item.price}</span>
-          <span className={styles.month}>/month</span>
-        </Box>
-      )}
 
-      <Button onClick={handleSelect}>
+      <button onClick={handleSelect}>
         {item.isEnterprise
           ? 'Customize'
           : item.isCurrentPlan
           ? 'Selected Plan'
           : 'Select'}
-      </Button>
+      </button>
     </Box>
   )
 }
-
-export default BillingCard
