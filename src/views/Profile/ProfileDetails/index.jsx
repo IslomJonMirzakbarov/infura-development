@@ -141,6 +141,7 @@ const ProfileDetails = () => {
               width='100%'
               height='100%'
               mt='250px'
+              className={styles.planBtn}
             >
               <Button
                 variant='contained'

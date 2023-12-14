@@ -1,10 +1,22 @@
+@import 'styles/_mixins.scss';
+
 .elements {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   column-gap: 12px;
+
+  @include sm {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    max-width: 100%;
+  }
 }
 
 .txHash {
+  @include sm {
+    margin-bottom: 24px;
+    overflow: auto;
+    width: 100%;
+  }
   label {
     display: block;
   }
@@ -13,9 +25,19 @@
     line-height: 20px;
     color: #fff;
     opacity: 0.8;
+
     cursor: pointer;
     p {
       text-decoration: underline;
+      @include sm {
+        width: max-content;
+      }
     }
+  }
+}
+
+.planBtn {
+  @include sm {
+    margin-top: 50px;
   }
 }
