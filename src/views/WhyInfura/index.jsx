@@ -6,6 +6,7 @@ import { ReactComponent as GatewayProviderIcon } from 'assets/icons/gateway_prov
 import { ReactComponent as InfuraDashboardIcon } from 'assets/icons/infura_dashboard.svg'
 import styles from './style.module.scss'
 import PageTransition from 'components/PageTransition'
+import Container from 'components/Container'
 
 const contentItems = [
   {

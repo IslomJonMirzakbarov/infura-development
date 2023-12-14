@@ -1,9 +1,11 @@
+@import 'styles/_mixins.scss';
+
 .mainContainer {
   z-index: 2;
   position: relative;
   padding: 70px 70px 370px 70px;
 
-  @media (max-width: 600px) {
+  @include sm {
     padding: 42px 25px 113px;
   }
 
@@ -14,7 +16,7 @@
     gap: 28px;
     margin-bottom: 58px;
 
-    @media (max-width: 600px) {
+    @include sm {
       gap: 10px;
       margin-bottom: 45px;
     }
@@ -23,7 +25,7 @@
       width: 424px;
       height: 160px;
 
-      @media (max-width: 600px) {
+      @include sm {
         width: 170px;
         height: 70px;
       }
@@ -35,7 +37,7 @@
         font-weight: 700;
         line-height: 80px;
 
-        @media (max-width: 600px) {
+        @include sm {
           font-size: 28px;
           font-style: normal;
           font-weight: 700;
@@ -50,7 +52,7 @@
         color: var(--main);
         font-style: normal;
 
-        @media (max-width: 600px) {
+        @include sm {
           font-size: 28px;
           font-style: normal;
           font-weight: 700;
@@ -67,7 +69,7 @@
       letter-spacing: 0em;
       text-align: left;
 
-      @media (max-width: 600px) {
+      @include sm {
         margin-bottom: 43px;
         font-size: 14px;
         line-height: normal;
@@ -90,7 +92,7 @@
       font-weight: 600;
       white-space: nowrap;
 
-      @media (max-width: 600px) {
+      @include sm {
         width: 180px;
         height: 55px;
         border-radius: 10px;
@@ -113,8 +115,8 @@
     opacity: 0.9;
     margin-bottom: 160px;
 
-    @media (max-width: 600px) {
-      padding: 24px 50px 45px 62.5px;
+    @include sm {
+      padding: 24px 50px 45px;
       flex-direction: column;
       width: calc(100% + 50px);
       margin-left: -25px;
@@ -131,7 +133,7 @@
       font-weight: 700;
       line-height: 50px;
 
-      @media (max-width: 600px) {
+      @include sm {
         font-size: 28px;
         line-height: 35px;
         margin-bottom: 32px;
@@ -140,7 +142,7 @@
     }
 
     .stats {
-      @media (max-width: 600px) {
+      @include sm {
         margin-bottom: 30px;
 
         &:last-child {
@@ -154,7 +156,7 @@
         font-weight: 700;
         margin-bottom: 13px;
 
-        @media (max-width: 600px) {
+        @include sm {
           text-align: center;
         }
       }
@@ -171,7 +173,7 @@
         );
         position: relative;
 
-        @media (max-width: 600px) {
+        @include sm {
           width: 290px;
           height: 160px;
         }
@@ -184,7 +186,7 @@
           font-size: 35px;
           font-weight: 500;
 
-          @media (max-width: 600px) {
+          @include sm {
             top: 20px;
             left: 20px;
             font-size: 48px;
@@ -201,7 +203,7 @@
           font-weight: 500;
           line-height: 30px;
 
-          @media (max-width: 600px) {
+          @include sm {
             bottom: 20px;
             right: 20px;
             font-size: 20px;
@@ -217,7 +219,7 @@
     align-items: center;
     margin-bottom: 202px;
 
-    @media (max-width: 600px) {
+    @include sm {
       flex-direction: column;
       align-items: center;
       gap: 71px;
@@ -226,7 +228,7 @@
     }
 
     .middleIcon {
-      @media (max-width: 600px) {
+      @include sm {
         order: -1;
         width: 100%;
         display: flex;
@@ -241,10 +243,15 @@
       gap: 65px;
       height: 262.29px;
 
-      @media (max-width: 600px) {
+      @include sm {
         width: 100%;
         gap: 71px;
         height: max-content;
+
+        .featureBox {
+          @include align-items-center;
+          flex-direction: column;
+        }
       }
 
       .featureTitle {
@@ -254,11 +261,11 @@
         font-weight: 700;
         margin-bottom: 8px;
 
-        @media (max-width: 600px) {
+        @include sm {
           text-align: center;
           font-size: 24px;
           max-width: 284px;
-          margin-left: 35px;
+          // margin-left: 35px;
           margin-bottom: 20px;
         }
       }
@@ -268,7 +275,7 @@
         font-size: 14px;
         font-weight: 275;
 
-        @media (max-width: 600px) {
+        @include sm {
           text-align: center;
           font-size: 15px;
         }
@@ -276,19 +283,19 @@
 
       &:nth-of-type(3) {
         gap: 128.2px;
-        @media (max-width: 600px) {
+        @include sm {
           gap: 71px;
         }
         .featureTitle {
           text-align: left;
-          @media (max-width: 600px) {
+          @include sm {
             text-align: center;
             gap: 0;
           }
         }
         .featureText {
           text-align: left;
-          @media (max-width: 600px) {
+          @include sm {
             text-align: center;
           }
         }
@@ -304,7 +311,7 @@
       line-height: 50px;
       margin-bottom: 75px;
 
-      @media (max-width: 600px) {
+      @include sm {
         font-size: 28px;
         line-height: 35px;
         margin-bottom: 25px;
@@ -318,7 +325,7 @@
       justify-content: center;
       gap: 66px;
 
-      @media (max-width: 600px) {
+      @include sm {
         gap: 10px;
       }
 
@@ -331,7 +338,7 @@
         justify-content: space-around;
         gap: 25px;
 
-        @media (max-width: 600px) {
+        @include sm {
           width: 100vw;
           flex-direction: row;
         }
@@ -344,7 +351,7 @@
           background: #030221;
           cursor: pointer;
 
-          @media (max-width: 600px) {
+          @include sm {
             width: 246px;
             height: max-content;
           }
@@ -357,7 +364,7 @@
           .titleDesc {
             padding: 20px;
 
-            @media (max-width: 600px) {
+            @include sm {
               padding: 12px;
             }
 

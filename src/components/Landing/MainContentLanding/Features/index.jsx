@@ -23,7 +23,7 @@ const Features = () => {
         ) : (
           <Box className={styles.featureCol}>
             {feature.map((featureItem) => (
-              <Box key={featureItem.title}>
+              <Box key={featureItem.title} className={styles.featureBox}>
                 <Typography
                   className={styles.featureTitle}
                   dangerouslySetInnerHTML={{ __html: featureItem.title }}

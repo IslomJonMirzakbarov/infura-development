@@ -38,6 +38,6 @@
 
 .planBtn {
   @include sm {
-    margin-top: 50px;
+    margin-top: 50px !important;
   }
 }
