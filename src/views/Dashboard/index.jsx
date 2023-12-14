@@ -147,22 +147,26 @@ const Dashboard = () => {
           </Box>
 
           <div className={styles.chartBody}>
-            <Box
-              width='100%'
-              height='40px'
-              backgroundColor='rgba(255, 255, 255, 0.15);'
-              borderRadius='7px 7px 0px 0px'
-              display='flex'
-              alignItems='center'
-              paddingLeft='11px'
-              gap='33px'
-            >
-              {infoBoxes}
-            </Box>
-            <DashboardBarChart
-              upload={poolData?.uploaded_files_count}
-              download={0}
-            />
+            <div className={styles.infoBoxesContainer}>
+              <Box
+                width='100%'
+                height='40px'
+                backgroundColor='rgba(255, 255, 255, 0.15);'
+                borderRadius='7px 7px 0px 0px'
+                display='flex'
+                alignItems='center'
+                paddingLeft='11px'
+                gap='33px'
+                className={styles.infoBoxes}
+              >
+                {infoBoxes}
+              </Box>
+              <DashboardBarChart
+                upload={poolData?.uploaded_files_count}
+                download={0}
+                className={styles.chart} // Add className here
+              />
+            </div>
             <Box padding='16px 12px'>
               <Box display='flex' alignItems='center' gap='8px' mb='5px'>
                 <Box width={13} height={13} backgroundColor='#27e6d6' />

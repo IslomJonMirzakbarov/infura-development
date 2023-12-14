@@ -2,9 +2,13 @@
 
 .container {
   @include sm {
-    overflow-y: hidden;
+    overflow: hidden;
     padding-right: 0;
     padding-left: 25px;
+
+    .container {
+      padding: 0;
+    }
   }
 }
 
@@ -62,7 +66,7 @@
     .planTxt {
       margin-top: 15px;
       margin-bottom: 20px;
-      margin-left: -90px;
+      margin-left: -145px;
       text-align: left;
     }
   }
@@ -70,8 +74,23 @@
 
 .chartBody {
   @include sm {
-    overflow-x: auto;
+    width: 100%;
+    white-space: nowrap;
+    overflow-x: scroll;
     overflow-y: hidden;
-    width: 718px;
+
+    .infoBoxesContainer {
+      display: flex;
+      flex-direction: column;
+      width: max-content;
+      padding-right: 11px;
+
+      .infoBoxes {
+        padding-right: 11px;
+      }
+      .chart {
+        width: 100%;
+      }
+    }
   }
 }
