@@ -47,7 +47,7 @@ export default function MobileBillingCard({ onSelect, item, isFree }) {
         </ul>
       )}
 
-      <button onClick={handleSelect}>
+      <button onClick={handleSelect} className={styles.btn}>
         {item.isEnterprise
           ? 'Customize'
           : item.isCurrentPlan
