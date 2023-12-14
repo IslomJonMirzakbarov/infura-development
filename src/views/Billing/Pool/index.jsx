@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import Container from 'components/Container'
 import React, { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
@@ -26,6 +26,7 @@ import PageTransition from 'components/PageTransition'
 const Pool = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
+  const isMobile = useMediaQuery('(max-width:640px)')
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       unit: 'GB'
@@ -289,8 +290,11 @@ const Pool = () => {
       <ApiKeyModal
         onSubmit={() => navigate('/main/profile')}
         poolAddress={poolAddress}
-        title='Transaction successfully
-complete'
+        title={
+          isMobile
+            ? 'Transaction Complete'
+            : 'Transaction successfully complete'
+        }
         txHash={txHash}
         toggle={toggle3}
         open={open3}

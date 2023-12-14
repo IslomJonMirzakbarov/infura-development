@@ -6,6 +6,9 @@
   color: #121212;
   position: relative;
   height: 373px;
+  @include sm {
+    width: 100%;
+  }
   h6 {
     font-weight: 600;
     font-size: 15px;

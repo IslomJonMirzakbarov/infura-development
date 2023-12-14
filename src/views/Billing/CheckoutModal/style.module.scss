@@ -1,3 +1,5 @@
+@import 'styles/_mixins.scss';
+
 .box {
   .items {
     display: grid;
@@ -5,6 +7,10 @@
     gap: 5px;
     padding-bottom: 10px;
     border-bottom: 1px dashed #d1d1d1;
+
+    @include sm {
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
     .item {
       padding: 11px;
       border-radius: 7px;
@@ -38,6 +44,10 @@
     background: #1d1d41;
     z-index: -1;
     border-radius: 0 0 10px 10px;
+
+    @include sm {
+      height: 156px;
+    }
     p {
       font-weight: 500;
       &:first-child {
@@ -56,6 +66,7 @@
       align-items: flex-end;
       justify-content: space-between;
       margin-top: 10px;
+
       button {
         &:first-child {
           padding: 0;

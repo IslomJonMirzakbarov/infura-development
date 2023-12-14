@@ -18,7 +18,7 @@
   @include sm {
     padding: 15px;
     width: 335px;
-    height: 350px;
+    min-height: 350px;
     justify-content: space-between;
     border-radius: 7px;
     outline: none;
