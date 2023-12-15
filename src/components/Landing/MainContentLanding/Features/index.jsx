@@ -1,10 +1,18 @@
 import React from 'react'
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, useMediaQuery } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 import styles from '../style.module.scss'
 import { ReactComponent as MiddleIcon } from 'assets/images/landing/middle_icon2.svg'
 import { features } from '../data'
 
+const formatTextForMobile = (text, isMobile) => {
+  return isMobile ? text.replace(/<br\s*\/?>/gi, ' ') : text
+}
+
 const Features = () => {
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
   return (
     <div className={styles.featuresContainer}>
       {features.map((feature) =>
@@ -15,14 +23,16 @@ const Features = () => {
         ) : (
           <Box className={styles.featureCol}>
             {feature.map((featureItem) => (
-              <Box>
+              <Box key={featureItem.title} className={styles.featureBox}>
                 <Typography
                   className={styles.featureTitle}
                   dangerouslySetInnerHTML={{ __html: featureItem.title }}
                 />
                 <Typography
                   className={styles.featureText}
-                  dangerouslySetInnerHTML={{ __html: featureItem.text }}
+                  dangerouslySetInnerHTML={{
+                    __html: formatTextForMobile(featureItem.text, isMobile)
+                  }}
                 />
               </Box>
             ))}

@@ -1,11 +1,11 @@
-@import 'styles/unit';
+@import 'styles/mixins';
 
 .tab {
   margin-top: 25px;
 }
 
 .tableTitle {
-  color: #fff;
+  color: var(--base-white);
   font-size: 22px;
   font-weight: 700;
   margin-bottom: 15px;

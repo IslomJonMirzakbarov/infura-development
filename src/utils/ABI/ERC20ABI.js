@@ -1,4 +1,4 @@
-export const ERC20_ABI = [
+const ERC20_ABI = [
   {
     constant: false,
     inputs: [
@@ -177,4 +177,6 @@ export const ERC20_ABI = [
     stateMutability: 'nonpayable',
     type: 'function'
   }
-];
+]
+
+export default ERC20_ABI

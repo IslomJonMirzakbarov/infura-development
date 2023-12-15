@@ -5,7 +5,14 @@ import styles from './style.module.scss'
 import { truncateJWT } from 'utils/utilFuncs'
 import { useState } from 'react'
 
-const ApiKeyModal = ({ open, toggle, title, onSubmit, poolAddress }) => {
+const ApiKeyModal = ({
+  open,
+  toggle,
+  title,
+  onSubmit,
+  poolAddress,
+  txHash
+}) => {
   const [copied, setCopied] = useState(false)
 
   const handleCopy = (tx) => {
@@ -21,6 +28,17 @@ const ApiKeyModal = ({ open, toggle, title, onSubmit, poolAddress }) => {
       onSubmit={onSubmit}
       title={title || 'Your API key'}
     >
+      {txHash && (
+        <p className={styles.txHash}>
+          <a
+            href={`https://baobab.scope.klaytn.com/tx/${txHash}`}
+            target='_blank'
+          >
+            {truncateJWT(txHash, 20)}
+          </a>
+        </p>
+      )}
+      <p className={styles.title}>API Key</p>
       <Box className={styles.text}>
         {poolAddress && <p>{truncateJWT(poolAddress, 20)}</p>}
         <Tooltip

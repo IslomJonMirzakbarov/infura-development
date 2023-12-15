@@ -1,17 +1,50 @@
+@import 'styles/mixins';
+
 .form {
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 100;
   width: 470px;
+  @include sm {
+    width: 100%;
+    margin-top: 77px;
+    padding: 0 25px;
+  }
   .title {
-    color: #fff;
+    color: var(--base-white);
     text-align: center;
     font-size: 40px;
     font-style: normal;
     font-weight: 700;
-    line-height: 50px; /* 125% */
+    line-height: 50px;
     margin-bottom: 67px;
+    @include sm {
+      font-size: 20px;
+      line-height: 50px;
+      margin-bottom: 75px;
+    }
+  }
+  .resend {
+    width: 100%;
+    @include sm {
+      margin-top: -10px;
+    }
+    p {
+      color: var(--base-white);
+      font-size: 12px;
+      margin-left: 10px;
+      @include align-items-center;
+      span {
+        @include align-items-center;
+        margin-left: 3px;
+        a {
+          color: var(--main);
+          text-decoration-line: underline;
+          cursor: pointer;
+        }
+      }
+    }
   }
   button {
     margin-top: 100px;

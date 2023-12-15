@@ -1,19 +1,10 @@
-.container {
-  background: #141332;
-  width: 100%;
-  height: 100vh;
-  position: relative;
-  overflow-x: hidden;
+.globusIcon {
+  position: absolute;
+  top: -90px;
+  right: -60px;
+  z-index: 1;
 
-  .navBar {
-    position: relative;
-    z-index: 3;
-  }
-
-  .globusIcon {
-    position: absolute;
-    top: -90px;
-    right: -60px;
-    z-index: 1;
+  @media (max-width: 600px) {
+    display: none;
   }
 }

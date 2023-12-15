@@ -20,6 +20,10 @@ class Store {
     this.isAuth = value
   }
 
+  setAccessToken(value) {
+    this.token.access_token = value
+  }
+
   login(data) {
     this.isAuth = true
     this.userData = data.user

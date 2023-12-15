@@ -13,7 +13,7 @@
 
 .select {
   svg {
-    color: #fff;
+    color: var(--base-white);
   }
 }
 .menu {
@@ -21,7 +21,7 @@
   padding: 0 !important;
   li {
     padding: 16px;
-    color: #fff;
+    color: var(--base-white);
     font-size: 15px;
     font-weight: 500;
     line-height: normal;

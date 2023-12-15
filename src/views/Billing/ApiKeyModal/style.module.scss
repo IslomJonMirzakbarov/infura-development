@@ -1,3 +1,10 @@
+.title {
+  font-size: 12px;
+  font-weight: 500;
+  color: #000;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
 .text {
   display: flex;
   align-items: center;
@@ -6,11 +13,29 @@
   padding: 16px 13px;
   background: #141332;
   p {
-    color: #fff;
+    color: var(--base-white);
     font-size: 15px;
     font-weight: 500;
   }
   svg {
     cursor: pointer;
+  }
+}
+.txHash {
+  //margin-top: 14px;
+  padding: 16px 13px;
+  font-size: 14px;
+  gap: 10px;
+  border-radius: 7px;
+  border: 1px solid #f0f0f0;
+  background: #ececec;
+  margin-bottom: 10px;
+  a {
+    text-decoration: underline;
+    color: #0052f5;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    line-height: normal;
   }
 }

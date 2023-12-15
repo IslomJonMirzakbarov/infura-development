@@ -1,73 +1,97 @@
-import { Box } from '@mui/material'
+import React from 'react'
 import Container from 'components/Container'
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import CardsContainer from './CardsContainer'
-import GatewayModal from './GatewayModal'
-import { useNavigate } from 'react-router-dom'
-import { usePoolCheckMutation } from 'services/pool.service'
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography'
+import styles from './style.module.scss'
+import Table from 'components/Table'
+import { ReactComponent as InvoiceRoute } from 'assets/icons/invoice_routing.svg'
+import { useInvoice } from 'services/pool.service'
+import { formatNumberWithCommas } from 'utils/utilFuncs'
+import { ReactComponent as SmallCycon } from 'assets/icons/small_cycon.svg'
+import PageTransition from 'components/PageTransition'
+
+const headColumns = [
+  {
+    key: 'date',
+    title: 'Date'
+  },
+  {
+    key: 'pool_name',
+    title: 'Pool Name'
+  },
+  {
+    key: 'invoice_price',
+    title: 'Pool price'
+  },
+  {
+    key: 'status',
+    title: 'Status'
+  },
+  {
+    key: 'plan',
+    title: 'Plan'
+  }
+]
 
 const Billing = () => {
-  const { control, handleSubmit } = useForm()
-  const { mutate } = usePoolCheckMutation()
-  const navigate = useNavigate()
-  const [open, setOpen] = useState(false)
-  const [item, setItem] = useState(null)
-  const [success, setSuccess] = useState(null)
-  const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
-
-  const toggle = () => {
-    setOpen((prev) => !prev)
+  const { data, isLoading } = useInvoice()
+  let transformedData = []
+  if (data && data.invoices && data.invoices.length > 0) {
+    transformedData = data?.invoices?.map((item) => ({
+      date: (
+        <div className={styles.column}>
+          {new Date(item.transaction_date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}{' '}
+          <InvoiceRoute />
+        </div>
+      ),
+      txHash: item.tx_hash,
+      pool_name: item.pool_name,
+      invoice_price: (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '7px'
+          }}
+        >
+          <SmallCycon />
+          {formatNumberWithCommas(item.price)}
+        </div>
+      ),
+      status: 'Paid',
+      plan: 'Custom plan'
+    }))
   }
-
-  const onSelect = (data) => {
-    setItem(data)
-    toggle()
-  }
-
-  const onSubmit = (data) => {
-    const formData = { pool_name: data.name }
-    setIsLoading(true)
-    mutate(formData, {
-      onSuccess: (res) => {
-        setSuccess(res?.success)
-        setIsLoading(false)
-        if (item.isFree) {
-          navigate('/main/billing/confirm', {
-            state: {
-              poolName: data.name
-            }
-          })
-        } else {
-          navigate('/main/billing/pool', {
-            state: {
-              poolName: data.name
-            }
-          })
-        }
-      },
-      onError: (error) => {
-        setIsLoading(false)
-        setError(error?.data?.message)
-      }
-    })
-  }
-
   return (
-    <Container maxWidth={true}>
-      <GatewayModal
-        error={error}
-        open={open}
-        cancelLabel='Cancel'
-        submitLabel='Continue'
-        toggle={toggle}
-        onSubmit={handleSubmit(onSubmit)}
-        control={control}
-        isLoading={isLoading}
-      />
-      <CardsContainer onSelect={onSelect} />
-    </Container>
+    <PageTransition>
+      <Container maxWidth={true}>
+        <div className={styles.billingContainer}>
+          <Paper className={styles.paper}>
+            <h2 className={styles.title}>Invoice History</h2>
+            {transformedData.length > 0 ? (
+              <Table
+                name='billingTable'
+                columns={headColumns}
+                data={transformedData}
+              />
+            ) : isLoading ? (
+              ''
+            ) : (
+              <Typography
+                variant='body1'
+                style={{ margin: '20px', color: '#fff' }}
+              >
+                No invoice data available.
+              </Typography>
+            )}
+          </Paper>
+        </div>
+      </Container>
+    </PageTransition>
   )
 }
 

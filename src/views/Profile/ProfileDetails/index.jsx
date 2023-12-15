@@ -1,42 +1,45 @@
 import { Box, Button, Typography } from '@mui/material'
 import Container from 'components/Container'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
-import React, { useState } from 'react'
+import React from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
-import ApiKeyModal from '../../Billing/ApiKeyModal'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
-import poolStore from 'store/pool.store'
-const sizes = [
-  {
-    label: 'TB',
-    value: 'TB'
-  },
-  {
-    label: 'GB',
-    value: 'GB'
-  }
-]
+import { formatNumberWithCommas } from 'utils/utilFuncs'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
+import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 
 const ProfileDetails = () => {
   const { id } = useParams()
-  const { data, isLoading } = useGetPoolById({ id })
-  const navigate = useNavigate()
-  const { control, handleSubmit } = useForm({
+  const { control, handleSubmit, reset } = useForm({
     defaultValues: {
-      type: 'TB',
-      pin: 10
+      name: '',
+      size: '',
+      gateway: 'https://public.oceandrive.network ',
+      replication: '',
+      price: '',
+      api_key: ''
     }
   })
-  const pools = poolStore.pools
-  const apiKey = pools.find((pool) => pool.id === id)?.token
+  const { data } = useGetPoolById({
+    id,
+    queryProps: {
+      onSuccess: (res) => {
+        reset({
+          name: res?.name,
+          size: `${res?.size?.value}${res?.size?.unit}`,
+          replication: res?.pin_replication,
+          price: `${formatNumberWithCommas(res?.price)}`,
+          api_key: res?.token
+        })
+      }
+    }
+  })
+
+  const navigate = useNavigate()
 
   const onSubmit = (data) => {}
-
-  const [open, setOpen] = useState(true)
-
-  const toggle = () => setOpen((prev) => !prev)
 
   const handleRegenerate = () => {
     // Logic for regenerating the API Key
@@ -52,58 +55,74 @@ const ProfileDetails = () => {
               Details
             </Typography>
             <div className={styles.elements}>
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='name'
                 label='Pool name'
                 required
                 fullWidth
-                value={isLoading ? '' : data?.name}
                 readOnly={true}
                 disabled
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='size'
                 label='Pool size'
                 required
                 fullWidth
-                value={
-                  isLoading ? '' : `${data?.size?.value}${data?.size?.unit}`
-                }
                 readOnly={true}
                 disabled
               />
-              <HFTextField
+              <CopyField
                 control={control}
                 name='gateway'
                 label='Gateway'
                 fullWidth
                 withCopy
-                value={'https://public.oceandrive.network '}
                 readOnly={true}
                 disabled
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='replication'
                 type='number'
                 label='Pin Replication'
                 fullWidth
-                value={isLoading ? '' : `${data?.pin_replication}`}
                 readOnly={true}
                 disabled
               />
-              <HFTextField
-                control={control}
-                name='price'
-                label='Pool price'
-                fullWidth
-                value={isLoading ? '' : `${data?.price}`}
-                readOnly={true}
-                disabled
-              />
-              <HFTextField
+              <Box>
+                <BasicTextField
+                  control={control}
+                  name='price'
+                  label='Pool price in CYCON'
+                  fullWidth
+                  readOnly={true}
+                  disabled
+                />
+
+                {data?.tx_hash && (
+                  <Box className={styles.txHash}>
+                    <Typography
+                      color='white'
+                      variant='standard'
+                      fontWeight={500}
+                      mb={1}
+                    >
+                      Tx hash
+                    </Typography>
+                    <a
+                      href={`https://baobab.scope.klaytn.com/tx/${data.tx_hash}`}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      <p>{data.tx_hash}</p>
+                    </a>
+                  </Box>
+                )}
+              </Box>
+
+              <PasswordField
                 control={control}
                 name='api_key'
                 type='password'
@@ -111,9 +130,9 @@ const ProfileDetails = () => {
                 fullWidth
                 withCopy
                 withRegenerate={handleRegenerate}
-                value={isLoading ? '' : apiKey}
                 readOnly={true}
                 disabled
+                value={data?.token}
               />
             </div>
             <Box
@@ -122,12 +141,13 @@ const ProfileDetails = () => {
               width='100%'
               height='100%'
               mt='250px'
+              className={styles.planBtn}
             >
               <Button
                 variant='contained'
                 color='secondary'
                 type='submit'
-                onClick={() => navigate('/main/billing')}
+                onClick={() => navigate('/main/pricing')}
               >
                 Change plan
               </Button>
@@ -135,7 +155,6 @@ const ProfileDetails = () => {
           </form>
         </Box>
       </Container>
-      {/* <ApiKeyModal toggle={toggle} open={open} /> */}
     </>
   )
 }

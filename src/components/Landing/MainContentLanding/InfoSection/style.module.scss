@@ -1,0 +1,135 @@
+.infoSection {
+  margin-bottom: 202px;
+
+  @media (max-width: 600px) {
+    margin-bottom: 147px;
+  }
+
+  .header {
+    color: var(--base-white);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 50px; /* 125% */
+
+    @media (max-width: 600px) {
+      font-size: 28px;
+      line-height: 35px;
+    }
+  }
+
+  .description {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 21px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: var(--base-white);
+  }
+
+  .options {
+    margin-top: 45px;
+    margin-bottom: 5px;
+    overflow-x: auto;
+    ul {
+      list-style-type: none;
+      display: flex;
+      gap: 50px;
+
+      @media (max-width: 600px) {
+        width: max-content;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 10px;
+      }
+
+      li {
+        transition: color 0.1s ease, transform 0.1s ease;
+        color: var(--base-white);
+        font-size: 15px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: normal;
+        cursor: pointer;
+
+        &:hover {
+          color: var(--main, #27e6d6);
+        }
+      }
+
+      .activeOption {
+        color: var(--main, #27e6d6);
+      }
+    }
+  }
+
+  .optionDesc {
+    height: 185.231px;
+    border-radius: 12px;
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.1) 0.04%,
+      rgba(255, 255, 255, 0) 99.96%
+    );
+    padding: 26px 35px;
+    position: relative;
+
+    @media (max-width: 600px) {
+      height: 340px;
+      background: linear-gradient(
+        180deg,
+        rgba(255, 255, 255, 0.1) 0.04%,
+        rgba(255, 255, 255, 0) 99.96%
+      );
+      padding: 20px;
+    }
+
+    div {
+      position: absolute;
+      bottom: 25px;
+      right: 216px;
+
+      @media (max-width: 600px) {
+        position: absolute;
+        bottom: -20px;
+        right: 14px;
+
+        svg {
+          width: 164.996px;
+          height: 160.496px;
+        }
+      }
+    }
+
+    .specialIcon {
+      bottom: -35px;
+      right: 180px !important;
+
+      @media (max-width: 600px) {
+        position: absolute;
+        bottom: -20px;
+        right: 14px !important;
+      }
+    }
+
+    .title {
+      color: var(--main, #27e6d6);
+      font-size: 30px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+
+      @media (max-width: 600px) {
+        font-size: 20px;
+        margin-bottom: 20px;
+      }
+    }
+
+    .desc {
+      color: var(--base-white);
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+    }
+  }
+}

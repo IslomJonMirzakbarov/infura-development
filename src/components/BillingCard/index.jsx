@@ -1,17 +1,20 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import React from 'react'
 import styles from './style.module.scss'
-import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
 import classNames from 'classnames'
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded'
+import MobileBillingCard from './MobileBillingCard'
 
 const BillingCard = ({ onSelect, item, isFree }) => {
   const handleSelect = () => {
     if (item.isCurrentPlan) return
     onSelect(item)
   }
+  const isMobile = useMediaQuery('(max-width:600px)')
 
-  return (
+  return isMobile ? (
+    <MobileBillingCard onSelect={onSelect} item={item} isFree={isFree} />
+  ) : (
     <Box
       className={classNames(styles.card, {
         [styles.currentPlan]: item.isCurrentPlan,
@@ -48,7 +51,7 @@ const BillingCard = ({ onSelect, item, isFree }) => {
         {item.isEnterprise
           ? 'Customize'
           : item.isCurrentPlan
-          ? 'Your current plan'
+          ? 'Selected Plan'
           : 'Select'}
       </Button>
     </Box>

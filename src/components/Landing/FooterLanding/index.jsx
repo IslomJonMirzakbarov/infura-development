@@ -1,7 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './style.module.scss'
-import { Box, IconButton, Tooltip, Typography } from '@mui/material'
+import {
+  Box,
+  IconButton,
+  Tooltip,
+  Typography,
+  useMediaQuery
+} from '@mui/material'
 import { ReactComponent as OceanDriveIcon } from 'assets/images/landing/oceandrive.svg'
 import { ReactComponent as TelegramIcon } from 'assets/images/landing/telegram.svg'
 import { ReactComponent as TwitterIcon } from 'assets/images/landing/twitter.svg'
@@ -9,6 +15,7 @@ import { ReactComponent as KatotIcon } from 'assets/images/landing/katot.svg'
 import { ReactComponent as GithubIcon } from 'assets/images/landing/github.svg'
 import { ReactComponent as YouTubeIcon } from 'assets/images/landing/youtube.svg'
 import { ReactComponent as MediumIcon } from 'assets/images/landing/medium.svg'
+import { useThemeVariants } from '@mui/styles'
 
 const icons = [
   { IconComp: <TelegramIcon /> },
@@ -21,6 +28,7 @@ const icons = [
 const FooterLanding = () => {
   const navigate = useNavigate()
   const [hoveredIcon, setHoveredIcon] = useState(null)
+  const isMobile = useMediaQuery('(max-width:600px)')
 
   return (
     <div className={styles.footer}>
@@ -43,6 +51,9 @@ const FooterLanding = () => {
           </Box>
         ))}
       </div>
+      {isMobile && (
+        <p className={styles.reserved}>ⓒ 2023 CONUN, All Rights Reserved</p>
+      )}
     </div>
   )
 }

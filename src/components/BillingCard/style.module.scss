@@ -1,3 +1,5 @@
+@import 'styles/_mixins.scss';
+
 .card {
   border-radius: 10px;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -8,6 +10,24 @@
   transition: 0s ease-in-out all;
   position: relative;
 
+  @include sm {
+    width: 162px;
+    height: 200px;
+    padding: 10px 15px;
+    align-items: center;
+  }
+
+  .title {
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 700;
+    color: var(--base-white);
+
+    @include sm {
+      font-size: 12px;
+    }
+  }
+
   .text {
     color: #000;
     font-size: 13px;
@@ -15,29 +35,45 @@
     line-height: 18px;
     margin-top: 17px;
     height: 78.5px;
+
+    @include sm {
+      font-size: 11px;
+      margin-top: 17px;
+      height: 36px;
+      text-align: center;
+    }
+  }
+
+  .priceBox {
+    margin-top: 0;
   }
 
   .priceText {
-    color: #fff;
+    color: var(--base-white);
     font-size: 22px;
     font-weight: 700;
     line-height: 23px;
     margin-top: 44px;
     height: 68px;
-  }
 
-  .title {
-    font-size: 15px;
-    font-style: normal;
-    font-weight: 700;
-    color: #fff;
+    @include sm {
+      font-size: 16px;
+      line-height: 20px;
+      margin-top: 9px;
+      height: 40px;
+      text-align: center;
+    }
   }
 
   .price {
     font-size: 45px;
     font-style: normal;
     font-weight: 600;
-    color: #fff;
+    color: var(--base-white);
+
+    @include sm {
+      font-size: 30px;
+    }
   }
 
   .month {
@@ -53,20 +89,37 @@
     margin-top: 17px;
     list-style: none;
 
+    @include sm {
+      margin-top: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .item {
       font-size: 13px;
       font-style: normal;
       font-weight: 500;
-      color: #fff;
+      color: var(--base-white);
       display: flex;
       align-items: center;
       margin: 5px 0;
+
+      @include sm {
+        font-size: 11px;
+      }
+
+      &:first-child {
+        @include sm {
+          margin-top: 0;
+        }
+      }
 
       svg {
         width: 15px;
         height: 15px;
         margin-right: 5px;
-        color: #27e6d6;
+        color: var(--main);
       }
     }
   }
@@ -76,12 +129,19 @@
     background: rgba(255, 255, 255, 0.15);
     margin-top: 18px;
     border: none;
+
+    @include sm {
+      border-radius: 7px;
+      height: 37px;
+      width: 131px;
+      color: #ffffff;
+    }
   }
 
   &.isEnterprise {
     border-radius: 10px;
     border: 1.3px solid #fff;
-    background-color: #27e6d6;
+    background-color: var(--main);
     .title {
       color: #000;
     }
@@ -92,50 +152,6 @@
       }
     }
   }
-
-  // button:active div {
-  //   background-color: var(--primary-color) !important;
-  //   color: #fff;
-  // }
-
-  // &:active,
-  // &.currentPlan {
-  //   background-color: var(--primary-color);
-  //   color: #fff;
-
-  //   .title,
-  //   .month,
-  //   .price,
-  //   .item {
-  //     color: #fff;
-  //   }
-  // }
-
-  // &.disabled {
-  //   background-color: #fff;
-
-  //   &::after {
-  //     content: '';
-  //     position: absolute;
-  //     top: 0;
-  //     right: 0;
-  //     bottom: 0;
-  //     left: 0;
-  //     z-index: 4;
-  //   }
-
-  //   .title,
-  //   .month,
-  //   .price,
-  //   .item {
-  //     color: #cacaca;
-  //   }
-
-  //   button {
-  //     border: 1px solid #cacaca;
-  //     color: #cacaca;
-  //   }
-  // }
 }
 
 .disabled {

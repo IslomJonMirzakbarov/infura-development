@@ -1,5 +1,11 @@
+@import 'styles/_mixins.scss';
+
 .body {
   overflow: auto;
   width: 100%;
   padding: 35px;
+
+  @include sm {
+    padding: 25px;
+  }
 }

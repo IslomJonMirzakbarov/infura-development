@@ -1,80 +1,80 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { ERC20_ABI } from 'utils/ABI/ERC20ABI';
-import Caver from 'caver-js';
+import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import ERC20_ABI from 'utils/ABI/ERC20ABI'
+import Caver from 'caver-js'
 
-export const conAddress = '0xaa5542ABBd8047Df38231818c49d23A47c930Ed2';
-export const symbol = 'CONX';
+export const conAddress = '0xaa5542ABBd8047Df38231818c49d23A47c930Ed2'
+export const symbol = 'CONX'
 export const tokenImg =
-  'https://dexpo.s3.ap-northeast-2.amazonaws.com/1662393423341_con-token.png';
-export const chainId = 1001;
-export const chainName = 'Klaytn Testnet Baobab';
-export const rpcUrl = 'https://api.baobab.klaytn.net:8651';
-export const conName = 'KLAY';
+  'https://dexpo.s3.ap-northeast-2.amazonaws.com/1662393423341_con-token.png'
+export const chainId = 1001
+export const chainName = 'Klaytn Testnet Baobab'
+export const rpcUrl = 'https://api.baobab.klaytn.net:8651'
+export const conName = 'KLAY'
 
-const caver = new Caver(rpcUrl);
+const caver = new Caver(rpcUrl)
 
 const useCaver = () => {
-  const { walletAddress: account } = useSelector((store) => store.auth);
+  const { walletAddress: account } = useSelector((store) => store.auth)
 
-  const [balance, setBalance] = useState();
+  const [balance, setBalance] = useState()
 
   useEffect(() => {
-    if (!account) return;
+    if (!account) return
 
-    getUserBalance(account);
-  }, [account]);
+    getUserBalance(account)
+  }, [account])
 
   const getUserBalance = async (acc) => {
     try {
-      const contractERC20 = new caver.klay.Contract(ERC20_ABI, conAddress);
-      const balance = await contractERC20.methods.balanceOf(acc).call();
-      const res = caver.utils.fromWei(balance);
+      const contractERC20 = new caver.klay.Contract(ERC20_ABI, conAddress)
+      const balance = await contractERC20.methods.balanceOf(acc).call()
+      const res = caver.utils.fromWei(balance)
 
-      setBalance(res);
-      return res;
+      setBalance(res)
+      return res
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-    return 0;
-  };
+    return 0
+  }
 
   const getGasPrice = async (fromAddress) => {
-    caver.klay.defaultAccount = fromAddress;
-    const gasPrice = await caver.klay.getGasPrice();
+    caver.klay.defaultAccount = fromAddress
+    const gasPrice = await caver.klay.getGasPrice()
 
-    return gasPrice;
-  };
+    return gasPrice
+  }
 
   const getGasLimit = async ({ from, to, amount }) => {
     const contract = new caver.klay.Contract(ERC20_ABI, conAddress, {
       from
-    });
+    })
 
     const myData = contract.methods
       .transfer(to, caver.utils.toWei(amount))
-      .encodeABI();
+      .encodeABI()
 
     var getEstimateGas = await caver.klay.estimateGas({
       from,
       to: conAddress,
       data: myData
-    });
+    })
 
-    return getEstimateGas;
-  };
+    return getEstimateGas
+  }
 
   async function getTransactionFee({ from, to, amount }) {
     let data = {
       gasLimit: null,
       gasPrice: null
-    };
+    }
 
-    data.gasLimit = await getGasLimit({ from, to, amount });
+    data.gasLimit = await getGasLimit({ from, to, amount })
 
     await caver.klay.getGasPrice().then((result) => {
-      data.gasPrice = caver.utils.fromWei(result, 'gwei');
-    });
+      data.gasPrice = caver.utils.fromWei(result, 'gwei')
+    })
 
     // return {
     //   CMD: 'RES_ESTIMATE_NETWORK_FEE',
@@ -94,7 +94,7 @@ const useCaver = () => {
     //     total: (data.gasPrice * 3 * data.gasLimit) / 1000000000
     //   }
     // };
-    return (data.gasPrice * data.gasLimit) / 1000000000;
+    return (data.gasPrice * data.gasLimit) / 1000000000
   }
 
   const sendCoin = async ({
@@ -105,23 +105,23 @@ const useCaver = () => {
     onTxHash,
     onReceipt
   }) => {
-    let response;
-    caver.klay.defaultAccount = fromAddress;
+    let response
+    caver.klay.defaultAccount = fromAddress
     try {
       const contractERC20 = new caver.klay.Contract(ERC20_ABI, conAddress, {
         from: fromAddress
-      });
+      })
       var myData = contractERC20.methods
         .transfer(toAddress, caver.utils.toWei(amount))
-        .encodeABI();
+        .encodeABI()
 
-      const gasPrice = await getGasPrice(fromAddress);
+      const gasPrice = await getGasPrice(fromAddress)
 
       const gasLimit = await getGasLimit({
         from: fromAddress,
         to: conAddress,
         amount
-      });
+      })
 
       caver.klay.getTransactionCount(fromAddress, async (err, txCount) => {
         // Build the transaction
@@ -133,13 +133,13 @@ const useCaver = () => {
           gasLimit: caver.utils.toHex(gasLimit),
           gasPrice: caver.utils.toHex(gasPrice),
           data: myData
-        };
+        }
 
         // Sign the transaction
         const resTx = await caver.klay.accounts.signTransaction(
           txObject,
           private_key
-        );
+        )
 
         caver.klay
           .sendSignedTransaction(resTx.rawTransaction)
@@ -151,8 +151,8 @@ const useCaver = () => {
               account: fromAddress,
               status: 'pending',
               amount
-            };
-            onTxHash(response);
+            }
+            onTxHash(response)
           })
           .on('receipt', (newTx) => {
             response = {
@@ -162,22 +162,22 @@ const useCaver = () => {
               account: fromAddress,
               status: 'completed',
               amount
-            };
-            onReceipt(response);
-          });
-      });
+            }
+            onReceipt(response)
+          })
+      })
     } catch (err) {
-      console.log(err);
+      console.log(err)
     }
-    return response;
-  };
+    return response
+  }
 
   return {
     getUserBalance,
     balance,
     sendCoin,
     getTransactionFee
-  };
-};
+  }
+}
 
-export default useCaver;
+export default useCaver

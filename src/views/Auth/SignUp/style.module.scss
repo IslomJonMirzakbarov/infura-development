@@ -1,16 +1,30 @@
+@import 'styles/mixins';
+
 .form {
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 100;
   width: 470px;
+
+  @include sm {
+    width: 100%;
+    margin-top: 77px;
+    padding: 0 25px;
+  }
+
   .title {
-    color: #fff;
+    color: var(--base-white);
     text-align: center;
     font-size: 40px;
     font-weight: 700;
     line-height: 50px;
     margin-bottom: 67px;
+    @include sm {
+      font-size: 20px;
+      line-height: 50px;
+      margin-bottom: 75px;
+    }
   }
 
   .forgot {
@@ -18,7 +32,7 @@
     margin-top: -17px;
     text-align: right;
     width: 100%;
-    color: #fff;
+    color: var(--base-white);
     font-size: 12px;
     text-decoration-line: underline;
     position: relative;
@@ -36,17 +50,15 @@
     gap: 7px;
     margin-top: 23px;
     span {
-      color: #27e6d6;
+      color: var(--main);
       text-decoration-line: underline;
       cursor: pointer;
-      img {
-        margin-left: 6px;
-        position: absolute;
-        top: 4px;
-      }
     }
   }
   .button {
     margin-top: 70px;
+    @include sm {
+      margin-top: 48px;
+    }
   }
 }

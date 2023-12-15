@@ -1,4 +1,4 @@
-@import 'styles/unit';
+@import 'styles/mixins';
 
 .modal {
   border-radius: 7px;
@@ -9,7 +9,7 @@
     padding: 13px 16px;
     background: #151c52;
     justify-content: space-between;
-    color: #fff;
+    color: var(--base-white);
     p {
       font-weight: 600;
       font-size: 14px;

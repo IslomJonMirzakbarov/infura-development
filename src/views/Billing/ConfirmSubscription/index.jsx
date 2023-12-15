@@ -1,17 +1,15 @@
 import { Box, Button, Typography } from '@mui/material'
 import Container from 'components/Container'
-import HFTextField from 'components/ControlledFormElements/HFTextField'
 import React, { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
 import ApiKeyModal from '../ApiKeyModal'
 import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  usePoolCheckMutation,
-  usePoolCreateMutation
-} from 'services/pool.service'
+import { usePoolCreateMutation } from 'services/pool.service'
 import poolStore from 'store/pool.store'
 import LoaderModal from '../LoaderModal'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
 
 const ConfirmSubscription = () => {
   const navigate = useNavigate()
@@ -19,7 +17,7 @@ const ConfirmSubscription = () => {
   const { control, handleSubmit, reset } = useForm()
   const [poolAddress, setPoolAddress] = useState('')
   const [open2, setOpen2] = useState(false)
-  const { mutate, isLoading } = usePoolCreateMutation()
+  const { mutate } = usePoolCreateMutation()
 
   const toggle2 = () => setOpen2((prev) => !prev)
 
@@ -38,13 +36,15 @@ const ConfirmSubscription = () => {
     mutate(formData, {
       onSuccess: (res) => {
         setPoolAddress(res?.access_token?.token)
-        poolStore.addPool({ id: res?.id, token: res?.access_token?.token })
         const items = [...poolStore.billingItems]
-        items[0].isCurrentPlan = true
-        items[0].disabled = true
         poolStore.changeBillingItems(items)
+        poolStore.setSelected(true)
         toggle()
         setOpen2(false)
+      },
+      onError: (err) => {
+        console.log('confirmErr: ', err)
+        poolStore.setSelected(false)
       }
     })
   }
@@ -74,7 +74,7 @@ const ConfirmSubscription = () => {
               Confirm Subscription
             </Typography>
             <div className={styles.elements}>
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='pool_name'
                 label='Pool name'
@@ -83,7 +83,7 @@ const ConfirmSubscription = () => {
                 fullWidth
                 disabled
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='pool_size'
                 label='Pool size'
@@ -93,7 +93,7 @@ const ConfirmSubscription = () => {
                 placeholder='Enter pool size'
                 disabled
               />
-              <HFTextField
+              <CopyField
                 control={control}
                 name='gateway'
                 label='Gateway'
@@ -102,7 +102,7 @@ const ConfirmSubscription = () => {
                 disabled
                 value='https://public.oceandrive.network'
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='pin_replication'
                 type='number'
@@ -111,10 +111,10 @@ const ConfirmSubscription = () => {
                 fullWidth
                 disabled
               />
-              <HFTextField
+              <BasicTextField
                 control={control}
                 name='pool_price'
-                label='Pool price'
+                label='Pool price in CYCON'
                 placeholder='Enter pool price'
                 fullWidth
                 disabled
