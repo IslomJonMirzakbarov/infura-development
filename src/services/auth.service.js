@@ -7,6 +7,7 @@ const authService = {
   register: async (data) => httpRequest.post('api/v1/auth/register', data),
   confirmCode: async (data) => httpRequest.post('api/v1/auth/confirm', data),
   resend: async (data) => httpRequest.post('api/v1/auth/resend-otp', data),
+  renew: async (data) => httpRequest.post('api/v1/auth/renew', data),
   forgotPassword: async (data) =>
     httpRequest.post('api/v1/auth/reset-password', data),
   resetPassword: async (data) =>
@@ -39,4 +40,13 @@ export const useResetPasswordMutation = (mutationSettings) => {
 
 export const useResendSms = (mutationSettings) => {
   return useMutation(authService.resend, mutationSettings)
+}
+
+export const refreshToken = async (token) => {
+  try {
+    const res = await authService.renew({
+      refresh_token: token
+    })
+    return res?.payload?.token?.access_token
+  } catch (e) {}
 }

@@ -10,6 +10,7 @@ import toast from 'react-hot-toast'
 import { observer } from 'mobx-react-lite'
 import useMetaMask from 'hooks/useMetaMask'
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded'
+import PageTransition from 'components/PageTransition'
 
 const walletType = {
   metamask:
@@ -75,10 +76,10 @@ const Connect = () => {
       {
         loading: 'Connection...',
         success: (
-          <b>
+          <span>
             Successful connection to{' '}
-            {walletType === 'metamask' ? 'MetaMask' : 'Kaikas'} wallet.
-          </b>
+            <b>{walletType === 'metamask' ? 'MetaMask' : 'Kaikas'} </b>wallet.
+          </span>
         ),
         error: <b>Connection error.</b>
       },
@@ -103,7 +104,7 @@ const Connect = () => {
   }, [])
 
   return (
-    <>
+    <PageTransition>
       <div className={classes.form}>
         <div className={classes.formArea}>
           <div className={classes.wallets}>
@@ -121,6 +122,7 @@ const Connect = () => {
               new one.
             </Typography>
           </div>
+
           <div className={classes.metamask}>
             <img
               src={type ? walletType[type] : walletType.metamask}
@@ -144,6 +146,15 @@ const Connect = () => {
             )}
           </div>
         </div>
+        <Typography
+          variant='standard'
+          fontWeight={400}
+          color='#fff'
+          className={classes.mobileText}
+        >
+          <span style={{ fontWeight: 700 }}>Connect your wallet</span> to one of
+          the available <br /> providers by importing or creating a new one.
+        </Typography>
         <ul>
           {wallets.map((wallet) => (
             <li
@@ -178,7 +189,7 @@ const Connect = () => {
         handleClose={handleClose}
         hanldeLogout={hanldeLogout}
       />
-    </>
+    </PageTransition>
   )
 }
 

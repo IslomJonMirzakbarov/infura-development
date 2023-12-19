@@ -1,5 +1,11 @@
+@import 'styles/_mixins.scss';
+
 .whyInfuraContainer {
   padding: 75px;
+
+  @include sm {
+    padding: 25px;
+  }
 }
 
 .mainGrid {
@@ -14,6 +20,11 @@
   line-height: 80px; /* 114.286% */
   margin-bottom: 64px !important;
 
+  @include sm {
+    font-size: 28px;
+    line-height: 35px;
+  }
+
   span {
     color: var(--main, #27e6d6);
   }
@@ -25,14 +36,28 @@
   column-gap: 57px;
   row-gap: 54px;
 
+  @include sm {
+    grid-template-columns: repeat(1, 1fr);
+    text-align: center;
+    row-gap: 80px;
+  }
+
   .paper {
     background-color: #141332;
     border: none;
     box-shadow: none;
     padding-right: 80px;
 
+    @include sm {
+      padding-right: 0;
+    }
+
     svg {
       margin-bottom: 6px;
+
+      @include sm {
+        margin-bottom: 30px;
+      }
     }
 
     .heading {
@@ -41,6 +66,10 @@
       font-style: normal;
       font-weight: 700;
       line-height: normal;
+
+      @include sm {
+        margin-bottom: 15px;
+      }
     }
 
     .bodyText {

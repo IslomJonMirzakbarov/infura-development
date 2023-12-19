@@ -3,7 +3,7 @@ import BasicModal from 'components/BasicModal'
 import styles from './style.module.scss'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { formatNumberWithCommas } from 'utils/utilFuncs'
+import { formatNumberWithCommas, getShortenedPoolName } from 'utils/utilFuncs'
 
 const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
   const [price, setPrice] = useState(null)
@@ -44,7 +44,7 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
         <div className={styles.items}>
           <div className={styles.item}>
             <p>Pool Name</p>
-            <p>{formData?.pool_name}</p>
+            <p>{getShortenedPoolName(formData?.pool_name)}</p>
           </div>
           <div className={styles.item}>
             <p>Pool Size</p>
@@ -66,7 +66,7 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
         </div>
         <Box
           display='flex'
-          padding='10px 0 31px'
+          padding='10px 0 16px'
           justifyContent='space-between'
         >
           <p className={styles.price}>Estimated Pool Price</p>

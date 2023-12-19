@@ -1,23 +1,39 @@
-import { useState } from 'react'
-import toast from 'react-hot-toast'
+import { useEffect, useState } from 'react'
 import walletStore from 'store/wallet.store'
 import ERC20_ABI from 'utils/ABI/ERC20ABI'
 import REWARD_ABI from 'utils/ABI/REWARD_ABI'
-import eToNumber from 'utils/eToNumber'
-import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
 import Web3 from 'web3'
 
-//const web3 = new Web3(Web3.givenProvider)
-export const web3 = new Web3(Web3.givenProvider)
-
-const KLAYTN_CHAIN_ID = '0x3e9'
-const KLAYTN_BRIDGE_ADDRESS = '0xfdC48Bb197303855D7C33dAa5Ba7c8EA6917d407'
+const KLAYTN_CHAIN_ID = process.env.REACT_APP_KLAYTN_CHAIN_ID
+const REWARD_CONTRACT_ADDRESS = process.env.REACT_APP_REWARD_CONTRACT
 const approveAmount =
   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
 
-const CYCON_CONTRACT_ADDRESS = '0xaa5542ABBd8047Df38231818c49d23A47c930Ed2'
+const CYCON_CONTRACT_ADDRESS = process.env.REACT_APP_CYCON_CONTRACT_ADDRESS
+
 const useMetaMask = () => {
   const { address } = walletStore
+
+  const [web3, setWeb3] = useState(null)
+
+  useEffect(() => {
+    const initWeb3 = async () => {
+      try {
+        if (window.ethereum) {
+          const web3Instance = new Web3(window.ethereum)
+          setWeb3(web3Instance)
+        } else {
+          console.error(
+            'MetaMask not detected! Please install MetaMask to use this application.'
+          )
+        }
+      } catch (error) {
+        console.error('Error initializing Web3:', error)
+      }
+    }
+
+    initWeb3()
+  }, [])
 
   const checkCurrentNetwork = async () => {
     const chainId = await window.web3.currentProvider.request({
@@ -37,7 +53,7 @@ const useMetaMask = () => {
     pin_replication,
     pool_period
   }) => {
-    const contract = new web3.eth.Contract(REWARD_ABI, KLAYTN_BRIDGE_ADDRESS)
+    const contract = new web3.eth.Contract(REWARD_ABI, REWARD_CONTRACT_ADDRESS)
 
     const price = web3.utils.toWei(String(pool_price), 'ether')
 
@@ -61,13 +77,13 @@ const useMetaMask = () => {
     const contract = new web3.eth.Contract(ERC20_ABI, CYCON_CONTRACT_ADDRESS)
 
     const gasLimit = await contract.methods
-      .approve(KLAYTN_BRIDGE_ADDRESS, approveAmount)
+      .approve(REWARD_CONTRACT_ADDRESS, approveAmount)
       .estimateGas({
         from: address
       })
 
     const approve = await contract.methods
-      .approve(KLAYTN_BRIDGE_ADDRESS, approveAmount)
+      .approve(REWARD_CONTRACT_ADDRESS, approveAmount)
       .send({
         from: address,
         gas: gasLimit
@@ -78,7 +94,7 @@ const useMetaMask = () => {
   const checkAllowance = async () => {
     const contract = new web3.eth.Contract(ERC20_ABI, CYCON_CONTRACT_ADDRESS)
     const allowance = await contract.methods
-      .allowance(address, KLAYTN_BRIDGE_ADDRESS)
+      .allowance(address, REWARD_CONTRACT_ADDRESS)
       .call()
     return allowance
   }
@@ -90,13 +106,13 @@ const useMetaMask = () => {
         params: [
           {
             chainName: 'Klaytn Testnet Baobab',
-            chainId: web3.utils.toHex('0x3e9'),
+            chainId: web3.utils.toHex(KLAYTN_CHAIN_ID),
             nativeCurrency: {
               name: 'KLAY',
               decimals: 18,
               symbol: 'KLAY'
             },
-            rpcUrls: ['https://api.baobab.klaytn.net:8651']
+            rpcUrls: [process.env.REACT_APP_KLAYTN_RPC_URL]
           }
         ]
       })
@@ -112,7 +128,7 @@ const useMetaMask = () => {
         method: 'wallet_switchEthereumChain',
         params: [
           {
-            chainId: web3.utils.toHex('0x3e9')
+            chainId: web3.utils.toHex(KLAYTN_CHAIN_ID)
           }
         ]
       })

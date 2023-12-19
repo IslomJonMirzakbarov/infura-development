@@ -1,3 +1,5 @@
+@import 'styles/_mixins.scss';
+
 .wrapper {
   display: flex;
   position: absolute;
@@ -7,11 +9,21 @@
   flex-direction: column;
   padding: 30px 15px 15px;
   width: 423.956px;
-  min-height: 454px;
+  min-height: 373px;
   background-color: var(--base-white);
   justify-content: space-between;
   border-radius: 10px;
   outline: none;
+
+  @include sm {
+    padding: 15px;
+    width: 335px;
+    min-height: 350px;
+    justify-content: space-between;
+    border-radius: 7px;
+    outline: none;
+  }
+
   &.heightAuto {
     min-height: auto;
   }
@@ -20,13 +32,25 @@
     font-size: 22px;
     font-weight: 700;
     margin-bottom: 10px;
+
+    @include sm {
+      text-align: center;
+      font-size: 15px;
+      margin-bottom: 20px;
+    }
   }
   .close {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 16px;
+    right: 16px;
     cursor: pointer;
     color: #d9d9d9;
+
+    @include sm {
+      width: 20px;
+      top: 14px;
+      right: 14px;
+    }
   }
   .content {
     display: flex;

@@ -6,9 +6,11 @@ import GatewayModal from './GatewayModal'
 import { useNavigate } from 'react-router-dom'
 import { usePoolCheckMutation } from 'services/pool.service'
 import walletStore from 'store/wallet.store'
+import PageTransition from 'components/PageTransition'
+import styles from './style.module.scss'
 
 const Billing = () => {
-  const { control, handleSubmit, clearErrors } = useForm()
+  const { control, handleSubmit } = useForm()
   const { mutate } = usePoolCheckMutation()
   const navigate = useNavigate()
   const walletAddress = walletStore.address
@@ -59,20 +61,22 @@ const Billing = () => {
   }
 
   return (
-    <Container maxWidth={true}>
-      <GatewayModal
-        serverError={serverError}
-        open={open}
-        cancelLabel='Cancel'
-        submitLabel='Continue'
-        toggle={toggle}
-        onSubmit={handleSubmit(onSubmit)}
-        control={control}
-        isLoading={isLoading}
-        setServerError={setServerError}
-      />
-      <CardsContainer onSelect={onSelect} />
-    </Container>
+    <PageTransition>
+      <Container maxWidth={true} className={styles.container}>
+        <GatewayModal
+          serverError={serverError}
+          open={open}
+          cancelLabel='Cancel'
+          submitLabel='Continue'
+          toggle={toggle}
+          onSubmit={handleSubmit(onSubmit)}
+          control={control}
+          isLoading={isLoading}
+          setServerError={setServerError}
+        />
+        <CardsContainer onSelect={onSelect} />
+      </Container>
+    </PageTransition>
   )
 }
 

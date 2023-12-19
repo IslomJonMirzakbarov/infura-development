@@ -5,6 +5,8 @@ import { ReactComponent as AccessibilityIcon } from 'assets/icons/accessibility.
 import { ReactComponent as GatewayProviderIcon } from 'assets/icons/gateway_provider.svg'
 import { ReactComponent as InfuraDashboardIcon } from 'assets/icons/infura_dashboard.svg'
 import styles from './style.module.scss'
+import PageTransition from 'components/PageTransition'
+import Container from 'components/Container'
 
 const contentItems = [
   {
@@ -35,7 +37,7 @@ const contentItems = [
 
 const WhyInfura = () => {
   return (
-    <div className={styles.whyInfuraContainer}>
+    <PageTransition className={styles.whyInfuraContainer}>
       <Grid container className={styles.mainGrid}>
         <Grid item xs={12} className={styles.titleSection}>
           <Typography variant='h2' className={styles.title}>
@@ -59,7 +61,7 @@ const WhyInfura = () => {
           ))}
         </Grid>
       </Grid>
-    </div>
+    </PageTransition>
   )
 }
 

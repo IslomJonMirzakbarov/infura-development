@@ -1,7 +1,7 @@
-import { Box, Button, Typography } from '@mui/material'
+import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import Container from 'components/Container'
 import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useForm, useWatch } from 'react-hook-form'
 import styles from './styles.module.scss'
 import ApiKeyModal from '../ApiKeyModal'
 import HFSelect from 'components/ControlledFormElements/HFSelect'
@@ -19,52 +19,35 @@ import useMetaMask from 'hooks/useMetaMask'
 import ApproveModal from './ApproveModal'
 import toast from 'react-hot-toast'
 import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
-const sizes = [
-  {
-    label: '20',
-    value: 20
-  },
-  {
-    label: '30',
-    value: 30
-  }
-]
-
-const units = [
-  { label: 'GB', value: 'GB' },
-  { label: 'TB', value: 'TB' }
-]
-
-const months = [
-  {
-    label: '1 month',
-    value: 1
-  },
-  {
-    label: '2 months',
-    value: 2
-  }
-]
+import { months, sizes, units } from './poolData'
+import walletStore from 'store/wallet.store'
+import PageTransition from 'components/PageTransition'
 
 const Pool = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { control, handleSubmit, formState, watch } = useForm({
+  const isMobile = useMediaQuery('(max-width:640px)')
+  const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       unit: 'GB'
     }
   })
   const { createPool, checkAllowance, makeApprove } = useMetaMask()
+
   const [propError, setPropError] = useState('')
   const [openApprove, setOpenApprove] = useState(false)
   const [txHash, setTxHash] = useState(null)
   const { mutate: checkPool, isLoading: isCheckLoading } =
     usePoolCheckMutation()
-  const poolName = watch('name')
+  const poolName = useWatch({
+    control,
+    name: 'name'
+  })
+
   const debouncedPoolName = useDebounce(poolName, 500)
 
   useEffect(() => {
-    if (debouncedPoolName) {
+    if (debouncedPoolName && poolName.length > 4 && poolName.length < 21) {
       checkPool(
         { pool_name: debouncedPoolName },
         {
@@ -74,21 +57,23 @@ const Pool = () => {
           },
           onError: (error) => {
             console.log('error: ', error?.data?.message)
-            if (
-              error?.data?.message ===
-              "code=400, message=Key: 'CheckPoolReq.PoolName' Error:Field validation for 'PoolName' failed on the 'min' tag"
-            ) {
-              setPropError('Please enter at least 5 characters.')
-            } else {
-              setPropError(error?.data?.message)
-            }
+            setPropError(error?.data?.message)
           }
         }
       )
     }
   }, [debouncedPoolName])
 
-  const { mutate, isLoading } = usePoolCreateMutation()
+  useEffect(() => {
+    if (window.ethereum) {
+      window.ethereum.on('accountsChanged', (accounts) => {
+        walletStore.logout()
+        navigate('/main/billing/connect')
+      })
+    }
+  }, [])
+
+  const { mutate } = usePoolCreateMutation()
 
   const [formData, setFormData] = useState(null)
   const [poolAddress, setPoolAddress] = useState(null)
@@ -131,6 +116,7 @@ const Pool = () => {
 
   const submitCheckout = async () => {
     try {
+      setOpen(false)
       const allowance = await checkAllowance()
       const numericAllowance = Number(allowance)
       if (numericAllowance < formData.pool_price) {
@@ -149,26 +135,26 @@ const Pool = () => {
         pool_size
       })
       setTxHash(result.transactionHash)
-      setOpen(false)
-      mutate(
-        { ...formData, tx_hash: result.transactionHash },
-        {
-          onSuccess: (res) => {
-            console.log('res: ', res)
-            setPoolAddress(res?.access_token?.token)
-            setOpen2(false)
-            setOpen3(true)
-            queryClient.invalidateQueries('pools')
-          },
-          onError: (error) => {
-            setOpen2(false)
-            console.log('error: ', error)
-            if (error.status === 401) {
-              // navigate('/auth/register')
+      if (result.transactionHash)
+        mutate(
+          { ...formData, tx_hash: result.transactionHash },
+          {
+            onSuccess: (res) => {
+              console.log('res: ', res)
+              setPoolAddress(res?.access_token?.token)
+              setOpen2(false)
+              setOpen3(true)
+              queryClient.invalidateQueries('pools')
+            },
+            onError: (error) => {
+              setOpen2(false)
+              console.log('error: ', error)
+              if (error.status === 401) {
+                // navigate('/auth/register')
+              }
             }
           }
-        }
-      )
+        )
     } catch (e) {
       setOpen2(false)
       toast.error(getRPCErrorMessage(e))
@@ -176,7 +162,7 @@ const Pool = () => {
   }
 
   return (
-    <>
+    <PageTransition>
       <Container>
         <Box width='100%' display='flex' alignItems='center'>
           <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
@@ -193,6 +179,12 @@ const Pool = () => {
                   required={!propError}
                   fullWidth
                   minLength={5}
+                  rules={{
+                    maxLength: {
+                      value: 20,
+                      message: `Maximum length should be 20 characters`
+                    }
+                  }}
                 />
                 {propError && (
                   <p
@@ -249,11 +241,16 @@ const Pool = () => {
               <BasicTextField
                 control={control}
                 name='price'
-                type='number'
                 label='Estimated Pool price in CYCON'
                 placeholder='Enter pool price'
                 required
                 fullWidth
+                type='number'
+                rules={{
+                  validate: (value) =>
+                    value >= 1000 ||
+                    'The minimum price should be greater than 1000'
+                }}
               />
             </div>
             <Box
@@ -293,13 +290,16 @@ const Pool = () => {
       <ApiKeyModal
         onSubmit={() => navigate('/main/profile')}
         poolAddress={poolAddress}
-        title='Transaction successfully
-complete'
+        title={
+          isMobile
+            ? 'Transaction Complete'
+            : 'Transaction successfully complete'
+        }
         txHash={txHash}
         toggle={toggle3}
         open={open3}
       />
-    </>
+    </PageTransition>
   )
 }
 

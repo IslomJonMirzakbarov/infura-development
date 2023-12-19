@@ -1,7 +1,15 @@
+.container {
+  padding-left: 10px;
+  padding-right: 0;
+  padding-top: 35px;
+}
+
 .billingContainer {
   display: flex;
   flex-direction: column;
   gap: 34px;
+  margin-left: -20px;
+  margin-right: -20px;
 }
 
 .paper {

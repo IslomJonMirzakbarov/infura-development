@@ -3,15 +3,21 @@ import Container from 'components/Container'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography'
 import styles from './style.module.scss'
-import classNames from 'classnames'
 import Table from 'components/Table'
-import EventIcon from '@material-ui/icons/Event'
 import { ReactComponent as InvoiceRoute } from 'assets/icons/invoice_routing.svg'
+import { useInvoice } from 'services/pool.service'
+import { formatNumberWithCommas } from 'utils/utilFuncs'
+import { ReactComponent as SmallCycon } from 'assets/icons/small_cycon.svg'
+import PageTransition from 'components/PageTransition'
 
 const headColumns = [
   {
     key: 'date',
     title: 'Date'
+  },
+  {
+    key: 'pool_name',
+    title: 'Pool Name'
   },
   {
     key: 'invoice_price',
@@ -27,80 +33,65 @@ const headColumns = [
   }
 ]
 
-export const mockUploadedData = [
-  {
-    date: (
-      <div className={styles.column}>
-        Jul 25, 2023 <InvoiceRoute />
-      </div>
-    ),
-    invoice_price: '$50.00',
-    status: 'Paid',
-    plan: 'Custom plan'
-  },
-  {
-    date: (
-      <div className={styles.column}>
-        Aug 10, 2023 <InvoiceRoute />
-      </div>
-    ),
-    invoice_price: '$0.00',
-    status: 'Free',
-    plan: 'Free plan'
-  },
-  {
-    date: (
-      <div className={styles.column}>
-        Oct 10, 2023 <InvoiceRoute />
-      </div>
-    ),
-    invoice_price: '$78.00',
-    status: 'Paid',
-    plan: 'Custom plan'
-  },
-  {
-    date: (
-      <div className={styles.column}>
-        Nov 10, 2023 <InvoiceRoute />
-      </div>
-    ),
-    invoice_price: '$110.00',
-    status: 'Paid',
-    plan: 'Custom plan'
-  }
-]
-
 const Billing = () => {
+  const { data, isLoading } = useInvoice()
+  let transformedData = []
+  if (data && data.invoices && data.invoices.length > 0) {
+    transformedData = data?.invoices?.map((item) => ({
+      date: (
+        <div className={styles.column}>
+          {new Date(item.transaction_date).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          })}{' '}
+          <InvoiceRoute />
+        </div>
+      ),
+      txHash: item.tx_hash,
+      pool_name: item.pool_name,
+      invoice_price: (
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '7px'
+          }}
+        >
+          <SmallCycon />
+          {formatNumberWithCommas(item.price)}
+        </div>
+      ),
+      status: 'Paid',
+      plan: 'Custom plan'
+    }))
+  }
   return (
-    <Container maxWidth={true}>
-      <div className={styles.billingContainer}>
-        <Paper className={styles.paper}>
-          <h2 className={classNames(styles.title, styles.title1)}>
-            Current Plan
-          </h2>
-          <div className={styles.planBox}>
-            <Typography variant='subtitle1' className={styles.subtitle1}>
-              Free plan
-            </Typography>
-            <Typography variant='h5' className={styles.h5}>
-              $0.00 per month
-            </Typography>
-            <Typography variant='body2' className={styles.body2}>
-              Your plan renews on November 9, 2023
-            </Typography>
-          </div>
-        </Paper>
-
-        <Paper className={styles.paper}>
-          <h2 className={styles.title}>Invoice History</h2>
-          <Table
-            name='billingTable'
-            columns={headColumns}
-            data={mockUploadedData}
-          />
-        </Paper>
-      </div>
-    </Container>
+    <PageTransition>
+      <Container maxWidth={true}>
+        <div className={styles.billingContainer}>
+          <Paper className={styles.paper}>
+            <h2 className={styles.title}>Invoice History</h2>
+            {transformedData.length > 0 ? (
+              <Table
+                name='billingTable'
+                columns={headColumns}
+                data={transformedData}
+              />
+            ) : isLoading ? (
+              ''
+            ) : (
+              <Typography
+                variant='body1'
+                style={{ margin: '20px', color: '#fff' }}
+              >
+                No invoice data available.
+              </Typography>
+            )}
+          </Paper>
+        </div>
+      </Container>
+    </PageTransition>
   )
 }
 

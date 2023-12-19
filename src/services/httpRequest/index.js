@@ -1,13 +1,16 @@
 import axios from 'axios'
 import authStore from 'store/auth.store'
 import toast from 'react-hot-toast'
+import { refreshToken } from 'services/auth.service'
+import modalStore from 'store/modal.store'
 
 const httpRequest = axios.create({
-  baseURL: 'https://api.oceandrive.network/',
+  baseURL: process.env.REACT_APP_BASE_URL,
   timeout: 100000
 })
 
-const errorHandler = (error, hooks) => {
+const errorHandler = async (error, hooks) => {
+  const originalRequest = error.config
   if (
     error?.response?.data?.message &&
     error?.response?.data?.message !==
@@ -17,8 +20,25 @@ const errorHandler = (error, hooks) => {
     toast.error(capitalizeFirstLetter(error.response.data.message))
   }
 
-  if (error?.response?.status === 401) {
+  if (error?.response?.status === 500) {
+    modalStore.setOpenServerError(true)
+  }
+
+  if (
+    originalRequest.url.includes('auth/renew') &&
+    error?.response?.status === 401
+  ) {
     authStore.logout()
+    return Promise.reject(error.response)
+  }
+
+  if (error?.response?.status === 401) {
+    const token = authStore?.token?.refresh_token?.token
+    if (token) {
+      const res = await refreshToken(token)
+      authStore.setAccessToken(res)
+      return httpRequest(originalRequest)
+    }
   }
 
   return Promise.reject(error.response)
