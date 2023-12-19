@@ -10,7 +10,11 @@
   position: relative;
   overflow: hidden;
   @include sm {
-    padding-top: 70px;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   .blurImgR {
     position: absolute;
@@ -38,6 +42,7 @@
 
   .form {
     z-index: 1;
+    width: 100%;
   }
 
   .logo,

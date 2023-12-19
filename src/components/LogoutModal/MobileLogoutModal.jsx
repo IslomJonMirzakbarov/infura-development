@@ -60,7 +60,14 @@ export default function MobileLogoutModal({ toggle, open }) {
           />
         </Box>
         <Box display='flex' mt='55px' gap='5px'>
-          <Button onClick={toggle} variant='contained' color='info'>
+          <Button
+            onClick={toggle}
+            style={{
+              width: '50%'
+            }}
+            variant='contained'
+            color='info'
+          >
             Cancel
           </Button>
           <LoadingButton
@@ -68,6 +75,9 @@ export default function MobileLogoutModal({ toggle, open }) {
             onClick={handleLogout}
             variant='contained'
             color='primary'
+            style={{
+              width: '50%'
+            }}
           >
             Confirm
           </LoadingButton>

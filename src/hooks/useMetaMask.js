@@ -128,7 +128,7 @@ const useMetaMask = () => {
         method: 'wallet_switchEthereumChain',
         params: [
           {
-            chainId: web3.utils.toHex('0x3e9')
+            chainId: web3.utils.toHex(KLAYTN_CHAIN_ID)
           }
         ]
       })
