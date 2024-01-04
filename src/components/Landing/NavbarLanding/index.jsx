@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box, Button, Container, Menu, MenuItem, Tooltip } from '@mui/material'
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { ReactComponent as WalletIcon } from 'assets/images/landing/wallet.svg'
 import { ReactComponent as Logo } from 'assets/images/landing/oceandrive.svg'
 import { ReactComponent as ArrowDownIcon } from 'assets/images/landing/down_arrow.svg'
@@ -44,18 +44,34 @@ const NavbarLanding = () => {
 
               <li onMouseEnter={handleOpen} onMouseLeave={handleClose}>
                 <p>
-                  Support <ArrowDownIcon />
+                  User Guide <ArrowDownIcon />
                 </p>
                 <Menu
-                  id='support-menu'
+                  id='user-guide'
                   anchorEl={anchorEl}
                   keepMounted
                   open={Boolean(anchorEl)}
                   onClose={handleClose}
                   onMouseLeave={handleClose}
                 >
-                  <MenuItem onClick={handleClose}>Kakaotalk</MenuItem>
-                  <MenuItem onClick={handleClose}>Telegram</MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Link
+                      to='/OceanDrive_Infura_User Guide_en.pdf'
+                      target='_blank'
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      User Guide (en)
+                    </Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Link
+                      to='/OceanDrive_Infura_User Guide_ko.pdf'
+                      target='_blank'
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      User Guide (ko)
+                    </Link>
+                  </MenuItem>
                 </Menu>
               </li>
 
