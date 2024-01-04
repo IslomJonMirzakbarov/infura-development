@@ -1,12 +1,12 @@
-import { NavLink, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import cls from './style.module.scss'
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
 import { Button } from '@mui/material'
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import classNames from 'classnames'
 import authStore from 'store/auth.store'
 import { useState } from 'react'
-import LogoutModal from 'components/LogoutModal'
 import MobileLogoutModal from 'components/LogoutModal/MobileLogoutModal'
 
 export default function MobileMenu({ isOpen, onClose }) {
@@ -15,6 +15,12 @@ export default function MobileMenu({ isOpen, onClose }) {
   const [openLogout, setOpenLogout] = useState(false)
   const toggleLogout = () => {
     setOpenLogout((prev) => !prev)
+  }
+
+  const [userGuideSubmenuOpen, setUserGuideSubmenuOpen] = useState(false)
+
+  const toggleUserGuideSubmenu = () => {
+    setUserGuideSubmenuOpen(!userGuideSubmenuOpen)
   }
   return (
     <>
@@ -43,10 +49,44 @@ export default function MobileMenu({ isOpen, onClose }) {
           <NavLink onClick={onClose} to='/' className={cls.item}>
             Pricing <KeyboardArrowRightRoundedIcon />
           </NavLink>
-          <NavLink onClick={onClose} to='/' className={cls.item}>
-            Support
-            <KeyboardArrowRightRoundedIcon />
-          </NavLink>
+          <div
+            className={classNames(cls.item, {
+              [cls.hasSubMenu]: userGuideSubmenuOpen
+            })}
+            onClick={toggleUserGuideSubmenu}
+          >
+            User Guide
+            {userGuideSubmenuOpen ? (
+              <ExpandMoreIcon />
+            ) : (
+              <KeyboardArrowRightRoundedIcon />
+            )}
+          </div>
+          {userGuideSubmenuOpen && (
+            <div
+              className={classNames(cls.subMenu, {
+                [cls.open]: userGuideSubmenuOpen
+              })}
+            >
+              <Link
+                to='/OceanDrive_Infura_User Guide_en.pdf'
+                target='_blank'
+                className={cls.subItem}
+                onClick={onClose}
+              >
+                User Guide (en)
+              </Link>
+              <Link
+                to='/OceanDrive_Infura_User Guide_ko.pdf'
+                target='_blank'
+                className={cls.subItem}
+                onClick={onClose}
+              >
+                User Guide (ko)
+              </Link>
+            </div>
+          )}
+
           <NavLink onClick={onClose} to='/why-infura' className={cls.item}>
             Why OceanDrive INFURA
             <KeyboardArrowRightRoundedIcon />

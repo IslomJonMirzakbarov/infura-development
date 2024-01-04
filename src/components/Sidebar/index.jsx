@@ -68,7 +68,7 @@ export default function Sidebar() {
           <div className={styles.header}>
             <NavLink to='/' onClick={(e) => handleNavigation('/', e)}>
               <Logo
-                style={{ width: 128, fontSize: 128 }}
+                style={{ width: 102, height: 43.57 }}
                 className={styles.logo}
               />
             </NavLink>
