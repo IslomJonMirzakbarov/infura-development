@@ -7,9 +7,11 @@ import Features from './Features'
 import WhatsNew from './WhatsNew'
 import authStore from 'store/auth.store'
 import InfoSection from './InfoSection'
+import { useTranslation } from 'react-i18next'
 
 const MainContentLanding = ({ stats }) => {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const token = authStore?.token?.access_token
   const goToClick = () =>
     token ? navigate('/main/dashboard') : navigate('/auth/login')
@@ -23,17 +25,17 @@ const MainContentLanding = ({ stats }) => {
         </Box>
 
         <Typography className={styles.description}>
-          OceanDrive Infura is the bridge to a world seamlessly connected
-          through <br className={styles.mobileHide} /> decentralized storage
-          solutions. Our innovative platform leverages the latent{' '}
-          <br className={styles.mobileHide} /> potential of unused storage space
-          across our global network of participants,{' '}
-          <br className={styles.mobileHide} /> creating a web of connectivity
-          that transcends online and offline boundaries.
+          {t('oceandrive_infura_description_1')}{' '}
+          <br className={styles.mobileHide} />
+          {t('oceandrive_infura_description_2')}{' '}
+          <br className={styles.mobileHide} />
+          {t('oceandrive_infura_description_3')}{' '}
+          <br className={styles.mobileHide} />
+          {t('oceandrive_infura_description_4')}
         </Typography>
 
         <Button className={styles.goToBtn} onClick={goToClick}>
-          Go to dashboard
+          {t('go_to_dashboard')}
         </Button>
       </Box>
 

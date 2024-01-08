@@ -5,31 +5,28 @@ import { ReactComponent as WorldwideIcon } from 'assets/images/landing/worldwide
 import { ReactComponent as EmpowerIcon } from 'assets/images/landing/empower.svg'
 import { ReactComponent as DeveloperIcon } from 'assets/images/landing/developer.svg'
 import { ReactComponent as DataIcon } from 'assets/images/landing/data-assurance.svg'
+import { useTranslation } from 'react-i18next'
 
 const optionsData = {
   worldwide: {
     icon: <WorldwideIcon />,
-    title: 'Worldwide',
-    description:
-      'OceanDrive Infura provides secure and accessible decentralized <br /> storage solutions that function as a global storage network, bringing <br /> together storage resources from around the world.'
+    title: 'worldwide_title',
+    description: 'worldwide_description'
   },
   empower: {
     icon: <EmpowerIcon />,
-    title: 'Empower',
-    description:
-      'OceanDrive Infura empowers users to take control <br /> of their data and digital assets, ensuring they remain <br /> secure and accessible on a global scale'
+    title: 'empower_title',
+    description: 'empower_description'
   },
   developer: {
     icon: <DeveloperIcon />,
-    title: 'Developer',
-    description:
-      'OceanDrive Infura facilitate seamless integration of <br /> decentralized storage solutions through APIs, allowing developers <br /> to securely store digital assets within their applications.'
+    title: 'developer_title',
+    description: 'developer_description'
   },
   dataAssurance: {
     icon: <DataIcon className={styles.dataIcon} />,
-    title: 'Data Assurance',
-    description:
-      "You'll never have to worry about losing your data, <br /> ensuring its safety and accessibility."
+    title: 'data_assurance_title',
+    description: 'data_assurance_description'
   }
 }
 
@@ -43,6 +40,7 @@ const formatDescription = (description, isMobile) => {
 const InfoSection = () => {
   const [selectedOption, setSelectedOption] = useState(optionsData.worldwide)
   const isMobile = useMediaQuery('(max-width:600px)')
+  const { t } = useTranslation()
 
   const handleOptionSelect = (optionKey) => {
     setSelectedOption(optionsData[optionKey])
@@ -57,7 +55,9 @@ const InfoSection = () => {
         <Grid item xs={12}>
           <h2
             className={styles.header}
-            dangerouslySetInnerHTML={{ __html: 'OceanDrive Infura empowers' }}
+            dangerouslySetInnerHTML={{
+              __html: t('oceandrive_infura_empowers')
+            }}
           />
         </Grid>
         <Grid item xs={12}>
@@ -65,13 +65,7 @@ const InfoSection = () => {
             className={styles.description}
             dangerouslySetInnerHTML={{
               __html: formatDescription(
-                `
-      Your business by providing a robust and secure decentralized storage
-      and synchronization platform. <br /> We help you work efficiently,
-      deliver content seamlessly, and foster innovation across the globe,
-      ensuring <br /> your data is accessible and protected wherever you
-      go.
-    `,
+                t('your_business_description'),
                 isMobile
               )
             }}
@@ -94,9 +88,9 @@ const InfoSection = () => {
                 <p
                   className={styles.text}
                   dangerouslySetInnerHTML={{
-                    __html: `${isMobile ? `0${index + 1} ` : ''}${
+                    __html: `${isMobile ? `0${index + 1} ` : ''}${t(
                       optionsData[key].title
-                    }`
+                    )}`
                   }}
                 />
               </li>
@@ -107,19 +101,23 @@ const InfoSection = () => {
           <Box className={styles.optionDesc}>
             <div
               className={
-                selectedOption.title === 'Data Assurance' && styles.specialIcon
+                selectedOption.title === 'data_assurance_title' &&
+                styles.specialIcon
               }
             >
               {selectedOption.icon}
             </div>
             <h2
               className={styles.title}
-              dangerouslySetInnerHTML={{ __html: selectedOption.title }}
+              dangerouslySetInnerHTML={{ __html: t(selectedOption.title) }}
             />
             <p
               className={styles.desc}
               dangerouslySetInnerHTML={{
-                __html: formatDescription(selectedOption.description, isMobile)
+                __html: formatDescription(
+                  t(selectedOption.description),
+                  isMobile
+                )
               }}
             />
           </Box>

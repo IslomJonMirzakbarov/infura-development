@@ -4,6 +4,7 @@ import { useTheme } from '@mui/material/styles'
 import styles from '../style.module.scss'
 import { ReactComponent as MiddleIcon } from 'assets/images/landing/middle_icon2.svg'
 import { features } from '../data'
+import { useTranslation } from 'react-i18next'
 
 const formatTextForMobile = (text, isMobile) => {
   return isMobile ? text.replace(/<br\s*\/?>/gi, ' ') : text
@@ -12,6 +13,7 @@ const formatTextForMobile = (text, isMobile) => {
 const Features = () => {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+  const { t } = useTranslation()
 
   return (
     <div className={styles.featuresContainer}>
@@ -26,12 +28,12 @@ const Features = () => {
               <Box key={featureItem.title} className={styles.featureBox}>
                 <Typography
                   className={styles.featureTitle}
-                  dangerouslySetInnerHTML={{ __html: featureItem.title }}
+                  dangerouslySetInnerHTML={{ __html: t(featureItem.title) }}
                 />
                 <Typography
                   className={styles.featureText}
                   dangerouslySetInnerHTML={{
-                    __html: formatTextForMobile(featureItem.text, isMobile)
+                    __html: formatTextForMobile(t(featureItem.text), isMobile)
                   }}
                 />
               </Box>

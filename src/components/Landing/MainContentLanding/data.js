@@ -24,23 +24,23 @@ export const stats = [
 export const features = [
   [
     {
-      title: 'Connect to Decentralized Storage ',
-      text: "Unlike traditional centralized storage systems, OceanDrive <br/> is decentralized. This means that your data isn't <br/> stored in a single, vulnerable location but is distributed across <br/> multiple nodes within the network. This decentralization reduces <br/> the risk of data loss or unauthorized access. Even if one node <br/> goes offline, your data remains accessible from other nodes."
+      title: 'connect_to_decentralized_storage_title',
+      text: 'connect_to_decentralized_storage_text'
     },
     {
-      title: 'Cost',
-      text: "Save big on storage costs with OceanDrive Infura. We harness <br/> the untapped storage resources of our network, bringing you a <br/> cost-effective storage solution that doesn't break the bank."
+      title: 'cost_title',
+      text: 'cost_text'
     }
   ],
   { middleIcon: 'middleIcon' },
   [
     {
-      title: 'Global Storage Connection',
-      text: "OceanDrive builds bridges around the globe, connecting your <br/> data seamlessly. Whether you're online or offline, your data is just <br/> a click away, no matter where you are in the world."
+      title: 'global_storage_connection_title',
+      text: 'global_storage_connection_text'
     },
     {
-      title: 'Security',
-      text: "At OceanDrive Network, your data's safety is paramount. <br/> We employ cutting-edge encryption and decentralized <br/> storage, ensuring that your files are shielded from <br/> unauthorized access at all times. Your peace of mind is our priority."
+      title: 'security_title',
+      text: 'security_text'
     }
   ]
 ]
