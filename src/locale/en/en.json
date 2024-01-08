@@ -32,6 +32,14 @@
     "developer_description": "OceanDrive Infura facilitate seamless integration of <br /> decentralized storage solutions through APIs, allowing developers <br /> to securely store digital assets within their applications.",
     "data_assurance_title": "Data Assurance",
     "data_assurance_description": "You'll never have to worry about losing your data, <br /> ensuring its safety and accessibility.",
-    "whats_new": "What's New"
+    "whats_new": "What's New",
+    "decentralized_storage_title": "Decentralized Storage",
+    "decentralized_storage_description": "OceanDrive Infura is at the forefront of the decentralized storage revolution. Unlike traditional centralized storage solutions that come with inherent security and privacy risks, OceanDrive leverages the power of blockchain and decentralized networks to provide a secure, private, and reliable storage platform. By decentralizing data across a network of nodes, OceanDrive ensures that your data remains resilient against single points of failure and minimizes the risk of data lost.",
+    "accessibility_and_availability_title": "Accessibility and Availability",
+    "accessibility_and_availability_description": "One of the core benefits of OceanDrive Infura is the unparalleled accessibility and availability it offers. Your stored data is accessible from anywhere with an internet connection, making it a truly global storage solution. Whether you're at home, in the office, or on the go, your important files and documents are just a few clicks away. Plus, OceanDrive's decentralized nature means that your data is always available, even if some nodes in the network go offline. This ensures that you can retrieve your data whenever you need it, without worrying about downtime or data loss.",
+    "gateway_and_storage_provider_title": "Gateway and Storage Provider",
+    "gateway_and_storage_provider_description": "OceanDrive Infura acts as a gateway to a vast network of storage providers. These providers contribute their storage capacity to the OceanDrive network ensuring that you have ample space to store your data securely. By connecting with OceanDrive Infura, you gain access to this network of storage resources, offering scalability and flexibility to meet your storage needs. Whether you require a small amount of space or a significant storage capacity, OceanDrive Infura can accommodate your requirements.",
+    "infura_dashboard_title": "Infura Dashboard",
+    "infura_dashboard_description": "The Infura Dashboard is your command center for managing your OceanDrive experience. It provides an easy-to-navigate interface where you can control your storage, explore shared assets, and monitor your usage. From the dashboard, you can initiate storage pool creation, track rewards, and manage your data encryption settings. It's designed to be user-friendly and informative, giving you complete visibility and control over your OceanDrive Infura account."
   }
 }

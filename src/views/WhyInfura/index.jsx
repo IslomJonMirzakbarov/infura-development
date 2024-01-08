@@ -7,35 +7,33 @@ import { ReactComponent as InfuraDashboardIcon } from 'assets/icons/infura_dashb
 import styles from './style.module.scss'
 import PageTransition from 'components/PageTransition'
 import Container from 'components/Container'
+import { useTranslation } from 'react-i18next'
 
 const contentItems = [
   {
     Icon: DecentralizedStorageIcon,
-    title: 'Decentralized Storage',
-    description:
-      'OceanDrive Infura is at the forefront of the decentralized storage revolution. Unlike traditional centralized storage solutions that come with inherent security and privacy risks, OceanDrive leverages the power of blockchain and decentralized networks to provide a secure, private, and reliable storage platform. By decentralizing data across a network of nodes, OceanDrive ensures that your data remains resilient against single points of failure and minimizes the risk of data lost.'
+    title: 'decentralized_storage_title',
+    description: 'decentralized_storage_description'
   },
   {
     Icon: AccessibilityIcon,
-    title: 'Accessibility and Availability',
-    description:
-      "One of the core benefits of OceanDrive Infura is the unparalleled accessibility and availability it offers. Your stored data is accessible from anywhere with an internet connection, making it a truly global storage solution. Whether you're at home, in the office, or on the go, your important files and documents are just a few clicks away. Plus, OceanDrive's decentralized nature means that your data is always available, even if some nodes in the network go offline. This ensures that you can retrieve your data whenever you need it, without worrying about downtime or data loss."
+    title: 'accessibility_and_availability_title',
+    description: 'accessibility_and_availability_description'
   },
   {
     Icon: GatewayProviderIcon,
-    title: 'Gateway and Storage Provider',
-    description:
-      'OceanDrive Infura acts as a gateway to a vast network of storage providers. These providers contribute their storage capacity to the OceanDrive network ensuring that you have ample space to store your data securely. By connecting with OceanDrive Infura, you gain access to this network of storage resources, offering scalability and flexibility to meet your storage needs. Whether you require a small amount of space or a significant storage capacity, OceanDrive Infura can accommodate your requirements.'
+    title: 'gateway_and_storage_provider_title',
+    description: 'gateway_and_storage_provider_description'
   },
   {
     Icon: InfuraDashboardIcon,
-    title: 'Infura Dashboard',
-    description:
-      "The Infura Dashboard is your command center for managing your OceanDrive experience. It provides an easy-to-navigate interface where you can control your storage, explore shared assets, and monitor your usage. From the dashboard, you can initiate storage pool creation, track rewards, and manage your data encryption settings. It's designed to be user-friendly and informative, giving you complete visibility and control over your OceanDrive Infura account."
+    title: 'infura_dashboard_title',
+    description: 'infura_dashboard_description'
   }
 ]
 
 const WhyInfura = () => {
+  const { t } = useTranslation()
   return (
     <PageTransition className={styles.whyInfuraContainer}>
       <Grid container className={styles.mainGrid}>
@@ -51,11 +49,11 @@ const WhyInfura = () => {
               <Typography
                 variant='h5'
                 className={styles.heading}
-                dangerouslySetInnerHTML={{ __html: item.title }}
+                dangerouslySetInnerHTML={{ __html: t(item.title) }}
               />
               <Typography
                 className={styles.bodyText}
-                dangerouslySetInnerHTML={{ __html: item.description }}
+                dangerouslySetInnerHTML={{ __html: t(item.description) }}
               />
             </Paper>
           ))}
