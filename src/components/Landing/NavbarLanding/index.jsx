@@ -11,10 +11,17 @@ import classNames from 'classnames'
 import { truncateWalletAddress } from 'utils/utilFuncs'
 import Hamburger from 'hamburger-react'
 import MobileMenu from './MobileMenu'
+import i18next from 'i18next'
+import { useTranslation } from 'react-i18next'
+import languageStore from 'store/language.store'
+import { useEffect } from 'react'
 
 const NavbarLanding = () => {
   const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = useState(null)
+  const [language, setLanguage] = useState(languageStore.language)
+  const { t } = useTranslation()
+
   const { isAuth } = authStore
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget)
@@ -29,6 +36,16 @@ const NavbarLanding = () => {
     setAnchorEl(null)
   }
 
+  const changeLanguage = (lng) => {
+    setLanguage(lng)
+    languageStore.setLanguage(lng)
+    i18next.changeLanguage(lng)
+  }
+
+  useEffect(() => {
+    i18next.changeLanguage(languageStore.language)
+  }, [])
+
   return (
     <>
       <header className={styles.header}>
@@ -39,13 +56,14 @@ const NavbarLanding = () => {
           <nav>
             <ul>
               <li>
-                <NavLink to='/'>Pricing</NavLink>
+                <NavLink to='/'>{t('pricing')}</NavLink>
               </li>
 
               <li onMouseEnter={handleOpen} onMouseLeave={handleClose}>
                 <p>
-                  User Guide <ArrowDownIcon />
+                  {t('user_guide')} <ArrowDownIcon />
                 </p>
+
                 <Menu
                   id='user-guide'
                   anchorEl={anchorEl}
@@ -98,15 +116,16 @@ const NavbarLanding = () => {
                   variant='unstyled'
                   onClick={() => navigate('/auth/register')}
                 >
-                  Sign up
+                  {t('sign_up')}
                 </Button>
+
                 <Button
                   variant='outlined'
                   onClick={() => navigate('/auth/login')}
                   size='small'
                   className={styles.login}
                 >
-                  Login
+                  {t('login')}
                 </Button>
               </>
             )}
@@ -121,6 +140,22 @@ const NavbarLanding = () => {
                 <WalletIcon />
               </Box>
             </Tooltip>
+
+            <Box className={styles.languageSelection}>
+              <Button
+                onClick={() => changeLanguage('en')}
+                className={language === 'en' ? styles.activeLanguage : ''}
+              >
+                EN
+              </Button>
+              <Button
+                onClick={() => changeLanguage('ko')}
+                className={language === 'ko' ? styles.activeLanguage : ''}
+              >
+                KR
+              </Button>
+            </Box>
+
             <Box className={styles.burgerBtn}>
               <Hamburger
                 size={20}

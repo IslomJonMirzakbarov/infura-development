@@ -4,6 +4,7 @@ import './styles/index.scss'
 import App from './App'
 import reportWebVitals from './reportWebVitals'
 import { configure } from 'mobx'
+import './i18n'
 
 setTimeout(() =>
   configure({

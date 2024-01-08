@@ -98,6 +98,20 @@
           }
         }
       }
+
+      .languageSelection {
+        .activeLanguage {
+          color: #27e6d6;
+        }
+        Button {
+          color: white;
+          margin: 0 5px;
+          width: 45px;
+          height: max-content !important;
+          padding: 5px 0;
+          min-width: 0;
+        }
+      }
     }
   }
 }
