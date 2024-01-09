@@ -7,11 +7,13 @@ import { LoadingButton } from '@mui/lab'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 const Signup = () => {
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm()
   const { mutate, isLoading } = useRegisterMutation()
+  const { t } = useTranslation()
 
   const onSubmit = (data) => {
     mutate(data, {
@@ -28,29 +30,28 @@ const Signup = () => {
   return (
     <PageTransition>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <h1 className={styles.title}>Create an account</h1>
+        <h1 className={styles.title}>{t('create_account')}</h1>
         <BasicTextField
           fullWidth
           name='email'
-          label='Email'
+          label='email'
+          placeholder='email_placeholder'
           control={control}
-          placeholder='Enter your email'
           required
           type='email'
         />
         <PasswordField
           fullWidth
           name='password'
-          label='Password'
+          label='password'
           control={control}
-          placeholder='Enter your password'
+          placeholder='password_placeholder'
           required
           type='password'
           rules={{
             pattern: {
               value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
-              message:
-                'Password must be have minimum 8 characters, at least one number, one letter and one special character'
+              message: t('password_requirements')
             }
           }}
         />
@@ -61,12 +62,12 @@ const Signup = () => {
           color='primary'
           loading={isLoading}
         >
-          Sign up
+          {t('sign_up')}
         </LoadingButton>
         <div className={styles.alreadyUser}>
-          Already have an account?
+          {t('already_have_account')}
           <span onClick={() => navigate('/auth/login')}>
-            Log In <ForwardIcon />
+            {t('login')} <ForwardIcon />
           </span>
         </div>
       </form>
