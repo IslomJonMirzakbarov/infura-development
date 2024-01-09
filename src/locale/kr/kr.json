@@ -84,6 +84,18 @@
     "subscribed_nodes": "구독 노드",
     "uploaded_files": "업로드된 파일",
     "upload": "업로드",
-    "download": "다운로드"
+    "download": "다운로드",
+    "free": "무료",
+    "storage": "스토리지",
+    "gateway": "게이트웨이",
+    "pin_replication": "핀 복제",
+    "select": "선택",
+    "selected_plan": "선택한 플랜",
+    "enterprise": "엔터프라이즈",
+    "custom_plan_description": "본 플랜은 맞춤을 원하시는 분들을 위한 맞춤형 플랜입니다. 궁금한 점이 있으면 언제든지 문의해 주세요.",
+    "get_personalized_plan": "맞춤형 계획을 세워보세요",
+    "customize": "커스텀 하기",
+    "per_month": "월",
+    "pool_creation_limit_reached": "풀 생성'의 최대 한도에 도달했습니다."
   }
 }

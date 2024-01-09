@@ -84,6 +84,18 @@
     "subscribed_nodes": "Subscribed Nodes",
     "uploaded_files": "Uploaded Files",
     "upload": "Upload",
-    "download": "Download"
+    "download": "Download",
+    "free": "Free",
+    "storage": "storage",
+    "gateway": "gateway",
+    "pin_replication": "pin replication",
+    "select": "Select",
+    "selected_plan": "Selected Plan",
+    "enterprise": "Enterprise",
+    "custom_plan_description": "This plan is a custom plan for those who want custom packaging. Feel free to contact us.",
+    "get_personalized_plan": "Get a personalized plan",
+    "customize": "Customize",
+    "per_month": "month",
+    "pool_creation_limit_reached": "You have reached the maximum limit for 'Pool Creation'"
   }
 }
