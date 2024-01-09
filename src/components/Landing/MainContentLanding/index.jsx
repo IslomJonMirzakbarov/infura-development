@@ -45,7 +45,7 @@ const MainContentLanding = ({ stats }) => {
 
       <InfoSection />
 
-      <WhatsNew />
+      {/* <WhatsNew /> */}
     </div>
   )
 }

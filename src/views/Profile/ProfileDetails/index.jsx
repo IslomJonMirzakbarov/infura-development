@@ -9,9 +9,11 @@ import { formatNumberWithCommas } from 'utils/utilFuncs'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
+import { useTranslation } from 'react-i18next'
 
 const ProfileDetails = () => {
   const { id } = useParams()
+  const { t } = useTranslation()
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       name: '',
@@ -58,7 +60,7 @@ const ProfileDetails = () => {
               <BasicTextField
                 control={control}
                 name='name'
-                label='Pool name'
+                label={t('pool_name')}
                 required
                 fullWidth
                 readOnly={true}
@@ -67,7 +69,7 @@ const ProfileDetails = () => {
               <BasicTextField
                 control={control}
                 name='size'
-                label='Pool size'
+                label={t('pool_size')}
                 required
                 fullWidth
                 readOnly={true}
@@ -76,7 +78,7 @@ const ProfileDetails = () => {
               <CopyField
                 control={control}
                 name='gateway'
-                label='Gateway'
+                label={t('gateway_b')}
                 fullWidth
                 withCopy
                 readOnly={true}
@@ -86,7 +88,7 @@ const ProfileDetails = () => {
                 control={control}
                 name='replication'
                 type='number'
-                label='Pin Replication'
+                label={t('pin_replication_b')}
                 fullWidth
                 readOnly={true}
                 disabled
@@ -95,7 +97,7 @@ const ProfileDetails = () => {
                 <BasicTextField
                   control={control}
                   name='price'
-                  label='Pool price in CYCON'
+                  label={t('pool_price')}
                   fullWidth
                   readOnly={true}
                   disabled
@@ -109,7 +111,7 @@ const ProfileDetails = () => {
                       fontWeight={500}
                       mb={1}
                     >
-                      Tx hash
+                      {t('tx_hash')}
                     </Typography>
                     <a
                       href={`https://baobab.scope.klaytn.com/tx/${data.tx_hash}`}
@@ -126,7 +128,7 @@ const ProfileDetails = () => {
                 control={control}
                 name='api_key'
                 type='password'
-                label='API Key'
+                label={t('api_key')}
                 fullWidth
                 withCopy
                 withRegenerate={handleRegenerate}
@@ -149,7 +151,7 @@ const ProfileDetails = () => {
                 type='submit'
                 onClick={() => navigate('/main/pricing')}
               >
-                Change plan
+                {t('change_plan')}
               </Button>
             </Box>
           </form>

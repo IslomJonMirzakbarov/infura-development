@@ -163,7 +163,7 @@ const PasswordField = ({
                         fontWeight: '500'
                       }}
                     >
-                      Regenerate
+                      {t('regenerate')}
                     </Typography>
                   </IconButton>
                 </InputAdornment>

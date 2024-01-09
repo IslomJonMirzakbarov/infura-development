@@ -9,6 +9,7 @@ import { useInvoice } from 'services/pool.service'
 import { formatNumberWithCommas } from 'utils/utilFuncs'
 import { ReactComponent as SmallCycon } from 'assets/icons/small_cycon.svg'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 const headColumns = [
   {
@@ -35,6 +36,7 @@ const headColumns = [
 
 const Billing = () => {
   const { data, isLoading } = useInvoice()
+  const { t } = useTranslation()
   let transformedData = []
   if (data && data.invoices && data.invoices.length > 0) {
     transformedData = data?.invoices?.map((item) => ({
@@ -71,7 +73,7 @@ const Billing = () => {
       <Container maxWidth={true}>
         <div className={styles.billingContainer}>
           <Paper className={styles.paper}>
-            <h2 className={styles.title}>Invoice History</h2>
+            <h2 className={styles.title}>{t('invoice_history')}</h2>
             {transformedData.length > 0 ? (
               <Table
                 name='billingTable'
@@ -85,7 +87,7 @@ const Billing = () => {
                 variant='body1'
                 style={{ margin: '20px', color: '#fff' }}
               >
-                No invoice data available.
+                {t('no_invoice_data')}
               </Typography>
             )}
           </Paper>

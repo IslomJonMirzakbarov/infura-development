@@ -22,8 +22,10 @@ import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
 import { months, sizes, units } from './poolData'
 import walletStore from 'store/wallet.store'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 const Pool = () => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const isMobile = useMediaQuery('(max-width:640px)')
@@ -167,22 +169,22 @@ const Pool = () => {
         <Box width='100%' display='flex' alignItems='center'>
           <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
             <Typography component='p' color='#fff' variant='main' mb='22px'>
-              Pool Form
+              {t('pool_form')}
             </Typography>
             <div className={styles.elements}>
               <div>
                 <BasicTextField
                   control={control}
                   name='name'
-                  label='Pool name'
-                  placeholder='Enter pool name'
+                  label='pool_name'
+                  placeholder='enter_pool_name'
                   required={!propError}
                   fullWidth
                   minLength={5}
                   rules={{
                     maxLength: {
                       value: 20,
-                      message: `Maximum length should be 20 characters`
+                      message: t('max_length_20')
                     }
                   }}
                 />
@@ -203,10 +205,10 @@ const Pool = () => {
                 <BasicTextField
                   control={control}
                   name='size'
-                  label='Pool size'
+                  label='pool_size'
                   type='number'
                   required
-                  placeholder='Enter pool size'
+                  placeholder={t('enter_pool_size')}
                 />
                 <HFSelect
                   control={control}
@@ -221,8 +223,8 @@ const Pool = () => {
               <HFSelect
                 control={control}
                 name='replication'
-                label='Pin Replication'
-                placeholder='Select pin replication'
+                label={t('pin_replication_b')}
+                placeholder={t('select_pin_replication')}
                 fullWidth
                 required
                 options={sizes}
@@ -231,8 +233,8 @@ const Pool = () => {
               <HFSelect
                 control={control}
                 name='period'
-                label='Period'
-                placeholder='Select a time period'
+                label={t('period')}
+                placeholder={t('select_time_period')}
                 fullWidth
                 required
                 options={months}
@@ -241,15 +243,13 @@ const Pool = () => {
               <BasicTextField
                 control={control}
                 name='price'
-                label='Estimated Pool price in CYCON'
-                placeholder='Enter pool price'
+                label={t('estimated_pool_price')}
+                placeholder={t('enter_pool_price')}
                 required
                 fullWidth
                 type='number'
                 rules={{
-                  validate: (value) =>
-                    value >= 1000 ||
-                    'The minimum price should be greater than 1000'
+                  validate: (value) => value >= 1000 || t('min_price_1000')
                 }}
               />
             </div>
@@ -266,7 +266,7 @@ const Pool = () => {
                 color='secondary'
                 type='submit'
               >
-                Submit
+                {t('submit')}
               </Button>
             </Box>
           </form>
@@ -283,7 +283,7 @@ const Pool = () => {
         open={openApprove}
         title='CYCON'
         handleClose={() => setOpenApprove(false)}
-        desc='Please approve the CYCON token to proceed.'
+        desc={t('approve_desc')}
         img='https://swap.conun.io/static/cycon.svg'
       />
       <LoaderModal title='Loading' toggle={toggle2} open={open2} />
@@ -292,8 +292,8 @@ const Pool = () => {
         poolAddress={poolAddress}
         title={
           isMobile
-            ? 'Transaction Complete'
-            : 'Transaction successfully complete'
+            ? t('transaction_complete_mobile')
+            : t('transaction_complete_desktop')
         }
         txHash={txHash}
         toggle={toggle3}

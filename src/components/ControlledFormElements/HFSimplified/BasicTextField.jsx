@@ -48,8 +48,8 @@ const BasicTextField = ({
             minLength: {
               value: minLength,
               message:
-                placeholder === 'Enter pool name'
-                  ? `Pool name should be at least ${minLength} characters`
+                placeholder === 'enter_pool_name'
+                  ? t(`pool_name_min_length`)
                   : `${name} should be at least ${minLength} characters`
             }
           }),

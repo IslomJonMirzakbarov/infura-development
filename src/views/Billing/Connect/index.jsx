@@ -11,6 +11,7 @@ import { observer } from 'mobx-react-lite'
 import useMetaMask from 'hooks/useMetaMask'
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 const walletType = {
   metamask:
@@ -36,7 +37,7 @@ const wallets = [
 
 const Connect = () => {
   const navigate = useNavigate()
-
+  const { t } = useTranslation()
   const { connectWallet, hanldeLogout } = useWallet()
   const [isCopy, setIsCopy] = useState(false)
   const { address, type } = walletStore
@@ -109,7 +110,7 @@ const Connect = () => {
         <div className={classes.formArea}>
           <div className={classes.wallets}>
             <Typography variant='main' color='#fff' fontWeight={700}>
-              Connect Wallet
+              {t('connect_wallet')}
             </Typography>
             <Typography
               variant='standard'
@@ -117,9 +118,11 @@ const Connect = () => {
               mt='8px'
               color='#fff'
             >
-              <span style={{ fontWeight: 700 }}>Connect your wallet</span> to
-              one of the available <br /> providers by importing or creating a
-              new one.
+              <span style={{ fontWeight: 700 }}>
+                {t('connect_your_wallet')}
+              </span>{' '}
+              {t('to_one_of_the_available')} <br />{' '}
+              {t('providers_by_importing')}
             </Typography>
           </div>
 
@@ -175,11 +178,10 @@ const Connect = () => {
           <div className={classes.warning} id='switch'>
             <WarningRoundedIcon />
             <p>
-              Switch to{' '}
+              {t('switch_to_klaytn_mainnet')}
               <a href='#' onClick={handleChangeNetwork}>
                 Klaytn Mainnet
               </a>{' '}
-              to start the pool create.
             </p>
           </div>
         )}
