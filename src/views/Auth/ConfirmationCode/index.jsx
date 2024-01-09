@@ -7,9 +7,11 @@ import toast from 'react-hot-toast'
 import { CircularProgress } from '@mui/material'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 const ConfirmationCode = () => {
   const location = useLocation()
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm()
   const { mutate, isLoading } = useConfirmCodeMutation()
@@ -24,7 +26,7 @@ const ConfirmationCode = () => {
       {
         onSuccess: (res) => {
           navigate('/auth/login')
-          toast.success('Successfully registred!')
+          toast.success(t('successfully_registered'))
         }
       }
     )
@@ -38,7 +40,7 @@ const ConfirmationCode = () => {
       },
       {
         onSuccess: () => {
-          toast.success('We sent an OTP to your email for verification.', {
+          toast.success(t('sent_otp_for_verification'), {
             duration: 6000
           })
         }
@@ -49,24 +51,24 @@ const ConfirmationCode = () => {
   return (
     <PageTransition>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <h1 className={styles.title}>Confirmation Code</h1>
+        <h1 className={styles.title}>{t('confirmation_code')}</h1>
         <BasicTextField
           fullWidth
           name='otp'
-          label='Enter confirmation code'
+          label='confirmation_label'
           control={control}
           required
-          placeholder='Please enter code'
+          placeholder='confirmation_placeholder'
           type='number'
         />
         <div className={styles.resend}>
           <p>
-            Didn’t receive a code?{' '}
+            {t('didnt_receive_code')}{' '}
             <span>
               {isLoader ? (
                 <CircularProgress size='15px' color='inherit' />
               ) : (
-                <a onClick={onResend}>Resend</a>
+                <a onClick={onResend}>{t('resend')}</a>
               )}
             </span>
           </p>
@@ -77,7 +79,7 @@ const ConfirmationCode = () => {
           color='primary'
           loading={isLoading}
         >
-          Confirm
+          {t('confirm')}
         </LoadingButton>
       </form>
     </PageTransition>

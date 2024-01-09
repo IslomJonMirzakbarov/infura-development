@@ -51,6 +51,20 @@
     "password_requirements": "Password must have a minimum of 8 characters, at least one number, one letter, and one special character",
     "already_have_account": "Already have an account?",
     "dont_have_account": "Don't have an account?",
-    "forgot_password": "Forgot password?"
+    "forgot_password": "Forgot password?",
+    "reset_password": "Reset Password",
+    "enter_email_for_reset": "Enter your email address below and we will send you a reset link",
+    "submit": "Submit",
+    "already_have_email_password": "Already have email and password",
+    "back_to_login": "Back to Login",
+    "sent_token_for_password_reset": "We sent a token to your email to reset your password.",
+    "successfully_registered": "Successfully registered!",
+    "sent_otp_for_verification": "We sent an OTP to your email for verification.",
+    "confirmation_code": "Confirmation Code",
+    "confirmation_label": "Enter confirmation code",
+    "confirmation_placeholder": "Please enter code",
+    "didnt_receive_code": "Didn’t receive a code?",
+    "resend": "Resend",
+    "confirm": "Confirm"
   }
 }

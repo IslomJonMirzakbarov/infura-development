@@ -8,10 +8,17 @@ import { StylesProvider } from '@mui/styles'
 import { persistor, store } from './store'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import { useEffect } from 'react'
+import i18next from 'i18next'
+import languageStore from 'store/language.store'
 
 const queryClient = new QueryClient()
 
 function App() {
+  useEffect(() => {
+    i18next.changeLanguage(languageStore.language)
+  }, [])
+
   return (
     <Provider store={store}>
       <PersistGate persistor={persistor}>
