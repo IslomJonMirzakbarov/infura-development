@@ -49,6 +49,8 @@
     "password": "비밀번호",
     "password_placeholder": "비밀번호를 입력해주세요",
     "password_requirements": "비밀번호는 8자 이상, 숫자 1개, 문자 1개, 특수문자 1개 이상이어야 합니다.",
-    "already_have_account": "이미 계정이 있나요?"
+    "already_have_account": "이미 계정이 있나요?",
+    "dont_have_account": "계정이 없나요?",
+    "forgot_password": "비밀번호를 잊으셨나요?"
   }
 }

@@ -49,6 +49,8 @@
     "password": "Password",
     "password_placeholder": "Enter your password",
     "password_requirements": "Password must have a minimum of 8 characters, at least one number, one letter, and one special character",
-    "already_have_account": "Already have an account?"
+    "already_have_account": "Already have an account?",
+    "dont_have_account": "Don't have an account?",
+    "forgot_password": "Forgot password?"
   }
 }
