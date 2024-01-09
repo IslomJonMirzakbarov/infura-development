@@ -71,6 +71,19 @@
     "create_new_password": "Create a new password",
     "new_password": "New password",
     "new_password_placeholder": "Enter new password",
-    "confirm_password": "Confirm password"
+    "confirm_password": "Confirm password",
+    "dashboard": "Dashboard",
+    "billing": "Billing",
+    "profile": "Profile",
+    "log_out": "Log out",
+    "create_storage": "Create Storage",
+    "nodes_available": "Nodes available:",
+    "current_plan_free_change_your_plan": "Current Plan: Free/Change your plan",
+    "pool_size": "Pool Size",
+    "remaining_storage": "Remaining Storage",
+    "subscribed_nodes": "Subscribed Nodes",
+    "uploaded_files": "Uploaded Files",
+    "upload": "Upload",
+    "download": "Download"
   }
 }

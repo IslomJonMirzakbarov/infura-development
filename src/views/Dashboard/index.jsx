@@ -14,9 +14,11 @@ import {
   getShortenedPoolName
 } from 'utils/utilFuncs'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 const Dashboard = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { control, watch } = useForm({
     defaultValues: {
       dashboardPool: 'ALL'
@@ -80,6 +82,13 @@ const Dashboard = () => {
         UploadedFiles: poolData?.uploaded_files_count.toString() || '0'
       }
 
+  const keyMapping = {
+    PoolSize: t('pool_size'),
+    RemainingStorage: t('remaining_storage'),
+    SubscribedNodes: t('subscribed_nodes'),
+    UploadedFiles: t('uploaded_files')
+  }
+
   const infoBoxes = Object.entries(poolInfo).map(([key, value]) => {
     let displayValue
     if (key === 'PoolSize' || key === 'RemainingStorage') {
@@ -96,7 +105,7 @@ const Dashboard = () => {
 
     return (
       <Typography key={key} fontSize={12} fontWeight={700} color='#fff'>
-        {key.replace(/([A-Z])/g, ' $1')}:{' '}
+        {keyMapping[key]}:{' '}
         <span style={{ fontWeight: '300' }}>{displayValue}</span>
       </Typography>
     )
@@ -111,10 +120,10 @@ const Dashboard = () => {
             color='primary'
             onClick={() => navigate('/main/pricing')}
           >
-            <span>+</span> Create Storage
+            <span>+</span> {t('create_storage')}
           </Button>
           <Typography className={styles.nodes}>
-            Nodes available : {data?.available_nodes_count}
+            {t('nodes_available')} : {data?.available_nodes_count}
           </Typography>
         </Box>
 
@@ -142,7 +151,7 @@ const Dashboard = () => {
               mt={4}
               className={styles.planTxt}
             >
-              Current Plan: Free/Change your plan
+              {t('current_plan_free_change_your_plan')}
             </Typography>
           </Box>
 
@@ -171,13 +180,13 @@ const Dashboard = () => {
               <Box display='flex' alignItems='center' gap='8px' mb='5px'>
                 <Box width={13} height={13} backgroundColor='#27e6d6' />
                 <Typography color='#fff' fontSize={12} fontWeight={500}>
-                  Upload
+                  {t('upload')}
                 </Typography>
               </Box>
               <Box display='flex' alignItems='center' gap='8px'>
                 <Box width={13} height={13} backgroundColor='#4131CA' />
                 <Typography color='#fff' fontSize={12} fontWeight={500}>
-                  Download
+                  {t('download')}
                 </Typography>
               </Box>
             </Box>

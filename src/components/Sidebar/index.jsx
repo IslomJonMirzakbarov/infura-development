@@ -14,25 +14,26 @@ import { useNavigate } from 'react-router-dom'
 import { Box } from '@mui/material'
 import Hamburger from 'hamburger-react'
 import MobileSidebar from './MobileSidebar'
+import { useTranslation } from 'react-i18next'
 
 export const items = [
   {
-    title: 'Dashboard',
+    title: 'dashboard',
     icon: <GridIcon />,
     path: '/main/dashboard'
   },
   {
-    title: 'Pricing',
+    title: 'pricing',
     icon: <PricingIcon />,
     path: '/main/pricing'
   },
   {
-    title: 'Billing',
+    title: 'billing',
     icon: <BillingIcon />,
     path: '/main/billing'
   },
   {
-    title: 'Profile',
+    title: 'profile',
     icon: <ProfileIcon />,
     path: '/main/profile'
   }
@@ -43,6 +44,7 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
   const { isLoading } = useDashboard()
   const navigate = useNavigate()
+  const { t } = useTranslation()
 
   const toggle = () => setOpen((prev) => !prev)
   const toggleHamburger = () => setIsOpen((prev) => !prev)
@@ -95,7 +97,7 @@ export default function Sidebar() {
                       onClick={(e) => handleNavigation(item.path, e)}
                     >
                       {item.icon}
-                      {item.title}
+                      {t(item.title)}
                     </NavLink>
                   </li>
                 ))}
@@ -105,7 +107,7 @@ export default function Sidebar() {
         </div>
         <div className={styles.footer}>
           <div className={styles.logout} onClick={toggle}>
-            Log out
+            {t('log_out')}
             <LogoutIcon />
           </div>
         </div>

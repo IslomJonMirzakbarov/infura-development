@@ -71,6 +71,19 @@
     "create_new_password": "비밀번호 변경",
     "new_password": "새로운 비밀번호",
     "new_password_placeholder": "새 비밀번호를 입력하십시오",
-    "confirm_password": "비밀번호 확인"
+    "confirm_password": "비밀번호 확인",
+    "dashboard": "대시보드",
+    "billing": "빌링",
+    "profile": "프로필",
+    "log_out": "로그아웃",
+    "create_storage": "스토리지 생성",
+    "nodes_available": "사용 가능한 노드:",
+    "current_plan_free_change_your_plan": "현재 플랜: 무료/요금제 변경",
+    "pool_size": "풀 사이즈",
+    "remaining_storage": "남은 저장용량",
+    "subscribed_nodes": "구독 노드",
+    "uploaded_files": "업로드된 파일",
+    "upload": "업로드",
+    "download": "다운로드"
   }
 }
