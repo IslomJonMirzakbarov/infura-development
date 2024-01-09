@@ -65,6 +65,12 @@
     "confirmation_placeholder": "Please enter code",
     "didnt_receive_code": "Didn’t receive a code?",
     "resend": "Resend",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "password_mismatch": "Password mismatch",
+    "password_successfully_changed": "Password successfully changed!",
+    "create_new_password": "Create a new password",
+    "new_password": "New password",
+    "new_password_placeholder": "Enter new password",
+    "confirm_password": "Confirm password"
   }
 }

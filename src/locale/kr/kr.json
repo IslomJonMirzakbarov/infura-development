@@ -65,6 +65,12 @@
     "confirmation_placeholder": "코드를 입력하세요",
     "didnt_receive_code": "코드를 받지 못하셨나요?",
     "resend": "재전송",
-    "confirm": "확인"
+    "confirm": "확인",
+    "password_mismatch": "암호 불일치",
+    "password_successfully_changed": "비밀번호가 성공적으로 변경되었습니다!",
+    "create_new_password": "비밀번호 변경",
+    "new_password": "새로운 비밀번호",
+    "new_password_placeholder": "새 비밀번호를 입력하십시오",
+    "confirm_password": "비밀번호 확인"
   }
 }
