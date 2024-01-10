@@ -1,5 +1,6 @@
 import BasicModal from 'components/BasicModal'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import { useTranslation } from 'react-i18next'
 
 const GatewayModal = ({
   open,
@@ -10,22 +11,25 @@ const GatewayModal = ({
   serverError,
   setServerError
 }) => {
+  const { t } = useTranslation()
+  const error =
+    serverError === 'pool already exists' ? 'pool_exist' : serverError
   return (
     <BasicModal
       open={open}
       handleClose={toggle}
-      cancelLabel='Cancel'
-      submitLabel='Continue'
+      cancelLabel={t('cancel')}
+      submitLabel={t('continue')}
       onCancel={toggle}
       onSubmit={onSubmit}
-      title='Storage Pool Name'
+      title={t('storage_pool_name')}
       isLoading={isLoading}
     >
       <form onSubmit={onSubmit} style={{ width: '100%' }}>
         <BasicTextField
           name='name'
           control={control}
-          placeholder='Enter pool name'
+          placeholder={t('enter_pool_name')}
           fullWidth
           required={!serverError}
           color='secondary'
@@ -42,7 +46,7 @@ const GatewayModal = ({
               fontSize: '14px'
             }}
           >
-            {serverError}
+            {t(error)}
           </p>
         )}
       </form>

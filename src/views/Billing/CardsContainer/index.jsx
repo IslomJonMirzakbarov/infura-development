@@ -1,11 +1,13 @@
 import { Box, Grid, Typography } from '@mui/material'
 import BillingCard from 'components/BillingCard'
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import poolStore from 'store/pool.store'
 
 const CardsContainer = ({ onSelect }) => {
   const { isSelected, billingItems, poolCount } = poolStore
   const items = billingItems
+  const { t } = useTranslation()
   const isDisabled = poolCount > 2
 
   if (isDisabled && isSelected) {
@@ -46,7 +48,7 @@ const CardsContainer = ({ onSelect }) => {
             }
           }}
         >
-          You have reached the maximum limit for 'Pool Creation'
+          {t('pool_creation_limit_reached')}
         </Typography>
       )}
     </>

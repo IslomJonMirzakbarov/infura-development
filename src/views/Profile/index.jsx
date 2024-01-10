@@ -4,29 +4,34 @@ import { ReactComponent as PlayerIcon } from 'assets/icons/play.svg'
 import { ReactComponent as CancelIcon } from 'assets/icons/cancel.svg'
 import LinearWithValueLabel from 'components/LinearProgress'
 import Profile from './Profile'
+import { useTranslation } from 'react-i18next'
 
-const headColumns = [
-  {
-    key: 'domain',
-    title: 'Domain'
-  },
-  {
-    key: 'name',
-    title: 'Pool Name '
-  },
-  {
-    key: 'access',
-    title: 'Access'
-  },
-  {
-    key: 'price',
-    title: 'Price'
-  },
-  {
-    key: 'created_at',
-    title: 'Created'
-  }
-]
+const useTranslatedColumns = () => {
+  const { t } = useTranslation()
+
+  return [
+    {
+      key: 'domain',
+      title: t('domain')
+    },
+    {
+      key: 'name',
+      title: t('pool_name')
+    },
+    {
+      key: 'access',
+      title: t('access')
+    },
+    {
+      key: 'price',
+      title: t('price')
+    },
+    {
+      key: 'created_at',
+      title: t('created')
+    }
+  ]
+}
 
 const downloadData = [
   {
@@ -49,6 +54,7 @@ const downloadData = [
 const tabs = ['Gateway']
 
 export default function ProfileContainer() {
+  const headColumns = useTranslatedColumns()
   const [value, setValue] = useState(0)
   const [viewTable, setViewTable] = useState(true)
 

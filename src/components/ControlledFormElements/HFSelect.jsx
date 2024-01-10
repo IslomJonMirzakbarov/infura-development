@@ -10,6 +10,7 @@ import styles from './style.module.scss'
 import classNames from 'classnames'
 import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
+import { useTranslation } from 'react-i18next'
 
 const HFSelect = ({
   control,
@@ -24,6 +25,7 @@ const HFSelect = ({
   boxProps,
   ...props
 }) => {
+  const { t } = useTranslation()
   return (
     <Box display='flex' flexDirection='column' {...boxProps}>
       <Typography variant='standard' color='#fff' fontWeight={500} mb={1}>
@@ -46,7 +48,7 @@ const HFSelect = ({
         name={name}
         defaultValue=''
         rules={{
-          required: required ? 'This is required field' : false,
+          required: required ? t('field_required') : false,
           ...rules
         }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -145,7 +147,7 @@ const HFSelect = ({
               )} */}
               {options?.map((option) => (
                 <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+                  {t(option.label)}
                 </MenuItem>
               ))}
             </Select>

@@ -1,6 +1,7 @@
 import { Button, Dialog } from '@mui/material'
 import styles from './style.module.scss'
 import CloseIcon from '@mui/icons-material/Close'
+import { useTranslation } from 'react-i18next'
 
 export default function ApproveModal({
   open,
@@ -10,6 +11,7 @@ export default function ApproveModal({
   title,
   desc
 }) {
+  const { t } = useTranslation()
   return (
     <Dialog
       open={open}
@@ -29,7 +31,7 @@ export default function ApproveModal({
           }}
         />
         <Button variant='contained' fullWidth onClick={onConfirmApprove}>
-          Approve
+          {t('approve')}
         </Button>
       </div>
     </Dialog>

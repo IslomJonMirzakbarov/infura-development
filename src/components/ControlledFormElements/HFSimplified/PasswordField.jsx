@@ -11,6 +11,7 @@ import { useState } from 'react'
 import Visibility from '@mui/icons-material/Visibility'
 import VisibilityOff from '@mui/icons-material/VisibilityOff'
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg'
+import { useTranslation } from 'react-i18next'
 
 const PasswordField = ({
   control,
@@ -32,6 +33,7 @@ const PasswordField = ({
   setServerError,
   ...props
 }) => {
+  const { t } = useTranslation()
   const { value, disabled, placeholder } = props
   const [showPassword, setShowPassword] = useState(false)
 
@@ -61,7 +63,7 @@ const PasswordField = ({
     >
       {label && (
         <Typography color='white' variant='standard' fontWeight={500} mb={1}>
-          {label}
+          {t(label)}
           {required && !readOnly && (
             <span style={{ color: '#27E6D6' }}> *</span>
           )}
@@ -72,7 +74,7 @@ const PasswordField = ({
         name={name}
         defaultValue=''
         rules={{
-          required: required ? 'This field is required.' : false,
+          required: required ? t('field_required') : false,
           ...rules
         }}
         render={({ field: { onChange, value }, fieldState: { error } }) => (
@@ -136,6 +138,7 @@ const PasswordField = ({
                 )
               }}
               {...props}
+              placeholder={t(placeholder)}
             />
 
             {withRegenerate && (
@@ -160,7 +163,7 @@ const PasswordField = ({
                         fontWeight: '500'
                       }}
                     >
-                      Regenerate
+                      {t('regenerate')}
                     </Typography>
                   </IconButton>
                 </InputAdornment>

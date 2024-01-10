@@ -7,9 +7,11 @@ import headerBg from 'assets/images/profile/header_bg_m.png'
 import authStore from 'store/auth.store'
 import walletStore from 'store/wallet.store'
 import { truncateWalletAddress } from 'utils/utilFuncs'
+import { useTranslation } from 'react-i18next'
 
 export default function Header({ title }) {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const [copied, setCopied] = useState(false)
   const userData = authStore.userData
   const walletAddress = walletStore.address
@@ -25,7 +27,7 @@ export default function Header({ title }) {
       <div className={styles.walletLogoContainer}>
         <div className={styles.logoContainer}></div>
         <div className={styles.walletTxt}>
-          <h4>My Account</h4>
+          <h4>{t('my_account')}</h4>
           <div>
             <p>{userData?.email}</p>
             <Tooltip

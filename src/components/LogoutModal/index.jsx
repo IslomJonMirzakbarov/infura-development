@@ -4,10 +4,12 @@ import { useLogoutMutation } from 'services/auth.service'
 import authStore from 'store/auth.store'
 import { LoadingButton } from '@mui/lab'
 import walletStore from 'store/wallet.store'
+import { useTranslation } from 'react-i18next'
 
 export default function LogoutModal({ toggle }) {
   const { mutate, isLoading } = useLogoutMutation()
   const { token } = authStore
+  const { t } = useTranslation()
 
   const handleLogout = () => {
     mutate(
@@ -47,9 +49,8 @@ export default function LogoutModal({ toggle }) {
         lineHeight='26px'
         color='white'
         fontWeight='700'
-      >
-        Are you sure <br /> you want to log out?
-      </Typography>
+        dangerouslySetInnerHTML={{ __html: t('confirm_logout') }}
+      />
       <img
         src={logout}
         alt='logout'
@@ -61,7 +62,7 @@ export default function LogoutModal({ toggle }) {
       />
       <Box display='flex' mt='20px' gap='30px'>
         <Button onClick={toggle} variant='contained' color='info'>
-          Cancel
+          {t('cancel')}
         </Button>
         <LoadingButton
           loading={isLoading}
@@ -69,7 +70,7 @@ export default function LogoutModal({ toggle }) {
           variant='contained'
           color='primary'
         >
-          Confirm
+          {t('confirm')}
         </LoadingButton>
       </Box>
     </Box>

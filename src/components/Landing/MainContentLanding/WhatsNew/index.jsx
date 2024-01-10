@@ -6,17 +6,19 @@ import leftArrow from 'assets/images/landing/left_arrow.svg'
 import rightArrow from 'assets/images/landing/right_arrow.svg'
 import nextBtn from 'assets/images/landing/next_btn.svg'
 import { items } from '../data'
+import { useTranslation } from 'react-i18next'
 
 const WhatsNew = () => {
   const [currentIndex, setCurrentIndex] = useState(0)
   const isMobile = useMediaQuery('(max-width:600px)')
+  const { t } = useTranslation()
 
   const handleClick = () => {}
   const mobileItems = [items[0]]
 
   return (
     <div className={styles.whatsNewContainer}>
-      <Typography variant='h5'>What's New</Typography>
+      <Typography variant='h5'>{t('whats_new')}</Typography>
       <div className={styles.itemsContainer}>
         <img
           src={leftArrow}

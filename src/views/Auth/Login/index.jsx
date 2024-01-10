@@ -8,11 +8,13 @@ import { LoadingButton } from '@mui/lab'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 const Login = () => {
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm()
   const { mutate, isLoading } = useLoginMutation()
+  const { t } = useTranslation()
 
   const onSubmit = (data) => {
     mutate(data, {
@@ -30,36 +32,35 @@ const Login = () => {
   return (
     <PageTransition>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <h1 className={styles.title}>Login</h1>
+        <h1 className={styles.title}>{t('login')}</h1>
         <BasicTextField
           fullWidth
           name='email'
-          label='Email'
+          label='email'
           control={control}
-          placeholder='Enter your email'
+          placeholder='email_placeholder'
           required
           type='email'
         />
         <PasswordField
           fullWidth
           name='password'
-          label='Password'
+          label='password'
           control={control}
-          placeholder='Enter your password'
+          placeholder='password_placeholder'
           required
           type='password'
           minLength='8'
           rules={{
             pattern: {
               value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
-              message:
-                'Password must be have minimum 8 characters, at least one number, one letter and one special character'
+              message: t('password_requirements')
             }
           }}
         />
 
         <NavLink to='/auth/reset-password' className={styles.forgot}>
-          Forgot password?
+          {t('forgot_password')}
         </NavLink>
 
         <LoadingButton
@@ -69,12 +70,13 @@ const Login = () => {
           color='primary'
           loading={isLoading}
         >
-          Login
+          {t('login')}
         </LoadingButton>
         <div className={styles.alreadyUser}>
-          Don't have an account?{'  '}
+          {t('dont_have_account')}
+          {'  '}
           <span onClick={() => navigate('/auth/register')}>
-            Sign Up <ForwardIcon />
+            {t('sign_up')} <ForwardIcon />
           </span>
         </div>
       </form>

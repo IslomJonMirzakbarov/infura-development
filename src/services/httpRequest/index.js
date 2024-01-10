@@ -20,6 +20,10 @@ const errorHandler = async (error, hooks) => {
     toast.error(capitalizeFirstLetter(error.response.data.message))
   }
 
+  if (error?.code === 'ERR_NETWORK') {
+    toast.error(capitalizeFirstLetter(error?.message))
+  }
+
   if (error?.response?.status === 500) {
     modalStore.setOpenServerError(true)
   }
