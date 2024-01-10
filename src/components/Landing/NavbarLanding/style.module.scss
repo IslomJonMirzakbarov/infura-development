@@ -246,9 +246,16 @@
     }
   }
   .footerLang {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #1d1d41;
     display: flex;
     flex-direction: column;
-    // gap: 20px;
+    z-index: 1001;
+    display: flex;
+    flex-direction: column;
   }
   .langs {
     padding-left: 40px;
