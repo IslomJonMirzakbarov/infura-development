@@ -159,6 +159,8 @@
     "transaction_complete_desktop": "Transaction successfully complete",
     "approve": "Approve",
     "confirm_logout": "Are you sure <br /> you want to log out?",
-    "oceanDrive_description": "OceanDrive Infura is the bridge to a world seamlessly connected through decentralized storage solutions."
+    "oceanDrive_description": "OceanDrive Infura is the bridge to a world seamlessly connected through decentralized storage solutions.",
+    "personalized_plan": "Personalized plan",
+    "contact_us_for_questions": "Feel free to contact us for any questions."
   }
 }

@@ -1,5 +1,13 @@
 import React, { useState } from 'react'
-import { Box, Button, Container, Menu, MenuItem, Tooltip } from '@mui/material'
+import {
+  Box,
+  Button,
+  Container,
+  Menu,
+  MenuItem,
+  Tooltip,
+  useMediaQuery
+} from '@mui/material'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { ReactComponent as Logo } from 'assets/images/landing/oceandrive.svg'
 import { ReactComponent as ArrowDownIcon } from 'assets/images/landing/down_arrow.svg'
@@ -26,6 +34,7 @@ const NavbarLanding = () => {
   const [languageAnchorEl, setLanguageAnchorEl] = useState(null)
   const { t } = useTranslation()
   const [hoveredItem, setHoveredItem] = useState(null)
+  const isMobile = useMediaQuery('(max-width:600px)')
 
   const menuItemStyle = (language) => ({
     color: hoveredItem === language ? '#27E6D6' : '#FFF',
@@ -65,6 +74,7 @@ const NavbarLanding = () => {
     setLanguage(lng)
     languageStore.setLanguage(lng)
     i18next.changeLanguage(lng)
+    setLanguageAnchorEl(null)
   }
 
   const handleMenuToggle = (menu) => (event) => {
@@ -206,15 +216,17 @@ const NavbarLanding = () => {
               </Box>
             </Tooltip>
 
-            <Tooltip title='Select Language' placement='bottom-end' arrow>
-              <Box
-                className={styles.languageIcon}
-                // onMouseEnter={handleLanguageIconHover}
-                onMouseEnter={handleMenuToggle('language')}
-              >
-                <LanguageIcon />
-              </Box>
-            </Tooltip>
+            {!isMobile && (
+              <Tooltip title='Select Language' placement='bottom-end' arrow>
+                <Box
+                  className={styles.languageIcon}
+                  // onMouseEnter={handleLanguageIconHover}
+                  onMouseEnter={handleMenuToggle('language')}
+                >
+                  <LanguageIcon />
+                </Box>
+              </Tooltip>
+            )}
 
             <Menu
               id='language-menu'

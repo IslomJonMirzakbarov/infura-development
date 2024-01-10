@@ -155,8 +155,8 @@ const Connect = () => {
           color='#fff'
           className={classes.mobileText}
         >
-          <span style={{ fontWeight: 700 }}>Connect your wallet</span> to one of
-          the available <br /> providers by importing or creating a new one.
+          <span style={{ fontWeight: 700 }}>{t('connect_your_wallet')}</span>{' '}
+          {t('to_one_of_the_available')} <br /> {t('providers_by_importing')}
         </Typography>
         <ul>
           {wallets.map((wallet) => (
@@ -178,7 +178,7 @@ const Connect = () => {
           <div className={classes.warning} id='switch'>
             <WarningRoundedIcon />
             <p>
-              {t('switch_to_klaytn_mainnet')}
+              {t('switch_to_klaytn_mainnet')} {' '}
               <a href='#' onClick={handleChangeNetwork}>
                 Klaytn Mainnet
               </a>{' '}

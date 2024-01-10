@@ -11,8 +11,8 @@ const BillingCard = ({ onSelect, item, isFree }) => {
     if (item.isCurrentPlan) return
     onSelect(item)
   }
-  const { t } = useTranslation()
   const isMobile = useMediaQuery('(max-width:600px)')
+  const { t } = useTranslation()
   const translatedItemName = t(item.name.toLowerCase().replace(/\s/g, '_'))
   const translatedPriceText = item.isEnterprise
     ? t('get_personalized_plan')

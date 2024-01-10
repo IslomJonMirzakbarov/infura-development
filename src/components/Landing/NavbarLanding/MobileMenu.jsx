@@ -1,13 +1,17 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import cls from './style.module.scss'
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
-import { Button } from '@mui/material'
+import { Button, Typography } from '@mui/material'
 import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
+import { ReactComponent as LangIcon } from 'assets/icons/lang-globus.svg'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import classNames from 'classnames'
 import authStore from 'store/auth.store'
 import { useState } from 'react'
 import MobileLogoutModal from 'components/LogoutModal/MobileLogoutModal'
+import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
+import languageStore from 'store/language.store'
 
 export default function MobileMenu({ isOpen, onClose }) {
   const navigate = useNavigate()
@@ -16,11 +20,22 @@ export default function MobileMenu({ isOpen, onClose }) {
   const toggleLogout = () => {
     setOpenLogout((prev) => !prev)
   }
+  const { t } = useTranslation()
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    languageStore.language
+  )
 
   const [userGuideSubmenuOpen, setUserGuideSubmenuOpen] = useState(false)
 
   const toggleUserGuideSubmenu = () => {
     setUserGuideSubmenuOpen(!userGuideSubmenuOpen)
+  }
+
+  const handleLanguageChange = (language) => {
+    setSelectedLanguage(language)
+    languageStore.setLanguage(language)
+    i18next.changeLanguage(language)
+    onClose()
   }
   return (
     <>
@@ -33,21 +48,21 @@ export default function MobileMenu({ isOpen, onClose }) {
           {!isAuth && (
             <>
               <NavLink onClick={onClose} to='/auth/login' className={cls.item}>
-                Login <KeyboardArrowRightRoundedIcon />
+                {t('login')} <KeyboardArrowRightRoundedIcon />
               </NavLink>
               <NavLink
                 onClick={onClose}
                 to='/auth/register'
                 className={cls.item}
               >
-                Sign Up
+                {t('sign_up')}
                 <KeyboardArrowRightRoundedIcon />
               </NavLink>
             </>
           )}
 
           <NavLink onClick={onClose} to='/' className={cls.item}>
-            Pricing <KeyboardArrowRightRoundedIcon />
+            {t('pricing')} <KeyboardArrowRightRoundedIcon />
           </NavLink>
           <div
             className={classNames(cls.item, {
@@ -55,7 +70,7 @@ export default function MobileMenu({ isOpen, onClose }) {
             })}
             onClick={toggleUserGuideSubmenu}
           >
-            User Guide
+            {t('user_guide')}
             {userGuideSubmenuOpen ? (
               <ExpandMoreIcon />
             ) : (
@@ -101,22 +116,37 @@ export default function MobileMenu({ isOpen, onClose }) {
               variant='contained'
               color='secondary'
             >
-              Go to Dashboard
+              {t('go_to_dashboard')}
             </Button>
           </div>
         </div>
-        {isAuth && (
-          <div
-            onClick={() => {
-              onClose()
-              toggleLogout()
-            }}
-            className={cls.footer}
-          >
-            Log out
-            <LogoutIcon />
+        <div className={cls.footerLang}>
+          <div className={cls.langs}>
+            <LangIcon />
+            <Typography
+              className={classNames(cls.lang, {
+                [cls.activeLang]: selectedLanguage === 'en'
+              })}
+              onClick={() => handleLanguageChange('en')}
+            >
+              En
+            </Typography>
+            <Typography
+              className={classNames(cls.lang, {
+                [cls.activeLang]: selectedLanguage === 'ko'
+              })}
+              onClick={() => handleLanguageChange('ko')}
+            >
+              Kr
+            </Typography>
           </div>
-        )}
+          {isAuth && (
+            <div onClick={toggleLogout} className={cls.footer}>
+              {t('log_out')}
+              <LogoutIcon />
+            </div>
+          )}
+        </div>
       </div>
       {openLogout && (
         <MobileLogoutModal open={openLogout} toggle={toggleLogout} />
