@@ -177,6 +177,7 @@
   display: none;
   @include sm {
     display: flex;
+    // overflow-y: auto;
   }
   &.isOpen {
     transform: translateX(0);
@@ -192,6 +193,10 @@
       line-height: normal;
       @include align-items-center;
       justify-content: space-between;
+    }
+
+    .notAuthItem {
+      padding: 15px 40px;
     }
 
     .hasSubMenu {

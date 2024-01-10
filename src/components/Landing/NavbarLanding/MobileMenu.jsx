@@ -47,13 +47,21 @@ export default function MobileMenu({ isOpen, onClose }) {
         <div className={cls.body}>
           {!isAuth && (
             <>
-              <NavLink onClick={onClose} to='/auth/login' className={cls.item}>
+              <NavLink
+                onClick={onClose}
+                to='/auth/login'
+                className={classNames(cls.item, {
+                  [cls.notAuthItem]: !isAuth
+                })}
+              >
                 {t('login')} <KeyboardArrowRightRoundedIcon />
               </NavLink>
               <NavLink
                 onClick={onClose}
                 to='/auth/register'
-                className={cls.item}
+                className={classNames(cls.item, {
+                  [cls.notAuthItem]: !isAuth
+                })}
               >
                 {t('sign_up')}
                 <KeyboardArrowRightRoundedIcon />
@@ -61,12 +69,19 @@ export default function MobileMenu({ isOpen, onClose }) {
             </>
           )}
 
-          <NavLink onClick={onClose} to='/' className={cls.item}>
+          <NavLink
+            onClick={onClose}
+            to='/'
+            className={classNames(cls.item, {
+              [cls.notAuthItem]: !isAuth
+            })}
+          >
             {t('pricing')} <KeyboardArrowRightRoundedIcon />
           </NavLink>
           <div
             className={classNames(cls.item, {
-              [cls.hasSubMenu]: userGuideSubmenuOpen
+              [cls.hasSubMenu]: userGuideSubmenuOpen,
+              [cls.notAuthItem]: !isAuth
             })}
             onClick={toggleUserGuideSubmenu}
           >
@@ -102,7 +117,13 @@ export default function MobileMenu({ isOpen, onClose }) {
             </div>
           )}
 
-          <NavLink onClick={onClose} to='/why-infura' className={cls.item}>
+          <NavLink
+            onClick={onClose}
+            to='/why-infura'
+            className={classNames(cls.item, {
+              [cls.notAuthItem]: !isAuth
+            })}
+          >
             Why OceanDrive INFURA
             <KeyboardArrowRightRoundedIcon />
           </NavLink>
@@ -123,7 +144,10 @@ export default function MobileMenu({ isOpen, onClose }) {
         <div className={cls.footerLang}>
           <div
             className={cls.langs}
-            style={{ paddingBottom: isAuth ? '0px' : '35px' }}
+            style={{
+              paddingBottom: isAuth ? '0px' : '35px',
+              paddingTop: isAuth ? '0px' : '20px'
+            }}
           >
             <LangIcon />
             <Typography
