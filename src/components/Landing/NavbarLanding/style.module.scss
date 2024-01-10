@@ -175,7 +175,7 @@
   transition: all 0.6s ease-in-out;
   display: none;
   height: calc(100vh - 80px);
-  overflow: auto;
+  overflow: hidden; // auto
   @include sm {
     display: flex;
   }
@@ -183,6 +183,7 @@
     transform: translateX(0);
   }
   .body {
+    overflow-y: auto; // added
     display: flex;
     flex-direction: column;
     .item {
@@ -246,7 +247,7 @@
     }
   }
   .footerLang {
-    position: fixed;
+    position: absolute; // fixed to absolute
     left: 0;
     right: 0;
     bottom: 0;
