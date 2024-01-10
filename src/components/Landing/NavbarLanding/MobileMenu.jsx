@@ -121,7 +121,10 @@ export default function MobileMenu({ isOpen, onClose }) {
           </div>
         </div>
         <div className={cls.footerLang}>
-          <div className={cls.langs}>
+          <div
+            className={cls.langs}
+            style={{ paddingBottom: isAuth ? '0px' : '35px' }}
+          >
             <LangIcon />
             <Typography
               className={classNames(cls.lang, {

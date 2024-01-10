@@ -54,7 +54,7 @@ const ProfileDetails = () => {
         <Box width='100%' display='flex' alignItems='center'>
           <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
             <Typography component='p' color='#fff' variant='main' mb='22px'>
-              Details
+              {t('details')}
             </Typography>
             <div className={styles.elements}>
               <BasicTextField

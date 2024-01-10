@@ -161,6 +161,7 @@
     "confirm_logout": "로그아웃하시겠습니까?",
     "oceanDrive_description": "OceanDrive Infura는 분산형 스토리지 솔루션을 통해 원활하게 연결된 세상으로 가는 다리입니다.",
     "personalized_plan": "맞춤형 계획",
-    "contact_us_for_questions": "질문이 있으시면 언제든지 문의해 주세요."
+    "contact_us_for_questions": "질문이 있으시면 언제든지 문의해 주세요.",
+    "details": "내용"
   }
 }
