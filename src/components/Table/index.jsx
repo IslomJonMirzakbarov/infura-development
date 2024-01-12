@@ -61,7 +61,7 @@ export default function Table({
                   ) : value.key === 'domain' ? (
                     <td>
                       <div className={styles.column}>
-                        public.oceandrive.network
+                        infura.oceandrive.network
                       </div>
                     </td>
                   ) : value.key === 'access' ? (

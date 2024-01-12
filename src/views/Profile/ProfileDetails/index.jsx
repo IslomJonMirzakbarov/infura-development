@@ -18,7 +18,7 @@ const ProfileDetails = () => {
     defaultValues: {
       name: '',
       size: '',
-      gateway: 'https://public.oceandrive.network ',
+      gateway: 'https://infura.oceandrive.network',
       replication: '',
       price: '',
       api_key: ''
