@@ -101,7 +101,8 @@ const NavbarLanding = () => {
           <nav>
             <ul>
               <li>
-                <NavLink to='/'>{t('pricing')}</NavLink>
+                <NavLink to='/faq'>FAQ</NavLink>
+                {/* <NavLink to='/'>{t('pricing')}</NavLink> */}
               </li>
 
               <li onMouseEnter={handleMenuToggle('userGuide')}>

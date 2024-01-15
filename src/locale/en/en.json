@@ -162,6 +162,18 @@
     "oceanDrive_description": "OceanDrive Infura is the bridge to a world seamlessly connected through decentralized storage solutions.",
     "personalized_plan": "Personalized plan",
     "contact_us_for_questions": "Feel free to contact us for any questions.",
-    "details": "Details"
+    "details": "Details",
+    "why_create_storage": "Why create storage?",
+    "storage_creation_explanation": "OceanDrive Infura is a platform for storage requesters who need storage space, instead of relying on traditional cloud storage. When you create storage, OceanDrive Storage Providers (Desktop Application and Storage Node) contribute storage capacity by subscribing to pool events.",
+    "how_to_use_storage": "Once storage is created, how to use it?",
+    "usage_explanation": "After successfully creating storage, you will receive credentials for uploading files, which you will need to implement into your own application or software.",
+    "difference_from_oceandrive_app": "What is the difference from the Ocean Drive application?",
+    "oceandrive_app_explanation": "The OceanDrive Application is designed for storage providers who want to share their personal computer's storage and receive rewards. In contrast, OceanDrive Infura is for users who need storage and request it from OceanDrive Network contributors.",
+    "where_to_use_api_key": "Where to use the API Key?",
+    "api_key_usage_explanation": "After creating storage using the OceanDrive Infura Dashboard, you will receive an API URL and API Key for uploading files. The API Key is unique and belongs exclusively to the storage requester. To access the storage and upload files, you need to implement the API URL and API Key into your application's source code. Please be cautious in securely managing and keeping your API Key, as any unauthorized access could occur if it's shared with third parties.",
+    "where_files_stored": "Where will my files be stored?",
+    "files_stored_explanation": "When you upload your files, they will be distributed across the global network of subscribers to pool events, including Desktop Applications and Node Providers.",
+    "can_providers_access_files": "Can storage providers access my files?",
+    "providers_access_explanation": "No, unless you share your content ID and/or API KEY with a third party. Your stored files cannot be directly accessed by storage providers. Your data's privacy and security are maintained within the OceanDrive network."
   }
 }

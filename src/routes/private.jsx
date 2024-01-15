@@ -19,6 +19,7 @@ import ProfileContainer from 'views/Profile'
 import ConfirmSubscription from 'views/Billing/ConfirmSubscription'
 import LandingLayout from 'layouts/LandingLayout'
 import WhyInfura from 'views/WhyInfura'
+import FAQ from 'views/FAQ'
 
 export const privateRoutes = [
   {
@@ -32,6 +33,10 @@ export const privateRoutes = [
       {
         path: 'why-infura',
         element: <WhyInfura />
+      },
+      {
+        path: 'faq',
+        element: <FAQ />
       }
     ]
   },

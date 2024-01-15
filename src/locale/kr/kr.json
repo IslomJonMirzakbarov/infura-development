@@ -162,6 +162,18 @@
     "oceanDrive_description": "OceanDrive Infura는 분산형 스토리지 솔루션을 통해 원활하게 연결된 세상으로 가는 다리입니다.",
     "personalized_plan": "맞춤형 계획",
     "contact_us_for_questions": "질문이 있으시면 언제든지 문의해 주세요.",
-    "details": "내용"
+    "details": "내용",
+    "why_create_storage": "스토리지를 만드는 이유는 무엇입니까?",
+    "storage_creation_explanation": "OceanDrive Infura는 기존 클라우드 스토리지에 의존하지 않고 스토리지 공간이 필요한 스토리지 요청자를 위한 플랫폼입니다. 스토리지를 생성하면 OceanDrive 스토리지 공급자(데스크톱 애플리케이션 및 스토리지 노드)가 풀 이벤트를 구독하여 스토리지 용량을 제공합니다.",
+    "how_to_use_storage": "스토리지가 생성되면 어떻게 사용하나요?",
+    "usage_explanation": "저장소를 성공적으로 생성한 후에는 파일 업로드를 위한 자격 증명을 받게 되며, 이를 자신의 애플리케이션이나 소프트웨어에 구현해야 합니다.",
+    "difference_from_oceandrive_app": "오션드라이브 앱과 차이점은 무엇인가요?",
+    "oceandrive_app_explanation": "OceanDrive 애플리케이션은 개인용 컴퓨터의 스토리지를 공유하고 보상을 받기를 원하는 스토리지 제공업체를 위해 설계되었습니다. 대조적으로, OceanDrive Infura는 스토리지가 필요하고 OceanDrive Network 기여자에게 요청하는 사용자를 위한 것입니다.",
+    "where_to_use_api_key": "API 키는 어디에 사용하나요?",
+    "api_key_usage_explanation": "OceanDrive Infura 대시보드를 사용하여 스토리지를 생성한 후 파일 업로드를 위한 API URL과 API 키를 받게 됩니다. API 키는 고유하며 스토리지 요청자에게만 속합니다. 저장소에 액세스하고 파일을 업로드하려면 API URL과 API 키를 애플리케이션의 소스 코드에 구현해야 합니다. API Key를 제3자에게 공유할 경우 무단 접속이 발생할 수 있으므로 안전하게 관리하고 보관하시기 바랍니다.",
+    "where_files_stored": "내 파일은 어디에 저장되나요?",
+    "files_stored_explanation": "파일을 업로드하면 데스크톱 응용 프로그램 및 노드 공급자를 포함하여 풀 이벤트 가입자의 글로벌 네트워크에 배포됩니다.",
+    "can_providers_access_files": "스토리지 공급자가 내 파일에 액세스할 수 있나요?",
+    "providers_access_explanation": "아니요. 콘텐츠 ID 및/또는 API 키를 제3자와 공유하지 않는 한. 저장된 파일은 스토리지 공급자가 직접 액세스할 수 없습니다. 귀하의 데이터 개인 정보 보호 및 보안은 OceanDrive 네트워크 내에서 유지됩니다."
   }
 }
