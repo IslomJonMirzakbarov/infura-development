@@ -1,4 +1,4 @@
-import { Container, Typography } from '@mui/material'
+import { Container, Typography, useMediaQuery } from '@mui/material'
 import styles from './style.module.scss'
 import MuiAccordion from '@mui/material/Accordion'
 import MuiAccordionSummary from '@mui/material/AccordionSummary'
@@ -74,6 +74,7 @@ export default function Faq({ faqs }) {
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const [items, setItems] = useState([])
+  const isMobile = useMediaQuery('(max-width:600px)')
 
   useEffect(() => {
     if (search) {
@@ -96,7 +97,7 @@ export default function Faq({ faqs }) {
           align='center'
           variant='h2'
           color='#fff'
-          fontSize='55px'
+          fontSize={isMobile ? '24px' : '55px'}
           fontWeight={700}
         >
           FAQ

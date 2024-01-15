@@ -71,12 +71,12 @@ export default function MobileMenu({ isOpen, onClose }) {
 
           <NavLink
             onClick={onClose}
-            to='/'
+            to='/faq'
             className={classNames(cls.item, {
               [cls.notAuthItem]: !isAuth
             })}
           >
-            {t('pricing')} <KeyboardArrowRightRoundedIcon />
+            FAQ <KeyboardArrowRightRoundedIcon />
           </NavLink>
           <div
             className={classNames(cls.item, {
