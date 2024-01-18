@@ -87,7 +87,7 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
           <p>{t('notice')}</p>
           <p>{t('transaction_warning')}</p>
           <div className={styles.buttons}>
-            <button>{t('cancel')}</button>
+            <button onClick={toggle}>{t('cancel')}</button>
             <Button variant='contained' color='primary' onClick={onSubmit}>
               {t('confirm')}
             </Button>
