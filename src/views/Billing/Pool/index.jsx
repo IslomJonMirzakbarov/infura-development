@@ -23,10 +23,12 @@ import { months, sizes, units } from './poolData'
 import walletStore from 'store/wallet.store'
 import PageTransition from 'components/PageTransition'
 import { useTranslation } from 'react-i18next'
+import useKaikas from 'hooks/useKaikas'
 
 const Pool = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { type } = walletStore
   const queryClient = useQueryClient()
   const isMobile = useMediaQuery('(max-width:640px)')
   const { control, handleSubmit, formState } = useForm({
@@ -34,7 +36,11 @@ const Pool = () => {
       unit: 'GB'
     }
   })
-  const { createPool, checkAllowance, makeApprove } = useMetaMask()
+  const metamask = useMetaMask()
+  const kaikas = useKaikas()
+
+  const { createPool, checkAllowance, makeApprove } =
+    type === 'metamask' ? metamask : kaikas
 
   const [propError, setPropError] = useState('')
   const [openApprove, setOpenApprove] = useState(false)
@@ -112,6 +118,7 @@ const Pool = () => {
       await submitCheckout()
     } catch (e) {
       setOpenApprove(false)
+      setOpen2(false)
       toast.error(getRPCErrorMessage(e))
     }
   }
@@ -159,6 +166,7 @@ const Pool = () => {
         )
     } catch (e) {
       setOpen2(false)
+
       toast.error(getRPCErrorMessage(e))
     }
   }
