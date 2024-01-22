@@ -70,12 +70,22 @@ const BasicTextField = ({
 
           const handlePriceChange = (e) => {
             const unformattedValue = e.target.value.replace(/,/g, '')
-            if (!isNaN(unformattedValue) && unformattedValue.trim() !== '') {
+            // if (!isNaN(unformattedValue) && unformattedValue.trim() !== '') {
+            //   const formattedValue = formatNumberWithCommas(unformattedValue)
+            //   onChange(unformattedValue)
+            //   e.target.value = formattedValue
+            // } else {
+            //   onChange('')
+            // }
+            if (unformattedValue === '' || unformattedValue === '0') {
+              onChange('')
+            } else if (
+              !isNaN(unformattedValue) &&
+              unformattedValue.trim() !== ''
+            ) {
               const formattedValue = formatNumberWithCommas(unformattedValue)
               onChange(unformattedValue)
               e.target.value = formattedValue
-            } else {
-              // onChange('')
             }
           }
           return (
