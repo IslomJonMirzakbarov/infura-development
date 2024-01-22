@@ -255,9 +255,21 @@ const Pool = () => {
                 placeholder={t('enter_pool_price')}
                 required
                 fullWidth
-                type='number'
+                // type='number'
+                // rules={{
+                //   validate: (value) => value >= 1000 || t('min_price_1000')
+                // }}
+                type='text'
                 rules={{
-                  validate: (value) => value >= 1000 || t('min_price_1000')
+                  validate: (value) => {
+                    const numberString = value.replace(/,/g, '')
+                    return (
+                      (numberString &&
+                        !isNaN(numberString) &&
+                        parseInt(numberString, 10) >= 1000) ||
+                      t('min_price_1000')
+                    )
+                  }
                 }}
               />
             </div>
