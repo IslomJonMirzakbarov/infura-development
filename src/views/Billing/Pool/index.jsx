@@ -136,9 +136,9 @@ const Pool = () => {
       setOpen2(true)
       const pool_size =
         formData.pool_size.unit === 'GB'
-          ? parseInt(formData.pool_size.value * 1024)
-          : parseInt(formData.pool_size.value * 1024 * 1024)
-      console.log('pool_size===>', pool_size)
+          ? formData.pool_size.value
+          : formData.pool_size.value * 1024
+
       const result = await createPool({
         ...formData,
         pool_size
