@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles'
 import { useParams } from 'react-router-dom'
 import { Box, Button, Typography } from '@mui/material'
 import ProfileDetails from '../ProfileDetails'
+import classNames from 'classnames'
 
 const demoColumns = [
   {
@@ -81,7 +82,7 @@ const FileUpload = () => {
   const [activeTab, setActiveTab] = useState('files')
   return (
     <PageTransition>
-      <Container>
+      <Container className={styles.fileUploadContainer}>
         <Box className={styles.tabContainer}>
           <Typography
             className={activeTab === 'files' ? styles.activeTab : styles.tabT}
@@ -106,20 +107,30 @@ const FileUpload = () => {
               justifyContent='space-between'
               alignItems='center'
               marginBottom='15px'
+              className={classNames(styles.btnsBox, {
+                [styles.oneBtn]: !demoData || demoData.length === 0
+              })}
             >
               <h2 className={styles.tableTitle}>File History</h2>
-              <Box display='flex' alignItems='center' gap='10px'>
+              <Box
+                display='flex'
+                alignItems='center'
+                gap='10px'
+                className={styles.uploadDownloadBtns}
+              >
                 {demoData && demoData.length > 0 && (
                   <DownloadBtn>Download</DownloadBtn>
                 )}
                 <UploadBtn>Upload / Drop</UploadBtn>
               </Box>
             </Box>
-            <FileUploadTable
-              columns={demoColumns}
-              data={demoData}
-              poolId={poolId}
-            />
+            <Box className={styles.tableHolder}>
+              <FileUploadTable
+                columns={demoColumns}
+                data={demoData}
+                poolId={poolId}
+              />
+            </Box>
           </>
         ) : (
           <>

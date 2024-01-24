@@ -4,10 +4,45 @@
   margin-top: 25px;
 }
 
+.fileUploadContainer {
+  @include sm {
+    padding-right: 0px;
+  }
+}
+@include sm {
+}
+.tableHolder {
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  width: 100%;
+  overflow: auto;
+  @include sm {
+    width: 100%;
+    overflow: auto;
+  }
+}
+.btnsBox {
+  @include sm {
+    align-items: flex-end !important;
+    margin-bottom: 30px !important;
+    padding-right: 25px;
+  }
+}
+
+.oneBtn {
+  @include sm {
+    margin-top: 3rem;
+  }
+}
+
 .tableTitle {
   color: var(--base-white);
   font-size: 22px;
   font-weight: 700;
+
+  @include sm {
+    font-size: 20px;
+  }
 }
 
 .tabContainer {
@@ -15,6 +50,10 @@
   align-items: center;
   margin-bottom: 34px;
   gap: 17px;
+
+  @include sm {
+    margin-bottom: -20px;
+  }
 }
 
 .tabT {
@@ -31,6 +70,12 @@
   font-weight: 500;
   border-bottom: 1px solid var(--main, #27e6d6);
   cursor: pointer;
+}
+
+.uploadDownloadBtns {
+  @include sm {
+    flex-direction: column;
+  }
 }
 
 .list {

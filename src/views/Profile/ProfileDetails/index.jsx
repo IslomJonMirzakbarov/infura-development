@@ -48,7 +48,12 @@ const ProfileDetails = ({ id }) => {
   }
 
   return (
-    <Box width='100%' display='flex' alignItems='center'>
+    <Box
+      width='100%'
+      display='flex'
+      alignItems='center'
+      className={styles.detailsBox}
+    >
       <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
         <Typography component='p' color='#fff' variant='main' mb='22px'>
           {t('details')}

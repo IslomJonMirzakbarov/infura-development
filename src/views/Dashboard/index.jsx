@@ -173,7 +173,7 @@ const Dashboard = () => {
               <DashboardBarChart
                 upload={poolData?.uploaded_files_count}
                 download={0}
-                className={styles.chart} // Add className here
+                className={styles.chart}
               />
             </div>
             <Box padding='16px 12px'>
