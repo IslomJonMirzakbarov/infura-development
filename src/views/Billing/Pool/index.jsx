@@ -100,7 +100,7 @@ const Pool = () => {
       pool_price: data.price,
       pin_replication: parseInt(data.replication),
       pool_size: {
-        value: parseFloat(data.size),
+        value: parseInt(data.size),
         unit: data.unit
       }
     }
@@ -136,8 +136,8 @@ const Pool = () => {
       setOpen2(true)
       const pool_size =
         formData.pool_size.unit === 'GB'
-          ? formData.pool_size.value
-          : formData.pool_size.value * 1024
+          ? parseInt(formData.pool_size.value)
+          : parseInt(formData.pool_size.value * 1024)
 
       const result = await createPool({
         ...formData,
@@ -217,6 +217,9 @@ const Pool = () => {
                   type='number'
                   required
                   placeholder={t('enter_pool_size')}
+                  onKeyDown={(evt) =>
+                    (evt.key === '.' || evt.key === '-') && evt.preventDefault()
+                  }
                 />
                 <HFSelect
                   control={control}
