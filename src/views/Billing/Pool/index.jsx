@@ -100,7 +100,7 @@ const Pool = () => {
       pool_price: data.price,
       pin_replication: parseInt(data.replication),
       pool_size: {
-        value: parseInt(data.size),
+        value: parseFloat(data.size),
         unit: data.unit
       }
     }
@@ -136,9 +136,9 @@ const Pool = () => {
       setOpen2(true)
       const pool_size =
         formData.pool_size.unit === 'GB'
-          ? formData.pool_size.value
-          : formData.pool_size.value * 1024
-
+          ? parseInt(formData.pool_size.value * 1024)
+          : parseInt(formData.pool_size.value * 1024 * 1024)
+      console.log('pool_size===>', pool_size)
       const result = await createPool({
         ...formData,
         pool_size
@@ -166,7 +166,7 @@ const Pool = () => {
         )
     } catch (e) {
       setOpen2(false)
-
+      console.log(e)
       toast.error(getRPCErrorMessage(e))
     }
   }
