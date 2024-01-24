@@ -16,7 +16,7 @@ export default function Table({
   if (isLoading) return <></>
   const handleRowClick = (row) => {
     if (name === 'profileTable') {
-      navigate(`/main/profile/details/${row.id}`)
+      navigate(`/main/profile/${row.id}/file-upload`)
     }
 
     if (name === 'billingTable' && row.txHash) {
