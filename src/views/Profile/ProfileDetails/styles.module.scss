@@ -1,5 +1,12 @@
 @import 'styles/_mixins.scss';
 
+.detailsBox {
+  @include sm {
+    margin-top: 3.5rem !important;
+    padding-right: 25px;
+  }
+}
+
 .elements {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

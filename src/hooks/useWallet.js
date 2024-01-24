@@ -31,6 +31,7 @@ const useWallet = () => {
   const getAccount = async (type) => {
     try {
       const accounts = await getAccountsByType(type)
+
       const account = accounts[0]
 
       walletStore.setWallet({

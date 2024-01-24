@@ -1,24 +1,19 @@
-import AuthLayout from 'layouts/AuthLayout'
 import MainLayout from 'layouts/MainLayout'
 import { Navigate, useRoutes } from 'react-router-dom'
-import ConfirmationCode from 'views/Auth/ConfirmationCode'
-import Login from 'views/Auth/Login'
-import NewPassword from 'views/Auth/NewPassword'
-import ResetPassword from 'views/Auth/ResetPassword'
-import Signup from 'views/Auth/SignUp'
 import Billing from 'views/Billing'
 import Pricing from 'views/Billing/pricing'
 import Connect from 'views/Billing/Connect'
 import Deposit from 'views/Billing/Deposit'
 import BillingContainer from 'views/Billing/index.container'
 import Pool from 'views/Billing/Pool'
-import ProfileDetails from 'views/Profile/ProfileDetails'
 import Dashboard from 'views/Dashboard'
 import LandingPage from 'views/LandingPage'
 import ProfileContainer from 'views/Profile'
 import ConfirmSubscription from 'views/Billing/ConfirmSubscription'
 import LandingLayout from 'layouts/LandingLayout'
 import WhyInfura from 'views/WhyInfura'
+import FAQ from 'views/FAQ'
+import FileUpload from 'views/Profile/FileUpload'
 
 export const privateRoutes = [
   {
@@ -32,6 +27,10 @@ export const privateRoutes = [
       {
         path: 'why-infura',
         element: <WhyInfura />
+      },
+      {
+        path: 'faq',
+        element: <FAQ />
       }
     ]
   },
@@ -52,9 +51,13 @@ export const privateRoutes = [
         element: <ProfileContainer />
       },
       {
-        path: 'profile/details/:id',
-        element: <ProfileDetails />
+        path: 'profile/:poolId/file-upload',
+        element: <FileUpload />
       },
+      // {
+      //   path: 'profile/details/:id',
+      //   element: <ProfileDetails />
+      // },
       {
         path: 'pricing',
         element: <BillingContainer />,

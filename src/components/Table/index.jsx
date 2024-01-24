@@ -16,7 +16,7 @@ export default function Table({
   if (isLoading) return <></>
   const handleRowClick = (row) => {
     if (name === 'profileTable') {
-      navigate(`/main/profile/details/${row.id}`)
+      navigate(`/main/profile/${row.id}/file-upload`)
     }
 
     if (name === 'billingTable' && row.txHash) {
@@ -61,7 +61,7 @@ export default function Table({
                   ) : value.key === 'domain' ? (
                     <td>
                       <div className={styles.column}>
-                        public.oceandrive.network
+                        infura.oceandrive.network
                       </div>
                     </td>
                   ) : value.key === 'access' ? (

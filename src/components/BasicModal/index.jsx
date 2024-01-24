@@ -19,8 +19,13 @@ const BasicModal = ({
   isLoading = false
 }) => {
   const isLoader = submitLabel === 'loader'
+  const handleModalClose = (event, reason) => {
+    if (reason !== 'backdropClick') {
+      handleClose()
+    }
+  }
   return (
-    <Modal open={open} onClose={handleClose}>
+    <Modal open={open} onClose={handleModalClose}>
       <Box
         className={classNames(styles.wrapper, {
           [styles.heightAuto]: heightAuto

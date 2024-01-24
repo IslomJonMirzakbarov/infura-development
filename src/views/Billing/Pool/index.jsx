@@ -23,10 +23,12 @@ import { months, sizes, units } from './poolData'
 import walletStore from 'store/wallet.store'
 import PageTransition from 'components/PageTransition'
 import { useTranslation } from 'react-i18next'
+import useKaikas from 'hooks/useKaikas'
 
 const Pool = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { type } = walletStore
   const queryClient = useQueryClient()
   const isMobile = useMediaQuery('(max-width:640px)')
   const { control, handleSubmit, formState } = useForm({
@@ -34,7 +36,11 @@ const Pool = () => {
       unit: 'GB'
     }
   })
-  const { createPool, checkAllowance, makeApprove } = useMetaMask()
+  const metamask = useMetaMask()
+  const kaikas = useKaikas()
+
+  const { createPool, checkAllowance, makeApprove } =
+    type === 'metamask' ? metamask : kaikas
 
   const [propError, setPropError] = useState('')
   const [openApprove, setOpenApprove] = useState(false)
@@ -112,6 +118,7 @@ const Pool = () => {
       await submitCheckout()
     } catch (e) {
       setOpenApprove(false)
+      setOpen2(false)
       toast.error(getRPCErrorMessage(e))
     }
   }
@@ -129,8 +136,8 @@ const Pool = () => {
       setOpen2(true)
       const pool_size =
         formData.pool_size.unit === 'GB'
-          ? formData.pool_size.value
-          : formData.pool_size.value * 1024
+          ? parseInt(formData.pool_size.value)
+          : parseInt(formData.pool_size.value * 1024)
 
       const result = await createPool({
         ...formData,
@@ -159,6 +166,7 @@ const Pool = () => {
         )
     } catch (e) {
       setOpen2(false)
+      console.log(e)
       toast.error(getRPCErrorMessage(e))
     }
   }
@@ -209,6 +217,9 @@ const Pool = () => {
                   type='number'
                   required
                   placeholder={t('enter_pool_size')}
+                  onKeyDown={(evt) =>
+                    (evt.key === '.' || evt.key === '-') && evt.preventDefault()
+                  }
                 />
                 <HFSelect
                   control={control}
@@ -247,9 +258,21 @@ const Pool = () => {
                 placeholder={t('enter_pool_price')}
                 required
                 fullWidth
-                type='number'
+                // type='number'
+                // rules={{
+                //   validate: (value) => value >= 1000 || t('min_price_1000')
+                // }}
+                type='text'
                 rules={{
-                  validate: (value) => value >= 1000 || t('min_price_1000')
+                  validate: (value) => {
+                    const numberString = value.replace(/,/g, '')
+                    return (
+                      (numberString &&
+                        !isNaN(numberString) &&
+                        parseInt(numberString, 10) >= 1000) ||
+                      t('min_price_1000')
+                    )
+                  }
                 }}
               />
             </div>

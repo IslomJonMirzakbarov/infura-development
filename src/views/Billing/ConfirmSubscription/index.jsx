@@ -61,7 +61,7 @@ const ConfirmSubscription = () => {
     reset({
       pool_name: location.state?.poolName,
       pool_size: '1 GB',
-      gateway: 'https://public.oceandrive.network',
+      gateway: 'https://infura.oceandrive.network',
       pin_replication: 1,
       pool_price: 'Free'
     })
@@ -102,7 +102,7 @@ const ConfirmSubscription = () => {
                 fullWidth
                 withCopy
                 disabled
-                value='https://public.oceandrive.network'
+                value='https://infura.oceandrive.network'
               />
               <BasicTextField
                 control={control}

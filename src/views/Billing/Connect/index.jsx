@@ -76,23 +76,33 @@ const Connect = () => {
       connectWallet(walletType),
       {
         loading: 'Connection...',
-        success: (
-          <span>
-            Successful connection to{' '}
-            <b>{walletType === 'metamask' ? 'MetaMask' : 'Kaikas'} </b>wallet.
-          </span>
-        ),
-        error: <b>Connection error.</b>
+        success: (value) => {
+          async function checkResult() {
+            const result = await checkCurrentNetwork()
+            if (result === 'error') setNetworkError(true)
+            else navigate('/main/billing/pool')
+          }
+          if (value) {
+            checkResult()
+            return (
+              <span>
+                Successful connection to{' '}
+                <b>{walletType === 'metamask' ? 'MetaMask' : 'Kaikas'} </b>
+                wallet.
+              </span>
+            )
+          }
+
+          throw Error()
+        },
+        error: () => {
+          return <b>Connection error.</b>
+        }
       },
       {
         duration: 6000
       }
     )
-
-    const result = await checkCurrentNetwork()
-
-    if (result === 'error') setNetworkError(true)
-    else navigate('/main/billing/pool')
   }
 
   const handleCopy = useCallback(() => {
@@ -178,7 +188,7 @@ const Connect = () => {
           <div className={classes.warning} id='switch'>
             <WarningRoundedIcon />
             <p>
-              {t('switch_to_klaytn_mainnet')} {' '}
+              {t('switch_to_klaytn_mainnet')}{' '}
               <a href='#' onClick={handleChangeNetwork}>
                 Klaytn Mainnet
               </a>{' '}

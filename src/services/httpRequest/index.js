@@ -28,6 +28,10 @@ const errorHandler = async (error, hooks) => {
     modalStore.setOpenServerError(true)
   }
 
+  if (error?.response?.status === 502) {
+    modalStore.setOpenBadGatewayError(true)
+  }
+
   if (
     originalRequest.url.includes('auth/renew') &&
     error?.response?.status === 401

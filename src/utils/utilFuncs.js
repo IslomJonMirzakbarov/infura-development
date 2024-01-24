@@ -69,3 +69,6 @@ export function formatStatNumber(num) {
     return { value: num, cap: '' }
   }
 }
+
+
+export const getDataByLang = (lang, key, data) => data[`${key}_${lang}`]
