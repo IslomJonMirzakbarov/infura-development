@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from 'react-query'
 import httpRequest from './httpRequest'
+import axios from 'axios'
 
 const poolService = {
   check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
@@ -8,9 +9,18 @@ const poolService = {
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
   getStats: async () => httpRequest.get('infura/api/v1/stats'),
-  getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`)
+  getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`),
+  fileUpload: async (data) =>
+    axios.post('https://infura.oceandrive.network/v1/file/upload', data?.file, {
+      headers: {
+        Authorization: `Bearer ${data?.token}`
+      }
+    })
 }
 
+export const useFileUpload = (mutationSettings) => {
+  return useMutation(poolService.fileUpload, mutationSettings)
+}
 export const usePoolCheckMutation = (mutationSettings) => {
   return useMutation(poolService.check, mutationSettings)
 }

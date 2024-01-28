@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './style.module.scss'
 import PageTransition from 'components/PageTransition'
 import Container from 'components/Container'
@@ -8,6 +8,8 @@ import { useParams } from 'react-router-dom'
 import { Box, Button, Typography } from '@mui/material'
 import ProfileDetails from '../ProfileDetails'
 import classNames from 'classnames'
+import { useFileUpload, useGetPoolById } from 'services/pool.service'
+import LoaderModal from 'views/Billing/LoaderModal'
 
 const demoColumns = [
   {
@@ -79,7 +81,53 @@ const UploadBtn = styled(DownloadBtn)({
 
 const FileUpload = () => {
   const { poolId } = useParams()
+  const { data: poolData } = useGetPoolById({ id: poolId })
+  const token = poolData?.token
+  const { mutate: uploadFile, isLoading: isUploading } = useFileUpload()
+
   const [activeTab, setActiveTab] = useState('files')
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [isLoadingOpen, setIsLoadingOpen] = useState(false)
+
+  const handleFileChange = (event) => {
+    setSelectedFile(event.target.files[0])
+  }
+
+  const handleUploadClick = () => {
+    const fileInput = document.getElementById('file-upload-input')
+    fileInput.click()
+  }
+
+  const handleUploadFile = async () => {
+    if (selectedFile && token) {
+      setIsLoadingOpen(true)
+      const formData = new FormData()
+      formData.append('file', selectedFile)
+
+      uploadFile(
+        { file: formData, token: token },
+        {
+          onSuccess: (res) => {
+            console.log('upload res: ', res)
+            setSelectedFile(null)
+            setIsLoadingOpen(false)
+          },
+          onError: (err) => {
+            console.log('upload err: ', err)
+            setSelectedFile(null)
+            setIsLoadingOpen(false)
+          }
+        }
+      )
+    }
+  }
+
+  useEffect(() => {
+    if (selectedFile) {
+      handleUploadFile()
+    }
+  }, [selectedFile])
+
   return (
     <PageTransition>
       <Container className={styles.fileUploadContainer}>
@@ -121,7 +169,13 @@ const FileUpload = () => {
                 {demoData && demoData.length > 0 && (
                   <DownloadBtn>Download</DownloadBtn>
                 )}
-                <UploadBtn>Upload / Drop</UploadBtn>
+                <UploadBtn onClick={handleUploadClick}>Upload / Drop</UploadBtn>
+                <input
+                  type='file'
+                  id='file-upload-input'
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
               </Box>
             </Box>
             <Box className={styles.tableHolder}>
@@ -134,10 +188,11 @@ const FileUpload = () => {
           </>
         ) : (
           <>
-            <ProfileDetails id={poolId} />
+            <ProfileDetails poolData={poolData} />
           </>
         )}
       </Container>
+      <LoaderModal title='Loading' open={isLoadingOpen} />
     </PageTransition>
   )
 }
