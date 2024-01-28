@@ -1,17 +1,15 @@
 import { Box, Button, Typography } from '@mui/material'
-import Container from 'components/Container'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import styles from './styles.module.scss'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useGetPoolById } from 'services/pool.service'
+import { useNavigate } from 'react-router-dom'
 import { formatNumberWithCommas } from 'utils/utilFuncs'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import { useTranslation } from 'react-i18next'
 
-const ProfileDetails = ({ id }) => {
+const ProfileDetails = ({ poolData }) => {
   const { t } = useTranslation()
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
@@ -23,20 +21,18 @@ const ProfileDetails = ({ id }) => {
       api_key: ''
     }
   })
-  const { data } = useGetPoolById({
-    id,
-    queryProps: {
-      onSuccess: (res) => {
-        reset({
-          name: res?.name,
-          size: `${res?.size?.value}${res?.size?.unit}`,
-          replication: res?.pin_replication,
-          price: `${formatNumberWithCommas(res?.price)}`,
-          api_key: res?.token
-        })
-      }
+
+  useEffect(() => {
+    if (poolData) {
+      reset({
+        name: poolData?.name,
+        size: `${poolData?.size?.value}${poolData?.size?.unit}`,
+        replication: poolData?.pin_replication,
+        price: `${formatNumberWithCommas(poolData?.price)}`,
+        api_key: poolData?.token
+      })
     }
-  })
+  }, [poolData, reset])
 
   const navigate = useNavigate()
 
@@ -105,7 +101,7 @@ const ProfileDetails = ({ id }) => {
               disabled
             />
 
-            {data?.tx_hash && (
+            {poolData?.tx_hash && (
               <Box className={styles.txHash}>
                 <Typography
                   color='white'
@@ -116,11 +112,11 @@ const ProfileDetails = ({ id }) => {
                   {t('tx_hash')}
                 </Typography>
                 <a
-                  href={`https://baobab.scope.klaytn.com/tx/${data.tx_hash}`}
+                  href={`https://baobab.scope.klaytn.com/tx/${poolData.tx_hash}`}
                   target='_blank'
                   rel='noreferrer'
                 >
-                  <p>{data.tx_hash}</p>
+                  <p>{poolData.tx_hash}</p>
                 </a>
               </Box>
             )}
@@ -136,7 +132,7 @@ const ProfileDetails = ({ id }) => {
             // withRegenerate={handleRegenerate}
             readOnly={true}
             disabled
-            value={data?.token}
+            value={poolData?.token}
           />
         </div>
         <Box
