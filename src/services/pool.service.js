@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from 'react-query'
 import httpRequest from './httpRequest'
+import axios from 'axios'
 
 const poolService = {
   check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
@@ -8,9 +9,18 @@ const poolService = {
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
   getStats: async () => httpRequest.get('infura/api/v1/stats'),
+  getDownloadsCount: async () =>
+    axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
   getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`)
 }
 
+export const useDownloadsCount = (querySettings) => {
+  return useQuery(
+    'downloads-count',
+    poolService.getDownloadsCount,
+    querySettings
+  )
+}
 export const usePoolCheckMutation = (mutationSettings) => {
   return useMutation(poolService.check, mutationSettings)
 }
