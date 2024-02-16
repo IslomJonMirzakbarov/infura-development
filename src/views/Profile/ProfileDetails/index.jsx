@@ -19,7 +19,8 @@ const ProfileDetails = () => {
       name: '',
       size: '',
       gateway: 'https://infura.oceandrive.network',
-      replication: '',
+      // replication: '',
+      period: '',
       price: '',
       api_key: ''
     }
@@ -28,10 +29,19 @@ const ProfileDetails = () => {
     id,
     queryProps: {
       onSuccess: (res) => {
+        console.log('data: fdsaf', id)
         reset({
           name: res?.name,
           size: `${res?.size?.value}${res?.size?.unit}`,
-          replication: res?.pin_replication,
+          // replication: res?.pin_replication,
+          period:
+            res?.period === 0
+              ? 0
+              : res?.period === 1
+              ? '1 month'
+              : res?.period > 1
+              ? `${res?.period} months`
+              : null,
           price: `${formatNumberWithCommas(res?.price)}`,
           api_key: res?.token
         })
@@ -86,9 +96,9 @@ const ProfileDetails = () => {
               />
               <BasicTextField
                 control={control}
-                name='replication'
-                type='number'
-                label={t('pin_replication_b')}
+                name='period'
+                type='string'
+                label={t('period')}
                 fullWidth
                 readOnly={true}
                 disabled

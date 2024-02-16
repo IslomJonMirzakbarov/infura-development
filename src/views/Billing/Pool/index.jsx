@@ -98,7 +98,8 @@ const Pool = () => {
       pool_name: data.name,
       pool_period: parseInt(data.period),
       pool_price: data.price,
-      pin_replication: parseInt(data.replication),
+      // pin_replication: parseInt(data.replication),
+      pin_replication: 1000,
       pool_size: {
         value: parseInt(data.size),
         unit: data.unit
@@ -231,7 +232,7 @@ const Pool = () => {
                 />
               </div>
 
-              <HFSelect
+              {/* <HFSelect
                 control={control}
                 name='replication'
                 label={t('pin_replication_b')}
@@ -239,7 +240,7 @@ const Pool = () => {
                 fullWidth
                 required
                 options={sizes}
-              />
+              /> */}
 
               <HFSelect
                 control={control}
