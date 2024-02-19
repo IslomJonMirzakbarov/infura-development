@@ -140,6 +140,8 @@
         line-height: 35px;
         margin-bottom: 32px;
         text-align: center;
+        margin-left: 0;
+        margin-right: 0;
       }
     }
 
@@ -147,6 +149,7 @@
       margin-right: 10px;
       @include sm {
         margin-bottom: 30px;
+        margin-right: 0px;
 
         &:last-child {
           margin-bottom: 0;
