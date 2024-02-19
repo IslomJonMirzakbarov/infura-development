@@ -132,6 +132,8 @@
       font-size: 40px;
       font-weight: 700;
       line-height: 50px;
+      margin-left: -30px;
+      margin-right: 17px;
 
       @include sm {
         font-size: 28px;
@@ -142,6 +144,7 @@
     }
 
     .stats {
+      margin-right: 10px;
       @include sm {
         margin-bottom: 30px;
 
@@ -162,7 +165,7 @@
       }
 
       .statBox {
-        width: 212.281px;
+        width: 190.281px;
         height: 113.832px;
         border-radius: 10px;
         border: 1px solid rgba(255, 255, 255, 0.1);
