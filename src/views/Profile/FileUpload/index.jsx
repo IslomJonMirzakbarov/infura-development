@@ -8,8 +8,16 @@ import { useParams } from 'react-router-dom'
 import { Box, Button, Typography } from '@mui/material'
 import ProfileDetails from '../ProfileDetails'
 import classNames from 'classnames'
-import { useFileUpload, useGetPoolById } from 'services/pool.service'
+import { saveAs } from 'file-saver'
+import {
+  poolService,
+  useFileUpload,
+  useGetFileHistory,
+  useGetPoolById
+} from 'services/pool.service'
 import LoaderModal from 'views/Billing/LoaderModal'
+import { useQueryClient } from 'react-query'
+import toast from 'react-hot-toast'
 
 const demoColumns = [
   {
@@ -81,16 +89,73 @@ const UploadBtn = styled(DownloadBtn)({
 
 const FileUpload = () => {
   const { poolId } = useParams()
+  const queryClient = useQueryClient()
   const { data: poolData } = useGetPoolById({ id: poolId })
   const token = poolData?.token
   const { mutate: uploadFile, isLoading: isUploading } = useFileUpload()
+  const { data: fileUploadHistory, isLoading: isGettingHistory } =
+    useGetFileHistory({ token: token })
+
+  const formattedData =
+    fileUploadHistory?.data?.data.map((file) => {
+      const createdAtDate = new Date(file.createdAt)
+      const formattedDate = `${createdAtDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      })}, ${createdAtDate
+        .getHours()
+        .toString()
+        .padStart(2, '0')}:${createdAtDate
+        .getMinutes()
+        .toString()
+        .padStart(2, '0')}:${createdAtDate
+        .getSeconds()
+        .toString()
+        .padStart(2, '0')}`
+
+      return {
+        name: file.fileName,
+        type: file.extension,
+        size: `${(file.fileSize / (1024 * 1024)).toFixed(2)}MB`,
+        created_at: formattedDate,
+        content_id: file.cid
+      }
+    }) || []
 
   const [activeTab, setActiveTab] = useState('files')
   const [selectedFile, setSelectedFile] = useState(null)
   const [isLoadingOpen, setIsLoadingOpen] = useState(false)
+  const [selectedContentId, setSelectedContentId] = useState(null)
+
+  const handleDownload = async () => {
+    if (selectedContentId.contentId && token) {
+      setIsLoadingOpen(true)
+      try {
+        const response = await poolService.downloadFile(
+          token,
+          selectedContentId.contentId
+        )
+
+        console.log('download res: ', response)
+
+        const blob = new Blob([response.data], { type: selectedContentId.type })
+        saveAs(blob, selectedContentId.name)
+
+        setIsLoadingOpen(false)
+      } catch (error) {
+        console.error('Download error:', error)
+        toast.error('Error downloading file')
+        setIsLoadingOpen(false)
+      }
+    } else {
+      toast.error('No file selected!')
+    }
+  }
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0])
+    event.target.value = null
   }
 
   const handleUploadClick = () => {
@@ -109,6 +174,11 @@ const FileUpload = () => {
         {
           onSuccess: (res) => {
             console.log('upload res: ', res)
+            if (res?.data?.statusCode === 6002) {
+              toast.error(res?.data?.message)
+            } else {
+              queryClient.invalidateQueries(`get-file-history-${token}`)
+            }
             setSelectedFile(null)
             setIsLoadingOpen(false)
           },
@@ -166,8 +236,8 @@ const FileUpload = () => {
                 gap='10px'
                 className={styles.uploadDownloadBtns}
               >
-                {demoData && demoData.length > 0 && (
-                  <DownloadBtn>Download</DownloadBtn>
+                {formattedData && formattedData.length > 0 && (
+                  <DownloadBtn onClick={handleDownload}>Download</DownloadBtn>
                 )}
                 <UploadBtn onClick={handleUploadClick}>Upload / Drop</UploadBtn>
                 <input
@@ -181,8 +251,10 @@ const FileUpload = () => {
             <Box className={styles.tableHolder}>
               <FileUploadTable
                 columns={demoColumns}
-                data={demoData}
+                data={formattedData}
                 poolId={poolId}
+                isLoading={isGettingHistory}
+                onRowSelected={setSelectedContentId}
               />
             </Box>
           </>

@@ -3,10 +3,27 @@ import { Box, Typography } from '@mui/material'
 import styles from '../style.module.scss'
 import { formatStatStorageNumber, formatStatNumber } from 'utils/utilFuncs'
 import { useTranslation } from 'react-i18next'
+import { useDownloadsCount } from 'services/pool.service'
 
 const Stats = ({ stats: statsData }) => {
+  const { data } = useDownloadsCount()
+
+  let downloadsCount = 0
+  if (
+    data?.data?.data?.attributes?.mac ||
+    data?.data?.data?.attributes?.windows
+  ) {
+    downloadsCount =
+      parseInt(data?.data?.data?.attributes?.mac) +
+      parseInt(data?.data?.data?.attributes?.windows)
+  }
   const { t } = useTranslation()
   const stats = [
+    {
+      statTitle: t('downloads'),
+      statNum: downloadsCount ?? 0,
+      formatFunction: formatStatNumber
+    },
     {
       statTitle: t('connected_nodes'),
       statNum: statsData?.connected_nodes_count ?? 0,

@@ -16,7 +16,8 @@ const ProfileDetails = ({ poolData }) => {
       name: '',
       size: '',
       gateway: 'https://infura.oceandrive.network',
-      replication: '',
+      // replication: '',
+      period: '',
       price: '',
       api_key: ''
     }
@@ -27,7 +28,15 @@ const ProfileDetails = ({ poolData }) => {
       reset({
         name: poolData?.name,
         size: `${poolData?.size?.value}${poolData?.size?.unit}`,
-        replication: poolData?.pin_replication,
+        // replication: poolData?.pin_replication,
+        period:
+          poolData?.period === 0
+            ? 0
+            : poolData?.period === 1
+            ? '1 month'
+            : poolData?.period > 1
+            ? `${poolData?.period} months`
+            : null,
         price: `${formatNumberWithCommas(poolData?.price)}`,
         api_key: poolData?.token
       })
@@ -84,9 +93,9 @@ const ProfileDetails = ({ poolData }) => {
           />
           <BasicTextField
             control={control}
-            name='replication'
-            type='number'
-            label={t('pin_replication_b')}
+            name='period'
+            type='string'
+            label={t('period')}
             fullWidth
             readOnly={true}
             disabled
