@@ -63,8 +63,8 @@ export default function FileUploadTable({
                   return value.key === 'content_id' ? (
                     <td className={styles.contentId}>
                       <span>
-                        {item[value.key].slice(0, 6)}...
-                        {item[value.key].slice(-4)}
+                        {item[value.key]?.slice(0, 6)}...
+                        {item[value.key]?.slice(-4)}
                       </span>
                       <Tooltip
                         title={copiedIndex === index ? 'Copied' : 'Copy'}
@@ -90,10 +90,10 @@ export default function FileUploadTable({
                           toggleRowSelection(index)
                         }}
                       />
-                      {item[value.key].replace(/\.[^/.]+$/, '')}
+                      {item[value.key]?.replace(/\.[^/.]+$/, '')}
                     </td>
                   ) : value.key === 'type' ? (
-                    <td>{item[value.key].split('/')[1]}</td>
+                    <td>{item[value.key]?.split('/')[1]}</td>
                   ) : (
                     <td>{item[value.key]}</td>
                   )
