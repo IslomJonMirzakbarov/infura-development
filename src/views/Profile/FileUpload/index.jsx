@@ -126,21 +126,36 @@ const FileUpload = () => {
   const [activeTab, setActiveTab] = useState('files')
   const [selectedFile, setSelectedFile] = useState(null)
   const [isLoadingOpen, setIsLoadingOpen] = useState(false)
+  const [loaderTitle, setLoaderTitle] = useState('')
   const [selectedContentId, setSelectedContentId] = useState(null)
 
   const handleDownload = async () => {
     if (selectedContentId.contentId && token) {
       setIsLoadingOpen(true)
+      setLoaderTitle('Downloading...')
       try {
         const response = await poolService.downloadFile(
           token,
           selectedContentId.contentId
         )
 
-        console.log('download res: ', response)
+        const json = await response.data.text()
+        const result = JSON.parse(json)
 
-        const blob = new Blob([response.data], { type: selectedContentId.type })
-        saveAs(blob, selectedContentId.name)
+        const byteValues = Object.values(result).map((val) => parseInt(val))
+        const byteArray = new Uint8Array(byteValues)
+        const blob = new Blob([byteArray], { type: selectedContentId.type })
+
+        let filename = selectedContentId.name || 'download'
+        const contentDisposition = response.headers['content-disposition']
+        if (contentDisposition) {
+          const matches = contentDisposition.match(/filename="?(.+)"?/)
+          if (matches && matches[1]) {
+            filename = matches[1]
+          }
+        }
+
+        saveAs(blob, filename)
 
         setIsLoadingOpen(false)
       } catch (error) {
@@ -166,6 +181,7 @@ const FileUpload = () => {
   const handleUploadFile = async () => {
     if (selectedFile && token) {
       setIsLoadingOpen(true)
+      setLoaderTitle('Uploading...')
       const formData = new FormData()
       formData.append('file', selectedFile)
 
@@ -264,7 +280,7 @@ const FileUpload = () => {
           </>
         )}
       </Container>
-      <LoaderModal title='Loading' open={isLoadingOpen} />
+      <LoaderModal title={loaderTitle} open={isLoadingOpen} />
     </PageTransition>
   )
 }

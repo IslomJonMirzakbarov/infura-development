@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom'
 import { Box, Tooltip, Typography } from '@mui/material'
 import { ReactComponent as CopyIcon } from '../../assets/icons/copy_white.svg'
 import { ReactComponent as SearchIcon } from '../../assets/icons/search_icon.svg'
-import { useDownloadFile } from 'services/pool.service'
 
 export default function FileUploadTable({
   columns,
@@ -15,28 +14,23 @@ export default function FileUploadTable({
   onRowSelected
 }) {
   const navigate = useNavigate()
-  const [selectedRows, setSelectedRows] = useState({})
+  const [selectedRow, setSelectedRow] = useState(null)
   const [copiedIndex, setCopiedIndex] = useState(null)
-  // const {data: donwloadData, isLoading: isDownloading} = useDownloadFile({token: token})
 
   const handleRowClick = (item, index) => {
     console.log('selected item: ', item)
-    onRowSelected({
-      contentId: item.content_id,
-      type: item.type,
-      name: item.name
-    })
-    setSelectedRows((prevSelectedRows) => ({
-      ...prevSelectedRows,
-      [index]: !prevSelectedRows[index]
-    }))
-  }
+    const isSelected = selectedRow === index
+    setSelectedRow(isSelected ? null : index)
 
-  const toggleRowSelection = (index) => {
-    setSelectedRows((prevSelectedRows) => ({
-      ...prevSelectedRows,
-      [index]: !prevSelectedRows[index]
-    }))
+    onRowSelected(
+      isSelected
+        ? null
+        : {
+            contentId: item.content_id,
+            type: item.type,
+            name: item.name
+          }
+    )
   }
 
   const copyToClipboard = async (text, index) => {
@@ -83,12 +77,8 @@ export default function FileUploadTable({
                       <div></div>
                       <div
                         className={classNames(styles.clickableBox, {
-                          [styles.isSelected]: selectedRows[index]
+                          [styles.isSelected]: selectedRow === index
                         })}
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          toggleRowSelection(index)
-                        }}
                       />
                       {item[value.key]?.replace(/\.[^/.]+$/, '')}
                     </td>

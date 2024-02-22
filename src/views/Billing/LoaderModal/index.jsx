@@ -13,7 +13,7 @@ const LoaderModal = ({ open, toggle, title, onSubmit }) => {
     >
       <Box className={styles.loader}>
         <LoaderIcon />
-        <p>Loading...</p>
+        <p>{title ? title : 'Loading...'}</p>
       </Box>
     </BasicModal>
   )
