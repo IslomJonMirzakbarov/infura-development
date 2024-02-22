@@ -5,9 +5,6 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import AuthProvider from 'components/AuthProvider'
 import { Toaster } from 'react-hot-toast'
 import { StylesProvider } from '@mui/styles'
-import { persistor, store } from './store'
-import { Provider } from 'react-redux'
-import { PersistGate } from 'redux-persist/integration/react'
 import { useEffect } from 'react'
 import i18next from 'i18next'
 import languageStore from 'store/language.store'
@@ -20,20 +17,16 @@ function App() {
   }, [])
 
   return (
-    <Provider store={store}>
-      <PersistGate persistor={persistor}>
-        <ThemeProvider theme={theme}>
-          <StylesProvider injectFirst>
-            <BrowserRouter>
-              <QueryClientProvider client={queryClient}>
-                <AuthProvider />
-                <Toaster position='top-right' />
-              </QueryClientProvider>
-            </BrowserRouter>
-          </StylesProvider>
-        </ThemeProvider>
-      </PersistGate>
-    </Provider>
+    <ThemeProvider theme={theme}>
+      <StylesProvider injectFirst>
+        <BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <AuthProvider />
+            <Toaster position='top-right' />
+          </QueryClientProvider>
+        </BrowserRouter>
+      </StylesProvider>
+    </ThemeProvider>
   )
 }
 
