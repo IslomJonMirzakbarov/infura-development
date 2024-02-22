@@ -54,6 +54,7 @@
           font-size: 12px;
           font-weight: 700;
           line-height: 150%;
+          height: 53px;
 
           &:last-child {
             text-align: right;
@@ -73,7 +74,6 @@
   .selectTd {
     display: flex;
     align-items: center;
-    gap: 10px;
 
     .clickableBox {
       width: 20px;
@@ -81,6 +81,7 @@
       border-radius: 6px;
       border: 1px solid #707ab7;
       background: #282833;
+      margin-right: 10px;
     }
 
     .isSelected {

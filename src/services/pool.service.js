@@ -2,7 +2,7 @@ import { useMutation, useQuery } from 'react-query'
 import httpRequest from './httpRequest'
 import axios from 'axios'
 
-const poolService = {
+export const poolService = {
   check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
   create: async (data) => httpRequest.post('infura/api/v1/pools', data),
   getPools: async () => httpRequest.get('infura/api/v1/pools'),
@@ -17,9 +17,45 @@ const poolService = {
       headers: {
         Authorization: `Bearer ${data?.token}`
       }
-    })
+    }),
+  getFileHistory: async (token) =>
+    axios.get('https://infura.oceandrive.network/v1/file/history', {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }),
+  downloadFile: async (token, contentId) =>
+    axios.get(
+      `https://infura.oceandrive.network/v1/file/download?contentId=${contentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        responseType: 'blob'
+      }
+    )
 }
 
+export const useDownloadFile = ({ token, contentId, queryProps }) => {
+  return useQuery(
+    `get-file-history-${token}`,
+    () => poolService.downloadFile(token, contentId),
+    {
+      enabled: !!token && !!contentId,
+      ...queryProps
+    }
+  )
+}
+export const useGetFileHistory = ({ token, queryProps }) => {
+  return useQuery(
+    `get-file-history-${token}`,
+    () => poolService.getFileHistory(token),
+    {
+      enabled: !!token,
+      ...queryProps
+    }
+  )
+}
 export const useFileUpload = (mutationSettings) => {
   return useMutation(poolService.fileUpload, mutationSettings)
 }
