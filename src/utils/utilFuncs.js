@@ -70,5 +70,14 @@ export function formatStatNumber(num) {
   }
 }
 
-
 export const getDataByLang = (lang, key, data) => data[`${key}_${lang}`]
+
+export const formatDateFile = (date) =>
+  `${date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })}, ${date.getHours().toString().padStart(2, '0')}:${date
+    .getMinutes()
+    .toString()
+    .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`
