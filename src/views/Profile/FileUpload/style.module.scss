@@ -76,6 +76,10 @@
   @include sm {
     flex-direction: column;
   }
+
+  .hiddenDownloadBtn {
+    visibility: hidden;
+  }
 }
 
 .list {

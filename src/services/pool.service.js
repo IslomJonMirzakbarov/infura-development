@@ -16,7 +16,9 @@ export const poolService = {
     axios.post('https://infura.oceandrive.network/v1/file/upload', data?.file, {
       headers: {
         Authorization: `Bearer ${data?.token}`
-      }
+      },
+      onUploadProgress: data?.onUploadProgress,
+      cancelToken: data?.cancelToken
     }),
   getFileHistory: async (token) =>
     axios.get('https://infura.oceandrive.network/v1/file/history', {
@@ -24,14 +26,15 @@ export const poolService = {
         Authorization: `Bearer ${token}`
       }
     }),
-  downloadFile: async (token, contentId) =>
+  downloadFile: async (token, contentId, config) =>
     axios.get(
       `https://infura.oceandrive.network/v1/file/download?contentId=${contentId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`
         },
-        responseType: 'blob'
+        responseType: 'blob',
+        ...config
       }
     )
 }
