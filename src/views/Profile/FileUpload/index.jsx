@@ -18,6 +18,8 @@ import {
 import LoaderModal from 'views/Billing/LoaderModal'
 import { useQueryClient } from 'react-query'
 import toast from 'react-hot-toast'
+import axios from 'axios'
+import ProgressLoader from 'components/UploadLoader'
 
 const demoColumns = [
   {
@@ -126,17 +128,35 @@ const FileUpload = () => {
   const [activeTab, setActiveTab] = useState('files')
   const [selectedFile, setSelectedFile] = useState(null)
   const [isLoadingOpen, setIsLoadingOpen] = useState(false)
-  const [loaderTitle, setLoaderTitle] = useState('')
+  const [loaderTitle, setLoaderTitle] = useState(null)
   const [selectedContentId, setSelectedContentId] = useState(null)
+  const [cancelTokenSource, setCancelTokenSource] = useState(null)
 
   const handleDownload = async () => {
     if (selectedContentId.contentId && token) {
       setIsLoadingOpen(true)
-      setLoaderTitle('Downloading...')
+      setLoaderTitle({ title: 'Downloading...', percent: 0 })
+
+      const source = axios.CancelToken.source()
+      setCancelTokenSource(source)
+
       try {
         const response = await poolService.downloadFile(
           token,
-          selectedContentId.contentId
+          selectedContentId.contentId,
+          {
+            onDownloadProgress: (progressEvent) => {
+              const percentCompleted = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              )
+              console.log('Download progress:', percentCompleted)
+              setLoaderTitle({
+                title: 'Downloading...',
+                percent: percentCompleted
+              })
+            },
+            cancelToken: source.token
+          }
         )
 
         const json = await response.data.text()
@@ -159,8 +179,12 @@ const FileUpload = () => {
 
         setIsLoadingOpen(false)
       } catch (error) {
-        console.error('Download error:', error)
-        toast.error('Error downloading file')
+        if (axios.isCancel(error)) {
+          console.log('Download cancelled by the user.')
+        } else {
+          console.error('Download error:', error)
+          toast.error('Error downloading file')
+        }
         setIsLoadingOpen(false)
       }
     } else {
@@ -181,12 +205,25 @@ const FileUpload = () => {
   const handleUploadFile = async () => {
     if (selectedFile && token) {
       setIsLoadingOpen(true)
-      setLoaderTitle('Uploading...')
+      setLoaderTitle({ title: 'Uploading...', percent: 0 })
       const formData = new FormData()
       formData.append('file', selectedFile)
 
+      const source = axios.CancelToken.source()
+      setCancelTokenSource(source)
+
       uploadFile(
-        { file: formData, token: token },
+        {
+          file: formData,
+          token: token,
+          onUploadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            )
+            setLoaderTitle({ title: 'Uploading...', percent: percentCompleted })
+          },
+          cancelToken: source.token
+        },
         {
           onSuccess: (res) => {
             console.log('upload res: ', res)
@@ -206,6 +243,15 @@ const FileUpload = () => {
         }
       )
     }
+  }
+
+  const cancelOperation = () => {
+    if (cancelTokenSource) {
+      cancelTokenSource.cancel('Operation cancelled by the user.')
+    }
+    setIsLoadingOpen(false)
+    setLoaderTitle(null)
+    setCancelTokenSource(null)
   }
 
   useEffect(() => {
@@ -252,9 +298,16 @@ const FileUpload = () => {
                 gap='10px'
                 className={styles.uploadDownloadBtns}
               >
-                {formattedData && formattedData.length > 0 && (
-                  <DownloadBtn onClick={handleDownload}>Download</DownloadBtn>
-                )}
+                <DownloadBtn
+                  onClick={handleDownload}
+                  className={
+                    formattedData && formattedData.length > 0
+                      ? ''
+                      : styles.hiddenDownloadBtn
+                  }
+                >
+                  Download
+                </DownloadBtn>
                 <UploadBtn onClick={handleUploadClick}>Upload / Drop</UploadBtn>
                 <input
                   type='file'
@@ -280,7 +333,11 @@ const FileUpload = () => {
           </>
         )}
       </Container>
-      <LoaderModal title={loaderTitle} open={isLoadingOpen} />
+      <ProgressLoader
+        title={loaderTitle}
+        open={isLoadingOpen}
+        toggle={cancelOperation}
+      />
     </PageTransition>
   )
 }
