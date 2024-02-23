@@ -192,8 +192,16 @@ const FileUpload = () => {
     }
   }
 
+  const MAX_FILE_SIZE = 5 * 1024 * 1024
+
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0])
+    const file = event.target.files[0]
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error('Max file size is 5MB')
+      event.target.value = null
+      return
+    }
+    setSelectedFile(file)
     event.target.value = null
   }
 
