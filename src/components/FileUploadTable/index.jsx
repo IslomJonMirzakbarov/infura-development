@@ -5,13 +5,16 @@ import { useNavigate } from 'react-router-dom'
 import { Box, Tooltip, Typography } from '@mui/material'
 import { ReactComponent as CopyIcon } from '../../assets/icons/copy_white.svg'
 import { ReactComponent as SearchIcon } from '../../assets/icons/search_icon.svg'
+import { ReactComponent as LoaderIcon } from 'assets/icons/loader_infinite.svg'
 
 export default function FileUploadTable({
   columns,
   data,
   isLoading,
   poolId,
-  onRowSelected
+  onRowSelected,
+  dataChecker,
+  error
 }) {
   const navigate = useNavigate()
   const [selectedRow, setSelectedRow] = useState(null)
@@ -92,12 +95,18 @@ export default function FileUploadTable({
             ))}
         </tbody>
       </table>
-      {data && data.length === 0 && (
-        <Box className={styles.noDataContainer}>
-          <SearchIcon />
-          <Typography className={styles.noDataText}>No Data</Typography>
-        </Box>
-      )}
+      <Box className={styles.noDataContainer}>
+        {(isLoading || dataChecker === undefined) && data?.length === 0 ? (
+          <LoaderIcon height='140px' style={{ marginTop: '-27px' }} />
+        ) : dataChecker !== undefined && data?.length === 0 ? (
+          <>
+            <SearchIcon />
+            <Typography className={styles.noDataText}>No Data</Typography>
+          </>
+        ) : !!error ? (
+          <h1 style={{ color: '#fff' }}>Error...</h1>
+        ) : null}
+      </Box>
     </div>
   )
 }

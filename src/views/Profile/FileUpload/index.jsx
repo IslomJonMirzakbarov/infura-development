@@ -24,8 +24,12 @@ const FileUpload = () => {
   const { data: poolData } = useGetPoolById({ id: poolId })
   const token = poolData?.token
   const { mutate: uploadFile, isLoading: isUploading } = useFileUpload()
-  const { data: fileUploadHistory, isLoading: isGettingHistory } =
-    useGetFileHistory({ token: token })
+  const {
+    data: fileUploadHistory,
+    isLoading: isGettingHistory,
+    error,
+    isFetching
+  } = useGetFileHistory({ token: token })
 
   const formattedData =
     fileUploadHistory?.data?.data.map((file) => {
@@ -132,8 +136,10 @@ const FileUpload = () => {
               <FileUploadTable
                 columns={demoColumns}
                 data={formattedData}
+                dataChecker={fileUploadHistory}
+                error={error}
                 poolId={poolId}
-                isLoading={isGettingHistory}
+                isLoading={isGettingHistory || isFetching}
                 onRowSelected={setSelectedContentId}
               />
             </Box>
