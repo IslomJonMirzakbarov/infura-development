@@ -118,8 +118,11 @@ const useUploadDownload = ({
         {
           onSuccess: (res) => {
             console.log('upload res: ', res)
-            if (res?.data?.statusCode === 6002) {
-              toast.error(res?.data?.message)
+            if (
+              res?.data?.statusCode === 6002 &&
+              res?.data?.message.includes('FILE_WITH_SAME_CID_ALREADY_EXIST!')
+            ) {
+              toast.error('File with the same cid already exist!')
             } else {
               queryClient.invalidateQueries(`get-file-history-${token}`)
             }
