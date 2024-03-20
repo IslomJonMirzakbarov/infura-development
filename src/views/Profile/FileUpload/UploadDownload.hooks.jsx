@@ -62,13 +62,26 @@ const useUploadDownload = ({
 
         setIsLoadingOpen(false)
       } catch (error) {
+        setIsLoadingOpen(false)
         if (axios.isCancel(error)) {
           console.log('Download cancelled by the user.')
         } else {
+          let errorMessage = 'Error downloading file'
+          if (error.response) {
+            if (error.response.status === 504) {
+              errorMessage =
+                'The server did not respond in time, please try again later.'
+            }
+          } else if (error.request) {
+            errorMessage = error.message
+          }
+          toast.error(
+            errorMessage === 'Network Error'
+              ? 'The server did not respond in time, please try again later.'
+              : errorMessage
+          )
           console.error('Download error:', error)
-          toast.error('Error downloading file')
         }
-        setIsLoadingOpen(false)
       }
     } else {
       toast.error('No file selected!')
