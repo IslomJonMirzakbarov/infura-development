@@ -4,9 +4,11 @@ import styles from './style.module.scss'
 import axios from 'axios'
 import { useEffect, useState } from 'react'
 import { formatNumberWithCommas, getShortenedPoolName } from 'utils/utilFuncs'
+import { useTranslation } from 'react-i18next'
 
 const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
   const [price, setPrice] = useState(null)
+  const { t } = useTranslation()
 
   const handlePrice = async () => {
     try {
@@ -32,35 +34,35 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
     <BasicModal
       open={open}
       handleClose={toggle}
-      submitLabel='Continue'
+      submitLabel={t('continue')}
       onCancel={toggle}
       onSubmit={onSubmit}
-      title='Checkout Confirmation'
-      cancelLabel='Cancel'
+      title={t('checkout_confirmation')}
+      cancelLabel={t('cancel')}
       withFooter={false}
       heightAuto
     >
       <Box className={styles.box}>
         <div className={styles.items}>
           <div className={styles.item}>
-            <p>Pool Name</p>
+            <p>{t('pool_name')}</p>
             <p>{getShortenedPoolName(formData?.pool_name)}</p>
           </div>
           <div className={styles.item}>
-            <p>Pool Size</p>
+            <p>{t('pool_size')}</p>
             <p>
               {formData?.pool_size?.value} {formData?.pool_size?.unit}
             </p>
           </div>
           <div className={styles.item}>
-            <p>Pin Replication</p>
+            <p>{t('pin_replication_b')}</p>
             <p>{formData?.pin_replication}</p>
           </div>
           <div className={styles.item}>
-            <p>Period</p>
+            <p>{t('period')}</p>
             <p>
               {formData?.pool_period}{' '}
-              {formData?.pool_period === 1 ? 'month' : 'months'}
+              {formData?.pool_period === 1 ? t('month') : t('months')}
             </p>
           </div>
         </div>
@@ -69,7 +71,7 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
           padding='10px 0 16px'
           justifyContent='space-between'
         >
-          <p className={styles.price}>Estimated Pool Price</p>
+          <p className={styles.price}>{t('estimated_pool_price_sh')}</p>
           <Box className={styles.cycon}>
             <p>{formatNumberWithCommas(formData?.pool_price)} CYCON</p>
             <p>
@@ -82,15 +84,12 @@ const CheckoutModal = ({ open, toggle, onSubmit, formData }) => {
           </Box>
         </Box>
         <Box className={styles.notice}>
-          <p>Notice!!!</p>
-          <p>
-            Once you click the “confirm” button, the transaction will occur and
-            cannot be canceled or refunded after it is complete.
-          </p>
+          <p>{t('notice')}</p>
+          <p>{t('transaction_warning')}</p>
           <div className={styles.buttons}>
-            <button>Cancel</button>
+            <button onClick={toggle}>{t('cancel')}</button>
             <Button variant='contained' color='primary' onClick={onSubmit}>
-              Confirm
+              {t('confirm')}
             </Button>
           </div>
         </Box>

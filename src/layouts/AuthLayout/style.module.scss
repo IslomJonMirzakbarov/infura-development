@@ -42,7 +42,9 @@
 
   .form {
     z-index: 1;
-    width: 100%;
+    @include sm {
+      width: 100%;
+    }
   }
 
   .logo,

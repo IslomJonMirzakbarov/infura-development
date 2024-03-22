@@ -6,6 +6,7 @@ import Login from 'views/Auth/Login'
 import NewPassword from 'views/Auth/NewPassword'
 import ResetPassword from 'views/Auth/ResetPassword'
 import Signup from 'views/Auth/SignUp'
+import FAQ from 'views/FAQ'
 import LandingPage from 'views/LandingPage'
 import WhyInfura from 'views/WhyInfura'
 
@@ -23,6 +24,10 @@ export const publicRoutes = [
           {
             path: 'why-infura',
             element: <WhyInfura />
+          },
+          {
+            path: 'faq',
+            element: <FAQ />
           }
         ]
       },

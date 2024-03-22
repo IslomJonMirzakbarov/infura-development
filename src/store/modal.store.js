@@ -6,9 +6,13 @@ class Store {
   }
 
   openServerError = false
+  openBadGatewayError = false
 
   setOpenServerError(value) {
     this.openServerError = value
+  }
+  setOpenBadGatewayError(value) {
+    this.openBadGatewayError = value
   }
 }
 

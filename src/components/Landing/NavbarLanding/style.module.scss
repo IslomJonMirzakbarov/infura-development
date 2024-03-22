@@ -7,6 +7,7 @@
   left: 0;
   top: 0;
   right: 0;
+
   @include sm {
     padding: 16px 0;
   }
@@ -97,16 +98,76 @@
           }
         }
       }
+
+      .languageIcon {
+        width: 45px;
+        height: 45px;
+        @include element-center;
+        border-radius: 7px;
+        background: #2e303c;
+        cursor: pointer;
+        border: 1px solid #2e303c;
+        transition: all 0.3s ease-in-out;
+        svg {
+          fill: #fff;
+          transition: all 0.3s ease-in-out;
+        }
+        &:hover {
+          border: 1px solid #fff;
+          svg {
+            fill: #27e6d6;
+          }
+        }
+      }
+
+      .languageMenu {
+        & .MuiPaper-root {
+          width: 180px;
+          height: 96px;
+          border-radius: 8px;
+          background: #2e303c;
+          color: #fff;
+          font-family: 'Poppins', sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+
+          .MuiMenuItem-root {
+            color: #fff !important;
+            font-family: 'Poppins', sans-serif !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+          }
+        }
+      }
+
+      .menu {
+        z-index: 10;
+      }
+
+      .languageSelection {
+        .activeLanguage {
+          color: #27e6d6;
+        }
+        Button {
+          color: white;
+          margin: 0 5px;
+          width: 45px;
+          height: max-content !important;
+          padding: 5px 0;
+          min-width: 0;
+        }
+      }
     }
   }
 }
 
 .menu {
+  z-index: 1000;
   position: fixed;
   left: 0;
   right: 0;
   bottom: 0;
-  top: 80px;
+  top: 75px;
   background-color: #1d1d41;
   display: flex;
   flex-direction: column;
@@ -114,10 +175,9 @@
   transform: translateX(-600px);
   transition: all 0.6s ease-in-out;
   display: none;
-  height: calc(100vh - 80px);
-  overflow: auto;
   @include sm {
     display: flex;
+    // overflow-y: auto;
   }
   &.isOpen {
     transform: translateX(0);
@@ -134,8 +194,80 @@
       @include align-items-center;
       justify-content: space-between;
     }
+
+    .notAuthItem {
+      padding: 15px 40px;
+    }
+
+    .hasSubMenu {
+      background-color: #ffffff;
+      color: #333;
+    }
+
+    .subMenu {
+      display: none;
+      flex-direction: column;
+      padding: 0;
+      background-color: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+      &.open {
+        display: flex;
+      }
+    }
+
+    .subItem {
+      padding: 15px 40px;
+      color: #333;
+      background-color: transparent;
+      text-decoration: none;
+      font-size: 15px;
+      border-top: 1px solid #e0e0e0;
+
+      &:first-child {
+        border-top: none;
+      }
+
+      &:hover {
+        background-color: #f5f5f5;
+      }
+    }
+
+    .subMenu {
+      transition: max-height 0.3s ease-in-out, visibility 0.3s ease-in-out;
+      overflow: hidden;
+      max-height: 0;
+      visibility: hidden;
+
+      &.open {
+        max-height: 500px;
+        visibility: visible;
+      }
+    }
+
     .button {
       padding: 10px 40px;
+    }
+  }
+  .footerLang {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  .langs {
+    padding-left: 40px;
+    @include align-items-center;
+    gap: 16px;
+
+    .lang {
+      color: #8c8c8c;
+      text-align: right;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .activeLang {
+      color: #fff;
     }
   }
   .footer {

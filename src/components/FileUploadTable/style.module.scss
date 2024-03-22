@@ -1,0 +1,113 @@
+@import '../../styles//mixins';
+
+.table {
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    white-space: nowrap;
+
+    thead {
+      border-radius: 7px 7px 0px 0px;
+      background: rgba(255, 255, 255, 0.15);
+      tr {
+        height: 40px;
+        th {
+          text-align: left;
+          padding: 12px 23px;
+          color: var(--base-white);
+          font-size: 12px;
+          font-weight: 700;
+          line-height: 150%;
+
+          &:first-child {
+            border-top-left-radius: 7px;
+          }
+
+          &:last-child {
+            border-top-right-radius: 7px;
+            text-align: right;
+          }
+        }
+      }
+    }
+    tbody {
+      border-radius: 0px 0px 7px 7px;
+      background: #1d1d41;
+      tr {
+        height: 53px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+        cursor: pointer;
+        &:last-child {
+          border-bottom: none;
+
+          td:first-child {
+            border-bottom-left-radius: 7px;
+          }
+
+          td:last-child {
+            border-bottom-right-radius: 7px;
+          }
+        }
+        td {
+          padding: 12px 23px;
+          color: var(--base-white);
+          font-size: 12px;
+          font-weight: 700;
+          line-height: 150%;
+          height: 53px;
+
+          &:last-child {
+            text-align: right;
+          }
+        }
+      }
+      tr {
+        & {
+          td:nth-child(3) {
+            color: var(--main);
+          }
+        }
+      }
+    }
+  }
+
+  .selectTd {
+    display: flex;
+    align-items: center;
+
+    .clickableBox {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+      border: 1px solid #707ab7;
+      background: #282833;
+      margin-right: 10px;
+    }
+
+    .isSelected {
+      background: var(--main, #27e6d6);
+    }
+  }
+
+  .contentId {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .noDataContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 52px;
+    gap: 20px;
+  }
+
+  .noDataText {
+    color: #858585;
+    font-size: 15px;
+    font-weight: 500;
+  }
+}

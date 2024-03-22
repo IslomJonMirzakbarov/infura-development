@@ -10,9 +10,11 @@ import poolStore from 'store/pool.store'
 import LoaderModal from '../LoaderModal'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
+import { useTranslation } from 'react-i18next'
 
 const ConfirmSubscription = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const location = useLocation()
   const { control, handleSubmit, reset } = useForm()
   const [poolAddress, setPoolAddress] = useState('')
@@ -59,7 +61,7 @@ const ConfirmSubscription = () => {
     reset({
       pool_name: location.state?.poolName,
       pool_size: '1 GB',
-      gateway: 'https://public.oceandrive.network',
+      gateway: 'https://infura.oceandrive.network',
       pin_replication: 1,
       pool_price: 'Free'
     })
@@ -71,14 +73,14 @@ const ConfirmSubscription = () => {
         <Box width='100%' display='flex' alignItems='center'>
           <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
             <Typography component='p' color='#fff' variant='main' mb='22px'>
-              Confirm Subscription
+              {t('confirm_subscription')}
             </Typography>
             <div className={styles.elements}>
               <BasicTextField
                 control={control}
                 name='pool_name'
-                label='Pool name'
-                placeholder='Enter pool name'
+                label='pool_name'
+                placeholder='enter_pool_name'
                 required
                 fullWidth
                 disabled
@@ -86,7 +88,7 @@ const ConfirmSubscription = () => {
               <BasicTextField
                 control={control}
                 name='pool_size'
-                label='Pool size'
+                label='pool_size'
                 type='text'
                 required
                 fullWidth
@@ -96,17 +98,17 @@ const ConfirmSubscription = () => {
               <CopyField
                 control={control}
                 name='gateway'
-                label='Gateway'
+                label={t('gateway_b')}
                 fullWidth
                 withCopy
                 disabled
-                value='https://public.oceandrive.network'
+                value='https://infura.oceandrive.network'
               />
               <BasicTextField
                 control={control}
                 name='pin_replication'
                 type='number'
-                label='Pin Replication'
+                label='pin_replication_b'
                 placeholder='Enter pin replication'
                 fullWidth
                 disabled
@@ -114,7 +116,7 @@ const ConfirmSubscription = () => {
               <BasicTextField
                 control={control}
                 name='pool_price'
-                label='Pool price in CYCON'
+                label='pool_price'
                 placeholder='Enter pool price'
                 fullWidth
                 disabled
@@ -128,7 +130,7 @@ const ConfirmSubscription = () => {
               mt='50px'
             >
               <Button variant='contained' color='secondary' type='submit'>
-                Submit
+                {t('submit')}
               </Button>
             </Box>
           </form>

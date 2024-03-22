@@ -7,6 +7,7 @@ import { useGetPools } from 'services/pool.service'
 import { useEffect } from 'react'
 import poolStore from 'store/pool.store'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 export default function Profile({
   downloadData,
@@ -17,6 +18,7 @@ export default function Profile({
   viewTable,
   setViewTable
 }) {
+  const { t } = useTranslation()
   const { data: pools } = useGetPools()
   const freePool = pools?.payload?.pools?.find((pool) => pool.price === 'free')
   const poolCount = pools?.payload?.count
@@ -34,7 +36,7 @@ export default function Profile({
       <Header title='Profile' />
 
       <Container>
-        <h2 className={styles.tableTitle}>Gateway</h2>
+        <h2 className={styles.tableTitle}>{t('gateway_b')}</h2>
 
         {viewTable ? (
           <>

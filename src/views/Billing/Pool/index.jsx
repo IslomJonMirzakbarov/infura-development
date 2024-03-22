@@ -22,9 +22,13 @@ import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
 import { months, sizes, units } from './poolData'
 import walletStore from 'store/wallet.store'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
+import useKaikas from 'hooks/useKaikas'
 
 const Pool = () => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
+  const { type } = walletStore
   const queryClient = useQueryClient()
   const isMobile = useMediaQuery('(max-width:640px)')
   const { control, handleSubmit, formState } = useForm({
@@ -32,7 +36,11 @@ const Pool = () => {
       unit: 'GB'
     }
   })
-  const { createPool, checkAllowance, makeApprove } = useMetaMask()
+  const metamask = useMetaMask()
+  const kaikas = useKaikas()
+
+  const { createPool, checkAllowance, makeApprove } =
+    type === 'metamask' ? metamask : kaikas
 
   const [propError, setPropError] = useState('')
   const [openApprove, setOpenApprove] = useState(false)
@@ -90,7 +98,8 @@ const Pool = () => {
       pool_name: data.name,
       pool_period: parseInt(data.period),
       pool_price: data.price,
-      pin_replication: parseInt(data.replication),
+      // pin_replication: parseInt(data.replication),
+      pin_replication: 1000,
       pool_size: {
         value: parseInt(data.size),
         unit: data.unit
@@ -110,6 +119,7 @@ const Pool = () => {
       await submitCheckout()
     } catch (e) {
       setOpenApprove(false)
+      setOpen2(false)
       toast.error(getRPCErrorMessage(e))
     }
   }
@@ -127,8 +137,8 @@ const Pool = () => {
       setOpen2(true)
       const pool_size =
         formData.pool_size.unit === 'GB'
-          ? formData.pool_size.value
-          : formData.pool_size.value * 1024
+          ? parseInt(formData.pool_size.value)
+          : parseInt(formData.pool_size.value * 1024)
 
       const result = await createPool({
         ...formData,
@@ -157,6 +167,7 @@ const Pool = () => {
         )
     } catch (e) {
       setOpen2(false)
+      console.log(e)
       toast.error(getRPCErrorMessage(e))
     }
   }
@@ -167,22 +178,22 @@ const Pool = () => {
         <Box width='100%' display='flex' alignItems='center'>
           <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
             <Typography component='p' color='#fff' variant='main' mb='22px'>
-              Pool Form
+              {t('pool_form')}
             </Typography>
             <div className={styles.elements}>
               <div>
                 <BasicTextField
                   control={control}
                   name='name'
-                  label='Pool name'
-                  placeholder='Enter pool name'
+                  label='pool_name'
+                  placeholder='enter_pool_name'
                   required={!propError}
                   fullWidth
                   minLength={5}
                   rules={{
                     maxLength: {
                       value: 20,
-                      message: `Maximum length should be 20 characters`
+                      message: t('max_length_20')
                     }
                   }}
                 />
@@ -203,10 +214,13 @@ const Pool = () => {
                 <BasicTextField
                   control={control}
                   name='size'
-                  label='Pool size'
+                  label='pool_size'
                   type='number'
                   required
-                  placeholder='Enter pool size'
+                  placeholder={t('enter_pool_size')}
+                  onKeyDown={(evt) =>
+                    (evt.key === '.' || evt.key === '-') && evt.preventDefault()
+                  }
                 />
                 <HFSelect
                   control={control}
@@ -218,21 +232,21 @@ const Pool = () => {
                 />
               </div>
 
-              <HFSelect
+              {/* <HFSelect
                 control={control}
                 name='replication'
-                label='Pin Replication'
-                placeholder='Select pin replication'
+                label={t('pin_replication_b')}
+                placeholder={t('select_pin_replication')}
                 fullWidth
                 required
                 options={sizes}
-              />
+              /> */}
 
               <HFSelect
                 control={control}
                 name='period'
-                label='Period'
-                placeholder='Select a time period'
+                label={t('period')}
+                placeholder={t('select_time_period')}
                 fullWidth
                 required
                 options={months}
@@ -241,15 +255,25 @@ const Pool = () => {
               <BasicTextField
                 control={control}
                 name='price'
-                label='Estimated Pool price in CYCON'
-                placeholder='Enter pool price'
+                label={t('estimated_pool_price')}
+                placeholder={t('enter_pool_price')}
                 required
                 fullWidth
-                type='number'
+                // type='number'
+                // rules={{
+                //   validate: (value) => value >= 1000 || t('min_price_1000')
+                // }}
+                type='text'
                 rules={{
-                  validate: (value) =>
-                    value >= 1000 ||
-                    'The minimum price should be greater than 1000'
+                  validate: (value) => {
+                    const numberString = value.replace(/,/g, '')
+                    return (
+                      (numberString &&
+                        !isNaN(numberString) &&
+                        parseInt(numberString, 10) >= 1000) ||
+                      t('min_price_1000')
+                    )
+                  }
                 }}
               />
             </div>
@@ -266,7 +290,7 @@ const Pool = () => {
                 color='secondary'
                 type='submit'
               >
-                Submit
+                {t('submit')}
               </Button>
             </Box>
           </form>
@@ -283,7 +307,7 @@ const Pool = () => {
         open={openApprove}
         title='CYCON'
         handleClose={() => setOpenApprove(false)}
-        desc='Please approve the CYCON token to proceed.'
+        desc={t('approve_desc')}
         img='https://swap.conun.io/static/cycon.svg'
       />
       <LoaderModal title='Loading' toggle={toggle2} open={open2} />
@@ -292,8 +316,8 @@ const Pool = () => {
         poolAddress={poolAddress}
         title={
           isMobile
-            ? 'Transaction Complete'
-            : 'Transaction successfully complete'
+            ? t('transaction_complete_mobile')
+            : t('transaction_complete_desktop')
         }
         txHash={txHash}
         toggle={toggle3}

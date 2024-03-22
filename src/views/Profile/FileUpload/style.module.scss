@@ -1,0 +1,116 @@
+@import 'styles/mixins';
+
+.tab {
+  margin-top: 25px;
+}
+
+.fileUploadContainer {
+  @include sm {
+    padding-right: 0px;
+  }
+}
+@include sm {
+}
+.tableHolder {
+  border-bottom-left-radius: 7px;
+  border-bottom-right-radius: 7px;
+  width: 100%;
+  overflow: auto;
+  @include sm {
+    width: 100%;
+    overflow: auto;
+  }
+}
+.btnsBox {
+  @include sm {
+    align-items: flex-end !important;
+    margin-bottom: 30px !important;
+    padding-right: 25px;
+  }
+}
+
+.oneBtn {
+  @include sm {
+    margin-top: 3rem;
+  }
+}
+
+.tableTitle {
+  color: var(--base-white);
+  font-size: 22px;
+  font-weight: 700;
+
+  @include sm {
+    font-size: 20px;
+  }
+}
+
+.tabContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 34px;
+  gap: 17px;
+
+  @include sm {
+    margin-bottom: -20px;
+  }
+}
+
+.tabT {
+  font-size: 15px;
+  color: #4d5377;
+  font-weight: 500;
+  border-bottom: 1px solid #4d5377;
+  cursor: pointer;
+}
+
+.activeTab {
+  font-size: 15px;
+  color: white;
+  font-weight: 500;
+  border-bottom: 1px solid var(--main, #27e6d6);
+  cursor: pointer;
+}
+
+.uploadDownloadBtns {
+  @include sm {
+    flex-direction: column;
+  }
+
+  .hiddenDownloadBtn {
+    visibility: hidden;
+  }
+}
+
+.list {
+  margin-top: 18px;
+  display: grid;
+  gap: 13px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.downloads {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+}
+
+.column {
+  @include align-items-center;
+  column-gap: 13px;
+  .name {
+    @include align-items-center;
+    width: 200px;
+    column-gap: 13px;
+  }
+  .progress {
+    width: calc(100% - 200px - 80px);
+  }
+  .cancle {
+    @include align-items-center;
+    column-gap: 8px;
+    font-size: 14px;
+    line-height: 21px;
+    width: 80px;
+  }
+}

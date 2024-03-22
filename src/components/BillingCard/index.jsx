@@ -4,6 +4,7 @@ import styles from './style.module.scss'
 import classNames from 'classnames'
 import VerifiedRoundedIcon from '@mui/icons-material/VerifiedRounded'
 import MobileBillingCard from './MobileBillingCard'
+import { useTranslation } from 'react-i18next'
 
 const BillingCard = ({ onSelect, item, isFree }) => {
   const handleSelect = () => {
@@ -11,6 +12,11 @@ const BillingCard = ({ onSelect, item, isFree }) => {
     onSelect(item)
   }
   const isMobile = useMediaQuery('(max-width:600px)')
+  const { t } = useTranslation()
+  const translatedItemName = t(item.name.toLowerCase().replace(/\s/g, '_'))
+  const translatedPriceText = item.isEnterprise
+    ? t('get_personalized_plan')
+    : `${item.price} ${t('per_month')}`
 
   return isMobile ? (
     <MobileBillingCard onSelect={onSelect} item={item} isFree={isFree} />
@@ -22,37 +28,37 @@ const BillingCard = ({ onSelect, item, isFree }) => {
         [styles.isEnterprise]: item.isEnterprise
       })}
     >
-      <Typography className={styles.title}>{item.name}</Typography>
+      <Typography className={styles.title}>{translatedItemName}</Typography>
       {item.isEnterprise ? (
-        <p className={styles.text}>{item.text}</p>
+        <p className={styles.text}>{t('custom_plan_description')}</p>
       ) : (
         <ul className={styles.list}>
           <li className={styles.item}>
-            <VerifiedRoundedIcon /> {item.storage} storage
+            <VerifiedRoundedIcon /> {item.storage} {t('storage')}
           </li>
           <li className={styles.item}>
-            <VerifiedRoundedIcon /> {item.gatewayCount} gateway
+            <VerifiedRoundedIcon /> {item.gatewayCount} {t('gateway')}
           </li>
           <li className={styles.item}>
-            <VerifiedRoundedIcon /> {item.replication} pin replication
+            <VerifiedRoundedIcon /> {item.replication} {t('pin_replication')}
           </li>
         </ul>
       )}
       {item.isEnterprise ? (
-        <p className={styles.priceText}>{item.priceText}</p>
+        <p className={styles.priceText}>{translatedPriceText}</p>
       ) : (
         <Box display='flex' alignItems='center' mt='44px'>
           <span className={styles.price}>${item.price}</span>
-          <span className={styles.month}>/month</span>
+          <span className={styles.month}>/{t('per_month')}</span>
         </Box>
       )}
 
       <Button onClick={handleSelect}>
         {item.isEnterprise
-          ? 'Customize'
+          ? t('customize')
           : item.isCurrentPlan
-          ? 'Selected Plan'
-          : 'Select'}
+          ? t('selected_plan')
+          : t('select')}
       </Button>
     </Box>
   )

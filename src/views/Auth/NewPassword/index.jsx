@@ -6,9 +6,11 @@ import { LoadingButton } from '@mui/lab'
 import toast from 'react-hot-toast'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import PageTransition from 'components/PageTransition'
+import { useTranslation } from 'react-i18next'
 
 const NewPassword = () => {
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const { control, handleSubmit, setError } = useForm()
   const { mutate, isLoading } = useResetPasswordMutation()
   const [searchParams] = useSearchParams()
@@ -16,7 +18,7 @@ const NewPassword = () => {
     if (data.new_password !== data.confirm_password) {
       setError('confirm_password', {
         type: 'custom',
-        message: 'Password mismatch'
+        message: t('password_mismatch')
       })
       return
     }
@@ -27,7 +29,7 @@ const NewPassword = () => {
       },
       {
         onSuccess: () => {
-          toast.success('Password successfully changed!')
+          toast.success(t('password_successfully_changed'))
           navigate('/auth/login')
         }
       }
@@ -36,36 +38,34 @@ const NewPassword = () => {
   return (
     <PageTransition>
       <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
-        <h1 className={styles.title}>Create a new password</h1>
+        <h1 className={styles.title}>{t('create_new_password')}</h1>
         <PasswordField
           fullWidth
           name='new_password'
-          label='New password'
+          label='new_password'
           control={control}
-          placeholder='Enter new password'
+          placeholder='new_password_placeholder'
           required
           type='password'
           rules={{
             pattern: {
               value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
-              message:
-                'Password must be have minimum 8 characters, at least one number, one letter and one special character'
+              message: t('password_requirements')
             }
           }}
         />
         <PasswordField
           fullWidth
           name='confirm_password'
-          label='Confirm password'
+          label='confirm_password'
           control={control}
-          placeholder='Enter new password'
+          placeholder='new_password_placeholder'
           required
           type='password'
           rules={{
             pattern: {
               value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
-              message:
-                'Password must be have minimum 8 characters, at least one number, one letter and one special character'
+              message: t('password_requirements')
             }
           }}
         />
@@ -76,7 +76,7 @@ const NewPassword = () => {
           color='primary'
           type='submit'
         >
-          Submit
+          {t('submit')}
         </LoadingButton>
       </form>
     </PageTransition>
