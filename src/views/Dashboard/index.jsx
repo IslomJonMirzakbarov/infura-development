@@ -45,7 +45,7 @@ const Dashboard = () => {
     }
   ]
 
-  const freePool = data?.pools?.find((pool) => pool.price === 'free')
+  const freePool = data?.pools?.find((pool) => pool.price === 'FREE')
   useEffect(() => {
     poolStore.setPoolCount(poolCount)
     if (freePool) {
