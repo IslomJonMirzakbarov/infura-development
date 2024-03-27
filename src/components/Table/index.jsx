@@ -71,12 +71,12 @@ export default function Table({
                   ) : value.key === 'price' ? (
                     <td
                       title={
-                        item[value.key] !== 'free'
+                        item[value.key] !== 'FREE'
                           ? formatNumberWithCommas(item[value.key])
                           : ''
                       }
                     >
-                      {item[value.key] === 'free' ? 'Free' : 'Paid'}
+                      {item[value.key] === 'FREE' ? 'Free' : 'Paid'}
                     </td>
                   ) : (
                     <td>{item[value.key]}</td>
