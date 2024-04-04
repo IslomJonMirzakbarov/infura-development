@@ -67,7 +67,7 @@ export default function Table({
                   ) : value.key === 'access' ? (
                     <td>Open</td>
                   ) : value.key === 'created_at' ? (
-                    <td>{formatTime(item['updated_at'])}</td>
+                    <td>{formatTime(item['created_at'])}</td>
                   ) : value.key === 'price' ? (
                     <td
                       title={
