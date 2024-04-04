@@ -92,11 +92,11 @@ const useUploadDownload = ({
 
   const handleFileChange = (event) => {
     const file = event.target.files[0]
-    if (file.size > MAX_FILE_SIZE) {
-      toast.error('Max file size is 5MB')
-      event.target.value = null
-      return
-    }
+    // if (file.size > MAX_FILE_SIZE) {
+    //   toast.error('Max file size is 5MB')
+    //   event.target.value = null
+    //   return
+    // }
     setSelectedFile(file)
     event.target.value = null
   }
