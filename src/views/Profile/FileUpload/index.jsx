@@ -32,7 +32,7 @@ const FileUpload = () => {
   } = useGetFileHistory({ token: token })
 
   const formattedData =
-    fileUploadHistory?.data?.data.map((file) => {
+    fileUploadHistory?.data?.data?.results?.map((file) => {
       const createdAtDate = new Date(file.createdAt)
       const formattedDate = formatDateFile(createdAtDate)
 
