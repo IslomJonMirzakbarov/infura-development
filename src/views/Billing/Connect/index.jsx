@@ -12,6 +12,7 @@ import useMetaMask from 'hooks/useMetaMask'
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded'
 import PageTransition from 'components/PageTransition'
 import { useTranslation } from 'react-i18next'
+import useKaikas from 'hooks/useKaikas'
 
 const walletType = {
   metamask:
@@ -43,6 +44,7 @@ const Connect = () => {
   const { address, type } = walletStore
   const [anchorEl, setAnchorEl] = useState(null)
   const { checkCurrentNetwork, onChangeNetwork } = useMetaMask()
+  const { checkCurrentNetwork: checkCurrentNetworkKaikas } = useKaikas()
   const [networkError, setNetworkError] = useState(false)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -78,7 +80,12 @@ const Connect = () => {
         loading: 'Connection...',
         success: (value) => {
           async function checkResult() {
-            const result = await checkCurrentNetwork()
+            let result
+            if (walletType === 'kaikas') {
+              result = await checkCurrentNetworkKaikas()
+            } else {
+              result = await checkCurrentNetwork()
+            }
             if (result === 'error') setNetworkError(true)
             else navigate('/main/billing/pool')
           }
