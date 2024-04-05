@@ -2,7 +2,13 @@ import walletStore from 'store/wallet.store'
 
 const useWallet = () => {
   const connectWallet = async (type) => {
-    if (typeof window.ethereum !== 'undefined') {
+    if (type === 'kaikas' && typeof window.klaytn !== 'undefined') {
+      return await getAccount(type)
+    } else if (
+      type === 'metamask' &&
+      typeof window.ethereum !== 'undefined' &&
+      window.ethereum.isMetaMask
+    ) {
       return await getAccount(type)
     } else {
       if (type === 'kaikas') {
