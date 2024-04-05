@@ -5,10 +5,17 @@ const useWallet = () => {
     if (typeof window.ethereum !== 'undefined') {
       return await getAccount(type)
     } else {
-      window.open(
-        'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
-        '_blank'
-      )
+      if (type === 'kaikas') {
+        window.open(
+          'https://chromewebstore.google.com/detail/kaikas/jblndlipeogpafnldhgmapagcccfchpi',
+          '_blank'
+        )
+      } else {
+        window.open(
+          'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
+          '_blank'
+        )
+      }
     }
   }
 
