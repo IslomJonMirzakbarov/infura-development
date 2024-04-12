@@ -2,7 +2,8 @@ import { useMutation, useQuery } from 'react-query'
 import httpRequest from './httpRequest'
 import axios from 'axios'
 
-const INFURA_NETWORK = process.env.REACT_APP_INFURA_NETWORK
+const INFURA_NETWORK =
+  process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
 
 export const poolService = {
   check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
