@@ -270,7 +270,7 @@ const Pool = () => {
                     return (
                       (numberString &&
                         !isNaN(numberString) &&
-                        parseInt(numberString, 10) >= 1000) ||
+                        parseInt(numberString, 10) >= 0) ||
                       t('min_price_1000')
                     )
                   }

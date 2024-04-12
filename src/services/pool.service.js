@@ -2,6 +2,9 @@ import { useMutation, useQuery } from 'react-query'
 import httpRequest from './httpRequest'
 import axios from 'axios'
 
+const INFURA_NETWORK =
+  process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
+
 export const poolService = {
   check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
   create: async (data) => httpRequest.post('infura/api/v1/pools', data),
@@ -13,7 +16,7 @@ export const poolService = {
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
   getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`),
   fileUpload: async (data) =>
-    axios.post('https://infura.oceandrive.network/v1/file/upload', data?.file, {
+    axios.post(`${INFURA_NETWORK}/v1/file/upload`, data?.file, {
       headers: {
         Authorization: `Bearer ${data?.token}`
       },
@@ -21,22 +24,19 @@ export const poolService = {
       cancelToken: data?.cancelToken
     }),
   getFileHistory: async (token) =>
-    axios.get('https://infura.oceandrive.network/v1/file/history', {
+    axios.get(`${INFURA_NETWORK}/v1/file/history`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     }),
   downloadFile: async (token, contentId, config) =>
-    axios.get(
-      `https://infura.oceandrive.network/v1/file/download?contentId=${contentId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        responseType: 'blob',
-        ...config
-      }
-    )
+    axios.get(`${INFURA_NETWORK}/v1/file/download?contentId=${contentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      responseType: 'blob',
+      ...config
+    })
 }
 
 export const useDownloadFile = ({ token, contentId, queryProps }) => {
