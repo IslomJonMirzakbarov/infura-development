@@ -13,15 +13,59 @@ const useKaikas = () => {
 
   const { address } = walletStore
 
+  // const checkCurrentNetwork = async () => {
+  //   const chainId = await caver.currentProvider.request({
+  //     method: 'eth_chainId'
+  //   })
+
+  //   if (chainId === KLAYTN_CHAIN_ID) {
+  //     return 'success'
+  //   } else {
+  //     return 'error'
+  //   }
+  // }
+
   const checkCurrentNetwork = async () => {
     const chainId = await caver.currentProvider.request({
       method: 'eth_chainId'
     })
 
-    if (chainId === KLAYTN_CHAIN_ID) {
+    if (caver.utils.toHex(chainId) === caver.utils.toHex(KLAYTN_CHAIN_ID)) {
       return 'success'
     } else {
-      return 'error'
+      try {
+        await caver.currentProvider.request({
+          method: 'wallet_switchKlaytnChain',
+          params: [
+            {
+              chainId: caver.utils.toHex(KLAYTN_CHAIN_ID)
+            }
+          ]
+        })
+        return 'success'
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          try {
+            await caver.klay.wallet_addEthereumChain({
+              chainId: caver.utils.toHex(KLAYTN_CHAIN_ID),
+              chainName: 'Klaytn Network',
+              nativeCurrency: {
+                name: 'KLAY',
+                symbol: 'KLAY',
+                decimals: 18
+              },
+              rpcUrls: ['KLAYTN_RPC_URL']
+            })
+            return 'success'
+          } catch (addError) {
+            console.error('Failed to add the Klaytn network', addError)
+            return 'error'
+          }
+        } else {
+          console.error('Failed to switch to the Klaytn network', switchError)
+          return 'error'
+        }
+      }
     }
   }
 

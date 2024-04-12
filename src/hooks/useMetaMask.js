@@ -8,6 +8,7 @@ const KLAYTN_CHAIN_ID = process.env.REACT_APP_KLAYTN_CHAIN_ID
 const REWARD_CONTRACT_ADDRESS = process.env.REACT_APP_REWARD_CONTRACT
 const approveAmount =
   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff'
+const KLAYTN_RPC_URL = process.env.REACT_APP_KLAYTN_RPC_URL
 
 const CYCON_CONTRACT_ADDRESS = process.env.REACT_APP_CYCON_CONTRACT_ADDRESS
 
@@ -35,15 +36,60 @@ const useMetaMask = () => {
     initWeb3()
   }, [])
 
+  // const checkCurrentNetwork = async () => {
+  // const chainId = await window.web3.currentProvider.request({
+  //   method: 'eth_chainId'
+  // })
+
+  //   if (chainId === KLAYTN_CHAIN_ID) {
+  //     return 'success'
+  //   } else {
+  //     return 'error'
+  //   }
+  // }
+
   const checkCurrentNetwork = async () => {
     const chainId = await window.web3.currentProvider.request({
       method: 'eth_chainId'
     })
 
-    if (chainId === KLAYTN_CHAIN_ID) {
+    if (web3.utils.toHex(chainId) === web3.utils.toHex(KLAYTN_CHAIN_ID)) {
       return 'success'
     } else {
-      return 'error'
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: web3.utils.toHex(KLAYTN_CHAIN_ID) }]
+        })
+        return 'success'
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: web3.utils.toHex(KLAYTN_CHAIN_ID),
+                  chainName: 'Klaytn Network',
+                  nativeCurrency: {
+                    name: 'KLAY',
+                    symbol: 'KLAY',
+                    decimals: 18
+                  },
+                  rpcUrls: [KLAYTN_RPC_URL]
+                }
+              ]
+            })
+            return 'success'
+          } catch (addError) {
+            console.error('Failed to add the Klaytn network', addError)
+            return 'error'
+          }
+        } else {
+          console.error('Failed to switch to the Klaytn network', switchError)
+          return 'error'
+        }
+      }
     }
   }
 

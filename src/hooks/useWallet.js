@@ -2,13 +2,26 @@ import walletStore from 'store/wallet.store'
 
 const useWallet = () => {
   const connectWallet = async (type) => {
-    if (typeof window.ethereum !== 'undefined') {
+    if (type === 'kaikas' && typeof window.klaytn !== 'undefined') {
+      return await getAccount(type)
+    } else if (
+      type === 'metamask' &&
+      typeof window.ethereum !== 'undefined' &&
+      window.ethereum.isMetaMask
+    ) {
       return await getAccount(type)
     } else {
-      window.open(
-        'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
-        '_blank'
-      )
+      if (type === 'kaikas') {
+        window.open(
+          'https://chromewebstore.google.com/detail/kaikas/jblndlipeogpafnldhgmapagcccfchpi',
+          '_blank'
+        )
+      } else {
+        window.open(
+          'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn',
+          '_blank'
+        )
+      }
     }
   }
 

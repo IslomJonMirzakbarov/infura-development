@@ -101,14 +101,16 @@ const ProfileDetails = ({ poolData }) => {
             disabled
           />
           <Box>
-            <BasicTextField
-              control={control}
-              name='price'
-              label={t('pool_price')}
-              fullWidth
-              readOnly={true}
-              disabled
-            />
+            {poolData?.price !== 'FREE' && (
+              <BasicTextField
+                control={control}
+                name='price'
+                label={t('pool_price')}
+                fullWidth
+                readOnly={true}
+                disabled
+              />
+            )}
 
             {poolData?.tx_hash && (
               <Box className={styles.txHash}>
