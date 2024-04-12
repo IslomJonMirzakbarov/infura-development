@@ -111,7 +111,12 @@ const useUploadDownload = ({
       setIsLoadingOpen(true)
       setLoaderTitle({ title: 'Uploading...', percent: 0 })
       const formData = new FormData()
-      formData.append('file', selectedFile)
+
+      formData.append(
+        'file',
+        selectedFile,
+        encodeURIComponent(selectedFile.name)
+      )
 
       const source = axios.CancelToken.source()
       setCancelTokenSource(source)
