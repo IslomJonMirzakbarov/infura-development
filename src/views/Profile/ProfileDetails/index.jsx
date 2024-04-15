@@ -11,11 +11,12 @@ import { useTranslation } from 'react-i18next'
 
 const ProfileDetails = ({ poolData }) => {
   const { t } = useTranslation()
+  const gatewayUrl = process.env.REACT_APP_INFURA_NETWORK
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       name: '',
       size: '',
-      gateway: 'https://infura.oceandrive.network',
+      gateway: gatewayUrl,
       // replication: '',
       period: '',
       price: '',
@@ -90,6 +91,7 @@ const ProfileDetails = ({ poolData }) => {
             withCopy
             readOnly={true}
             disabled
+            value={gatewayUrl}
           />
           <BasicTextField
             control={control}
