@@ -29,7 +29,9 @@ export default function Table({
     }
   }
 
-  const gatewayUrl = new URL(process.env.REACT_APP_INFURA_NETWORK)
+  const gatewayUrl = new URL(
+    process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
+  )
   const domain = gatewayUrl.hostname
 
   return (
