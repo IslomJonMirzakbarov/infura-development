@@ -29,6 +29,9 @@ export default function Table({
     }
   }
 
+  const gatewayUrl = new URL(process.env.REACT_APP_INFURA_NETWORK)
+  const domain = gatewayUrl.hostname
+
   return (
     <div
       className={classNames(styles.table, {
@@ -60,9 +63,7 @@ export default function Table({
                     </td>
                   ) : value.key === 'domain' ? (
                     <td>
-                      <div className={styles.column}>
-                        infura.oceandrive.network
-                      </div>
+                      <div className={styles.column}>{domain}</div>
                     </td>
                   ) : value.key === 'access' ? (
                     <td>Open</td>
