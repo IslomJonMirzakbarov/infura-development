@@ -8,7 +8,7 @@ const CardsContainer = ({ onSelect }) => {
   const { isSelected, billingItems, poolCount } = poolStore
   const items = billingItems
   const { t } = useTranslation()
-  const isDisabled = poolCount > 2
+  const isDisabled = poolCount > 9
 
   if (isDisabled && isSelected) {
     items[0].isCurrentPlan = true
