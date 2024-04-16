@@ -11,7 +11,8 @@ import { useTranslation } from 'react-i18next'
 
 const ProfileDetails = ({ poolData }) => {
   const { t } = useTranslation()
-  const gatewayUrl = process.env.REACT_APP_INFURA_NETWORK
+  const gatewayUrl =
+    process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
   const { control, handleSubmit, reset } = useForm({
     defaultValues: {
       name: '',

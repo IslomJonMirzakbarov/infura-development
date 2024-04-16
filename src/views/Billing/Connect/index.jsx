@@ -13,6 +13,7 @@ import WarningRoundedIcon from '@mui/icons-material/WarningRounded'
 import PageTransition from 'components/PageTransition'
 import { useTranslation } from 'react-i18next'
 import useKaikas from 'hooks/useKaikas'
+import poolStore from 'store/pool.store'
 
 const walletType = {
   metamask:
@@ -42,6 +43,7 @@ const Connect = () => {
   const { connectWallet, hanldeLogout } = useWallet()
   const [isCopy, setIsCopy] = useState(false)
   const { address, type } = walletStore
+  const { poolCount } = poolStore
   const [anchorEl, setAnchorEl] = useState(null)
   const { checkCurrentNetwork, onChangeNetwork } = useMetaMask()
   const { checkCurrentNetwork: checkCurrentNetworkKaikas } = useKaikas()
@@ -87,7 +89,13 @@ const Connect = () => {
               result = await checkCurrentNetwork()
             }
             if (result === 'error') setNetworkError(true)
-            else navigate('/main/billing/pool')
+            else {
+              if (poolCount > 9) {
+                return
+              } else {
+                navigate('/main/billing/pool')
+              }
+            }
           }
           if (value) {
             checkResult()
