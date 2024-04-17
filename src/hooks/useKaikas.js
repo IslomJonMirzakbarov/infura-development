@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import walletStore from 'store/wallet.store'
 import ERC20_ABI from 'utils/ABI/ERC20ABI'
 import REWARD_ABI from 'utils/ABI/REWARD_ABI'
@@ -12,6 +13,20 @@ const useKaikas = () => {
   const { caver } = window
 
   const { address } = walletStore
+  const [minPrice, setMinPrice] = useState(null)
+
+  useEffect(() => {
+    const initContracts = async () => {
+      const contract = new caver.klay.Contract(
+        REWARD_ABI.REWARD_ABI,
+        REWARD_CONTRACT_ADDRESS
+      )
+      const minPoolPrice = await contract.methods.minPoolPrice().call()
+      setMinPrice(caver.utils.fromWei(minPoolPrice, 'ether'))
+    }
+
+    initContracts()
+  }, [])
 
   // const checkCurrentNetwork = async () => {
   //   const chainId = await caver.currentProvider.request({
@@ -180,7 +195,8 @@ const useKaikas = () => {
     onChangeNetwork,
     createPool,
     makeApprove,
-    checkAllowance
+    checkAllowance,
+    minPrice
   }
 }
 

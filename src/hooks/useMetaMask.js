@@ -16,6 +16,7 @@ const useMetaMask = () => {
   const { address } = walletStore
 
   const [web3, setWeb3] = useState(null)
+  const [minPrice, setMinPrice] = useState(null)
 
   useEffect(() => {
     const initWeb3 = async () => {
@@ -23,6 +24,8 @@ const useMetaMask = () => {
         if (window.ethereum) {
           const web3Instance = new Web3(window.ethereum)
           setWeb3(web3Instance)
+          console.log('Web3 Initialized')
+          await initContracts(web3Instance)
         } else {
           console.error(
             'MetaMask not detected! Please install MetaMask to use this application.'
@@ -35,6 +38,20 @@ const useMetaMask = () => {
 
     initWeb3()
   }, [])
+
+  const initContracts = async (web3Instance) => {
+    try {
+      const rewardContract = new web3Instance.eth.Contract(
+        REWARD_ABI.REWARD_ABI,
+        REWARD_CONTRACT_ADDRESS
+      )
+      const minPoolPrice = await rewardContract.methods.minPoolPrice().call()
+      const ehtValue = Web3.utils.fromWei(minPoolPrice, 'ether')
+      setMinPrice(ehtValue)
+    } catch (error) {
+      console.error('Error initializing contract:', error)
+    }
+  }
 
   // const checkCurrentNetwork = async () => {
   // const chainId = await window.web3.currentProvider.request({
@@ -201,7 +218,8 @@ const useMetaMask = () => {
     onChangeNetwork,
     createPool,
     makeApprove,
-    checkAllowance
+    checkAllowance,
+    minPrice
   }
 }
 
