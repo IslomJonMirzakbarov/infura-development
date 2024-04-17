@@ -3,10 +3,13 @@ import { Box, Typography } from '@mui/material'
 import styles from '../style.module.scss'
 import { formatStatStorageNumber, formatStatNumber } from 'utils/utilFuncs'
 import { useTranslation } from 'react-i18next'
-import { useDownloadsCount } from 'services/pool.service'
+import { useDownloadsCount, useWalletsCount } from 'services/pool.service'
 
 const Stats = ({ stats: statsData }) => {
   const { data } = useDownloadsCount()
+  const { data: walletsData } = useWalletsCount()
+
+  const walletsCount = walletsData?.payload?.wallet_count
 
   let downloadsCount = 0
   if (
@@ -20,8 +23,8 @@ const Stats = ({ stats: statsData }) => {
   const { t } = useTranslation()
   const stats = [
     {
-      statTitle: t('downloads'),
-      statNum: downloadsCount ?? 0,
+      statTitle: t('users'),
+      statNum: walletsCount ?? 0,
       formatFunction: formatStatNumber
     },
     {

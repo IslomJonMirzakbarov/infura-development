@@ -53,12 +53,14 @@ const errorHandler = async (error, hooks) => {
 }
 
 httpRequest.interceptors.request.use((config) => {
-  const token = authStore?.token?.access_token?.token
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
+  if (!config.url.includes('app/stats')) {
+    const token = authStore?.token?.access_token?.token
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
 
-  config.headers['X-Conun-Service'] = 'infura'
+    config.headers['X-Conun-Service'] = 'infura'
+  }
 
   return config
 })
