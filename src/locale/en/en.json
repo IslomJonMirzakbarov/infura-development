@@ -140,7 +140,7 @@
     "12_months": "12 months",
     "estimated_pool_price": "Estimated Pool price in CYCON",
     "enter_pool_price": "Enter pool price",
-    "min_price_1000": "The minimum price should be greater than 1000",
+    "min_price": "The minimum pool amount is {{value}} CYCON.",
     "checkout_confirmation": "Checkout Confirmation",
     "month": "month",
     "months": "months",

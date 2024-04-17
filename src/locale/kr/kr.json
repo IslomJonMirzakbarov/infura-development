@@ -140,7 +140,7 @@
     "12_months": "12 개월",
     "estimated_pool_price": "CYCON의 예상 풀 가격",
     "enter_pool_price": "예상 풀 가격을 입력해주세요",
-    "min_price_1000": "최소 가격은 1000보다 커야 합니다.",
+    "min_price": "최소 풀 금액은 {{value}} CYCON 입니다.",
     "checkout_confirmation": "결제 확인",
     "month": "개월",
     "months": "개월",

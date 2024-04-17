@@ -42,6 +42,8 @@ const Pool = () => {
   const { createPool, checkAllowance, makeApprove } =
     type === 'metamask' ? metamask : kaikas
 
+  const minPrice = type === 'metamask' ? metamask.minPrice : kaikas.minPrice
+  console.log('minPrice: ', minPrice)
   const [propError, setPropError] = useState('')
   const [openApprove, setOpenApprove] = useState(false)
   const [txHash, setTxHash] = useState(null)
@@ -270,8 +272,8 @@ const Pool = () => {
                     return (
                       (numberString &&
                         !isNaN(numberString) &&
-                        parseInt(numberString, 10) >= 0) ||
-                      t('min_price_1000')
+                        parseInt(numberString, 10) >= minPrice) ||
+                      t('min_price', { value: minPrice })
                     )
                   }
                 }}
