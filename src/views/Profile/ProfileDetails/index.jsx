@@ -154,7 +154,7 @@ const ProfileDetails = ({ poolData }) => {
           justifyContent='flex-end'
           width='100%'
           height='100%'
-          mt='250px'
+          mt='110px'
           className={styles.planBtn}
         >
           <Button
