@@ -91,7 +91,7 @@ const useKaikas = () => {
     pool_period
   }) => {
     const contract = new caver.klay.Contract(
-      REWARD_ABI,
+      REWARD_ABI.REWARD_ABI,
       REWARD_CONTRACT_ADDRESS
     )
 

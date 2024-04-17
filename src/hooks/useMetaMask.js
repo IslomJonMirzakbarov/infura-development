@@ -116,7 +116,10 @@ const useMetaMask = () => {
     pin_replication,
     pool_period
   }) => {
-    const contract = new web3.eth.Contract(REWARD_ABI, REWARD_CONTRACT_ADDRESS)
+    const contract = new web3.eth.Contract(
+      REWARD_ABI.REWARD_ABI,
+      REWARD_CONTRACT_ADDRESS
+    )
 
     const price = web3.utils.toWei(String(pool_price), 'ether')
 
