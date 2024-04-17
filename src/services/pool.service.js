@@ -12,6 +12,7 @@ export const poolService = {
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
   getStats: async () => httpRequest.get('infura/api/v1/stats'),
+  getWalletsCount: async () => httpRequest.get('app/stats'),
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
   getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`),
@@ -68,6 +69,9 @@ export const useDownloadsCount = (querySettings) => {
     poolService.getDownloadsCount,
     querySettings
   )
+}
+export const useWalletsCount = (querySettings) => {
+  return useQuery('wallets-count', poolService.getWalletsCount, querySettings)
 }
 export const usePoolCheckMutation = (mutationSettings) => {
   return useMutation(poolService.check, mutationSettings)
