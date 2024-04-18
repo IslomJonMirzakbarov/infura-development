@@ -9,7 +9,7 @@ import {
   useMediaQuery
 } from '@mui/material'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { ReactComponent as Logo } from 'assets/images/landing/oceandrive.svg'
+import { ReactComponent as Logo } from 'assets/images/landing/oceandrive1.svg'
 import { ReactComponent as ArrowDownIcon } from 'assets/images/landing/down_arrow.svg'
 import styles from './style.module.scss'
 import authStore from 'store/auth.store'
