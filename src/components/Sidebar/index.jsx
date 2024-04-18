@@ -1,5 +1,5 @@
 import styles from './style.module.scss'
-import { ReactComponent as Logo } from 'assets/logos/logoV2.svg'
+import { ReactComponent as Logo } from 'assets/images/landing/oceandrive1.svg'
 import { ReactComponent as GridIcon } from 'assets/icons/grid.svg'
 import { ReactComponent as PricingIcon } from 'assets/icons/pricing.svg'
 import { ReactComponent as BillingIcon } from 'assets/icons/billing.svg'
