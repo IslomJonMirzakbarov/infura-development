@@ -16,6 +16,8 @@ import Hamburger from 'hamburger-react'
 import MobileSidebar from './MobileSidebar'
 import { useTranslation } from 'react-i18next'
 
+// later change it to dynamic
+
 export const items = [
   {
     title: 'dashboard',
