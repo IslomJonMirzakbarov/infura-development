@@ -1,5 +1,6 @@
 import styles from './style.module.scss'
-import { ReactComponent as Logo } from 'assets/images/landing/oceandrive1.svg'
+import { ReactComponent as LogoT } from 'assets/logos/logoV2.svg'
+import { ReactComponent as LogoM } from 'assets/images/landing/oceandrive1.svg'
 import { ReactComponent as GridIcon } from 'assets/icons/grid.svg'
 import { ReactComponent as PricingIcon } from 'assets/icons/pricing.svg'
 import { ReactComponent as BillingIcon } from 'assets/icons/billing.svg'
@@ -40,6 +41,7 @@ export const items = [
 ]
 
 export default function Sidebar() {
+  const isMainnet = process.env.REACT_APP_BASE_URL.includes('mainnet')
   const [open, setOpen] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { isLoading } = useDashboard()
@@ -69,10 +71,17 @@ export default function Sidebar() {
         <div>
           <div className={styles.header}>
             <NavLink to='/' onClick={(e) => handleNavigation('/', e)}>
-              <Logo
-                style={{ width: 102, height: 43.57 }}
-                className={styles.logo}
-              />
+              {isMainnet ? (
+                <LogoM
+                  style={{ width: 102, height: 43.57 }}
+                  className={styles.logo}
+                />
+              ) : (
+                <LogoT
+                  style={{ width: 102, height: 43.57 }}
+                  className={styles.logo}
+                />
+              )}
             </NavLink>
             <Box className={styles.burgerBtn}>
               <Hamburger
