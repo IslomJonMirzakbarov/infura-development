@@ -30,7 +30,7 @@ import { ReactComponent as EnglishIcon } from 'assets/images/landing/english.svg
 
 const NavbarLanding = () => {
   const navigate = useNavigate()
-  const isMainnet = process.env.REACT_APP_BASE_URL.includes('mainnet')
+  const isMainnet = process.env.REACT_APP_BASE_URL?.includes('mainnet')
   const [anchorEl, setAnchorEl] = useState(null)
   const [language, setLanguage] = useState(languageStore.language)
   const [languageAnchorEl, setLanguageAnchorEl] = useState(null)
