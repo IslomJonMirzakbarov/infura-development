@@ -26,7 +26,8 @@ class Store {
       name: 'Enterprise',
       text: 'This plan is a custom plan for those who want custom packaging. Feel free to contact us. ',
       priceText: 'Get a personalized plan',
-      isEnterprise: true
+      isEnterprise: true,
+      disabled: false
     }
   ]
   isSelected = false

@@ -22,6 +22,10 @@ const CardsContainer = ({ onSelect }) => {
     items[0].isCurrentPlan = false
     items[0].disabled = true
     items[1].disabled = true
+  } else if (!isDisabled && !isSelected && poolCount == 9) {
+    items[0].isCurrentPlan = false
+    items[0].disabled = false
+    items[1].disabled = true
   } else if (!isDisabled && !isSelected) {
     items[0].isCurrentPlan = false
     items[0].disabled = false
