@@ -7,6 +7,7 @@ import { useDownloadsCount, useWalletsCount } from 'services/pool.service'
 
 const Stats = ({ stats: statsData }) => {
   const { data } = useDownloadsCount()
+  console.log('datastorage: ', statsData)
   const { data: walletsData } = useWalletsCount()
 
   const walletsCount = walletsData?.payload?.wallet_count
@@ -34,7 +35,7 @@ const Stats = ({ stats: statsData }) => {
     },
     {
       statTitle: t('storage_capacity'),
-      statNum: statsData ? statsData.storage_capacity * 1e9 : 0,
+      statNum: statsData ? statsData.live_available_storage * 1e6 : 0,
       formatFunction: formatStatStorageNumber
     },
     {
