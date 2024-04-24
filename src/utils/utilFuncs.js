@@ -48,7 +48,7 @@ export function formatStatStorageNumber(num) {
   } else if (num >= 1e3) {
     return { value: (num / 1e3).toFixed(1), cap: 'KB' } // Thousands
   } else {
-    return { value: num, cap: 'B' } // Numbers less than 1000
+    return { value: num.toFixed(1), cap: 'B' } // Numbers less than 1000
   }
 }
 
