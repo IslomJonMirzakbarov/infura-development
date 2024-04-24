@@ -24,12 +24,14 @@ export const poolService = {
       onUploadProgress: data?.onUploadProgress,
       cancelToken: data?.cancelToken
     }),
-  getFileHistory: async (token) =>
-    axios.get(`${INFURA_NETWORK}/v1/file/history`, {
+  getFileHistory: async (token, page, limit) => {
+    const params = new URLSearchParams({ page, limit })
+    return axios.get(`${INFURA_NETWORK}/v1/file/history?${params}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
-    }),
+    })
+  },
   downloadFile: async (token, contentId, config) =>
     axios.get(`${INFURA_NETWORK}/v1/file/download?contentId=${contentId}`, {
       headers: {
@@ -50,12 +52,18 @@ export const useDownloadFile = ({ token, contentId, queryProps }) => {
     }
   )
 }
-export const useGetFileHistory = ({ token, queryProps }) => {
+export const useGetFileHistory = ({
+  token,
+  page = 1,
+  limit = 10,
+  queryProps
+}) => {
   return useQuery(
-    `get-file-history-${token}`,
-    () => poolService.getFileHistory(token),
+    ['get-file-history', { token, page, limit }],
+    () => poolService.getFileHistory(token, page, limit),
     {
       enabled: !!token,
+      keepPreviousData: true,
       ...queryProps
     }
   )
