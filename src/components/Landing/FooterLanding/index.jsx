@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import styles from './style.module.scss'
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import { ReactComponent as OceanDriveIcon } from 'assets/images/landing/oceandrive.svg'
+import { ReactComponent as LogoT } from 'assets/images/landing/oceandrive.svg'
+import { ReactComponent as LogoM } from 'assets/images/landing/oceandrive1.svg'
 import { ReactComponent as TelegramIcon } from 'assets/images/landing/telegram.svg'
 import { ReactComponent as TwitterIcon } from 'assets/images/landing/twitter.svg'
 import { ReactComponent as KatotIcon } from 'assets/images/landing/katot.svg'
@@ -23,6 +25,7 @@ const icons = [
 ]
 const FooterLanding = () => {
   const { t } = useTranslation()
+  const isMainnet = process.env.REACT_APP_BASE_URL?.includes('mainnet')
   const [hoveredIcon, setHoveredIcon] = useState(null)
   const isMobile = useMediaQuery('(max-width:600px)')
 
@@ -33,7 +36,7 @@ const FooterLanding = () => {
   return (
     <div className={styles.footer}>
       <div className={styles.descTitle}>
-        <OceanDriveIcon />
+        {isMainnet ? <LogoM /> : <LogoT />}
         <Typography variant='caption' className={styles.desc}>
           {t('oceanDrive_description')}
         </Typography>
