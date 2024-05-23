@@ -9,6 +9,8 @@ import { useEffect } from 'react'
 import i18next from 'i18next'
 import languageStore from 'store/language.store'
 
+// pipeline test 1
+
 const queryClient = new QueryClient()
 
 function App() {
