@@ -70,7 +70,7 @@ const Connect = () => {
     e.preventDefault()
     const res = await onChangeNetwork()
     if (res === 'success') {
-      navigate('/main/billing/pool')
+      navigate('/main/pool-creation/pool')
       setNetworkError(false)
     }
   }
@@ -93,7 +93,7 @@ const Connect = () => {
               if (poolCount > 9) {
                 return
               } else {
-                navigate('/main/billing/pool')
+                navigate('/main/pool-creation/pool')
               }
             }
           }

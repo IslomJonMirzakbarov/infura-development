@@ -14,6 +14,7 @@ import LandingLayout from 'layouts/LandingLayout'
 import WhyInfura from 'views/WhyInfura'
 import FAQ from 'views/FAQ'
 import FileUpload from 'views/Profile/FileUpload'
+import PoolCreate from 'views/PoolCreate'
 
 export const privateRoutes = [
   {
@@ -59,19 +60,33 @@ export const privateRoutes = [
       //   element: <ProfileDetails />
       // },
       {
-        path: 'pricing',
+        path: 'pool-creation/pool',
         element: <BillingContainer />,
         children: [
           {
             index: true,
-            element: <Pricing />
+            element: <PoolCreate />
           },
           {
-            path: 'confirm',
-            element: <ConfirmSubscription />
+            path: 'connect-wallet',
+            element: <Connect />
           }
         ]
       },
+      // {
+      //   path: 'pricing',
+      //   element: <BillingContainer />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: <Pricing />
+      //     },
+      //     {
+      //       path: 'confirm',
+      //       element: <ConfirmSubscription />
+      //     }
+      //   ]
+      // },
       {
         path: 'billing',
         element: <BillingContainer />,
@@ -88,7 +103,6 @@ export const privateRoutes = [
             path: 'pool',
             element: <Pool />
           },
-
           {
             path: 'connect',
             element: <Connect />
