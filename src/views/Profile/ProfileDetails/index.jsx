@@ -8,6 +8,8 @@ import BasicTextField from 'components/ControlledFormElements/HFSimplified/Basic
 import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import { useTranslation } from 'react-i18next'
+import HFSelect from 'components/ControlledFormElements/HFSelect'
+import { months, units } from 'views/Billing/Pool/poolData'
 
 const ProfileDetails = ({ poolData }) => {
   const { t } = useTranslation()
@@ -17,6 +19,7 @@ const ProfileDetails = ({ poolData }) => {
     defaultValues: {
       name: '',
       size: '',
+      unit: '',
       gateway: gatewayUrl,
       // replication: '',
       period: '',
@@ -29,16 +32,17 @@ const ProfileDetails = ({ poolData }) => {
     if (poolData) {
       reset({
         name: poolData?.name,
-        size: `${poolData?.size?.value}${poolData?.size?.unit}`,
+        size: poolData?.size?.value,
+        unit: poolData?.size?.unit,
         // replication: poolData?.pin_replication,
-        period:
-          poolData?.period === 0
-            ? 0
-            : poolData?.period === 1
-            ? '1 month'
-            : poolData?.period > 1
-            ? `${poolData?.period} months`
-            : null,
+        period: poolData?.period,
+        // poolData?.period === 0
+        //   ? 0
+        //   : poolData?.period === 1
+        //   ? '1 month'
+        //   : poolData?.period > 1
+        //   ? `${poolData?.period} months`
+        //   : null,
         price: `${formatNumberWithCommas(poolData?.price)}`,
         api_key: poolData?.token
       })
@@ -75,15 +79,24 @@ const ProfileDetails = ({ poolData }) => {
             readOnly={true}
             disabled
           />
-          <BasicTextField
-            control={control}
-            name='size'
-            label={t('pool_size')}
-            required
-            fullWidth
-            readOnly={true}
-            disabled
-          />
+          <div style={{ display: 'flex', gap: '6px' }}>
+            <BasicTextField
+              control={control}
+              name='size'
+              label='pool_size'
+              type='number'
+              onKeyDown={(evt) =>
+                (evt.key === '.' || evt.key === '-') && evt.preventDefault()
+              }
+            />
+            <HFSelect
+              control={control}
+              name='unit'
+              required
+              style={{ width: '80px' }}
+              options={units}
+            />
+          </div>
           <CopyField
             control={control}
             name='gateway'
@@ -94,14 +107,14 @@ const ProfileDetails = ({ poolData }) => {
             disabled
             value={gatewayUrl}
           />
-          <BasicTextField
+          <HFSelect
             control={control}
             name='period'
-            type='string'
             label={t('period')}
+            placeholder={t('select_time_period')}
             fullWidth
-            readOnly={true}
-            disabled
+            required
+            options={months}
           />
           <Box>
             {poolData?.price !== 'FREE' && (
@@ -111,7 +124,7 @@ const ProfileDetails = ({ poolData }) => {
                 label={t('pool_price')}
                 fullWidth
                 readOnly={true}
-                disabled
+                // disabled
               />
             )}
 
@@ -161,9 +174,9 @@ const ProfileDetails = ({ poolData }) => {
             variant='contained'
             color='secondary'
             type='submit'
-            onClick={() => navigate('/main/pricing')}
+            onClick={() => {}}
           >
-            {t('change_plan')}
+            {t('edit')}
           </Button>
         </Box>
       </form>
