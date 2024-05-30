@@ -213,7 +213,9 @@ const NavbarLanding = () => {
                 className={classNames(styles.wallet, {
                   [styles.connected]: address
                 })}
-                onClick={() => navigate('/main/billing/connect')}
+                onClick={() =>
+                  navigate('/main/pool-creation/pool/connect-wallet/create')
+                }
               >
                 <WalletIcon />
               </Box>

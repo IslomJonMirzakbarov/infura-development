@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Tooltip, Typography } from '@mui/material'
 import classes from './style.module.scss'
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import useWallet from 'hooks/useWallet'
 import walletStore from 'store/wallet.store'
 import ProfilePopup from './ProfilePopup'
@@ -38,6 +38,7 @@ const wallets = [
 ]
 
 const Connect = () => {
+  const { page } = useParams()
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { connectWallet, hanldeLogout } = useWallet()
@@ -70,7 +71,12 @@ const Connect = () => {
     e.preventDefault()
     const res = await onChangeNetwork()
     if (res === 'success') {
-      navigate('/main/pool-creation/pool')
+      if (page === 'create') {
+        navigate('/main/pool-creation/pool')
+      } else if (page.includes('update')) {
+        const poolId = page.split('update-')[1]
+        navigate(`/main/profile/${poolId}/file-upload`)
+      }
       setNetworkError(false)
     }
   }
@@ -93,7 +99,13 @@ const Connect = () => {
               if (poolCount > 9) {
                 return
               } else {
-                navigate('/main/pool-creation/pool')
+                if (page === 'create') {
+                  navigate('/main/pool-creation/pool')
+                } else if (page.includes('update')) {
+                  const poolId = page.split('update-')[1]
+                  navigate(`/main/profile/${poolId}/file-upload`)
+                }
+                // navigate('/main/pool-creation/pool')
               }
             }
           }

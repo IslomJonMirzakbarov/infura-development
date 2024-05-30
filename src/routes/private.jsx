@@ -55,6 +55,10 @@ export const privateRoutes = [
         path: 'profile/:poolId/file-upload',
         element: <FileUpload />
       },
+      {
+        path: 'profile/connect-wallet/:page',
+        element: <Connect />
+      },
       // {
       //   path: 'profile/details/:id',
       //   element: <ProfileDetails />
@@ -68,7 +72,7 @@ export const privateRoutes = [
             element: <PoolCreate />
           },
           {
-            path: 'connect-wallet',
+            path: 'connect-wallet/:page',
             element: <Connect />
           }
         ]

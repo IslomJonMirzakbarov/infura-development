@@ -15,7 +15,7 @@ export default function PoolCreate() {
 
   useEffect(() => {
     if (!walletAddress) {
-      navigate('/main/pool-creation/pool/connect-wallet')
+      navigate('/main/pool-creation/pool/connect-wallet/create')
     } else {
       navigate('/main/pool-creation/pool')
     }
