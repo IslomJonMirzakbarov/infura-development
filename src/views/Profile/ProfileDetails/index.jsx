@@ -99,12 +99,12 @@ const ProfileDetails = ({ poolData, poolId }) => {
     if (!address) {
       navigate(`/main/profile/connect-wallet/update-${poolId}`)
     } else if (
-      data.size === initialValues.size &&
-      data.unit === initialValues.unit &&
-      data.period === initialValues.period &&
+      // data.size === initialValues.size &&
+      // data.unit === initialValues.unit &&
+      // data.period === initialValues.period &&
       data.price === initialValues.price
     ) {
-      toast.error('No changes detected')
+      toast.error('Price change is required!')
       return
     } else {
       const poolPrice = data.price.replace(/,/g, '')
@@ -292,18 +292,20 @@ const ProfileDetails = ({ poolData, poolId }) => {
               value={poolData?.token}
             />
           </div>
-          <Box
-            display='flex'
-            justifyContent='flex-end'
-            width='100%'
-            height='100%'
-            mt='110px'
-            className={styles.planBtn}
-          >
-            <Button variant='contained' color='secondary' type='submit'>
-              {t('edit')}
-            </Button>
-          </Box>
+          {poolData?.is_active && (
+            <Box
+              display='flex'
+              justifyContent='flex-end'
+              width='100%'
+              height='100%'
+              mt='110px'
+              className={styles.planBtn}
+            >
+              <Button variant='contained' color='secondary' type='submit'>
+                {t('edit')}
+              </Button>
+            </Box>
+          )}
         </form>
       </Box>
       <ApproveModal
