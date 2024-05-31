@@ -292,7 +292,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
               value={poolData?.token}
             />
           </div>
-          {poolData?.is_active && (
+          {poolData?.is_active === false && (
             <Box
               display='flex'
               justifyContent='flex-end'
