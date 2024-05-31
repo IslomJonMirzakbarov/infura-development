@@ -58,6 +58,8 @@ const ProfileDetails = ({ poolData, poolId }) => {
     price: ''
   })
 
+  const editable = poolData?.is_active === false
+
   useEffect(() => {
     if (poolData) {
       const formattedPrice = `${formatNumberWithCommas(poolData?.price)}`
@@ -210,6 +212,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
                 onKeyDown={(evt) =>
                   (evt.key === '.' || evt.key === '-') && evt.preventDefault()
                 }
+                disabled={!editable}
               />
               <HFSelect
                 control={control}
@@ -217,6 +220,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
                 required
                 style={{ width: '80px' }}
                 options={units}
+                disabled={!editable}
               />
             </div>
             <CopyField
@@ -236,6 +240,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
               fullWidth
               required
               options={months}
+              disabled={!editable}
             />
             <Box>
               {poolData?.price !== 'FREE' && (
@@ -256,6 +261,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
                       )
                     }
                   }}
+                  disabled={!editable}
                 />
               )}
 
@@ -292,7 +298,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
               value={poolData?.token}
             />
           </div>
-          {poolData?.is_active === false && (
+          {editable && (
             <Box
               display='flex'
               justifyContent='flex-end'
