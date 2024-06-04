@@ -155,7 +155,8 @@ const ProfileDetails = ({ poolData, poolId }) => {
               data: {
                 pool_size: formData.pool_size,
                 pool_price: formData.pool_price,
-                pool_period: formData.pool_period
+                pool_period: formData.pool_period,
+                tx_hash: result.transactionHash
               }
             },
             {
@@ -164,6 +165,9 @@ const ProfileDetails = ({ poolData, poolId }) => {
                 setOpen2(false)
                 toast.success('Updated successfully!')
                 queryClient.invalidateQueries(`get-pool-${poolId}`)
+                setTimeout(() => {
+                  navigate('/main/billing')
+                }, 1000)
               },
               onError: (error) => {
                 setOpen2(false)
