@@ -36,7 +36,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
   const kaikas = useKaikas()
 
   const { upgradePool, checkAllowance, makeApprove } =
-    type === 'metamask' ? metamask : metamask
+    type === 'metamask' ? metamask : kaikas
 
   const minPrice = type === 'metamask' ? metamask.minPrice : kaikas.minPrice
   const { control, handleSubmit, reset, watch } = useForm({

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import walletStore from 'store/wallet.store'
 import ERC20_ABI from 'utils/ABI/ERC20ABI'
-import REWARD_ABI from 'utils/ABI/REWARD_ABI'
+import REWARD_ABI from 'utils/ABI/REWARD_ABI_V2'
 const KLAYTN_CHAIN_ID = process.env.REACT_APP_KLAYTN_CHAIN_ID
 const REWARD_CONTRACT_ADDRESS = process.env.REACT_APP_REWARD_CONTRACT
 const approveAmount =
@@ -18,7 +18,7 @@ const useKaikas = () => {
   useEffect(() => {
     const initContracts = async () => {
       const contract = new caver.klay.Contract(
-        REWARD_ABI.REWARD_ABI,
+        REWARD_ABI.REWARD_ABI_V2,
         REWARD_CONTRACT_ADDRESS
       )
       const minPoolPrice = await contract.methods.minPoolPrice().call()
@@ -91,7 +91,7 @@ const useKaikas = () => {
     pool_period
   }) => {
     const contract = new caver.klay.Contract(
-      REWARD_ABI.REWARD_ABI,
+      REWARD_ABI.REWARD_ABI_V2,
       REWARD_CONTRACT_ADDRESS
     )
 
@@ -111,6 +111,56 @@ const useKaikas = () => {
       })
 
     return result
+  }
+
+  const upgradePool = async ({
+    poolId,
+    poolSize,
+    poolPrice,
+    replicationCount,
+    replicationPeriod
+  }) => {
+    const contract = new caver.klay.Contract(
+      REWARD_ABI.REWARD_ABI_V2,
+      REWARD_CONTRACT_ADDRESS
+    )
+
+    const price = caver.utils.toWei(poolPrice.toString(), 'ether')
+    console.log(`Calling upgradePool with price in kaikas: ${price}`)
+
+    try {
+      const gasLimit = await contract.methods
+        .upgradePool(
+          poolId,
+          poolSize,
+          price,
+          replicationCount,
+          replicationPeriod
+        )
+        .estimateGas({
+          from: address
+        })
+
+      console.log(`Estimated gas limit in kaikas: ${gasLimit}`)
+
+      const result = await contract.methods
+        .upgradePool(
+          poolId,
+          poolSize,
+          price,
+          replicationCount,
+          replicationPeriod
+        )
+        .send({
+          from: address,
+          gas: gasLimit
+        })
+
+      return result
+    } catch (error) {
+      console.log('Error during upgradePool in kaikas: ', error)
+      throw error
+    }
   }
 
   const makeApprove = async () => {
@@ -194,6 +244,7 @@ const useKaikas = () => {
     checkCurrentNetwork,
     onChangeNetwork,
     createPool,
+    upgradePool,
     makeApprove,
     checkAllowance,
     minPrice
