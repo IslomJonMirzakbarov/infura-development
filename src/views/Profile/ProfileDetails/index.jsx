@@ -45,7 +45,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
       size: '',
       unit: '',
       gateway: gatewayUrl,
-      period: '',
+      period: 1,
       price: '',
       api_key: ''
     }
@@ -68,7 +68,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
         name: poolData?.name,
         size: poolData?.size?.value,
         unit: poolData?.size?.unit,
-        period: poolData?.period,
+        period: editable ? 1 : poolData?.period,
         price: formattedPrice,
         api_key: poolData?.token
       })
@@ -240,9 +240,8 @@ const ProfileDetails = ({ poolData, poolId }) => {
             <HFSelect
               control={control}
               name='period'
-              label={t('period')}
+              label={editable ? t('extra_period') : t('period')}
               fullWidth
-              required
               options={months}
               disabled={!editable}
             />
