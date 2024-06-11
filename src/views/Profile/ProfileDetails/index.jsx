@@ -144,7 +144,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
           poolSize,
           poolPrice: formData.pool_price,
           replicationCount: 1000,
-          replicationPeriod: parseInt(data.period)
+          replicationPeriod: parseInt(data.period) + parseInt(poolData?.period)
         })
 
         console.log('result: ', result)
