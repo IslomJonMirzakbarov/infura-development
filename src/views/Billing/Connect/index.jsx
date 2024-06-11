@@ -99,6 +99,9 @@ const Connect = () => {
               if (poolCount > 9) {
                 return
               } else {
+                if (!page) {
+                  navigate('/main/pool-creation/pool')
+                }
                 if (page === 'create') {
                   navigate('/main/pool-creation/pool')
                 } else if (page.includes('update')) {
