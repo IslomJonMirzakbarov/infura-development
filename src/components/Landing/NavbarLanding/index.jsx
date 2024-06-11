@@ -96,7 +96,7 @@ const NavbarLanding = () => {
   return (
     <>
       <header className={styles.header}>
-        <Container className={styles.container}>
+        <div className={styles.container}>
           <NavLink onClick={onClose} to='/' className={styles.logo}>
             {isMainnet ? <LogoM /> : <LogoT />}
           </NavLink>
@@ -281,7 +281,7 @@ const NavbarLanding = () => {
               />
             </Box>
           </Box>
-        </Container>
+        </div>
       </header>
       <MobileMenu isOpen={isOpen} onClose={onClose} />
     </>

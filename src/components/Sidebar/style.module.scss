@@ -32,12 +32,18 @@
     display: flex;
     align-items: center;
     margin-bottom: 53px;
+    margin-top: 35px;
+
+    a svg {
+      display: none;
+    }
 
     @include sm {
       justify-content: space-between;
       flex-direction: row;
       align-items: center;
       margin-bottom: 0;
+      margin-top: 0;
       position: relative;
       .burgerBtn {
         display: flex;
@@ -50,6 +56,7 @@
         max-width: 104px;
         max-height: 43px;
         margin-top: 8px;
+        display: block;
       }
     }
 
