@@ -189,7 +189,7 @@ const FileUpload = () => {
           </>
         ) : (
           <>
-            <ProfileDetails poolData={poolData} />
+            <ProfileDetails poolData={poolData} poolId={poolId} />
           </>
         )}
       </Container>

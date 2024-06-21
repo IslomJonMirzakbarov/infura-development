@@ -56,35 +56,33 @@ export default function Table({
           })}
         >
           {data?.length > 0 &&
-            data?.map((item, index) => (
-              <tr key={index} onClick={() => handleRowClick(item)}>
-                {columns?.map((value) =>
-                  value.key === 'id' ? (
-                    <td>
+            data.map((item) => (
+              <tr key={item.id} onClick={() => handleRowClick(item)}>
+                {columns?.map((value) => (
+                  <td key={`${item.id}-${value.key}`}>
+                    {value.key === 'id' ? (
                       <CopyButton tx={item[value.key]} />
-                    </td>
-                  ) : value.key === 'domain' ? (
-                    <td>
+                    ) : value.key === 'domain' ? (
                       <div className={styles.column}>{domain}</div>
-                    </td>
-                  ) : value.key === 'access' ? (
-                    <td>Open</td>
-                  ) : value.key === 'created_at' ? (
-                    <td>{formatTime(item['created_at'])}</td>
-                  ) : value.key === 'price' ? (
-                    <td
-                      title={
-                        item[value.key] !== 'FREE'
-                          ? formatNumberWithCommas(item[value.key])
-                          : ''
-                      }
-                    >
-                      {item[value.key] === 'FREE' ? 'Free' : 'Paid'}
-                    </td>
-                  ) : (
-                    <td>{item[value.key]}</td>
-                  )
-                )}
+                    ) : value.key === 'access' ? (
+                      'Open'
+                    ) : value.key === 'created_at' ? (
+                      formatTime(item['created_at'])
+                    ) : value.key === 'price' ? (
+                      <span
+                        title={
+                          item[value.key] !== 'FREE'
+                            ? formatNumberWithCommas(item[value.key])
+                            : ''
+                        }
+                      >
+                        {item[value.key] === 'FREE' ? 'Free' : 'Paid'}
+                      </span>
+                    ) : (
+                      item[value.key]
+                    )}
+                  </td>
+                ))}
               </tr>
             ))}
         </tbody>

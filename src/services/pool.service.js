@@ -8,6 +8,8 @@ const INFURA_NETWORK =
 export const poolService = {
   check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
   create: async (data) => httpRequest.post('infura/api/v1/pools', data),
+  update: async (data) =>
+    httpRequest.patch(`infura/api/v1/pools/${data.poolId}`, data.data),
   getPools: async () => httpRequest.get('infura/api/v1/pools'),
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
@@ -86,6 +88,9 @@ export const usePoolCheckMutation = (mutationSettings) => {
 }
 export const usePoolCreateMutation = (mutationSettings) => {
   return useMutation(poolService.create, mutationSettings)
+}
+export const usePoolUpdateMutation = (mutationSettings) => {
+  return useMutation(poolService.update, mutationSettings)
 }
 export const useGetPools = (mutationSettings) => {
   return useQuery('pools', poolService.getPools, mutationSettings)

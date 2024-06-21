@@ -24,9 +24,9 @@ export const items = [
     path: '/main/dashboard'
   },
   {
-    title: 'pricing',
+    title: 'pool_creation',
     icon: <PricingIcon />,
-    path: '/main/pricing'
+    path: '/main/pool-creation/pool'
   },
   {
     title: 'billing',

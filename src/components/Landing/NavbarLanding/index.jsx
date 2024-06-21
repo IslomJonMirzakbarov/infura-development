@@ -96,7 +96,7 @@ const NavbarLanding = () => {
   return (
     <>
       <header className={styles.header}>
-        <Container className={styles.container}>
+        <div className={styles.container}>
           <NavLink onClick={onClose} to='/' className={styles.logo}>
             {isMainnet ? <LogoM /> : <LogoT />}
           </NavLink>
@@ -213,7 +213,9 @@ const NavbarLanding = () => {
                 className={classNames(styles.wallet, {
                   [styles.connected]: address
                 })}
-                onClick={() => navigate('/main/billing/connect')}
+                onClick={() =>
+                  navigate('/main/pool-creation/pool/connect-wallet/create')
+                }
               >
                 <WalletIcon />
               </Box>
@@ -279,7 +281,7 @@ const NavbarLanding = () => {
               />
             </Box>
           </Box>
-        </Container>
+        </div>
       </header>
       <MobileMenu isOpen={isOpen} onClose={onClose} />
     </>

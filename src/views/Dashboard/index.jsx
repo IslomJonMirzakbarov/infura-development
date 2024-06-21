@@ -119,7 +119,7 @@ const Dashboard = () => {
             className={styles.createBtn}
             disableElevation
             color='primary'
-            onClick={() => navigate('/main/pricing')}
+            onClick={() => navigate('/main/pool-creation/pool')}
           >
             <span>+</span> {t('create_storage')}
           </Button>

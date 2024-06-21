@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import walletStore from 'store/wallet.store'
 import ERC20_ABI from 'utils/ABI/ERC20ABI'
-import REWARD_ABI from 'utils/ABI/REWARD_ABI'
+import REWARD_ABI from 'utils/ABI/REWARD_ABI_V2'
 import Web3 from 'web3'
 
 const KLAYTN_CHAIN_ID = process.env.REACT_APP_KLAYTN_CHAIN_ID
@@ -42,7 +42,7 @@ const useMetaMask = () => {
   const initContracts = async (web3Instance) => {
     try {
       const rewardContract = new web3Instance.eth.Contract(
-        REWARD_ABI.REWARD_ABI,
+        REWARD_ABI.REWARD_ABI_V2,
         REWARD_CONTRACT_ADDRESS
       )
       const minPoolPrice = await rewardContract.methods.minPoolPrice().call()
@@ -117,7 +117,7 @@ const useMetaMask = () => {
     pool_period
   }) => {
     const contract = new web3.eth.Contract(
-      REWARD_ABI.REWARD_ABI,
+      REWARD_ABI.REWARD_ABI_V2,
       REWARD_CONTRACT_ADDRESS
     )
 
@@ -137,6 +137,56 @@ const useMetaMask = () => {
       })
 
     return result
+  }
+
+  const upgradePool = async ({
+    poolId,
+    poolSize,
+    poolPrice,
+    replicationCount,
+    replicationPeriod
+  }) => {
+    const contract = new web3.eth.Contract(
+      REWARD_ABI.REWARD_ABI_V2,
+      REWARD_CONTRACT_ADDRESS
+    )
+
+    const price = web3.utils.toWei(poolPrice.toString(), 'ether')
+    console.log(`Calling upgradePool with price: ${price}`)
+
+    try {
+      const gasLimit = await contract.methods
+        .upgradePool(
+          poolId,
+          poolSize,
+          price,
+          replicationCount,
+          replicationPeriod
+        )
+        .estimateGas({
+          from: address
+        })
+
+      console.log(`Estimated gas limit: ${gasLimit}`)
+
+      const result = await contract.methods
+        .upgradePool(
+          poolId,
+          poolSize,
+          price,
+          replicationCount,
+          replicationPeriod
+        )
+        .send({
+          from: address,
+          gas: gasLimit
+        })
+
+      return result
+    } catch (error) {
+      console.log('Error during upgradePool: ', error)
+      throw error
+    }
   }
 
   const makeApprove = async () => {
@@ -220,6 +270,7 @@ const useMetaMask = () => {
     checkCurrentNetwork,
     onChangeNetwork,
     createPool,
+    upgradePool,
     makeApprove,
     checkAllowance,
     minPrice

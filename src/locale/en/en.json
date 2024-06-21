@@ -176,6 +176,9 @@
     "can_providers_access_files": "Can storage providers access my files?",
     "providers_access_explanation": "No, unless you share your content ID and/or API KEY with a third party. Your stored files cannot be directly accessed by storage providers. Your data's privacy and security are maintained within the OceanDrive network.",
     "downloads": "Downloads",
-    "users": "Users"
+    "users": "Users",
+    "pool_creation": "Pool Creation",
+    "edit": "Edit",
+    "extra_period": "Extra Period"
   }
 }
