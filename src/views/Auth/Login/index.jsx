@@ -9,6 +9,7 @@ import BasicTextField from 'components/ControlledFormElements/HFSimplified/Basic
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import PageTransition from 'components/PageTransition'
 import { useTranslation } from 'react-i18next'
+import walletStore from 'store/wallet.store'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -20,6 +21,7 @@ const Login = () => {
     mutate(data, {
       onSuccess: (res) => {
         authStore.login(res.payload)
+        walletStore.logout()
       },
       onError: (error) => {
         if (error.status === 404) {
