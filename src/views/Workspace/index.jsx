@@ -5,6 +5,7 @@ import React from 'react'
 import { ReactComponent as UploadIcon } from 'assets/icons/upload_icon.svg'
 import { ReactComponent as AddIcon } from 'assets/icons/add_icon.svg'
 import { useLocation } from 'react-router-dom'
+import HFDropzone from 'components/Dropzone'
 
 const buttons = [
   {
@@ -25,6 +26,12 @@ const Workspace = () => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const pool = queryParams.get('pool')
+  console.log('pool: ', pool)
+
+  const handleDrop = (acceptedFiles) => {
+    console.log('acceptedFiles: ', acceptedFiles)
+    // handle file upload logic here
+  }
 
   return (
     <PageTransition>
@@ -66,6 +73,8 @@ const Workspace = () => {
             >
               File History
             </Typography>
+
+            <HFDropzone handleDrop={handleDrop} disabled={!pool} />
           </Box>
         </Box>
       </Container>

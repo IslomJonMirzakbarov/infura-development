@@ -41,7 +41,9 @@ export default function Sidebar() {
   const [open, setOpen] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [workspaceOpen, setWorkspaceOpen] = useState(false)
-  const [selectedPool, setSelectedPool] = useState(poolNames[0])
+  const [selectedPool, setSelectedPool] = useState(
+    poolNames.length === 0 ? null : poolNames[0]
+  )
   const { isLoading } = useDashboard()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -69,8 +71,12 @@ export default function Sidebar() {
 
   useEffect(() => {
     if (location.pathname === workspaceItem.path) {
-      setSelectedPool(poolNames[0])
-      navigate(`${workspaceItem.path}?pool=${poolNames[0]}`)
+      setSelectedPool(poolNames.length === 0 ? null : poolNames[0])
+      if (selectedPool) {
+        navigate(`${workspaceItem.path}?pool=${poolNames[0]}`)
+      } else {
+        navigate(`${workspaceItem.path}`)
+      }
     }
   }, [location.pathname])
 
@@ -142,26 +148,27 @@ export default function Sidebar() {
                     )}
                     {t(workspaceItem.title)}
                   </NavLink>
-                  {location.pathname == workspaceItem.path && (
-                    <div className={styles.poolList}>
-                      {poolNames.map((poolName, index) => (
-                        <CustomTooltip
-                          key={index}
-                          title='Expires in 2 weeks'
-                          placement='right'
-                        >
-                          <div
-                            className={classNames(styles.poolItem, {
-                              [styles.selected]: selectedPool === poolName
-                            })}
-                            onClick={() => handlePoolClick(poolName)}
+                  {poolNames?.length > 0 &&
+                    location.pathname == workspaceItem.path && (
+                      <div className={styles.poolList}>
+                        {poolNames?.map((poolName, index) => (
+                          <CustomTooltip
+                            key={index}
+                            title='Expires in 2 weeks'
+                            placement='right'
                           >
-                            {poolName}
-                          </div>
-                        </CustomTooltip>
-                      ))}
-                    </div>
-                  )}
+                            <div
+                              className={classNames(styles.poolItem, {
+                                [styles.selected]: selectedPool === poolName
+                              })}
+                              onClick={() => handlePoolClick(poolName)}
+                            >
+                              {poolName}
+                            </div>
+                          </CustomTooltip>
+                        ))}
+                      </div>
+                    )}
                 </li>
               </ul>
             </nav>

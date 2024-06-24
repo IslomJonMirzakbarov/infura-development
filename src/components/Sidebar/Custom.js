@@ -3,16 +3,16 @@ import { styled } from '@mui/material/styles'
 import unionImage from 'assets/images/union.png'
 
 export const poolNames = [
-  'OD_EVENT_POOL_01',
-  'OD_EVENT_POOL_02',
-  'OD_EVENT_POOL_03',
-  'OD_EVENT_POOL_04',
-  'OD_EVENT_POOL_05',
-  'OD_EVENT_POOL_06',
-  'OD_EVENT_POOL_07',
-  'OD_EVENT_POOL_08',
-  'OD_EVENT_POOL_09',
-  'OD_EVENT_POOL_10'
+  // 'OD_EVENT_POOL_01',
+  // 'OD_EVENT_POOL_02',
+  // 'OD_EVENT_POOL_03',
+  // 'OD_EVENT_POOL_04',
+  // 'OD_EVENT_POOL_05',
+  // 'OD_EVENT_POOL_06',
+  // 'OD_EVENT_POOL_07',
+  // 'OD_EVENT_POOL_08',
+  // 'OD_EVENT_POOL_09',
+  // 'OD_EVENT_POOL_10'
 ]
 
 export const CustomTooltip = styled(({ className, ...props }) => (
