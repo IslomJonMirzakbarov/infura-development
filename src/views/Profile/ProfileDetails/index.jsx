@@ -22,7 +22,6 @@ import { usePoolUpdateMutation } from 'services/pool.service'
 import { useNavigate } from 'react-router-dom'
 
 const ProfileDetails = ({ poolData, poolId }) => {
-  console.log('poolData: ', poolData)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -31,6 +30,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
   const gatewayUrl =
     process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
   const { type, address } = walletStore
+  console.log('address: ', address)
   const { mutate } = usePoolUpdateMutation()
   const metamask = useMetaMask()
   const kaikas = useKaikas()
@@ -100,15 +100,17 @@ const ProfileDetails = ({ poolData, poolId }) => {
   const onSubmit = async (data) => {
     if (!address) {
       navigate(`/main/profile/connect-wallet/update-${poolId}`)
-    } else if (
-      // data.size === initialValues.size &&
-      // data.unit === initialValues.unit &&
-      // data.period === initialValues.period &&
-      data.price === initialValues.price
-    ) {
-      toast.error('Price change is required!')
-      return
-    } else {
+    }
+    // else if (
+    // data.size === initialValues.size &&
+    // data.unit === initialValues.unit &&
+    // data.period === initialValues.period &&
+    //   data.price === initialValues.price
+    // ) {
+    //   toast.error('Price change is required!')
+    //   return
+    // }
+    else {
       const poolPrice = data.price.replace(/,/g, '')
       if (isNaN(poolPrice) || !poolPrice) {
         toast.error('Invalid price value')
