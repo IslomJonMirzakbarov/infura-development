@@ -100,15 +100,17 @@ const ProfileDetails = ({ poolData, poolId }) => {
   const onSubmit = async (data) => {
     if (!address) {
       navigate(`/main/profile/connect-wallet/update-${poolId}`)
-    } else if (
-      // data.size === initialValues.size &&
-      // data.unit === initialValues.unit &&
-      // data.period === initialValues.period &&
-      data.price === initialValues.price
-    ) {
-      toast.error('Price change is required!')
-      return
-    } else {
+    }
+    // else if (
+    // data.size === initialValues.size &&
+    // data.unit === initialValues.unit &&
+    // data.period === initialValues.period &&
+    //   data.price === initialValues.price
+    // ) {
+    //   toast.error('Price change is required!')
+    //   return
+    // }
+    else {
       const poolPrice = data.price.replace(/,/g, '')
       if (isNaN(poolPrice) || !poolPrice) {
         toast.error('Invalid price value')
