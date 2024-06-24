@@ -15,6 +15,7 @@ import WhyInfura from 'views/WhyInfura'
 import FAQ from 'views/FAQ'
 import FileUpload from 'views/Profile/FileUpload'
 import PoolCreate from 'views/PoolCreate'
+import Workspace from 'views/Workspace'
 
 export const privateRoutes = [
   {
@@ -50,6 +51,10 @@ export const privateRoutes = [
       {
         path: 'profile',
         element: <ProfileContainer />
+      },
+      {
+        path: 'workspace',
+        element: <Workspace />
       },
       {
         path: 'profile/:poolId/file-upload',
