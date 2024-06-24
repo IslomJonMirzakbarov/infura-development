@@ -22,7 +22,6 @@ import { usePoolUpdateMutation } from 'services/pool.service'
 import { useNavigate } from 'react-router-dom'
 
 const ProfileDetails = ({ poolData, poolId }) => {
-  console.log('poolData: ', poolData)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -31,6 +30,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
   const gatewayUrl =
     process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
   const { type, address } = walletStore
+  console.log('address: ', address)
   const { mutate } = usePoolUpdateMutation()
   const metamask = useMetaMask()
   const kaikas = useKaikas()
