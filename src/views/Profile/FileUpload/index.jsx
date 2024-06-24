@@ -4,7 +4,13 @@ import PageTransition from 'components/PageTransition'
 import Container from 'components/Container'
 import FileUploadTable from 'components/FileUploadTable'
 import { useParams } from 'react-router-dom'
-import { Box, Typography } from '@mui/material'
+import {
+  Box,
+  Typography,
+  Pagination,
+  createTheme,
+  ThemeProvider
+} from '@mui/material'
 import ProfileDetails from '../ProfileDetails'
 import classNames from 'classnames'
 import {
@@ -24,15 +30,21 @@ const FileUpload = () => {
   const { data: poolData } = useGetPoolById({ id: poolId })
   const token = poolData?.token
   const { mutate: uploadFile, isLoading: isUploading } = useFileUpload()
+  const [currentPage, setCurrentPage] = useState(1)
   const {
     data: fileUploadHistory,
     isLoading: isGettingHistory,
     error,
     isFetching
-  } = useGetFileHistory({ token: token })
+  } = useGetFileHistory({ token: token, page: currentPage })
+  const totalPages = fileUploadHistory?.data?.data?.totalPages || 0
+
+  const handlePageChange = (event, value) => {
+    setCurrentPage(value)
+  }
 
   const formattedData =
-    fileUploadHistory?.data?.data.map((file) => {
+    fileUploadHistory?.data?.data?.results?.map((file) => {
       const createdAtDate = new Date(file.createdAt)
       const formattedDate = formatDateFile(createdAtDate)
 
@@ -76,6 +88,14 @@ const FileUpload = () => {
       handleUploadFile()
     }
   }, [selectedFile])
+
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: '#16D9C9'
+      }
+    }
+  })
 
   return (
     <PageTransition>
@@ -143,10 +163,33 @@ const FileUpload = () => {
                 onRowSelected={setSelectedContentId}
               />
             </Box>
+            {totalPages > 1 && (
+              <Box display='flex' justifyContent='center' mt={1}>
+                <ThemeProvider theme={theme}>
+                  <Pagination
+                    count={totalPages}
+                    page={currentPage}
+                    onChange={handlePageChange}
+                    color='primary'
+                    sx={{
+                      '.MuiPaginationItem-root': {
+                        color: 'white'
+                      },
+                      '.MuiPaginationItem-ellipsis': {
+                        color: 'white'
+                      },
+                      '.MuiSvgIcon-root': {
+                        color: 'white'
+                      }
+                    }}
+                  />
+                </ThemeProvider>
+              </Box>
+            )}
           </>
         ) : (
           <>
-            <ProfileDetails poolData={poolData} />
+            <ProfileDetails poolData={poolData} poolId={poolId} />
           </>
         )}
       </Container>

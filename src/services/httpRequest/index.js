@@ -3,6 +3,7 @@ import authStore from 'store/auth.store'
 import toast from 'react-hot-toast'
 import { refreshToken } from 'services/auth.service'
 import modalStore from 'store/modal.store'
+import { getCustomTranslation } from 'utils/customTranslation'
 
 const httpRequest = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
@@ -28,8 +29,9 @@ const errorHandler = async (error, hooks) => {
     modalStore.setOpenServerError(true)
   }
 
-  if (error?.response?.status === 502) {
-    modalStore.setOpenBadGatewayError(true)
+  if (error?.response?.status == 502) {
+    toast.error(getCustomTranslation('502_gateway_error'))
+    // modalStore.setOpenBadGatewayError(true)
   }
 
   if (
@@ -53,12 +55,14 @@ const errorHandler = async (error, hooks) => {
 }
 
 httpRequest.interceptors.request.use((config) => {
-  const token = authStore?.token?.access_token?.token
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`
-  }
+  if (!config.url.includes('app/stats')) {
+    const token = authStore?.token?.access_token?.token
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
 
-  config.headers['X-Conun-Service'] = 'infura'
+    config.headers['X-Conun-Service'] = 'infura'
+  }
 
   return config
 })

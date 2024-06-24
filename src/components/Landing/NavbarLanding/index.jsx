@@ -9,7 +9,8 @@ import {
   useMediaQuery
 } from '@mui/material'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { ReactComponent as Logo } from 'assets/images/landing/oceandrive.svg'
+import { ReactComponent as LogoT } from 'assets/images/landing/oceandrive.svg'
+import { ReactComponent as LogoM } from 'assets/images/landing/oceandrive1.svg'
 import { ReactComponent as ArrowDownIcon } from 'assets/images/landing/down_arrow.svg'
 import styles from './style.module.scss'
 import authStore from 'store/auth.store'
@@ -29,6 +30,7 @@ import { ReactComponent as EnglishIcon } from 'assets/images/landing/english.svg
 
 const NavbarLanding = () => {
   const navigate = useNavigate()
+  const isMainnet = process.env.REACT_APP_BASE_URL?.includes('mainnet')
   const [anchorEl, setAnchorEl] = useState(null)
   const [language, setLanguage] = useState(languageStore.language)
   const [languageAnchorEl, setLanguageAnchorEl] = useState(null)
@@ -94,9 +96,9 @@ const NavbarLanding = () => {
   return (
     <>
       <header className={styles.header}>
-        <Container className={styles.container}>
+        <div className={styles.container}>
           <NavLink onClick={onClose} to='/' className={styles.logo}>
-            <Logo />
+            {isMainnet ? <LogoM /> : <LogoT />}
           </NavLink>
           <nav>
             <ul>
@@ -211,7 +213,9 @@ const NavbarLanding = () => {
                 className={classNames(styles.wallet, {
                   [styles.connected]: address
                 })}
-                onClick={() => navigate('/main/billing/connect')}
+                onClick={() =>
+                  navigate('/main/pool-creation/pool/connect-wallet/create')
+                }
               >
                 <WalletIcon />
               </Box>
@@ -277,7 +281,7 @@ const NavbarLanding = () => {
               />
             </Box>
           </Box>
-        </Container>
+        </div>
       </header>
       <MobileMenu isOpen={isOpen} onClose={onClose} />
     </>

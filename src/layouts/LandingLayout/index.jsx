@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom'
 
 const LandingLayout = () => {
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-testid='container'>
       <div className={styles.navBar}>
         <NavbarLanding />
       </div>

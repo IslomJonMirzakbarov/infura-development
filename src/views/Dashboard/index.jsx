@@ -45,7 +45,7 @@ const Dashboard = () => {
     }
   ]
 
-  const freePool = data?.pools?.find((pool) => pool.price === 'free')
+  const freePool = data?.pools?.find((pool) => pool.price === 'FREE')
   useEffect(() => {
     poolStore.setPoolCount(poolCount)
     if (freePool) {
@@ -110,6 +110,7 @@ const Dashboard = () => {
       </Typography>
     )
   })
+
   return (
     <PageTransition>
       <Container maxWidth={true} className={styles.container}>
@@ -118,7 +119,7 @@ const Dashboard = () => {
             className={styles.createBtn}
             disableElevation
             color='primary'
-            onClick={() => navigate('/main/pricing')}
+            onClick={() => navigate('/main/pool-creation/pool')}
           >
             <span>+</span> {t('create_storage')}
           </Button>
@@ -172,7 +173,7 @@ const Dashboard = () => {
               </Box>
               <DashboardBarChart
                 upload={poolData?.uploaded_files_count}
-                download={0}
+                download={poolData?.downloaded_files_count}
                 className={styles.chart}
               />
             </div>

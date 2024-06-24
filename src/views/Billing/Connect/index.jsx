@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Tooltip, Typography } from '@mui/material'
 import classes from './style.module.scss'
 import { ReactComponent as CopyIcon } from 'assets/icons/copy.svg'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import useWallet from 'hooks/useWallet'
 import walletStore from 'store/wallet.store'
 import ProfilePopup from './ProfilePopup'
@@ -12,6 +12,8 @@ import useMetaMask from 'hooks/useMetaMask'
 import WarningRoundedIcon from '@mui/icons-material/WarningRounded'
 import PageTransition from 'components/PageTransition'
 import { useTranslation } from 'react-i18next'
+import useKaikas from 'hooks/useKaikas'
+import poolStore from 'store/pool.store'
 
 const walletType = {
   metamask:
@@ -36,13 +38,16 @@ const wallets = [
 ]
 
 const Connect = () => {
+  const { page } = useParams()
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { connectWallet, hanldeLogout } = useWallet()
   const [isCopy, setIsCopy] = useState(false)
   const { address, type } = walletStore
+  const { poolCount } = poolStore
   const [anchorEl, setAnchorEl] = useState(null)
   const { checkCurrentNetwork, onChangeNetwork } = useMetaMask()
+  const { checkCurrentNetwork: checkCurrentNetworkKaikas } = useKaikas()
   const [networkError, setNetworkError] = useState(false)
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
@@ -66,7 +71,12 @@ const Connect = () => {
     e.preventDefault()
     const res = await onChangeNetwork()
     if (res === 'success') {
-      navigate('/main/billing/pool')
+      if (page === 'create') {
+        navigate('/main/pool-creation/pool')
+      } else if (page.includes('update')) {
+        const poolId = page.split('update-')[1]
+        navigate(`/main/profile/${poolId}/file-upload`)
+      }
       setNetworkError(false)
     }
   }
@@ -78,9 +88,29 @@ const Connect = () => {
         loading: 'Connection...',
         success: (value) => {
           async function checkResult() {
-            const result = await checkCurrentNetwork()
+            let result
+            if (walletType === 'kaikas') {
+              result = await checkCurrentNetworkKaikas()
+            } else {
+              result = await checkCurrentNetwork()
+            }
             if (result === 'error') setNetworkError(true)
-            else navigate('/main/billing/pool')
+            else {
+              if (poolCount > 9) {
+                return
+              } else {
+                if (!page) {
+                  navigate('/main/pool-creation/pool')
+                }
+                if (page === 'create') {
+                  navigate('/main/pool-creation/pool')
+                } else if (page.includes('update')) {
+                  const poolId = page.split('update-')[1]
+                  navigate(`/main/profile/${poolId}/file-upload`)
+                }
+                // navigate('/main/pool-creation/pool')
+              }
+            }
           }
           if (value) {
             checkResult()

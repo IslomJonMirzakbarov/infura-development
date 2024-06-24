@@ -2,41 +2,46 @@ import { useMutation, useQuery } from 'react-query'
 import httpRequest from './httpRequest'
 import axios from 'axios'
 
+const INFURA_NETWORK =
+  process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
+
 export const poolService = {
   check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
   create: async (data) => httpRequest.post('infura/api/v1/pools', data),
+  update: async (data) =>
+    httpRequest.patch(`infura/api/v1/pools/${data.poolId}`, data.data),
   getPools: async () => httpRequest.get('infura/api/v1/pools'),
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
   getStats: async () => httpRequest.get('infura/api/v1/stats'),
+  getWalletsCount: async () => httpRequest.get('app/stats'),
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
   getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`),
   fileUpload: async (data) =>
-    axios.post('https://infura.oceandrive.network/v1/file/upload', data?.file, {
+    axios.post(`${INFURA_NETWORK}/v1/file/upload`, data?.file, {
       headers: {
         Authorization: `Bearer ${data?.token}`
       },
       onUploadProgress: data?.onUploadProgress,
       cancelToken: data?.cancelToken
     }),
-  getFileHistory: async (token) =>
-    axios.get('https://infura.oceandrive.network/v1/file/history', {
+  getFileHistory: async (token, page, limit) => {
+    const params = new URLSearchParams({ page, limit })
+    return axios.get(`${INFURA_NETWORK}/v1/file/history?${params}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
-    }),
+    })
+  },
   downloadFile: async (token, contentId, config) =>
-    axios.get(
-      `https://infura.oceandrive.network/v1/file/download?contentId=${contentId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-        responseType: 'blob',
-        ...config
-      }
-    )
+    axios.get(`${INFURA_NETWORK}/v1/file/download?contentId=${contentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      },
+      responseType: 'blob',
+      ...config
+    })
 }
 
 export const useDownloadFile = ({ token, contentId, queryProps }) => {
@@ -49,12 +54,18 @@ export const useDownloadFile = ({ token, contentId, queryProps }) => {
     }
   )
 }
-export const useGetFileHistory = ({ token, queryProps }) => {
+export const useGetFileHistory = ({
+  token,
+  page = 1,
+  limit = 10,
+  queryProps
+}) => {
   return useQuery(
-    `get-file-history-${token}`,
-    () => poolService.getFileHistory(token),
+    ['get-file-history', { token, page, limit }],
+    () => poolService.getFileHistory(token, page, limit),
     {
       enabled: !!token,
+      keepPreviousData: true,
       ...queryProps
     }
   )
@@ -69,11 +80,17 @@ export const useDownloadsCount = (querySettings) => {
     querySettings
   )
 }
+export const useWalletsCount = (querySettings) => {
+  return useQuery('wallets-count', poolService.getWalletsCount, querySettings)
+}
 export const usePoolCheckMutation = (mutationSettings) => {
   return useMutation(poolService.check, mutationSettings)
 }
 export const usePoolCreateMutation = (mutationSettings) => {
   return useMutation(poolService.create, mutationSettings)
+}
+export const usePoolUpdateMutation = (mutationSettings) => {
+  return useMutation(poolService.update, mutationSettings)
 }
 export const useGetPools = (mutationSettings) => {
   return useQuery('pools', poolService.getPools, mutationSettings)

@@ -20,7 +20,7 @@ export default function Profile({
 }) {
   const { t } = useTranslation()
   const { data: pools } = useGetPools()
-  const freePool = pools?.payload?.pools?.find((pool) => pool.price === 'free')
+  const freePool = pools?.payload?.pools?.find((pool) => pool.price === 'FREE')
   const poolCount = pools?.payload?.count
   useEffect(() => {
     poolStore.setPoolCount(poolCount)

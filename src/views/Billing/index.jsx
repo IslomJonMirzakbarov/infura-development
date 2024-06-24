@@ -7,7 +7,7 @@ import Table from 'components/Table'
 import { ReactComponent as InvoiceRoute } from 'assets/icons/invoice_routing.svg'
 import { useInvoice } from 'services/pool.service'
 import { formatNumberWithCommas } from 'utils/utilFuncs'
-import { ReactComponent as SmallCycon } from 'assets/icons/small_cycon.svg'
+import { ReactComponent as SmallCycon } from 'assets/icons/small_cycon2.svg'
 import PageTransition from 'components/PageTransition'
 import { useTranslation } from 'react-i18next'
 
