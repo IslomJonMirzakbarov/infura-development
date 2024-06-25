@@ -14,14 +14,17 @@ const Workspace = () => {
 
   return (
     <Box>
-      <Link to=''>
+      <Link to={`/main/workspace/${poolId}/details`}>
         <Typography
           fontWeight='500'
           fontSize='12px'
           lineHeight='18px'
           color='#27E6D6'
           marginBottom='1.5px'
-          style={{ cursor: 'pointer', textDecoration: 'underline' }}
+          style={{
+            cursor: 'pointer',
+            textDecoration: 'underline'
+          }}
         >
           {poolData?.name}
         </Typography>

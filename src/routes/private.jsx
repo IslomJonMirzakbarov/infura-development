@@ -14,6 +14,7 @@ import LandingPage from 'views/LandingPage'
 import PoolCreate from 'views/PoolCreate'
 import ProfileContainer from 'views/Profile'
 import FileUpload from 'views/Profile/FileUpload'
+import ProfileDetails from 'views/Profile/ProfileDetails'
 import WhyInfura from 'views/WhyInfura'
 import Workspace from 'views/Workspace'
 
@@ -60,7 +61,8 @@ export const privateRoutes = [
           {
             path: ':poolId',
             element: <Workspace />
-          }
+          },
+          { path: ':poolId/details', element: <ProfileDetails /> }
         ]
       },
       {
