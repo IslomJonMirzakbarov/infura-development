@@ -1,9 +1,8 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import styles from './style.module.scss'
-import { Link } from 'react-router-dom'
-import { ReactComponent as SearchIcon } from 'assets/icons/search_icon.svg'
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
+import Disabled from './Disabled'
 
 const HFDropzone = ({ handleDrop, disabled = false }) => {
   return (
@@ -24,30 +23,9 @@ const HFDropzone = ({ handleDrop, disabled = false }) => {
           style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
         >
           <input {...getInputProps()} />
-          {disabled && (
+          {disabled ? <Disabled /> : (
             <div>
-              <SearchIcon />
-              <Typography
-                fontWeight='600'
-                fontSize='15px'
-                lineHeight='22.5px'
-                color='#fff'
-                marginBottom='10px'
-              >
-                You have no pool to upload files. First, create a pool and then
-                proceed.
-              </Typography>
-              <Link to='/main/pool-creation/pool' className={styles.link}>
-                <Typography
-                  fontWeight='600'
-                  fontSize='15px'
-                  lineHeight='22.5px'
-                  color='#27E6D6'
-                  style={{ textDecoration: 'underline' }}
-                >
-                  Create Pool
-                </Typography>
-              </Link>
+              
             </div>
           )}
         </Box>

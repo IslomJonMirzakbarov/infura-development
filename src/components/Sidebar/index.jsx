@@ -1,21 +1,21 @@
-import styles from './style.module.scss'
-import { ReactComponent as LogoT } from 'assets/logos/logoV2.svg'
-import { ReactComponent as LogoM } from 'assets/images/landing/oceandrive1.svg'
-import { ReactComponent as GridIcon } from 'assets/icons/grid.svg'
-import { ReactComponent as PricingIcon } from 'assets/icons/pricing.svg'
-import { ReactComponent as DownIcon } from 'assets/icons/down.svg'
-import { ReactComponent as UpIcon } from 'assets/icons/up.svg'
-import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import LogoutModal from 'components/LogoutModal'
-import { useDashboard, useGetPools } from 'services/pool.service'
 import { Box } from '@mui/material'
-import Hamburger from 'hamburger-react'
-import MobileSidebar from './MobileSidebar'
-import { useTranslation } from 'react-i18next'
+import { ReactComponent as DownIcon } from 'assets/icons/down.svg'
+import { ReactComponent as GridIcon } from 'assets/icons/grid.svg'
+import { ReactComponent as LogoutIcon } from 'assets/icons/logout.svg'
+import { ReactComponent as PricingIcon } from 'assets/icons/pricing.svg'
+import { ReactComponent as UpIcon } from 'assets/icons/up.svg'
+import { ReactComponent as LogoM } from 'assets/images/landing/oceandrive1.svg'
+import { ReactComponent as LogoT } from 'assets/logos/logoV2.svg'
 import classNames from 'classnames'
+import LogoutModal from 'components/LogoutModal'
+import Hamburger from 'hamburger-react'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useDashboard, useGetPools } from 'services/pool.service'
 import { CustomTooltip, poolNames } from './Custom'
+import MobileSidebar from './MobileSidebar'
+import styles from './style.module.scss'
 
 export const items = [
   {
@@ -37,15 +37,14 @@ const workspaceItem = {
 }
 
 export default function Sidebar() {
+  const { poolId } = useParams()
   const isMainnet = process.env.REACT_APP_BASE_URL.includes('mainnet')
   const [open, setOpen] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [workspaceOpen, setWorkspaceOpen] = useState(false)
   const { data: pools } = useGetPools()
   console.log('pools: ', pools)
-  const [selectedPool, setSelectedPool] = useState(
-    pools?.payload?.count == 0 ? null : poolNames[0]
-  )
+  const [selectedPool, setSelectedPool] = useState(null)
   const { isLoading } = useDashboard()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -66,29 +65,33 @@ export default function Sidebar() {
     }
   }
 
-  const handlePoolClick = (poolName) => {
-    setSelectedPool(poolName)
-    navigate(`${workspaceItem.path}?pool=${poolName}`)
+  const handlePoolClick = (poolId) => {
+    setSelectedPool(poolId)
+    navigate(`${workspaceItem.path}/${poolId}`)
   }
 
   useEffect(() => {
-    if (pools?.payload?.count > 0) {
-      setSelectedPool(pools?.payload?.pools[0]?.name)
-      if (location.pathname === workspaceItem.path) {
-        navigate(
-          `${workspaceItem.path}?pool=${pools?.payload?.pools[0]?.name}`,
-          {
-            replace: true
-          }
-        )
-      }
+    if (poolId) {
+      setSelectedPool(poolId)
+    } else if (
+      pools?.payload?.count > 0 &&
+      location.pathname === workspaceItem.path
+    ) {
+      setSelectedPool(pools?.payload?.pools[0]?.id)
+      navigate(`${workspaceItem.path}/${pools?.payload?.pools[0]?.id}`)
     } else {
       setSelectedPool(null)
-      if (location.pathname === workspaceItem.path) {
-        navigate(workspaceItem.path, { replace: true })
+      if (location.pathname.includes(workspaceItem.path)) {
+        navigate(workspaceItem.path)
       }
     }
-  }, [pools, location.pathname, navigate])
+  }, [
+    location.pathname,
+    navigate,
+    poolId,
+    pools?.payload?.count,
+    pools?.payload?.pools
+  ])
 
   const onClose = () => {
     setIsOpen(false)
@@ -151,7 +154,7 @@ export default function Sidebar() {
                     onClick={toggleWorkspace}
                     to={workspaceItem.path}
                   >
-                    {location.pathname == workspaceItem.path ? (
+                    {location.pathname.includes(workspaceItem.path) ? (
                       <UpIcon />
                     ) : (
                       <DownIcon />
@@ -159,7 +162,7 @@ export default function Sidebar() {
                     {t(workspaceItem.title)}
                   </NavLink>
                   {pools?.payload?.count > 0 &&
-                    location.pathname == workspaceItem.path && (
+                    location.pathname.includes(workspaceItem.path) && (
                       <div className={styles.poolList}>
                         {pools?.payload?.pools?.map((pool) => (
                           <CustomTooltip
@@ -169,9 +172,9 @@ export default function Sidebar() {
                           >
                             <div
                               className={classNames(styles.poolItem, {
-                                [styles.selected]: selectedPool === pool.name
+                                [styles.selected]: selectedPool === pool.id
                               })}
-                              onClick={() => handlePoolClick(pool.name)}
+                              onClick={() => handlePoolClick(pool.id)}
                             >
                               {pool.name}
                             </div>

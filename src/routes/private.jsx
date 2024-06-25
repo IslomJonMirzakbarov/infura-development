@@ -1,20 +1,20 @@
+import LandingLayout from 'layouts/LandingLayout'
 import MainLayout from 'layouts/MainLayout'
+import WorkspaceLayout from 'layouts/WorkspaceLayout'
 import { Navigate, useRoutes } from 'react-router-dom'
 import Billing from 'views/Billing'
-import Pricing from 'views/Billing/pricing'
+import ConfirmSubscription from 'views/Billing/ConfirmSubscription'
 import Connect from 'views/Billing/Connect'
 import Deposit from 'views/Billing/Deposit'
-import BillingContainer from 'views/Billing/index.container'
 import Pool from 'views/Billing/Pool'
+import BillingContainer from 'views/Billing/index.container'
 import Dashboard from 'views/Dashboard'
-import LandingPage from 'views/LandingPage'
-import ProfileContainer from 'views/Profile'
-import ConfirmSubscription from 'views/Billing/ConfirmSubscription'
-import LandingLayout from 'layouts/LandingLayout'
-import WhyInfura from 'views/WhyInfura'
 import FAQ from 'views/FAQ'
-import FileUpload from 'views/Profile/FileUpload'
+import LandingPage from 'views/LandingPage'
 import PoolCreate from 'views/PoolCreate'
+import ProfileContainer from 'views/Profile'
+import FileUpload from 'views/Profile/FileUpload'
+import WhyInfura from 'views/WhyInfura'
 import Workspace from 'views/Workspace'
 
 export const privateRoutes = [
@@ -54,7 +54,14 @@ export const privateRoutes = [
       },
       {
         path: 'workspace',
-        element: <Workspace />
+        element: <WorkspaceLayout />,
+        children: [
+          { index: true, element: <Workspace /> },
+          {
+            path: ':poolId',
+            element: <Workspace />
+          }
+        ]
       },
       {
         path: 'profile/:poolId/file-upload',

@@ -1,84 +1,43 @@
 import { Box, Typography } from '@mui/material'
-import Container from 'components/Container'
-import PageTransition from 'components/PageTransition'
-import React from 'react'
-import { ReactComponent as UploadIcon } from 'assets/icons/upload_icon.svg'
-import { ReactComponent as AddIcon } from 'assets/icons/add_icon.svg'
-import { useLocation } from 'react-router-dom'
 import HFDropzone from 'components/Dropzone'
-
-const buttons = [
-  {
-    bgColor: '#fff',
-    Icon: <UploadIcon />,
-    color: '#000',
-    text: 'Upload / Drop'
-  },
-  {
-    bgColor: '#1F1E48',
-    Icon: <AddIcon />,
-    color: '#fff',
-    text: 'Create folder'
-  }
-]
+import { Link, useParams } from 'react-router-dom'
+import { useGetPoolById } from 'services/pool.service'
 
 const Workspace = () => {
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const pool = queryParams.get('pool')
-  console.log('pool: ', pool)
-
+  const { poolId } = useParams()
+  const { data: poolData } = useGetPoolById({ id: poolId })
+  console.log('poolData: ', poolData)
   const handleDrop = (acceptedFiles) => {
     console.log('acceptedFiles: ', acceptedFiles)
     // handle file upload logic here
   }
 
   return (
-    <PageTransition>
-      <Container>
-        <Box width='100%' display='flex' flexDirection='column'>
-          <Box display='flex' gap='15px' marginBottom='66px'>
-            {buttons.map((button, index) => (
-              <Box
-                width='153px'
-                height='88px'
-                borderRadius='10px'
-                backgroundColor={button.bgColor}
-                display='flex'
-                flexDirection='column'
-                padding='13px'
-                justifyContent='space-between'
-                style={{ cursor: 'pointer' }}
-              >
-                {button.Icon}
-                <Typography
-                  fontWeight='500'
-                  fontSize='15px'
-                  lineHeight='22.5px'
-                  color={button.color}
-                >
-                  {button.text}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
+    <Box>
+      <Link to=''>
+        <Typography
+          fontWeight='500'
+          fontSize='12px'
+          lineHeight='18px'
+          color='#27E6D6'
+          marginBottom='1.5px'
+          style={{ cursor: 'pointer', textDecoration: 'underline' }}
+        >
+          {poolData?.name}
+        </Typography>
+      </Link>
+      <Typography
+        fontWeight='700'
+        fontSize='22px'
+        lineHeight='33px'
+        color='#fff'
+        marginBottom='19px'
+      >
+        File History
+      </Typography>
 
-          <Box>
-            <Typography
-              fontWeight='700'
-              fontSize='22px'
-              lineHeight='33px'
-              color='#fff'
-              marginBottom='19px'
-            >
-              File History
-            </Typography>
-
-            <HFDropzone handleDrop={handleDrop} disabled={!pool} />
-          </Box>
-        </Box>
-      </Container>
-    </PageTransition>
+      <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
+    </Box>
   )
 }
 
