@@ -1,27 +1,31 @@
 import { Box, Button, Typography } from '@mui/material'
-import React, { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
-import styles from './styles.module.scss'
-import { formatNumberWithCommas } from 'utils/utilFuncs'
+import HFSelect from 'components/ControlledFormElements/HFSelect'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
-import { useTranslation } from 'react-i18next'
-import HFSelect from 'components/ControlledFormElements/HFSelect'
-import { months, units } from 'views/Billing/Pool/poolData'
-import useMetaMask from 'hooks/useMetaMask'
-import useKaikas from 'hooks/useKaikas'
-import walletStore from 'store/wallet.store'
-import toast from 'react-hot-toast'
-import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
-import { useQueryClient } from 'react-query'
-import ApproveModal from 'views/Billing/Pool/ApproveModal'
-import LoaderModal from 'views/Billing/LoaderModal'
 import PageTransition from 'components/PageTransition'
-import { usePoolUpdateMutation } from 'services/pool.service'
-import { useNavigate } from 'react-router-dom'
+import useKaikas from 'hooks/useKaikas'
+import useMetaMask from 'hooks/useMetaMask'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useGetPoolById, usePoolUpdateMutation } from 'services/pool.service'
+import walletStore from 'store/wallet.store'
+import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
+import { formatNumberWithCommas } from 'utils/utilFuncs'
+import LoaderModal from 'views/Billing/LoaderModal'
+import ApproveModal from 'views/Billing/Pool/ApproveModal'
+import { months, units } from 'views/Billing/Pool/poolData'
+import styles from './styles.module.scss'
 
 const ProfileDetails = ({ poolData, poolId }) => {
+  const { poolId: workspacePoolId } = useParams()
+  const { data: worksapcePoolData } = useGetPoolById({ id: workspacePoolId })
+  const customPoolId = workspacePoolId ? workspacePoolId : poolId
+  const customPoolData = workspacePoolId ? worksapcePoolData : poolData
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -58,29 +62,29 @@ const ProfileDetails = ({ poolData, poolId }) => {
     price: ''
   })
 
-  const editable = poolData?.is_active === false
+  const editable = customPoolData?.is_active === false
 
   useEffect(() => {
-    if (poolData) {
-      const formattedPrice = `${formatNumberWithCommas(poolData?.price)}`
+    if (customPoolData) {
+      const formattedPrice = `${formatNumberWithCommas(customPoolData?.price)}`
 
       reset({
-        name: poolData?.name,
-        size: poolData?.size?.value,
-        unit: poolData?.size?.unit,
-        period: editable ? 1 : poolData?.period,
+        name: customPoolData?.name,
+        size: customPoolData?.size?.value,
+        unit: customPoolData?.size?.unit,
+        period: editable ? 1 : customPoolData?.period,
         price: formattedPrice,
-        api_key: poolData?.token
+        api_key: customPoolData?.token
       })
 
       setInitialValues({
-        size: poolData?.size?.value,
-        unit: poolData?.size?.unit,
-        period: poolData?.period,
+        size: customPoolData?.size?.value,
+        unit: customPoolData?.size?.unit,
+        period: customPoolData?.period,
         price: formattedPrice
       })
     }
-  }, [poolData, reset])
+  }, [customPoolData, reset])
 
   const watchedValues = watch(['size', 'unit', 'period', 'price'])
 
@@ -99,7 +103,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
 
   const onSubmit = async (data) => {
     if (!address) {
-      navigate(`/main/profile/connect-wallet/update-${poolId}`)
+      navigate(`/main/profile/connect-wallet/update-${customPoolId}`)
     }
     // else if (
     // data.size === initialValues.size &&
@@ -142,18 +146,19 @@ const ProfileDetails = ({ poolData, poolId }) => {
             : parseInt(formData.pool_size.value * 1024)
 
         const result = await upgradePool({
-          poolId: poolData.reward_pool_id,
+          poolId: customPoolData.reward_pool_id,
           poolSize,
           poolPrice: formData.pool_price,
           replicationCount: 1000,
-          replicationPeriod: parseInt(data.period) + parseInt(poolData?.period)
+          replicationPeriod:
+            parseInt(data.period) + parseInt(customPoolData?.period)
         })
 
         console.log('result: ', result)
         if (result.transactionHash)
           mutate(
             {
-              poolId,
+              customPoolId,
               data: {
                 pool_size: formData.pool_size,
                 pool_price: formData.pool_price,
@@ -166,7 +171,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
                 console.log('res: ', res)
                 setOpen2(false)
                 toast.success('Updated successfully!')
-                queryClient.invalidateQueries(`get-pool-${poolId}`)
+                queryClient.invalidateQueries(`get-pool-${customPoolId}`)
                 setTimeout(() => {
                   navigate('/main/billing')
                 }, 1000)
@@ -192,9 +197,23 @@ const ProfileDetails = ({ poolData, poolId }) => {
       <Box
         width='100%'
         display='flex'
-        alignItems='center'
+        flexDirection={workspacePoolId ? 'column' : 'row'}
+        alignItems={workspacePoolId ? 'start' : 'center'}
         className={styles.detailsBox}
       >
+        {workspacePoolId && (
+          <Typography
+            fontWeight='500'
+            fontSize='15px'
+            lineHeight='22.5px'
+            color='#27e6d6'
+            style={{ textDecoration: 'underline', cursor: 'pointer' }}
+            onClick={() => navigate(-1)}
+            marginBottom='10px'
+          >
+            &lt; Back
+          </Typography>
+        )}
         <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
           <Typography component='p' color='#fff' variant='main' mb='22px'>
             {t('details')}
@@ -248,7 +267,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
               disabled={!editable}
             />
             <Box>
-              {poolData?.price !== 'FREE' && (
+              {customPoolData?.price !== 'FREE' && (
                 <BasicTextField
                   control={control}
                   name='price'
@@ -270,7 +289,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
                 />
               )}
 
-              {poolData?.tx_hash && (
+              {customPoolData?.tx_hash && (
                 <Box className={styles.txHash}>
                   <Typography
                     color='white'
@@ -281,11 +300,11 @@ const ProfileDetails = ({ poolData, poolId }) => {
                     {t('tx_hash')}
                   </Typography>
                   <a
-                    href={`https://baobab.scope.klaytn.com/tx/${poolData.tx_hash}`}
+                    href={`https://baobab.scope.klaytn.com/tx/${customPoolData.tx_hash}`}
                     target='_blank'
                     rel='noreferrer'
                   >
-                    <p>{poolData.tx_hash}</p>
+                    <p>{customPoolData.tx_hash}</p>
                   </a>
                 </Box>
               )}
@@ -300,7 +319,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
               withCopy
               readOnly={true}
               disabled
-              value={poolData?.token}
+              value={customPoolData?.token}
             />
           </div>
           {editable && (

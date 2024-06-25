@@ -10,19 +10,9 @@
   text-align: center;
   cursor: pointer;
   transition: border 0.2s ease-in-out;
-  position: relative;
 
-  &:hover:not(.disabled) {
+  &:hover {
     border-color: #fff;
-  }
-
-  &.disabled {
-    cursor: not-allowed;
-    pointer-events: none;
-
-    .link {
-      pointer-events: auto;
-    }
   }
 
   svg {
