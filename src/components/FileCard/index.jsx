@@ -65,7 +65,7 @@ export default function FileCard({ index, file, handleCheckboxToggle, checkedFil
             color='#888888'
             lineHeight='15px'
           >
-            {file.type.split('/')[1].toUpperCase()} /{' '}
+            {file?.type?.split('/')[1]?.toUpperCase()} /{' '}
             {formatStatStorageNumber(file.size).value}{' '}
             {formatStatStorageNumber(file.size).cap}
           </Typography>

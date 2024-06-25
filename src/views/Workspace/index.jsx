@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material'
 import HFDropzone from 'components/Dropzone'
 import FileCard from 'components/FileCard'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
 
@@ -10,6 +10,17 @@ const Workspace = () => {
   const { data: poolData } = useGetPoolById({ id: poolId })
   const [files, setFiles] = useState([])
   const [checkedFiles, setCheckedFiles] = useState({})
+
+  useEffect(() => {
+    const handleFilesSelected = (event) => {
+      const selectedFiles = Array.from(event.detail)
+      setFiles((prevFiles) => [...prevFiles, ...selectedFiles])
+    }
+    window.addEventListener('files-selected', handleFilesSelected)
+    return () => {
+      window.removeEventListener('files-selected', handleFilesSelected)
+    }
+  }, [])
 
   const handleDrop = (acceptedFiles) => {
     console.log('acceptedFiles: ', acceptedFiles)
@@ -74,7 +85,7 @@ const Workspace = () => {
           display='grid'
           gridTemplateColumns='repeat(auto-fill, minmax(200px, 1fr))'
           gap='10px'
-          rowGap='20px'
+          rowGap='30px'
           marginTop='20px'
         >
           {files.map((file, index) => {
