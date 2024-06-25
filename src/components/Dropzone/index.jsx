@@ -1,8 +1,8 @@
-import React from 'react'
-import Dropzone from 'react-dropzone'
-import styles from './style.module.scss'
 import { Box } from '@mui/material'
+import Dropzone from 'react-dropzone'
 import Disabled from './Disabled'
+import Drop from './Drop'
+import styles from './style.module.scss'
 
 const HFDropzone = ({ handleDrop, disabled = false }) => {
   return (
@@ -23,11 +23,7 @@ const HFDropzone = ({ handleDrop, disabled = false }) => {
           style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
         >
           <input {...getInputProps()} />
-          {disabled ? <Disabled /> : (
-            <div>
-              
-            </div>
-          )}
+          {disabled ? <Disabled /> : <Drop />}
         </Box>
       )}
     </Dropzone>
