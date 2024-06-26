@@ -44,9 +44,20 @@ const Workspace = () => {
       const selectedFiles = Array.from(event.detail)
       setFiles((prevFiles) => [...prevFiles, ...selectedFiles])
     }
+
+    const handleCreateFolder = (event) => {
+      const folderName = event.detail
+      setFiles((prevFiles) => [
+        ...prevFiles,
+        { name: folderName, type: 'folder', size: 0 }
+      ])
+    }
+
     window.addEventListener('files-selected', handleFilesSelected)
+    window.addEventListener('create-folder', handleCreateFolder)
     return () => {
       window.removeEventListener('files-selected', handleFilesSelected)
+      window.removeEventListener('create-folder', handleCreateFolder)
     }
   }, [])
 

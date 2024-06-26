@@ -3,8 +3,10 @@ import { ReactComponent as AddIcon } from 'assets/icons/add_icon.svg'
 import { ReactComponent as UploadIcon } from 'assets/icons/upload_icon.svg'
 import Container from 'components/Container'
 import PageTransition from 'components/PageTransition'
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { Outlet, useParams } from 'react-router-dom'
+import GatewayModal from 'views/Billing/GatewayModal'
 
 const buttons = [
   {
@@ -30,12 +32,27 @@ const IconWrapper = styled(Box)({
 const WorkspaceLayout = () => {
   const { poolId } = useParams()
   const fileInputRef = useRef(null)
+  const { control, handleSubmit, reset } = useForm()
+  const [isCreateFolderModalOpen, setCreateFolderModalOpen] = useState(false)
 
   const handleButtonClick = (action) => {
     if (action === 'upload') {
       fileInputRef.current.click()
+    } else if (action === 'createFolder') {
+      setCreateFolderModalOpen(true)
     }
-    // Handle other actions like 'createFolder' if needed
+  }
+
+  const toggle = () => {
+    setCreateFolderModalOpen(false)
+    reset()
+  }
+
+  const handleCreateFolder = (data) => {
+    const event = new CustomEvent('create-folder', { detail: data.name })
+    window.dispatchEvent(event)
+    setCreateFolderModalOpen(false)
+    reset()
   }
 
   return (
@@ -87,7 +104,6 @@ const WorkspaceLayout = () => {
             multiple
             onChange={(e) => {
               const files = e.target.files
-              // Pass files to the handleDrop function in Workspace component
               const event = new CustomEvent('files-selected', { detail: files })
               window.dispatchEvent(event)
             }}
@@ -95,6 +111,16 @@ const WorkspaceLayout = () => {
           <Outlet />
         </Box>
       </Container>
+
+      <GatewayModal
+        open={isCreateFolderModalOpen}
+        cancelLabel='Cancel'
+        submitLabel='Create'
+        toggle={toggle}
+        onSubmit={handleSubmit(handleCreateFolder)}
+        isLoading={false}
+        control={control}
+      />
     </PageTransition>
   )
 }
