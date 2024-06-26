@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box, Typography, styled } from '@mui/material'
 import { ReactComponent as AddIcon } from 'assets/icons/add_icon.svg'
 import { ReactComponent as UploadIcon } from 'assets/icons/upload_icon.svg'
 import Container from 'components/Container'
@@ -22,6 +22,10 @@ const buttons = [
     action: 'createFolder'
   }
 ]
+
+const IconWrapper = styled(Box)({
+  transition: 'transform 0.1s ease-in-out'
+})
 
 const WorkspaceLayout = () => {
   const { poolId } = useParams()
@@ -55,11 +59,16 @@ const WorkspaceLayout = () => {
                 padding='13px'
                 justifyContent='space-between'
                 sx={{
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  '&:hover': {
+                    '& .icon': {
+                      transform: 'translateY(2px)'
+                    }
+                  }
                 }}
                 onClick={() => handleButtonClick(button.action)}
               >
-                {button.Icon}
+                <IconWrapper className='icon'>{button.Icon}</IconWrapper>
                 <Typography
                   fontWeight='500'
                   fontSize='15px'
