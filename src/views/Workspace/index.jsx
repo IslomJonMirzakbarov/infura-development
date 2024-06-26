@@ -55,7 +55,32 @@ const Workspace = () => {
     }))
   }
 
-  const handleButtonClick = (action) => {}
+  const handleButtonClick = (action) => {
+    const checkedFileIndices = Object.keys(checkedFiles).filter(
+      (key) => checkedFiles[key]
+    )
+
+    if (action === 'download') {
+      checkedFileIndices.forEach((index) => {
+        const file = files[index]
+        const url = URL.createObjectURL(file)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = file.name
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+      })
+    } else if (action === 'delete') {
+      setFiles((prevFiles) =>
+        prevFiles.filter(
+          (_, index) => !checkedFileIndices.includes(String(index))
+        )
+      )
+      setCheckedFiles({})
+    }
+  }
 
   return (
     <Box>
