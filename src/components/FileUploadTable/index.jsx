@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import classNames from 'classnames'
-import styles from './style.module.scss'
-import { useNavigate } from 'react-router-dom'
 import { Box, Tooltip, Typography } from '@mui/material'
+import { ReactComponent as LoaderIcon } from 'assets/icons/loader_infinite.svg'
+import classNames from 'classnames'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ReactComponent as CopyIcon } from '../../assets/icons/copy_white.svg'
 import { ReactComponent as SearchIcon } from '../../assets/icons/search_icon.svg'
-import { ReactComponent as LoaderIcon } from 'assets/icons/loader_infinite.svg'
+import styles from './style.module.scss'
 
 export default function FileUploadTable({
   columns,
@@ -16,6 +16,7 @@ export default function FileUploadTable({
   dataChecker,
   error
 }) {
+  console.log('datadata: ', columns, data)
   const navigate = useNavigate()
   const [selectedRow, setSelectedRow] = useState(null)
   const [copiedIndex, setCopiedIndex] = useState(null)
