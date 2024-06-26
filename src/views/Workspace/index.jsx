@@ -9,8 +9,9 @@ import { Link, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
 import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
-import styles from './style.module.scss'
+import WorkSpaceModal from './WorkSpaceModal'
 import { demoColumns, formattedData } from './customData'
+import styles from './style.module.scss'
 
 const fileButtons = [
   {
@@ -36,6 +37,7 @@ const Workspace = () => {
   const [checkedFiles, setCheckedFiles] = useState({})
   const [menuAnchorEl, setMenuAnchorEl] = useState(null)
   const [view, setView] = useState('grid')
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false)
 
   useEffect(() => {
     const handleFilesSelected = (event) => {
@@ -61,11 +63,10 @@ const Workspace = () => {
   }
 
   const handleButtonClick = (action) => {
-    const checkedFileIndices = Object.keys(checkedFiles).filter(
-      (key) => checkedFiles[key]
-    )
-
     if (action === 'download') {
+      const checkedFileIndices = Object.keys(checkedFiles).filter(
+        (key) => checkedFiles[key]
+      )
       checkedFileIndices.forEach((index) => {
         const file = files[index]
         const url = URL.createObjectURL(file)
@@ -78,13 +79,21 @@ const Workspace = () => {
         URL.revokeObjectURL(url)
       })
     } else if (action === 'delete') {
-      setFiles((prevFiles) =>
-        prevFiles.filter(
-          (_, index) => !checkedFileIndices.includes(String(index))
-        )
-      )
-      setCheckedFiles({})
+      setDeleteModalOpen(true)
     }
+  }
+
+  const confirmDelete = () => {
+    const checkedFileIndices = Object.keys(checkedFiles).filter(
+      (key) => checkedFiles[key]
+    )
+    setFiles((prevFiles) =>
+      prevFiles.filter(
+        (_, index) => !checkedFileIndices.includes(String(index))
+      )
+    )
+    setCheckedFiles({})
+    setDeleteModalOpen(false)
   }
 
   const handleMenuOpen = (event) => {
@@ -106,8 +115,6 @@ const Workspace = () => {
     handleMenuItemClick,
     menuAnchorEl
   }
-
-  
 
   return (
     <Box>
@@ -203,6 +210,17 @@ const Workspace = () => {
           <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
         </Box>
       )}
+
+      <WorkSpaceModal
+        open={isDeleteModalOpen}
+        handleClose={() => setDeleteModalOpen(false)}
+        cancelLabel='Cancel'
+        submitLabel='Delete'
+        onCancel={() => setDeleteModalOpen(false)}
+        onSubmit={confirmDelete}
+        title='Delete Items'
+        isLoading={false}
+      />
     </Box>
   )
 }
