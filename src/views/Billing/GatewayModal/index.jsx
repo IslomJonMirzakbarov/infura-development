@@ -14,26 +14,27 @@ const GatewayModal = ({
   const { t } = useTranslation()
   const error =
     serverError === 'pool already exists' ? 'pool_exist' : serverError
+
   return (
     <BasicModal
       open={open}
       handleClose={toggle}
       cancelLabel={t('cancel')}
-      submitLabel={t('continue')}
+      submitLabel={t('Create')}
       onCancel={toggle}
       onSubmit={onSubmit}
-      title={t('storage_pool_name')}
+      title='Create folder'
       isLoading={isLoading}
     >
       <form onSubmit={onSubmit} style={{ width: '100%' }}>
         <BasicTextField
           name='name'
           control={control}
-          placeholder={t('enter_pool_name')}
+          placeholder={t('Folder name')}
           fullWidth
-          required={!serverError}
+          required
           color='secondary'
-          minLength={!serverError ? 5 : 0}
+          // minLength={5}
           serverError={serverError}
           setServerError={setServerError}
         />

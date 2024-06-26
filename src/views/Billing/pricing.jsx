@@ -81,3 +81,44 @@ const Billing = () => {
 }
 
 export default Billing
+
+
+{/* <Modal
+        open={isCreateFolderModalOpen}
+        onClose={() => setCreateFolderModalOpen(false)}
+        aria-labelledby='create-folder-modal-title'
+        aria-describedby='create-folder-modal-description'
+      >
+        <Box>
+          <Typography id='create-folder-modal-title' variant='h6'>
+            Create Folder
+          </Typography>
+          <TextField
+            fullWidth
+            label='Folder Name'
+            value={folderName}
+            onChange={(e) => setFolderName(e.target.value)}
+            sx={{ mt: 2 }}
+          />
+          <Box>
+            <Button
+              onClick={() => setCreateFolderModalOpen(false)}
+              variant='outlined'
+              color='primary'
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleCreateFolder}
+              variant='contained'
+              color='secondary'
+              sx={{
+                background: 'linear-gradient(90deg, #27E6D6 0%, #0052D9 100%)',
+                color: '#fff'
+              }}
+            >
+              Submit
+            </Button>
+          </Box>
+        </Box>
+      </Modal> */}
