@@ -73,10 +73,6 @@ export const privateRoutes = [
         path: 'profile/connect-wallet/:page',
         element: <Connect />
       },
-      // {
-      //   path: 'profile/details/:id',
-      //   element: <ProfileDetails />
-      // },
       {
         path: 'pool-creation/pool',
         element: <BillingContainer />,
@@ -91,20 +87,6 @@ export const privateRoutes = [
           }
         ]
       },
-      // {
-      //   path: 'pricing',
-      //   element: <BillingContainer />,
-      //   children: [
-      //     {
-      //       index: true,
-      //       element: <Pricing />
-      //     },
-      //     {
-      //       path: 'confirm',
-      //       element: <ConfirmSubscription />
-      //     }
-      //   ]
-      // },
       {
         path: 'billing',
         element: <BillingContainer />,

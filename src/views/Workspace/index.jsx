@@ -1,13 +1,15 @@
 import { Box, Typography } from '@mui/material'
 import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
-import { ReactComponent as GridListIcon } from 'assets/icons/grid_list_icon.svg'
 import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
 import HFDropzone from 'components/Dropzone'
 import FileCard from 'components/FileCard'
+import FileUploadTable from 'components/FileUploadTable'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
 import FileButton from './FileButton'
+import GridListPicker from './GridListPicker'
+import styles from './style.module.scss'
 
 const fileButtons = [
   {
@@ -31,6 +33,8 @@ const Workspace = () => {
   const { data: poolData } = useGetPoolById({ id: poolId })
   const [files, setFiles] = useState([])
   const [checkedFiles, setCheckedFiles] = useState({})
+  const [menuAnchorEl, setMenuAnchorEl] = useState(null)
+  const [view, setView] = useState('grid')
 
   useEffect(() => {
     const handleFilesSelected = (event) => {
@@ -81,6 +85,51 @@ const Workspace = () => {
       setCheckedFiles({})
     }
   }
+
+  const handleMenuOpen = (event) => {
+    setMenuAnchorEl(event.currentTarget)
+  }
+
+  const handleMenuClose = () => {
+    setMenuAnchorEl(null)
+  }
+
+  const handleMenuItemClick = (viewType) => {
+    setView(viewType)
+    handleMenuClose()
+  }
+
+  const props = {
+    handleMenuOpen,
+    handleMenuClose,
+    handleMenuItemClick,
+    menuAnchorEl
+  }
+
+  const demoColumns = [
+    { key: 'name', title: 'Name' },
+    { key: 'type', title: 'Type (jpg, png, zip etc.)' },
+    { key: 'size', title: 'Size ' },
+    { key: 'created_at', title: 'Created Date' },
+    { key: 'content_id', title: 'Content ID' }
+  ]
+
+  const formattedData = [
+    {
+      name: 'pic11.zip',
+      type: 'application/zip',
+      size: '0.29MB',
+      created_at: 'June 26, 2024, 11:34:47',
+      content_id: 'bafybeicclcdj3opiobfvdm45h7aeku4owizymcgltffhg7fgv5mrk6sjfu'
+    },
+    {
+      name: 'pic12.zip',
+      type: 'application/zip',
+      size: '0.29MB',
+      created_at: 'June 26, 2024, 11:34:08',
+      content_id: 'bafybeia5nl2mtvutotghoctjeznhy2ct46dqmpvxtydoj5uyfrcfvz2y44'
+    }
+  ]
 
   return (
     <Box>
@@ -138,7 +187,8 @@ const Workspace = () => {
             height='38px'
           >
             <Box display='flex' gap='8px' alignItems='center'>
-              {Object.values(checkedFiles).some((isChecked) => isChecked) &&
+              {(Object.values(checkedFiles).some((isChecked) => isChecked) ||
+                view === 'list') &&
                 fileButtons.map((button) => (
                   <FileButton
                     button={button}
@@ -147,23 +197,29 @@ const Workspace = () => {
                   />
                 ))}
             </Box>
-            <GridListIcon />
+            <GridListPicker {...props} />
           </Box>
         )}
       </Box>
       {files.length > 0 ? (
-        <Box
-          display='grid'
-          gridTemplateColumns='repeat(auto-fill, minmax(200px, 1fr))'
-          gap='10px'
-          rowGap='30px'
-          marginTop='20px'
-        >
-          {files.map((file, index) => {
-            const props = { index, file, handleCheckboxToggle, checkedFiles }
-            return <FileCard {...props} />
-          })}
-        </Box>
+        view === 'grid' ? (
+          <Box
+            display='grid'
+            gridTemplateColumns='repeat(auto-fill, minmax(200px, 1fr))'
+            gap='10px'
+            rowGap='30px'
+            marginTop='20px'
+          >
+            {files.map((file, index) => {
+              const props = { index, file, handleCheckboxToggle, checkedFiles }
+              return <FileCard {...props} />
+            })}
+          </Box>
+        ) : (
+          <Box className={styles.tableHolder}>
+            <FileUploadTable columns={demoColumns} data={formattedData} />
+          </Box>
+        )
       ) : (
         <Box marginTop='20px'>
           <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
