@@ -1,6 +1,7 @@
 import { Box, Typography } from '@mui/material'
-import BasicModal from 'components/BasicModal'
 import { ReactComponent as DeleteTrashIcon } from 'assets/icons/delete_trash_icon.svg'
+import { ReactComponent as HiFiveIcon } from 'assets/icons/hi_five.svg'
+import BasicModal from 'components/BasicModal'
 
 const WorkSpaceModal = ({
   open,
@@ -12,6 +13,7 @@ const WorkSpaceModal = ({
   onCancel,
   title
 }) => {
+  const isLogout = title === 'Bye Bye'
   return (
     <BasicModal
       open={open}
@@ -31,9 +33,11 @@ const WorkSpaceModal = ({
           color='#292929'
           marginBottom='35px'
         >
-          Are you sure you want to delete items?
+          {isLogout
+            ? 'Are you sure you want to log out?'
+            : 'Are you sure you want to delete items?'}
         </Typography>
-        <DeleteTrashIcon />
+        {isLogout ? <HiFiveIcon /> : <DeleteTrashIcon />}
       </Box>
     </BasicModal>
   )

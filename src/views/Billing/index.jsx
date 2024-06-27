@@ -10,6 +10,7 @@ import { formatNumberWithCommas } from 'utils/utilFuncs'
 import { ReactComponent as SmallCycon } from 'assets/icons/small_cycon2.svg'
 import PageTransition from 'components/PageTransition'
 import { useTranslation } from 'react-i18next'
+import Header from 'components/Header'
 
 const headColumns = [
   {
@@ -70,6 +71,7 @@ const Billing = () => {
   }
   return (
     <PageTransition>
+      <Header title='Profile' />
       <Container maxWidth={true}>
         <div className={styles.billingContainer}>
           <Paper className={styles.paper}>
