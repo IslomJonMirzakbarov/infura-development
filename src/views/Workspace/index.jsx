@@ -4,6 +4,7 @@ import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
 import HFDropzone from 'components/Dropzone'
 import FileCard from 'components/FileCard'
 import FileUploadTable from 'components/FileUploadTable'
+import UploadProgress from './UploadProgress'
 import { useEffect, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
@@ -38,11 +39,17 @@ const Workspace = () => {
   const [menuAnchorEl, setMenuAnchorEl] = useState(null)
   const [view, setView] = useState('grid')
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false)
+  const [uploads, setUploads] = useState([])
 
   useEffect(() => {
     const handleFilesSelected = (event) => {
-      const selectedFiles = Array.from(event.detail)
-      setFiles((prevFiles) => [...prevFiles, ...selectedFiles])
+      const selectedFiles = Array.from(event.detail).map((file) => ({
+        file,
+        progress: 0,
+        completed: false
+      }))
+      setUploads((prevUploads) => [...prevUploads, ...selectedFiles])
+      setFiles((prevFiles) => [...prevFiles, ...event.detail])
     }
 
     const handleCreateFolder = (event) => {
@@ -61,8 +68,32 @@ const Workspace = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (uploads.length > 0) {
+      uploads.forEach((upload, index) => {
+        const interval = setInterval(() => {
+          setUploads((prevUploads) => {
+            const newUploads = [...prevUploads]
+            if (newUploads[index].progress < 100) {
+              newUploads[index].progress += 10
+            } else {
+              newUploads[index].completed = true
+              clearInterval(interval)
+            }
+            return newUploads
+          })
+        }, 500)
+      })
+    }
+  }, [uploads])
+
   const handleDrop = (acceptedFiles) => {
-    console.log('acceptedFiles: ', acceptedFiles)
+    const filesWithProgress = acceptedFiles.map((file) => ({
+      file,
+      progress: 0,
+      completed: false
+    }))
+    setUploads((prevUploads) => [...prevUploads, ...filesWithProgress])
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles])
   }
 
@@ -232,6 +263,8 @@ const Workspace = () => {
         title='Delete Items'
         isLoading={false}
       />
+
+      {uploads.length > 0 && <UploadProgress uploads={uploads} />}
     </Box>
   )
 }
