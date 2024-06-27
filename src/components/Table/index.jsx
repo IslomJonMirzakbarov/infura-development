@@ -1,9 +1,9 @@
 import classNames from 'classnames'
 import CopyButton from 'components/CopyButton'
-import styles from './style.module.scss'
 import { useNavigate } from 'react-router-dom'
 import formatTime from 'utils/formatTime'
 import { formatNumberWithCommas } from 'utils/utilFuncs'
+import styles from './style.module.scss'
 
 export default function Table({
   columns,
@@ -16,7 +16,8 @@ export default function Table({
   if (isLoading) return <></>
   const handleRowClick = (row) => {
     if (name === 'profileTable') {
-      navigate(`/main/profile/${row.id}/file-upload`)
+      // navigate(`/main/profile/${row.id}/file-upload`)
+      navigate(`/main/profile/${row.id}/details`)
     }
 
     if (name === 'billingTable' && row.txHash) {

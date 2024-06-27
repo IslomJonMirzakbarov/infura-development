@@ -1,5 +1,6 @@
 import LandingLayout from 'layouts/LandingLayout'
 import MainLayout from 'layouts/MainLayout'
+import ProfileLayout from 'layouts/ProfileLayout'
 import WorkspaceLayout from 'layouts/WorkspaceLayout'
 import { Navigate, useRoutes } from 'react-router-dom'
 import Billing from 'views/Billing'
@@ -51,7 +52,11 @@ export const privateRoutes = [
       },
       {
         path: 'profile',
-        element: <ProfileContainer />
+        element: <ProfileLayout />,
+        children: [
+          { index: true, element: <ProfileContainer /> },
+          { path: ':poolId/details', element: <ProfileDetails /> }
+        ]
       },
       {
         path: 'workspace',
