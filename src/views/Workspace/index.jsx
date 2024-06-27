@@ -5,7 +5,7 @@ import HFDropzone from 'components/Dropzone'
 import FileCard from 'components/FileCard'
 import FileUploadTable from 'components/FileUploadTable'
 import UploadProgress from './UploadProgress'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
 import FileButton from './FileButton'
@@ -40,6 +40,8 @@ const Workspace = () => {
   const [view, setView] = useState('grid')
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false)
   const [uploads, setUploads] = useState([])
+  const [showUploadProgress, setShowUploadProgress] = useState(false)
+  const intervalsRef = useRef([])
 
   useEffect(() => {
     const handleFilesSelected = (event) => {
@@ -48,8 +50,9 @@ const Workspace = () => {
         progress: 0,
         completed: false
       }))
-      setUploads((prevUploads) => [...prevUploads, ...selectedFiles])
+      setUploads(selectedFiles)
       setFiles((prevFiles) => [...prevFiles, ...event.detail])
+      setShowUploadProgress(true)
     }
 
     const handleCreateFolder = (event) => {
@@ -58,6 +61,7 @@ const Workspace = () => {
         ...prevFiles,
         { name: folderName, type: 'folder', size: 0 }
       ])
+      setShowUploadProgress(true)
     }
 
     window.addEventListener('files-selected', handleFilesSelected)
@@ -70,20 +74,24 @@ const Workspace = () => {
 
   useEffect(() => {
     if (uploads.length > 0) {
-      uploads.forEach((upload, index) => {
-        const interval = setInterval(() => {
+      const newIntervals = uploads.map((upload, index) => {
+        return setInterval(() => {
           setUploads((prevUploads) => {
             const newUploads = [...prevUploads]
             if (newUploads[index].progress < 100) {
               newUploads[index].progress += 10
             } else {
               newUploads[index].completed = true
-              clearInterval(interval)
+              clearInterval(newIntervals[index])
             }
             return newUploads
           })
         }, 500)
       })
+      intervalsRef.current = newIntervals
+    }
+    return () => {
+      intervalsRef.current.forEach(clearInterval)
     }
   }, [uploads])
 
@@ -93,8 +101,9 @@ const Workspace = () => {
       progress: 0,
       completed: false
     }))
-    setUploads((prevUploads) => [...prevUploads, ...filesWithProgress])
+    setUploads(filesWithProgress)
     setFiles((prevFiles) => [...prevFiles, ...acceptedFiles])
+    setShowUploadProgress(true)
   }
 
   const handleCheckboxToggle = (index) => {
@@ -156,6 +165,13 @@ const Workspace = () => {
     handleMenuClose,
     handleMenuItemClick,
     menuAnchorEl
+  }
+
+  const uploadProgressClose = () => {
+    setShowUploadProgress(false)
+    setUploads([])
+    intervalsRef.current.forEach(clearInterval)
+    intervalsRef.current = []
   }
 
   return (
@@ -264,7 +280,9 @@ const Workspace = () => {
         isLoading={false}
       />
 
-      {uploads.length > 0 && <UploadProgress uploads={uploads} />}
+      {showUploadProgress && (
+        <UploadProgress uploads={uploads} onClose={uploadProgressClose} />
+      )}
     </Box>
   )
 }

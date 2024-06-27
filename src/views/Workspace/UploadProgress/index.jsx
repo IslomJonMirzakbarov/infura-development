@@ -1,5 +1,7 @@
+import CloseIcon from '@mui/icons-material/Close'
 import {
   Box,
+  IconButton,
   LinearProgress,
   Typography,
   linearProgressClasses,
@@ -21,22 +23,29 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
   }
 }))
 
-const UploadProgress = ({ uploads }) => {
+const UploadProgress = ({ uploads, onClose }) => {
   const totalUploads = uploads.length
   const completedUploads = uploads.filter((upload) => upload.completed).length
   const isAllUploaded = totalUploads === completedUploads
 
   return (
     <Box className={styles.uploadProgressContainer}>
-      <Typography
-        fontWeight='700'
-        fontSize='15px'
-        lineHeight='22.5px'
-        marginBottom='7px'
-        paddingLeft='5px'
-      >
-        Uploads
-      </Typography>
+      <Box display='flex' alignItems='center' justifyContent='space-between'>
+        <Typography
+          fontWeight='700'
+          fontSize='15px'
+          lineHeight='22.5px'
+          marginBottom='7px'
+          paddingLeft='5px'
+        >
+          Uploads
+        </Typography>
+        {isAllUploaded && (
+          <IconButton onClick={onClose}>
+            <CloseIcon style={{ color: 'white' }} />
+          </IconButton>
+        )}
+      </Box>
       {uploads.map((upload, index) => (
         <Box key={index} className={styles.uploadItem}>
           <Box display='flex' alignItems='center' gap='8px' marginBottom='5px'>
