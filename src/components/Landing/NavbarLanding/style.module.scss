@@ -146,6 +146,18 @@
         }
       }
 
+      .profileItem {
+        svg {
+          fill: #fff !important;
+          transition: all 0.3s ease-in-out;
+        }
+        &:hover {
+          svg {
+            fill: #27e6d6;
+          }
+        }
+      }
+
       .menu {
         z-index: 10;
       }

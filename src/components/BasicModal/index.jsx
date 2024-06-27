@@ -23,7 +23,7 @@ const BasicModal = ({
       handleClose()
     }
   }
-  const isWorkspace = title === 'Delete Items'
+  const isWorkspace = title === 'Delete Items' || title === 'Bye Bye'
   return (
     <Modal open={open} onClose={handleModalClose}>
       <Box
