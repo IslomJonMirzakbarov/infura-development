@@ -212,7 +212,7 @@ const NavbarLanding = () => {
             </Tooltip>
             <LanguagePicker {...languagePickerProps} />
 
-            <ProfileItemPicker {...profileItemPickerProps} />
+            {isAuth && <ProfileItemPicker {...profileItemPickerProps} />}
 
             <Box className={styles.burgerBtn}>
               <Hamburger
