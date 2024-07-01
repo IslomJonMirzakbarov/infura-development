@@ -1,35 +1,17 @@
 import { Box, Typography } from '@mui/material'
-import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
-import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
 import HFDropzone from 'components/Dropzone'
 import FileCard from 'components/FileCard'
 import FileUploadTable from 'components/FileUploadTable'
-import UploadProgress from './UploadProgress'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
 import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
+import UploadProgress from './UploadProgress'
 import WorkSpaceModal from './WorkSpaceModal'
+import useWorkspace from './Workspace.hooks'
 import { demoColumns, formattedData } from './customData'
 import styles from './style.module.scss'
-
-const fileButtons = [
-  {
-    bgColor: '#27E6D6',
-    Icon: <DownloadIcon />,
-    color: '#000',
-    text: 'Download',
-    action: 'download'
-  },
-  {
-    bgColor: '#27275E',
-    Icon: <TrashIcon />,
-    color: '#fff',
-    text: 'Delete',
-    action: 'delete'
-  }
-]
 
 const Workspace = () => {
   const { poolId } = useParams()
@@ -95,70 +77,26 @@ const Workspace = () => {
     }
   }, [uploads])
 
-  const handleDrop = (acceptedFiles) => {
-    const filesWithProgress = acceptedFiles.map((file) => ({
-      file,
-      progress: 0,
-      completed: false
-    }))
-    setUploads(filesWithProgress)
-    setFiles((prevFiles) => [...prevFiles, ...acceptedFiles])
-    setShowUploadProgress(true)
-  }
-
-  const handleCheckboxToggle = (index) => {
-    setCheckedFiles((prev) => ({
-      ...prev,
-      [index]: !prev[index]
-    }))
-  }
-
-  const handleButtonClick = (action) => {
-    if (action === 'download') {
-      const checkedFileIndices = Object.keys(checkedFiles).filter(
-        (key) => checkedFiles[key]
-      )
-      checkedFileIndices.forEach((index) => {
-        const file = files[index]
-        const url = URL.createObjectURL(file)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = file.name
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        URL.revokeObjectURL(url)
-      })
-    } else if (action === 'delete') {
-      setDeleteModalOpen(true)
-    }
-  }
-
-  const confirmDelete = () => {
-    const checkedFileIndices = Object.keys(checkedFiles).filter(
-      (key) => checkedFiles[key]
-    )
-    setFiles((prevFiles) =>
-      prevFiles.filter(
-        (_, index) => !checkedFileIndices.includes(String(index))
-      )
-    )
-    setCheckedFiles({})
-    setDeleteModalOpen(false)
-  }
-
-  const handleMenuOpen = (event) => {
-    setMenuAnchorEl(event.currentTarget)
-  }
-
-  const handleMenuClose = () => {
-    setMenuAnchorEl(null)
-  }
-
-  const handleMenuItemClick = (viewType) => {
-    setView(viewType)
-    handleMenuClose()
-  }
+  const {
+    handleDrop,
+    handleCheckboxToggle,
+    handleButtonClick,
+    confirmDelete,
+    handleMenuOpen,
+    handleMenuItemClick,
+    handleMenuClose,
+    fileButtons
+  } = useWorkspace({
+    setUploads,
+    setFiles,
+    setShowUploadProgress,
+    setCheckedFiles,
+    checkedFiles,
+    files,
+    setDeleteModalOpen,
+    setMenuAnchorEl,
+    setView
+  })
 
   const props = {
     handleMenuOpen,
