@@ -1,70 +1,78 @@
-import { Box, Menu, MenuItem, Tooltip } from '@mui/material'
+import { Box } from '@mui/material'
 import { ReactComponent as EnglishIcon } from 'assets/images/landing/english.svg'
 import { ReactComponent as KoreanIcon } from 'assets/images/landing/korean.svg'
 import { ReactComponent as LanguageIcon } from 'assets/images/landing/language.svg'
+import { useState } from 'react'
 import styles from './style.module.scss'
 
 export default function LanguagePicker({
   isMobile,
-  handleMenuToggle,
-  languageAnchorEl,
-  setLanguageAnchorEl,
-  menuPaperStyle,
   changeLanguage,
   setHoveredItem,
   menuItemStyle,
   iconStyle
 }) {
+  const [hovered, setHovered] = useState(false)
+
+  const handleEnter = () => {
+    setHovered(true)
+  }
+
+  const handleLeave = () => {
+    setHovered(false)
+  }
+
+  const handleLanguageClick = (lang) => {
+    changeLanguage(lang)
+    setHovered(false)
+  }
+
   return (
-    <>
+    <Box position='relative'>
       {!isMobile && (
-        <Tooltip title='Select Language' placement='bottom-end' arrow>
-          <Box
-            className={styles.languageIcon}
-            onMouseEnter={handleMenuToggle('language')}
-          >
-            <LanguageIcon />
-          </Box>
-        </Tooltip>
+        <Box
+          className={styles.languageIcon}
+          onMouseEnter={handleEnter}
+          onMouseLeave={handleLeave}
+          style={{ cursor: 'pointer' }}
+        >
+          <LanguageIcon />
+        </Box>
       )}
 
-      <Menu
-        id='language-menu'
-        anchorEl={languageAnchorEl}
-        keepMounted
-        open={Boolean(languageAnchorEl)}
-        onClose={() => setLanguageAnchorEl(null)}
-        className={styles.languageMenu}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        PaperProps={{ style: menuPaperStyle }}
-        MenuListProps={{
-          onMouseLeave: () => setLanguageAnchorEl(null)
-        }}
-      >
-        <MenuItem
-          onClick={() => changeLanguage('ko')}
-          onMouseEnter={() => setHoveredItem('ko')}
-          onMouseLeave={() => setHoveredItem(null)}
-          style={menuItemStyle('ko')}
+      {hovered && (
+        <Box
+          style={{
+            position: 'absolute',
+            paddingTop: '9px',
+            right: '0',
+            zIndex: 1
+          }}
+          onMouseEnter={handleEnter}
+          onMouseLeave={handleLeave}
         >
-          <KoreanIcon style={iconStyle} /> Korean
-        </MenuItem>
-        <MenuItem
-          onClick={() => changeLanguage('en')}
-          onMouseEnter={() => setHoveredItem('en')}
-          onMouseLeave={() => setHoveredItem(null)}
-          style={menuItemStyle('en')}
-        >
-          <EnglishIcon style={iconStyle} /> English
-        </MenuItem>
-      </Menu>
-    </>
+          <Box width='max-content' className={styles.languageMenu}>
+            <Box
+              onClick={() => handleLanguageClick('ko')}
+              onMouseEnter={() => setHoveredItem('ko')}
+              onMouseLeave={() => setHoveredItem(null)}
+              style={menuItemStyle('ko')}
+              className={styles.menuItem}
+            >
+              <KoreanIcon style={iconStyle} /> Korean
+            </Box>
+            <Box
+              onClick={() => handleLanguageClick('en')}
+              onMouseEnter={() => setHoveredItem('en')}
+              onMouseLeave={() => setHoveredItem(null)}
+              style={menuItemStyle('en')}
+              className={styles.menuItem}
+            >
+              <EnglishIcon style={iconStyle} /> English
+            </Box>
+          </Box>
+        </Box>
+      )}
+    </Box>
   )
 }

@@ -108,7 +108,9 @@
       .languageIcon {
         width: 45px;
         height: 45px;
-        @include element-center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border-radius: 7px;
         background: #2e303c;
         cursor: pointer;
@@ -119,6 +121,7 @@
           transition: all 0.3s ease-in-out;
         }
         &:hover {
+          cursor: pointer !important;
           border: 1px solid #fff;
           svg {
             fill: #27e6d6;
@@ -127,22 +130,20 @@
       }
 
       .languageMenu {
-        & .MuiPaper-root {
-          width: 180px;
-          height: 96px;
-          border-radius: 8px;
-          background: #2e303c;
-          color: #fff;
-          font-family: 'Poppins', sans-serif;
-          font-size: 13px;
-          font-weight: 500;
+        width: max-content;
+        height: max-content;
+        background: #2e303c;
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+        border-radius: 8px;
+        padding: 8px 0;
 
-          .MuiMenuItem-root {
-            color: #fff !important;
-            font-family: 'Poppins', sans-serif !important;
-            font-size: 13px !important;
-            font-weight: 500 !important;
-          }
+        .menuItem {
+          padding: 8px 16px;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
         }
       }
 
