@@ -327,7 +327,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
               justifyContent='flex-end'
               width='100%'
               height='100%'
-              mt='110px'
+              mt='60px'
               className={styles.planBtn}
             >
               <Button variant='contained' color='secondary' type='submit'>
