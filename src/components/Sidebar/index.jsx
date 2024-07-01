@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDashboard, useGetPools } from 'services/pool.service'
-import { CustomTooltip, poolNames } from './Custom'
+import { CustomTooltip } from './Custom'
 import MobileSidebar from './MobileSidebar'
 import styles from './style.module.scss'
 
@@ -52,10 +52,7 @@ export default function Sidebar() {
 
   const toggle = () => setOpen((prev) => !prev)
   const toggleHamburger = () => setIsOpen((prev) => !prev)
-  const toggleWorkspace = () => {
-    setWorkspaceOpen((prev) => !prev)
-    setSelectedPool(poolNames[0])
-  }
+  const toggleWorkspace = () => setWorkspaceOpen((prev) => !prev)
 
   const handleNavigation = (path, event) => {
     if (isLoading) {
@@ -70,6 +67,8 @@ export default function Sidebar() {
     navigate(`${workspaceItem.path}/${poolId}`)
   }
 
+  const isLocationWorkspace = location.pathname.includes(workspaceItem.path)
+
   useEffect(() => {
     if (poolId) {
       setSelectedPool(poolId)
@@ -81,11 +80,12 @@ export default function Sidebar() {
       navigate(`${workspaceItem.path}/${pools?.payload?.pools[0]?.id}`)
     } else {
       setSelectedPool(null)
-      if (location.pathname.includes(workspaceItem.path)) {
+      if (isLocationWorkspace) {
         navigate(workspaceItem.path)
       }
     }
   }, [
+    isLocationWorkspace,
     location.pathname,
     navigate,
     poolId,
@@ -148,21 +148,17 @@ export default function Sidebar() {
                   <NavLink
                     className={classNames(
                       styles.workspace,
-                      location.pathname.includes(workspaceItem.path) &&
-                        styles.active
+                      isLocationWorkspace && styles.active
                     )}
                     onClick={toggleWorkspace}
-                    to={workspaceItem.path}
+                    to={isLocationWorkspace ? '#' : workspaceItem.path}
                   >
-                    {location.pathname.includes(workspaceItem.path) ? (
-                      <UpIcon />
-                    ) : (
-                      <DownIcon />
-                    )}
+                    {workspaceOpen ? <UpIcon /> : <DownIcon />}
                     {t(workspaceItem.title)}
                   </NavLink>
                   {pools?.payload?.count > 0 &&
-                    location.pathname.includes(workspaceItem.path) && (
+                    isLocationWorkspace &&
+                    workspaceOpen && (
                       <div className={styles.poolList}>
                         {pools?.payload?.pools?.map((pool) => (
                           <CustomTooltip
