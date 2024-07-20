@@ -28,4 +28,32 @@ describe('FooterLanding Component', () => {
     render(<FooterLanding />)
     expect(screen.getByText('oceanDrive_description')).toBeInTheDocument()
   })
+
+  test('renders all social media icons', () => {
+    render(<FooterLanding />)
+    const iconLabels = [
+      'telegram.svg',
+      'twitter.svg',
+      'katot.svg',
+      'github.svg',
+      'youtube.svg',
+      'medium.svg'
+    ]
+    iconLabels.forEach((label) => {
+      expect(screen.getByText(label)).toBeInTheDocument()
+    })
+  })
+  test('renders reserved text on mobile', () => {
+    window.matchMedia = jest
+      .fn()
+      .mockImplementation((query) => ({
+        matches: query === '(max-width:600px)',
+        addListener: jest.fn(),
+        removeListener: jest.fn()
+      }))
+    render(<FooterLanding />)
+    expect(
+      screen.getByText('ⓒ 2024 CONUN, All Rights Reserved')
+    ).toBeInTheDocument()
+  })
 })
