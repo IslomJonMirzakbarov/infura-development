@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
 import { Box, Grid, useMediaQuery } from '@mui/material'
-import styles from './style.module.scss'
-import { ReactComponent as WorldwideIcon } from 'assets/images/landing/worldwide.svg'
-import { ReactComponent as EmpowerIcon } from 'assets/images/landing/empower.svg'
-import { ReactComponent as DeveloperIcon } from 'assets/images/landing/developer.svg'
 import { ReactComponent as DataIcon } from 'assets/images/landing/data-assurance.svg'
+import { ReactComponent as DeveloperIcon } from 'assets/images/landing/developer.svg'
+import { ReactComponent as EmpowerIcon } from 'assets/images/landing/empower.svg'
+import { ReactComponent as WorldwideIcon } from 'assets/images/landing/worldwide.svg'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styles from './style.module.scss'
 
 const optionsData = {
   worldwide: {
