@@ -85,4 +85,19 @@ describe('Dashboard Component', () => {
 
     expect(screen.getByTestId('dashboardPool')).toBeDisabled()
   })
+
+  test('renders without crashing', () => {
+    render(
+      <Router>
+        <Dashboard />
+      </Router>
+    )
+
+    expect(screen.getByText('create_storage')).toBeInTheDocument()
+    expect(
+      screen.getByText((content, element) =>
+        content.includes('nodes_available')
+      )
+    ).toBeInTheDocument()
+  })
 })
