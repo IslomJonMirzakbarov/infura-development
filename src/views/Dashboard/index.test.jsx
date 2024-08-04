@@ -100,4 +100,17 @@ describe('Dashboard Component', () => {
       )
     ).toBeInTheDocument()
   })
+
+  test('displays pool information correctly', () => {
+    render(
+      <Router>
+        <Dashboard />
+      </Router>
+    )
+
+    expect(screen.getByText(/pool_size/i)).toBeInTheDocument()
+    expect(screen.getByText(/remaining_storage/i)).toBeInTheDocument()
+    expect(screen.getByText(/subscribed_nodes/i)).toBeInTheDocument()
+    expect(screen.getByText(/uploaded_files/i)).toBeInTheDocument()
+  })
 })
