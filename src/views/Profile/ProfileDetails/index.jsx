@@ -182,7 +182,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
           )
       } catch (e) {
         console.log('Error during onSubmit: ', e)
-        toast.error(getRPCErrorMessage(e))
+        // toast.error(getRPCErrorMessage(e))
       }
     }
   }

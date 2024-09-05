@@ -35,6 +35,10 @@ export function getRPCErrorMessage(err) {
     return 'Insufficient balance'
   }
 
+  if (err.message.includes('execution reverted: Only pool owner can upgrade')) {
+    return 'Only pool owner can upgrade'
+  }
+
   try {
     const jsonMatch = err.message.match(/\{.*\}/)
     const errorData = jsonMatch ? JSON.parse(jsonMatch[0]) : null
