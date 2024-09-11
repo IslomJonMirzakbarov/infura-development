@@ -1,9 +1,8 @@
-import React from 'react'
 import { Box, Typography } from '@mui/material'
-import styles from '../style.module.scss'
-import { formatStatStorageNumber, formatStatNumber } from 'utils/utilFuncs'
 import { useTranslation } from 'react-i18next'
 import { useDownloadsCount, useWalletsCount } from 'services/pool.service'
+import { formatStatNumber, formatStatStorageNumber } from 'utils/utilFuncs'
+import styles from '../style.module.scss'
 
 const Stats = ({ stats: statsData }) => {
   const { data } = useDownloadsCount()

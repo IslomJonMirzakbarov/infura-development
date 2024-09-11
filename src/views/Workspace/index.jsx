@@ -3,6 +3,7 @@ import HFDropzone from 'components/Dropzone'
 import FileCard from 'components/FileCard'
 import FileUploadTable from 'components/FileUploadTable'
 import { useEffect, useRef, useState } from 'react'
+import toast from 'react-hot-toast'
 import { Link, useParams } from 'react-router-dom'
 import { useGetPoolById } from 'services/pool.service'
 import FileButton from './FileButton'
@@ -15,7 +16,7 @@ import styles from './style.module.scss'
 
 const Workspace = () => {
   const { poolId } = useParams()
-  const { data: poolData } = useGetPoolById({ id: poolId })
+  const { data: poolData, error, isError } = useGetPoolById({ id: poolId })
   const [files, setFiles] = useState([])
   const [checkedFiles, setCheckedFiles] = useState({})
   const [menuAnchorEl, setMenuAnchorEl] = useState(null)
@@ -24,6 +25,24 @@ const Workspace = () => {
   const [uploads, setUploads] = useState([])
   const [showUploadProgress, setShowUploadProgress] = useState(false)
   const intervalsRef = useRef([])
+  const [errorToastShown, setErrorToastShown] = useState(false)
+
+  useEffect(() => {
+    setErrorToastShown(false)
+  }, [poolId])
+
+  useEffect(() => {
+    if (isError && error && !errorToastShown) {
+      const errorMessage = error?.data?.message.includes('Pool not found')
+        ? 'Pool not found'
+        : error?.data?.message
+      toast.error(
+        errorMessage || 'An error occurred while fetching pool data',
+        { duration: 2000 }
+      )
+      setErrorToastShown(true)
+    }
+  }, [isError, error, errorToastShown])
 
   useEffect(() => {
     const handleFilesSelected = (event) => {

@@ -1,13 +1,11 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { Box, Button, Typography } from '@mui/material'
-import styles from './style.module.scss'
-import Stats from './Stats'
-import Features from './Features'
-import WhatsNew from './WhatsNew'
-import authStore from 'store/auth.store'
-import InfoSection from './InfoSection'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router-dom'
+import authStore from 'store/auth.store'
+import Features from './Features'
+import InfoSection from './InfoSection'
+import Stats from './Stats'
+import styles from './style.module.scss'
 
 const MainContentLanding = ({ stats }) => {
   const navigate = useNavigate()

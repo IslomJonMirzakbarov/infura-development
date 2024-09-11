@@ -1,16 +1,15 @@
-import React, { useState } from 'react'
-import styles from './style.module.scss'
 import { Box, Typography, useMediaQuery } from '@mui/material'
-import { ReactComponent as OceanDriveIcon } from 'assets/images/landing/oceandrive.svg'
+import { ReactComponent as GithubIcon } from 'assets/images/landing/github.svg'
+import { ReactComponent as KatotIcon } from 'assets/images/landing/katot.svg'
+import { ReactComponent as MediumIcon } from 'assets/images/landing/medium.svg'
 import { ReactComponent as LogoT } from 'assets/images/landing/oceandrive.svg'
 import { ReactComponent as LogoM } from 'assets/images/landing/oceandrive1.svg'
 import { ReactComponent as TelegramIcon } from 'assets/images/landing/telegram.svg'
 import { ReactComponent as TwitterIcon } from 'assets/images/landing/twitter.svg'
-import { ReactComponent as KatotIcon } from 'assets/images/landing/katot.svg'
-import { ReactComponent as GithubIcon } from 'assets/images/landing/github.svg'
 import { ReactComponent as YouTubeIcon } from 'assets/images/landing/youtube.svg'
-import { ReactComponent as MediumIcon } from 'assets/images/landing/medium.svg'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styles from './style.module.scss'
 
 const icons = [
   { IconComp: TelegramIcon, url: 'https://t.me/conuncycon' },
@@ -36,7 +35,11 @@ const FooterLanding = () => {
   return (
     <div className={styles.footer}>
       <div className={styles.descTitle}>
-        {isMainnet ? <LogoM /> : <LogoT />}
+        {isMainnet ? (
+          <LogoM data-testid='LogoM' />
+        ) : (
+          <LogoT data-testid='LogoT' />
+        )}
         <Typography variant='caption' className={styles.desc}>
           {t('oceanDrive_description')}
         </Typography>
