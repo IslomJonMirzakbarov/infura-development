@@ -110,6 +110,7 @@ export const useStats = (mutationSettings) => {
 export const useGetPoolById = ({ id, enabled = true, queryProps }) => {
   return useQuery(`get-pool-${id}`, () => poolService.getPoolById(id), {
     enabled: enabled && !!id,
+    retry: false,
     ...queryProps
   })
 }

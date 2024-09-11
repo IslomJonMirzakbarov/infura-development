@@ -1,7 +1,7 @@
 import axios from 'axios'
-import authStore from 'store/auth.store'
 import toast from 'react-hot-toast'
 import { refreshToken } from 'services/auth.service'
+import authStore from 'store/auth.store'
 import modalStore from 'store/modal.store'
 import { getCustomTranslation } from 'utils/customTranslation'
 
@@ -16,7 +16,8 @@ const errorHandler = async (error, hooks) => {
     error?.response?.data?.message &&
     error?.response?.data?.message !==
       "code=400, message=Key: 'CheckPoolReq.PoolName' Error:Field validation for 'PoolName' failed on the 'min' tag" &&
-    error?.response?.data?.message !== 'pool already exists'
+    error?.response?.data?.message !== 'pool already exists' &&
+    !error?.response?.data?.message.includes('Pool not found')
   ) {
     toast.error(capitalizeFirstLetter(error.response.data.message))
   }
@@ -25,7 +26,10 @@ const errorHandler = async (error, hooks) => {
     toast.error(capitalizeFirstLetter(error?.message))
   }
 
-  if (error?.response?.status === 500) {
+  if (
+    error?.response?.status === 500 &&
+    !error?.response?.data?.message.includes('Pool not found')
+  ) {
     modalStore.setOpenServerError(true)
   }
 
