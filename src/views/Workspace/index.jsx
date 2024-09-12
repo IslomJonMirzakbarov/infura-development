@@ -13,7 +13,6 @@ import {
 } from 'services/pool.service'
 import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
-import UploadProgress from './UploadProgress'
 import WorkSpaceModal from './WorkSpaceModal'
 import useWorkspace from './Workspace.hooks'
 import { demoColumns, formattedData } from './customData'
@@ -28,6 +27,7 @@ const Workspace = () => {
     token: poolData?.token
   })
   const rootFolderId = folders?.data?.data[0]?._id
+  const parentFolderId = folders?.data?.data[folders?.data?.data?.length - 1]
   const { data: poolFiles } = useGetFileHistory({ token: poolData?.token })
   const poolfiles = poolFiles?.data?.data?.results
 
@@ -47,6 +47,7 @@ const Workspace = () => {
 
   const {
     handleDrop,
+    handleCreateFolder,
     handleCheckboxToggle,
     handleButtonClick,
     confirmDelete,
@@ -56,6 +57,8 @@ const Workspace = () => {
     fileButtons
   } = useWorkspace({
     setUploads,
+    poolId,
+    parentFolderId,
     setShowUploadProgress,
     setCheckedFiles,
     checkedFiles,
@@ -85,9 +88,8 @@ const Workspace = () => {
   // Listen for files-selected event when file input is triggered from WorkspaceLayout
   useEffect(() => {
     const handleFilesSelected = (event) => {
-      // Convert the event detail (FileList) to an array and map it to an object with file details
       const selectedFiles = Array.from(event.detail).map((file) => {
-        console.log('File Object:', file) // Log the actual file object
+        console.log('File Object:', file)
         return {
           file,
           progress: 0,
@@ -98,9 +100,9 @@ const Workspace = () => {
       // Check if files exist
       if (selectedFiles.length > 0) {
         console.log('Selected Files:', selectedFiles)
-        setUploads(selectedFiles) // Set the selected files to be uploaded
-        handleDrop(selectedFiles) // Call the handleDrop function to upload the files
-        setShowUploadProgress(true) // Show the upload progress
+        setUploads(selectedFiles)
+        handleDrop(selectedFiles)
+        setShowUploadProgress(true)
       }
     }
 
@@ -109,6 +111,19 @@ const Workspace = () => {
       window.removeEventListener('files-selected', handleFilesSelected) // Cleanup listener on unmount
     }
   }, [handleDrop])
+
+  useEffect(() => {
+    const handleFolderCreateEvent = (event) => {
+      const folderName = event.detail
+      handleCreateFolder(folderName) // Call the function to create the folder
+    }
+
+    window.addEventListener('create-folder', handleFolderCreateEvent)
+
+    return () => {
+      window.removeEventListener('create-folder', handleFolderCreateEvent)
+    }
+  }, [handleCreateFolder])
 
   const uploadProgressClose = () => {
     setShowUploadProgress(false)

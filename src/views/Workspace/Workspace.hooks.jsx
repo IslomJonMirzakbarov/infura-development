@@ -1,8 +1,11 @@
 import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
-import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
 import { saveAs } from 'file-saver'
 import toast from 'react-hot-toast'
-import { poolService, useFileUpload } from 'services/pool.service'
+import {
+  poolService,
+  useCreateFolder,
+  useFileUpload
+} from 'services/pool.service'
 
 export default function useWorkspace({
   setUploads,
@@ -11,6 +14,8 @@ export default function useWorkspace({
   setCheckedFiles,
   checkedFiles,
   files,
+  poolId,
+  parentFolderId,
   setDeleteModalOpen,
   setMenuAnchorEl,
   setView,
@@ -26,14 +31,14 @@ export default function useWorkspace({
       color: '#000',
       text: 'Download',
       action: 'download'
-    },
-    {
-      bgColor: '#27275E',
-      Icon: <TrashIcon />,
-      color: '#fff',
-      text: 'Delete',
-      action: 'delete'
     }
+    // {
+    //   bgColor: '#27275E',
+    //   Icon: <TrashIcon />,
+    //   color: '#fff',
+    //   text: 'Delete',
+    //   action: 'delete'
+    // }
   ]
 
   // API Mutation for file upload
@@ -44,8 +49,32 @@ export default function useWorkspace({
     },
     onError: () => {
       // toast.error('Failed to upload file')
-    },
+    }
   })
+
+  const { mutate: createFolder } = useCreateFolder({
+    onSuccess: () => {
+      queryClient.invalidateQueries(['get-foldersby', { poolId: rootFolderId }])
+      toast.success('Folder created successfully')
+    },
+    onError: () => {
+      toast.error('Failed to create folder')
+    }
+  })
+
+  const handleCreateFolder = (folderName) => {
+    if (!folderName) {
+      toast.error('Folder name cannot be empty')
+      return
+    }
+
+    const data = {
+      data: { folderName, poolId, parentFolderId },
+      token
+    }
+
+    createFolder(data)
+  }
 
   // Function to handle file download with toast loading and success messages
   const handleDownload = async (file) => {
@@ -115,19 +144,22 @@ export default function useWorkspace({
       formData.append('file', file)
       formData.append('folderId', rootFolderId)
 
-      uploadFile({
-        data: formData,
-        token
-      }, {
-        onSuccess: () => {
-          toast.success(`${file.name} uploaded successfully!`, {
-            id: uploadToast
-          })
+      uploadFile(
+        {
+          data: formData,
+          token
         },
-        onError: () => {
-          toast.error('Failed to upload file', { id: uploadToast })
+        {
+          onSuccess: () => {
+            toast.success(`${file.name} uploaded successfully!`, {
+              id: uploadToast
+            })
+          },
+          onError: () => {
+            toast.error('Failed to upload file', { id: uploadToast })
+          }
         }
-      })
+      )
     })
   }
 
@@ -180,6 +212,7 @@ export default function useWorkspace({
 
   return {
     handleDrop,
+    handleCreateFolder,
     handleCheckboxToggle,
     handleButtonClick,
     confirmDelete,
