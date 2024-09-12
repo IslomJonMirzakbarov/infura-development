@@ -141,7 +141,7 @@ export default function useWorkspace({
 
     filesWithProgress.forEach(({ file }) => {
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', file, encodeURIComponent(file.name))
       formData.append('folderId', rootFolderId)
 
       uploadFile(

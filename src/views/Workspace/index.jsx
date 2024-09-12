@@ -15,8 +15,10 @@ import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
 import WorkSpaceModal from './WorkSpaceModal'
 import useWorkspace from './Workspace.hooks'
-import { demoColumns, formattedData } from './customData'
+import { demoColumns } from './customData'
 import styles from './style.module.scss'
+import formatTime from 'utils/formatTime'
+import { formatStatStorageNumber } from 'utils/utilFuncs'
 
 const Workspace = () => {
   const { poolId } = useParams()
@@ -30,6 +32,19 @@ const Workspace = () => {
   const parentFolderId = folders?.data?.data[folders?.data?.data?.length - 1]
   const { data: poolFiles } = useGetFileHistory({ token: poolData?.token })
   const poolfiles = poolFiles?.data?.data?.results
+
+  console.log('poolFiles for fff: ', poolfiles)
+  const fPoolData = poolfiles?.map(
+    ({ fileName, extension, fileSize, createdAt, cid }) => ({
+      name: fileName,
+      type: extension,
+      size: `${formatStatStorageNumber(fileSize, 2).value}${
+        formatStatStorageNumber(fileSize, 2).cap
+      }`,
+      created_at: formatTime(createdAt),
+      content_id: cid
+    })
+  )
 
   const [files, setFiles] = useState([])
   const [checkedFiles, setCheckedFiles] = useState({})
@@ -228,7 +243,7 @@ const Workspace = () => {
           </Box>
         ) : (
           <Box className={styles.tableHolder}>
-            <FileUploadTable columns={demoColumns} data={formattedData} />
+            <FileUploadTable columns={demoColumns} data={fPoolData} />
           </Box>
         )
       ) : (
