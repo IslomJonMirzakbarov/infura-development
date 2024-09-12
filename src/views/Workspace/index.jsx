@@ -4,8 +4,13 @@ import FileCard from 'components/FileCard'
 import FileUploadTable from 'components/FileUploadTable'
 import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useQueryClient } from 'react-query'
 import { Link, useParams } from 'react-router-dom'
-import { useGetPoolById } from 'services/pool.service'
+import {
+  useGetFileHistory,
+  useGetFoldersByPoolId,
+  useGetPoolById
+} from 'services/pool.service'
 import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
 import UploadProgress from './UploadProgress'
@@ -16,7 +21,16 @@ import styles from './style.module.scss'
 
 const Workspace = () => {
   const { poolId } = useParams()
+  const queryClient = useQueryClient()
   const { data: poolData, error, isError } = useGetPoolById({ id: poolId })
+  const { data: folders } = useGetFoldersByPoolId({
+    poolId: poolData?.id,
+    token: poolData?.token
+  })
+  const rootFolderId = folders?.data?.data[0]?._id
+  const { data: poolFiles } = useGetFileHistory({ token: poolData?.token })
+  const poolfiles = poolFiles?.data?.data?.results
+
   const [files, setFiles] = useState([])
   const [checkedFiles, setCheckedFiles] = useState({})
   const [menuAnchorEl, setMenuAnchorEl] = useState(null)
@@ -31,6 +45,30 @@ const Workspace = () => {
     setErrorToastShown(false)
   }, [poolId])
 
+  const {
+    handleDrop,
+    handleCheckboxToggle,
+    handleButtonClick,
+    confirmDelete,
+    handleMenuOpen,
+    handleMenuItemClick,
+    handleMenuClose,
+    fileButtons
+  } = useWorkspace({
+    setUploads,
+    setShowUploadProgress,
+    setCheckedFiles,
+    checkedFiles,
+    files,
+    setFiles,
+    setDeleteModalOpen,
+    setMenuAnchorEl,
+    setView,
+    token: poolData?.token,
+    rootFolderId,
+    queryClient
+  })
+
   useEffect(() => {
     if (isError && error && !errorToastShown) {
       const errorMessage = error?.data?.message.includes('Pool not found')
@@ -44,85 +82,33 @@ const Workspace = () => {
     }
   }, [isError, error, errorToastShown])
 
+  // Listen for files-selected event when file input is triggered from WorkspaceLayout
   useEffect(() => {
     const handleFilesSelected = (event) => {
-      const selectedFiles = Array.from(event.detail).map((file) => ({
-        file,
-        progress: 0,
-        completed: false
-      }))
-      setUploads(selectedFiles)
-      setFiles((prevFiles) => [...prevFiles, ...event.detail])
-      setShowUploadProgress(true)
-    }
-
-    const handleCreateFolder = (event) => {
-      const folderName = event.detail
-      setFiles((prevFiles) => [
-        ...prevFiles,
-        { name: folderName, type: 'folder', size: 0 }
-      ])
-      setShowUploadProgress(true)
-    }
-
-    window.addEventListener('files-selected', handleFilesSelected)
-    window.addEventListener('create-folder', handleCreateFolder)
-    return () => {
-      window.removeEventListener('files-selected', handleFilesSelected)
-      window.removeEventListener('create-folder', handleCreateFolder)
-    }
-  }, [])
-
-  useEffect(() => {
-    if (uploads.length > 0) {
-      const newIntervals = uploads.map((upload, index) => {
-        return setInterval(() => {
-          setUploads((prevUploads) => {
-            const newUploads = [...prevUploads]
-            if (newUploads[index].progress < 100) {
-              newUploads[index].progress += 10
-            } else {
-              newUploads[index].completed = true
-              clearInterval(newIntervals[index])
-            }
-            return newUploads
-          })
-        }, 500)
+      // Convert the event detail (FileList) to an array and map it to an object with file details
+      const selectedFiles = Array.from(event.detail).map((file) => {
+        console.log('File Object:', file) // Log the actual file object
+        return {
+          file,
+          progress: 0,
+          completed: false
+        }
       })
-      intervalsRef.current = newIntervals
+
+      // Check if files exist
+      if (selectedFiles.length > 0) {
+        console.log('Selected Files:', selectedFiles)
+        setUploads(selectedFiles) // Set the selected files to be uploaded
+        handleDrop(selectedFiles) // Call the handleDrop function to upload the files
+        setShowUploadProgress(true) // Show the upload progress
+      }
     }
+
+    window.addEventListener('files-selected', handleFilesSelected) // Listen for the files-selected event
     return () => {
-      intervalsRef.current.forEach(clearInterval)
+      window.removeEventListener('files-selected', handleFilesSelected) // Cleanup listener on unmount
     }
-  }, [uploads])
-
-  const {
-    handleDrop,
-    handleCheckboxToggle,
-    handleButtonClick,
-    confirmDelete,
-    handleMenuOpen,
-    handleMenuItemClick,
-    handleMenuClose,
-    fileButtons
-  } = useWorkspace({
-    setUploads,
-    setFiles,
-    setShowUploadProgress,
-    setCheckedFiles,
-    checkedFiles,
-    files,
-    setDeleteModalOpen,
-    setMenuAnchorEl,
-    setView
-  })
-
-  const props = {
-    handleMenuOpen,
-    handleMenuClose,
-    handleMenuItemClick,
-    menuAnchorEl
-  }
+  }, [handleDrop])
 
   const uploadProgressClose = () => {
     setShowUploadProgress(false)
@@ -178,7 +164,7 @@ const Workspace = () => {
             </Typography>
           </Box>
         </Box>
-        {files.length > 0 && (
+        {poolfiles?.length > 0 && (
           <Box
             display='flex'
             alignItems='center'
@@ -197,11 +183,16 @@ const Workspace = () => {
                   />
                 ))}
             </Box>
-            <GridListPicker {...props} />
+            <GridListPicker
+              handleMenuOpen={handleMenuOpen}
+              handleMenuClose={handleMenuClose}
+              handleMenuItemClick={handleMenuItemClick}
+              menuAnchorEl={menuAnchorEl}
+            />
           </Box>
         )}
       </Box>
-      {files.length > 0 ? (
+      {poolfiles?.length > 0 ? (
         view === 'grid' ? (
           <Box
             display='grid'
@@ -210,10 +201,15 @@ const Workspace = () => {
             rowGap='30px'
             marginTop='20px'
           >
-            {files.map((file, index) => {
-              const props = { index, file, handleCheckboxToggle, checkedFiles }
-              return <FileCard {...props} />
-            })}
+            {poolfiles.map((file, index) => (
+              <FileCard
+                key={file.id}
+                index={index}
+                file={file}
+                handleCheckboxToggle={handleCheckboxToggle}
+                checkedFiles={checkedFiles}
+              />
+            ))}
           </Box>
         ) : (
           <Box className={styles.tableHolder}>

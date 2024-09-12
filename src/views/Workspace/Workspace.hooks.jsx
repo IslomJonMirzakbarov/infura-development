@@ -1,16 +1,21 @@
 import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
 import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
+import toast from 'react-hot-toast'
+import { useFileUpload } from 'services/pool.service'
 
 export default function useWorkspace({
   setUploads,
-  setFiles,
   setShowUploadProgress,
+  setFiles,
   setCheckedFiles,
   checkedFiles,
   files,
   setDeleteModalOpen,
   setMenuAnchorEl,
-  setView
+  setView,
+  token,
+  rootFolderId,
+  queryClient
 }) {
   const fileButtons = [
     {
@@ -28,16 +33,44 @@ export default function useWorkspace({
       action: 'delete'
     }
   ]
-  
+
+  // API Mutation for file upload
+  const { mutate: uploadFile } = useFileUpload({
+    onSuccess: () => {
+      toast.success('File uploaded successfully')
+      queryClient.invalidateQueries(['get-file-history', { token }])
+    },
+    onError: () => {
+      toast.error('Failed to upload file')
+    }
+  })
+
+
   const handleDrop = (acceptedFiles) => {
-    const filesWithProgress = acceptedFiles.map((file) => ({
-      file,
-      progress: 0,
-      completed: false
-    }))
+    console.log('Files to be uploaded:', acceptedFiles)
+
+    const filesWithProgress = acceptedFiles.map((upload) => {
+      const file = upload.file || upload
+      return {
+        file,
+        progress: 0,
+        completed: false
+      }
+    })
+
     setUploads(filesWithProgress)
-    setFiles((prevFiles) => [...prevFiles, ...acceptedFiles])
     setShowUploadProgress(true)
+
+    filesWithProgress.forEach(({ file }) => {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('folderId', rootFolderId)
+
+      uploadFile({
+        data: formData,
+        token,
+      })
+    })
   }
 
   const handleCheckboxToggle = (index) => {

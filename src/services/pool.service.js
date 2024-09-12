@@ -1,6 +1,6 @@
+import axios from 'axios'
 import { useMutation, useQuery } from 'react-query'
 import httpRequest from './httpRequest'
-import axios from 'axios'
 
 const INFURA_NETWORK =
   process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
@@ -18,17 +18,28 @@ export const poolService = {
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
   getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`),
-  fileUpload: async (data) =>
-    axios.post(`${INFURA_NETWORK}/v1/file/upload`, data?.file, {
+  createFolder: async (data) =>
+    axios.post(`${INFURA_NETWORK}/v1/file-service/folder/create`, data?.data, {
       headers: {
         Authorization: `Bearer ${data?.token}`
-      },
-      onUploadProgress: data?.onUploadProgress,
-      cancelToken: data?.cancelToken
+      }
     }),
-  getFileHistory: async (token, page, limit) => {
-    const params = new URLSearchParams({ page, limit })
-    return axios.get(`${INFURA_NETWORK}/v1/file/history?${params}`, {
+  getFoldersByPoolId: async (poolId, token) =>
+    axios.get(`${INFURA_NETWORK}/v1/file-service/folders/${poolId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }),
+  fileUpload: async (data) =>
+    axios.post(`${INFURA_NETWORK}/v1/file-service/file/upload`, data?.data, {
+      headers: {
+        Authorization: `Bearer ${data?.token}`,
+        'Content-Type': 'multipart/form-data'
+      }
+    }),
+  getFileHistory: async (token) => {
+    // const params = new URLSearchParams({ page, limit })
+    return axios.get(`${INFURA_NETWORK}/v1/file-service/file/history`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -44,6 +55,24 @@ export const poolService = {
     })
 }
 
+export const useGetFoldersByPoolId = ({
+  poolId,
+  token,
+  enabled = true,
+  queryProps
+}) => {
+  return useQuery(
+    `get-foldersby-${poolId}`,
+    () => poolService.getFoldersByPoolId(poolId, token),
+    {
+      enabled: enabled && !!poolId && !!token,
+      ...queryProps
+    }
+  )
+}
+export const useCreateFolder = (mutationSettings) => {
+  return useMutation(poolService.createFolder, mutationSettings)
+}
 export const useDownloadFile = ({ token, contentId, queryProps }) => {
   return useQuery(
     `get-file-history-${token}`,
@@ -54,15 +83,10 @@ export const useDownloadFile = ({ token, contentId, queryProps }) => {
     }
   )
 }
-export const useGetFileHistory = ({
-  token,
-  page = 1,
-  limit = 10,
-  queryProps
-}) => {
+export const useGetFileHistory = ({ token, queryProps }) => {
   return useQuery(
-    ['get-file-history', { token, page, limit }],
-    () => poolService.getFileHistory(token, page, limit),
+    ['get-file-history', { token }],
+    () => poolService.getFileHistory(token),
     {
       enabled: !!token,
       keepPreviousData: true,

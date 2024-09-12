@@ -1,29 +1,30 @@
 import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import Container from 'components/Container'
-import React, { useEffect, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import styles from './styles.module.scss'
-import ApiKeyModal from '../ApiKeyModal'
 import HFSelect from 'components/ControlledFormElements/HFSelect'
-import CheckoutModal from '../CheckoutModal'
-import LoaderModal from '../LoaderModal'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import PageTransition from 'components/PageTransition'
+import useDebounce from 'hooks/useDebounce'
+import useKaikas from 'hooks/useKaikas'
+import useMetaMask from 'hooks/useMetaMask'
+import { useEffect, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
+import { useNavigate } from 'react-router-dom'
 import {
+  useCreateFolder,
   usePoolCheckMutation,
   usePoolCreateMutation
 } from 'services/pool.service'
-import { useNavigate } from 'react-router-dom'
-import { useQueryClient } from 'react-query'
-import useDebounce from 'hooks/useDebounce'
-import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
-import useMetaMask from 'hooks/useMetaMask'
-import ApproveModal from './ApproveModal'
-import toast from 'react-hot-toast'
-import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
-import { months, sizes, units } from './poolData'
 import walletStore from 'store/wallet.store'
-import PageTransition from 'components/PageTransition'
-import { useTranslation } from 'react-i18next'
-import useKaikas from 'hooks/useKaikas'
+import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
+import ApiKeyModal from '../ApiKeyModal'
+import CheckoutModal from '../CheckoutModal'
+import LoaderModal from '../LoaderModal'
+import ApproveModal from './ApproveModal'
+import { months, units } from './poolData'
+import styles from './styles.module.scss'
 
 const Pool = () => {
   const { t } = useTranslation()
@@ -84,6 +85,7 @@ const Pool = () => {
   }, [])
 
   const { mutate } = usePoolCreateMutation()
+  const { mutate: createFolder } = useCreateFolder()
 
   const [formData, setFormData] = useState(null)
   const [poolAddress, setPoolAddress] = useState(null)
@@ -152,15 +154,31 @@ const Pool = () => {
           { ...formData, tx_hash: result.transactionHash },
           {
             onSuccess: (res) => {
-              console.log('res: ', res)
-              setPoolAddress(res?.access_token?.token)
-              setOpen2(false)
-              setOpen3(true)
-              queryClient.invalidateQueries('pools')
+              console.log('create pool response success: ', res)
+              const data = {
+                data: { folderName: 'Root folder', poolId: res?.id },
+                token: res?.access_token?.token
+              }
+              createFolder(data, {
+                onSuccess: (resCreateFolder) => {
+                  console.log(
+                    'create folder response success: ',
+                    resCreateFolder
+                  )
+                  setPoolAddress(res?.access_token?.token)
+                  setOpen2(false)
+                  setOpen3(true)
+                  queryClient.invalidateQueries('pools')
+                },
+                onError: (error) => {
+                  setOpen2(false)
+                  console.log('create folder error: ', error)
+                }
+              })
             },
             onError: (error) => {
               setOpen2(false)
-              console.log('error: ', error)
+              console.log('create pool error: ', error)
               if (error.status === 401) {
                 // navigate('/auth/register')
               }
@@ -314,7 +332,7 @@ const Pool = () => {
       />
       <LoaderModal title='Loading' toggle={toggle2} open={open2} />
       <ApiKeyModal
-        onSubmit={() => navigate('/main/profile')}
+        onSubmit={() => navigate('/main/workspace')}
         poolAddress={poolAddress}
         title={
           isMobile

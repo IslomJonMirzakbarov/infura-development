@@ -37,7 +37,7 @@ const WorkspaceLayout = () => {
 
   const handleButtonClick = (action) => {
     if (action === 'upload') {
-      fileInputRef.current.click()
+      fileInputRef.current.click() // Trigger file input to open the file picker
     } else if (action === 'createFolder') {
       setCreateFolderModalOpen(true)
     }
@@ -53,6 +53,13 @@ const WorkspaceLayout = () => {
     window.dispatchEvent(event)
     setCreateFolderModalOpen(false)
     reset()
+  }
+
+  // Listen for file input change, and dispatch files-selected event
+  const handleFileChange = (e) => {
+    const files = e.target.files
+    const event = new CustomEvent('files-selected', { detail: files })
+    window.dispatchEvent(event) // Dispatch event so Workspace component can handle upload
   }
 
   return (
@@ -102,11 +109,7 @@ const WorkspaceLayout = () => {
             ref={fileInputRef}
             style={{ display: 'none' }}
             multiple
-            onChange={(e) => {
-              const files = e.target.files
-              const event = new CustomEvent('files-selected', { detail: files })
-              window.dispatchEvent(event)
-            }}
+            onChange={handleFileChange} // Handle file selection
           />
           <Outlet />
         </Box>
