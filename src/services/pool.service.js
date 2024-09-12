@@ -46,13 +46,16 @@ export const poolService = {
     })
   },
   downloadFile: async (token, contentId, config) =>
-    axios.get(`${INFURA_NETWORK}/v1/file/download?contentId=${contentId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      responseType: 'blob',
-      ...config
-    })
+    axios.get(
+      `${INFURA_NETWORK}/v1/file-service/file/download?contentId=${contentId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        responseType: 'blob',
+        ...config
+      }
+    )
 }
 
 export const useGetFoldersByPoolId = ({

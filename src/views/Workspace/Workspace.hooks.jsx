@@ -1,7 +1,8 @@
 import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
 import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
+import { saveAs } from 'file-saver'
 import toast from 'react-hot-toast'
-import { useFileUpload } from 'services/pool.service'
+import { poolService, useFileUpload } from 'services/pool.service'
 
 export default function useWorkspace({
   setUploads,
@@ -17,6 +18,7 @@ export default function useWorkspace({
   rootFolderId,
   queryClient
 }) {
+  console.log('checkedFiles when selected for download: ', files)
   const fileButtons = [
     {
       bgColor: '#27E6D6',
@@ -37,18 +39,65 @@ export default function useWorkspace({
   // API Mutation for file upload
   const { mutate: uploadFile } = useFileUpload({
     onSuccess: () => {
-      toast.success('File uploaded successfully')
+      // toast.success('File uploaded successfully')
       queryClient.invalidateQueries(['get-file-history', { token }])
     },
     onError: () => {
-      toast.error('Failed to upload file')
-    }
+      // toast.error('Failed to upload file')
+    },
   })
 
+  // Function to handle file download with toast loading and success messages
+  const handleDownload = async (file) => {
+    console.log('file when selected for download: ', file)
+
+    if (file.cid && token) {
+      const downloadToast = toast.loading(`Downloading ${file.fileName}...`)
+
+      try {
+        const response = await poolService.downloadFile(token, file.cid, {
+          onDownloadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            )
+            console.log('Download progress:', percentCompleted)
+          }
+        })
+
+        const json = await response.data.text()
+        const result = JSON.parse(json)
+
+        const byteValues = Object.values(result).map((val) => parseInt(val))
+        const byteArray = new Uint8Array(byteValues)
+        const blob = new Blob([byteArray], { type: file.extension })
+
+        let filename = file.fileName || 'download'
+        const contentDisposition = response.headers['content-disposition']
+        if (contentDisposition) {
+          const matches = contentDisposition.match(/filename="?(.+)"?/)
+          if (matches && matches[1]) {
+            filename = matches[1]
+          }
+        }
+
+        saveAs(blob, filename)
+
+        toast.success(`${file.fileName} downloaded successfully!`, {
+          id: downloadToast
+        })
+      } catch (error) {
+        toast.error('Failed to download file', {
+          id: downloadToast
+        })
+        console.error('Download error:', error)
+      }
+    } else {
+      toast.error('No file selected for download!')
+    }
+  }
 
   const handleDrop = (acceptedFiles) => {
-    console.log('Files to be uploaded:', acceptedFiles)
-
+    const uploadToast = toast.loading('Uploading files...')
     const filesWithProgress = acceptedFiles.map((upload) => {
       const file = upload.file || upload
       return {
@@ -68,7 +117,16 @@ export default function useWorkspace({
 
       uploadFile({
         data: formData,
-        token,
+        token
+      }, {
+        onSuccess: () => {
+          toast.success(`${file.name} uploaded successfully!`, {
+            id: uploadToast
+          })
+        },
+        onError: () => {
+          toast.error('Failed to upload file', { id: uploadToast })
+        }
       })
     })
   }
@@ -81,20 +139,13 @@ export default function useWorkspace({
   }
 
   const handleButtonClick = (action) => {
+    const checkedFileIndices = Object.keys(checkedFiles).filter(
+      (key) => checkedFiles[key]
+    )
     if (action === 'download') {
-      const checkedFileIndices = Object.keys(checkedFiles).filter(
-        (key) => checkedFiles[key]
-      )
       checkedFileIndices.forEach((index) => {
         const file = files[index]
-        const url = URL.createObjectURL(file)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = file.name
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        URL.revokeObjectURL(url)
+        handleDownload(file) // Call the download function
       })
     } else if (action === 'delete') {
       setDeleteModalOpen(true)

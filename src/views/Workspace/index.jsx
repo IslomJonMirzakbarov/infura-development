@@ -59,7 +59,7 @@ const Workspace = () => {
     setShowUploadProgress,
     setCheckedFiles,
     checkedFiles,
-    files,
+    files: poolfiles,
     setFiles,
     setDeleteModalOpen,
     setMenuAnchorEl,
@@ -233,9 +233,9 @@ const Workspace = () => {
         isLoading={false}
       />
 
-      {showUploadProgress && (
+      {/* {showUploadProgress && (
         <UploadProgress uploads={uploads} onClose={uploadProgressClose} />
-      )}
+      )} */}
     </Box>
   )
 }
