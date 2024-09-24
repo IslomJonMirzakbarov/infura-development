@@ -13,8 +13,10 @@ export const poolService = {
   getPools: async () => httpRequest.get('infura/api/v1/pools'),
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
-  getStats: async () => httpRequest.get('infura/api/v1/stats'),
-  getWalletsCount: async () => httpRequest.get('app/stats'),
+  getStats: async () =>
+    axios.get('https://api.oceandrive.network/infura/api/v1/stats'),
+  getWalletsCount: async () =>
+    axios.get('https://api.oceandrive.network/app/stats'),
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
   getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`),
