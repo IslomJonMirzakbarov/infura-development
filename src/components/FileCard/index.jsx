@@ -1,10 +1,9 @@
-import { Box, Typography, styled } from '@mui/material'
-import React from 'react'
 import CheckIcon from '@mui/icons-material/Check'
-import folderImage from 'assets/images/folder.png'
-import styles from './style.module.scss'
-import { formatStatStorageNumber } from 'utils/utilFuncs'
+import { Box, Typography, styled } from '@mui/material'
 import { ReactComponent as StarIcon } from 'assets/icons/star_icon.svg'
+import folderImage from 'assets/images/folder.png'
+import { formatStatStorageNumber } from 'utils/utilFuncs'
+import styles from './style.module.scss'
 
 const CustomCheckbox = styled('span')(({ theme, checked }) => ({
   borderRadius: 5,
@@ -22,10 +21,25 @@ const CustomCheckbox = styled('span')(({ theme, checked }) => ({
   }
 }))
 
-export default function FileCard({ index, file, handleCheckboxToggle, checkedFiles }) {
-  const isImageFile = (file) => {
-    return file.type.startsWith('image/')
+export default function FileCard({
+  index,
+  file,
+  handleCheckboxToggle,
+  checkedFiles
+}) {
+  const isImageFile = (extension) => {
+    return [
+      'jpg',
+      'jpeg',
+      'png',
+      'gif',
+      'bmp',
+      'webp',
+      'image/png',
+      'image/jpeg'
+    ].includes(extension.toLowerCase())
   }
+
   return (
     <Box key={index} className={styles.fileCard}>
       <Box
@@ -37,10 +51,10 @@ export default function FileCard({ index, file, handleCheckboxToggle, checkedFil
         </CustomCheckbox>
       </Box>
       <Box className={styles.imageContainer}>
-        {isImageFile(file) ? (
+        {isImageFile(file.extension) ? (
           <img
-            src={URL.createObjectURL(file)}
-            alt={file.name}
+            src={`https://dexpo.oceandrive.network/ipfs/${file?.cid}`}
+            alt={file.fileName}
             className={styles.image}
           />
         ) : (
@@ -56,7 +70,7 @@ export default function FileCard({ index, file, handleCheckboxToggle, checkedFil
           marginBottom='3px'
           className={styles.filename}
         >
-          {file.name}
+          {file.fileName}
         </Typography>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Typography
@@ -65,9 +79,9 @@ export default function FileCard({ index, file, handleCheckboxToggle, checkedFil
             color='#888888'
             lineHeight='15px'
           >
-            {file?.type?.split('/')[1]?.toUpperCase()} /{' '}
-            {formatStatStorageNumber(file.size).value}{' '}
-            {formatStatStorageNumber(file.size).cap}
+            {file.extension.toUpperCase()} /{' '}
+            {formatStatStorageNumber(file.fileSize).value}{' '}
+            {formatStatStorageNumber(file.fileSize).cap}
           </Typography>
           <StarIcon />
         </Box>

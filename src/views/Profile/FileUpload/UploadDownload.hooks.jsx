@@ -88,23 +88,23 @@ const useUploadDownload = ({
     }
   }
 
-  const MAX_FILE_SIZE = 100 * 1024 * 1024
+  // const MAX_FILE_SIZE = 100 * 1024 * 1024
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]
-    if (file.size > MAX_FILE_SIZE) {
-      toast.error('Max file size is 100MB')
-      event.target.value = null
-      return
-    }
-    setSelectedFile(file)
-    event.target.value = null
-  }
+  // const handleFileChange = (event) => {
+  //   const file = event.target.files[0]
+  //   if (file.size > MAX_FILE_SIZE) {
+  //     toast.error('Max file size is 100MB')
+  //     event.target.value = null
+  //     return
+  //   }
+  //   setSelectedFile(file)
+  //   event.target.value = null
+  // }
 
-  const handleUploadClick = () => {
-    const fileInput = document.getElementById('file-upload-input')
-    fileInput.click()
-  }
+  // const handleUploadClick = () => {
+  //   const fileInput = document.getElementById('file-upload-input')
+  //   fileInput.click()
+  // }
 
   const handleUploadFile = async () => {
     if (selectedFile && token) {
@@ -157,20 +157,20 @@ const useUploadDownload = ({
     }
   }
 
-  const cancelOperation = () => {
-    if (cancelTokenSource) {
-      cancelTokenSource.cancel('Operation cancelled by the user.')
-    }
-    setIsLoadingOpen(false)
-    setLoaderTitle(null)
-    setCancelTokenSource(null)
-  }
+  // const cancelOperation = () => {
+  //   if (cancelTokenSource) {
+  //     cancelTokenSource.cancel('Operation cancelled by the user.')
+  //   }
+  //   setIsLoadingOpen(false)
+  //   setLoaderTitle(null)
+  //   setCancelTokenSource(null)
+  // }
   return {
     handleDownload,
-    cancelOperation,
+    // cancelOperation,
     handleUploadFile,
-    handleUploadClick,
-    handleFileChange
+    // handleUploadClick,
+    // handleFileChange
   }
 }
 

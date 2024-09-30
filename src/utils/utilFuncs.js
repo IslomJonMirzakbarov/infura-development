@@ -52,21 +52,21 @@ export const getShortenedPoolName = (poolName) => {
 //   }
 // }
 
-export function formatStatStorageNumber(num) {
+export function formatStatStorageNumber(num, fixNum = 1) {
   if (num >= 1024 ** 6) {
-    return { value: (num / 1024 ** 6).toFixed(1), cap: 'Exabyte (EB)' }
+    return { value: (num / 1024 ** 6).toFixed(fixNum), cap: 'Exabyte (EB)' }
   } else if (num >= 1024 ** 5) {
-    return { value: (num / 1024 ** 5).toFixed(1), cap: 'Petabyte (PB)' }
+    return { value: (num / 1024 ** 5).toFixed(fixNum), cap: 'Petabyte (PB)' }
   } else if (num >= 1024 ** 4) {
-    return { value: (num / 1024 ** 4).toFixed(1), cap: 'TB' }
+    return { value: (num / 1024 ** 4).toFixed(fixNum), cap: 'TB' }
   } else if (num >= 1024 ** 3) {
-    return { value: (num / 1024 ** 3).toFixed(1), cap: 'GB' }
+    return { value: (num / 1024 ** 3).toFixed(fixNum), cap: 'GB' }
   } else if (num >= 1024 ** 2) {
-    return { value: (num / 1024 ** 2).toFixed(1), cap: 'MB' }
+    return { value: (num / 1024 ** 2).toFixed(fixNum), cap: 'MB' }
   } else if (num >= 1024) {
-    return { value: (num / 1024).toFixed(1), cap: 'KB' }
+    return { value: (num / 1024).toFixed(fixNum), cap: 'KB' }
   } else {
-    return { value: num.toFixed(1), cap: 'B' }
+    return { value: num.toFixed(fixNum), cap: 'B' }
   }
 }
 

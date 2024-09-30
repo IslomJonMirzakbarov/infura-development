@@ -1,17 +1,29 @@
 import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
-import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
+import { saveAs } from 'file-saver'
+import toast from 'react-hot-toast'
+import {
+  poolService,
+  useCreateFolder,
+  useFileUpload
+} from 'services/pool.service'
 
 export default function useWorkspace({
   setUploads,
-  setFiles,
   setShowUploadProgress,
+  setFiles,
   setCheckedFiles,
   checkedFiles,
   files,
+  poolId,
+  parentFolderId,
   setDeleteModalOpen,
   setMenuAnchorEl,
-  setView
+  setView,
+  token,
+  rootFolderId,
+  queryClient
 }) {
+  console.log('checkedFiles when selected for download: ', files)
   const fileButtons = [
     {
       bgColor: '#27E6D6',
@@ -19,25 +31,136 @@ export default function useWorkspace({
       color: '#000',
       text: 'Download',
       action: 'download'
-    },
-    {
-      bgColor: '#27275E',
-      Icon: <TrashIcon />,
-      color: '#fff',
-      text: 'Delete',
-      action: 'delete'
     }
+    // {
+    //   bgColor: '#27275E',
+    //   Icon: <TrashIcon />,
+    //   color: '#fff',
+    //   text: 'Delete',
+    //   action: 'delete'
+    // }
   ]
-  
+
+  // API Mutation for file upload
+  const { mutate: uploadFile } = useFileUpload({
+    onSuccess: () => {
+      // toast.success('File uploaded successfully')
+      queryClient.invalidateQueries(['get-file-history', { token }])
+    },
+    onError: () => {
+      // toast.error('Failed to upload file')
+    }
+  })
+
+  const { mutate: createFolder } = useCreateFolder({
+    onSuccess: () => {
+      queryClient.invalidateQueries(['get-foldersby', { poolId: rootFolderId }])
+      toast.success('Folder created successfully')
+    },
+    onError: () => {
+      toast.error('Failed to create folder')
+    }
+  })
+
+  const handleCreateFolder = (folderName) => {
+    if (!folderName) {
+      toast.error('Folder name cannot be empty')
+      return
+    }
+
+    const data = {
+      data: { folderName, poolId, parentFolderId },
+      token
+    }
+
+    createFolder(data)
+  }
+
+  // Function to handle file download with toast loading and success messages
+  const handleDownload = async (file) => {
+    console.log('file when selected for download: ', file)
+
+    if (file.cid && token) {
+      const downloadToast = toast.loading(`Downloading ${file.fileName}...`)
+
+      try {
+        const response = await poolService.downloadFile(token, file.cid, {
+          onDownloadProgress: (progressEvent) => {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            )
+            console.log('Download progress:', percentCompleted)
+          }
+        })
+
+        const json = await response.data.text()
+        const result = JSON.parse(json)
+
+        const byteValues = Object.values(result).map((val) => parseInt(val))
+        const byteArray = new Uint8Array(byteValues)
+        const blob = new Blob([byteArray], { type: file.extension })
+
+        let filename = file.fileName || 'download'
+        const contentDisposition = response.headers['content-disposition']
+        if (contentDisposition) {
+          const matches = contentDisposition.match(/filename="?(.+)"?/)
+          if (matches && matches[1]) {
+            filename = matches[1]
+          }
+        }
+
+        saveAs(blob, filename)
+
+        toast.success(`${file.fileName} downloaded successfully!`, {
+          id: downloadToast
+        })
+      } catch (error) {
+        toast.error('Failed to download file', {
+          id: downloadToast
+        })
+        console.error('Download error:', error)
+      }
+    } else {
+      toast.error('No file selected for download!')
+    }
+  }
+
   const handleDrop = (acceptedFiles) => {
-    const filesWithProgress = acceptedFiles.map((file) => ({
-      file,
-      progress: 0,
-      completed: false
-    }))
+    const uploadToast = toast.loading('Uploading files...')
+    const filesWithProgress = acceptedFiles.map((upload) => {
+      const file = upload.file || upload
+      return {
+        file,
+        progress: 0,
+        completed: false
+      }
+    })
+
     setUploads(filesWithProgress)
-    setFiles((prevFiles) => [...prevFiles, ...acceptedFiles])
     setShowUploadProgress(true)
+
+    filesWithProgress.forEach(({ file }) => {
+      const formData = new FormData()
+      formData.append('file', file, encodeURIComponent(file.name))
+      formData.append('folderId', rootFolderId)
+
+      uploadFile(
+        {
+          data: formData,
+          token
+        },
+        {
+          onSuccess: () => {
+            toast.success(`${file.name} uploaded successfully!`, {
+              id: uploadToast
+            })
+          },
+          onError: () => {
+            toast.error('Failed to upload file', { id: uploadToast })
+          }
+        }
+      )
+    })
   }
 
   const handleCheckboxToggle = (index) => {
@@ -48,20 +171,13 @@ export default function useWorkspace({
   }
 
   const handleButtonClick = (action) => {
+    const checkedFileIndices = Object.keys(checkedFiles).filter(
+      (key) => checkedFiles[key]
+    )
     if (action === 'download') {
-      const checkedFileIndices = Object.keys(checkedFiles).filter(
-        (key) => checkedFiles[key]
-      )
       checkedFileIndices.forEach((index) => {
         const file = files[index]
-        const url = URL.createObjectURL(file)
-        const link = document.createElement('a')
-        link.href = url
-        link.download = file.name
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        URL.revokeObjectURL(url)
+        handleDownload(file) // Call the download function
       })
     } else if (action === 'delete') {
       setDeleteModalOpen(true)
@@ -96,6 +212,7 @@ export default function useWorkspace({
 
   return {
     handleDrop,
+    handleCreateFolder,
     handleCheckboxToggle,
     handleButtonClick,
     confirmDelete,
