@@ -8,7 +8,7 @@ import { getCustomTranslation } from 'utils/customTranslation'
 const httpRequest = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
   timeout: 100000,
-  withCredentials: true,
+  withCredentials: true
 })
 
 const errorHandler = async (error, hooks) => {
@@ -60,7 +60,7 @@ const errorHandler = async (error, hooks) => {
 }
 
 httpRequest.interceptors.request.use((config) => {
-  if (!config.url.includes('app/stats')) {
+  if (!config.headers['Authorization'] && !config.url.includes('app/stats')) {
     const token = authStore?.token?.access?.token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`

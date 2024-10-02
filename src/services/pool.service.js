@@ -6,10 +6,9 @@ const INFURA_NETWORK =
   process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
 
 export const poolService = {
-  check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
-  create: async (data) => httpRequest.post('infura/api/v1/pools', data),
-  update: async (data) =>
-    httpRequest.patch(`infura/api/v1/pools/${data.poolId}`, data.data),
+  check: async (data) => httpRequest.post('infura/api/v1/pools/check', data), // missing; it checks pool existance by poolName
+  create: async (data) => httpRequest.post('pool/create', data), // tx_hash is missing in body, and subscription plan is extra
+  update: async (data) => httpRequest.patch('pool/update', data), // tx_hash is missing and subscription plan
   getPools: async () => httpRequest.get('infura/api/v1/pools'),
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),

@@ -157,13 +157,15 @@ const ProfileDetails = ({ poolData, poolId }) => {
         if (result.transactionHash)
           mutate(
             {
-              customPoolId,
-              data: {
-                pool_size: formData.pool_size,
-                pool_price: formData.pool_price,
-                pool_period: formData.pool_period,
-                tx_hash: result.transactionHash
-              }
+              poolId: poolId,
+              poolSize: {
+                size: formData.pool_size.value,
+                type: formData.pool_size.unit
+              },
+              pinReplication: 1000,
+              period: formData.pool_period,
+              subscriptionPlan: 0,
+              tx_hash: result.transactionHash
             },
             {
               onSuccess: (res) => {

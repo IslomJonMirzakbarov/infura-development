@@ -6,14 +6,16 @@ import PageTransition from 'components/PageTransition'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { useRegisterMutation } from 'services/auth.service'
+import { useRegisterMutation, useSendVerificationEmailMutation } from 'services/auth.service'
 import authStore from 'store/auth.store'
 import styles from './style.module.scss'
+import toast from 'react-hot-toast'
 
 const Signup = () => {
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm()
   const { mutate, isLoading } = useRegisterMutation()
+  const { mutate: sendVerificationEmail } = useSendVerificationEmailMutation()
   const { t } = useTranslation()
 
   const onSubmit = (data) => {
@@ -30,9 +32,20 @@ const Signup = () => {
           )
 
           authStore.setAccessToken(res?.details?.token?.access?.token)
-          navigate('/auth/confirm-code', {
-            state: {
-              email: data.email
+          authStore.setRefreshToken(res?.details?.token?.refresh?.token)
+          
+          sendVerificationEmail(null, {
+            onSuccess: () => {
+              toast.success(t('verification_email_sent'))
+              navigate('/auth/confirm-code', {
+                state: {
+                  email: data.email
+                }
+              })
+            },
+            onError: (error) => {
+              console.error('Error sending verification email:', error)
+              toast.error(t('error_sending_verification_email'))
             }
           })
         }

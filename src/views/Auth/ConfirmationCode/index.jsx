@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useConfirmCodeMutation, useResendSms } from 'services/auth.service'
+import { useConfirmCodeMutation, useResendSms, useSendVerificationEmailMutation } from 'services/auth.service'
 import styles from './style.module.scss'
 
 const ConfirmationCode = () => {
@@ -14,6 +14,7 @@ const ConfirmationCode = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm()
+  const { mutate: sendVerificationEmail } = useSendVerificationEmailMutation()
   const { mutate, isLoading } = useConfirmCodeMutation()
   const { mutate: resend, isLoading: isLoader } = useResendSms()
 
@@ -28,18 +29,27 @@ const ConfirmationCode = () => {
 
   const onResend = (e) => {
     e.preventDefault()
-    resend(
-      {
-        email: location.state.email
+    sendVerificationEmail(null, {
+      onSuccess: () => {
+        toast.success(t('verification_email_sent'))
       },
-      {
-        onSuccess: () => {
-          toast.success(t('sent_otp_for_verification'), {
-            duration: 6000
-          })
-        }
+      onError: (error) => {
+        console.error('Error sending verification email:', error)
+        toast.error(t('error_sending_verification_email'))
       }
-    )
+    })
+    // resend(
+    //   {
+    //     email: location.state.email
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       toast.success(t('sent_otp_for_verification'), {
+    //         duration: 6000
+    //       })
+    //     }
+    //   }
+    // )
   }
 
   return (

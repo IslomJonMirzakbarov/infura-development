@@ -1,10 +1,17 @@
 import { useMutation } from 'react-query'
+import authStore from 'store/auth.store'
 import httpRequest from './httpRequest'
 
 const authService = {
   login: async (data) => httpRequest.post('auth/users/login', data),
   logout: async (data) => httpRequest.post('auth/users/logout', data),
   register: async (data) => httpRequest.post('auth/users/register', data), // email verification is not working
+  sendVerificationEmail: async () =>
+    httpRequest.get('auth/users/send-verification-email', {
+      headers: {
+        Authorization: `Bearer ${authStore.token.refresh.token}`
+      }
+    }),
   confirmCode: async (otp) =>
     httpRequest.get(`auth/users/verify-email-with-otp`, { params: { otp } }),
   resend: async (data) =>
@@ -26,6 +33,10 @@ export const useLogoutMutation = (mutationSettings) => {
 
 export const useRegisterMutation = (mutationSettings) => {
   return useMutation(authService.register, mutationSettings)
+}
+
+export const useSendVerificationEmailMutation = (mutationSettings) => {
+  return useMutation(authService.sendVerificationEmail, mutationSettings)
 }
 
 export const useConfirmCodeMutation = (mutationSettings) => {

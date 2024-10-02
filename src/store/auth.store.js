@@ -33,6 +33,10 @@ class Store {
     this.token.access.token = value
   }
 
+  setRefreshToken(value) {
+    this.token.refresh.token = value
+  }
+
   login(data) {
     this.isAuth = true
     this.userData = data
