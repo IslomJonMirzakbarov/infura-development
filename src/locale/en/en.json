@@ -179,6 +179,8 @@
     "users": "Users",
     "pool_creation": "Pool Creation",
     "edit": "Edit",
-    "extra_period": "Extra Period"
+    "extra_period": "Extra Period",
+    "username": "Username",
+    "username_placeholder": "Enter your username"
   }
 }
