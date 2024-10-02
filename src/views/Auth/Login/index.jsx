@@ -21,7 +21,7 @@ const Login = () => {
     mutate(data, {
       onSuccess: (res) => {
         console.log('login response: ', res)
-        authStore.login(res.payload)
+        authStore.login(res.details)
         walletStore.logout()
       },
       onError: (error) => {
