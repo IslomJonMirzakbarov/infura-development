@@ -2,17 +2,18 @@ import { useMutation } from 'react-query'
 import httpRequest from './httpRequest'
 
 const authService = {
-  login: async (data) =>
-    httpRequest.post('auth/users/login', data),
-  logout: async (data) => httpRequest.post('api/v1/auth/logout', data),
-  register: async (data) => httpRequest.post('api/v1/auth/register', data),
-  confirmCode: async (data) => httpRequest.post('api/v1/auth/confirm', data),
-  resend: async (data) => httpRequest.post('api/v1/auth/resend-otp', data),
-  renew: async (data) => httpRequest.post('api/v1/auth/renew', data),
+  login: async (data) => httpRequest.post('auth/users/login', data),
+  logout: async (data) => httpRequest.post('auth/users/logout', data),
+  register: async (data) => httpRequest.post('auth/users/register', data), // email verification is not working
+  confirmCode: async (otp) =>
+    httpRequest.get(`auth/users/verify-email-with-otp`, { params: { otp } }),
+  resend: async (data) =>
+    httpRequest.post('auth/users/re-send-verification-email', data), // password is also required but when registering password is not set yet
+  renew: async (data) => httpRequest.post('auth/users/refresh-tokens', data),
   forgotPassword: async (data) =>
-    httpRequest.post('api/v1/auth/reset-password', data),
+    httpRequest.post('auth/users/forgot-password', data),
   resetPassword: async (data) =>
-    httpRequest.patch('api/v1/auth/reset-password', data)
+    httpRequest.patch('auth/users/reset-password', data)
 }
 
 export const useLoginMutation = (mutationSettings) => {
@@ -46,8 +47,8 @@ export const useResendSms = (mutationSettings) => {
 export const refreshToken = async (token) => {
   try {
     const res = await authService.renew({
-      refresh_token: token
+      refreshToken: token
     })
-    return res?.payload?.token?.access_token
+    return res?.details?.token?.access?.token
   } catch (e) {}
 }
