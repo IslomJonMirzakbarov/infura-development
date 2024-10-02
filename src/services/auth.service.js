@@ -8,7 +8,7 @@ const authService = {
   confirmCode: async (otp) =>
     httpRequest.get(`auth/users/verify-email-with-otp`, { params: { otp } }),
   resend: async (data) =>
-    httpRequest.post('auth/users/re-send-verification-email', data), // password is also required but when registering password is not set yet
+    httpRequest.post('auth/users/re-send-verification-email', data), // in the old api only email is required but in new password added
   renew: async (data) => httpRequest.post('auth/users/refresh-tokens', data),
   forgotPassword: async (data) =>
     httpRequest.post('auth/users/forgot-password', data),
