@@ -48,10 +48,10 @@ const errorHandler = async (error, hooks) => {
   }
 
   if (error?.response?.status === 401) {
-    const token = authStore?.token?.refresh_token?.token
+    const token = authStore?.token?.refresh?.token
     if (token) {
       const res = await refreshToken(token)
-      authStore.setAccessToken(res)
+      authStore.setAccessToken(res?.details?.token?.access?.token)
       return httpRequest(originalRequest)
     }
   }
@@ -61,7 +61,7 @@ const errorHandler = async (error, hooks) => {
 
 httpRequest.interceptors.request.use((config) => {
   if (!config.url.includes('app/stats')) {
-    const token = authStore?.token?.access_token?.token
+    const token = authStore?.token?.access?.token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
