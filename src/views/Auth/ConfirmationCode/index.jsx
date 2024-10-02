@@ -1,51 +1,55 @@
-import styles from './style.module.scss'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { useConfirmCodeMutation, useResendSms } from 'services/auth.service'
 import { LoadingButton } from '@mui/lab'
-import toast from 'react-hot-toast'
 import { CircularProgress } from '@mui/material'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import PageTransition from 'components/PageTransition'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useConfirmCodeMutation, useResendSms, useSendVerificationEmailMutation } from 'services/auth.service'
+import styles from './style.module.scss'
 
 const ConfirmationCode = () => {
   const location = useLocation()
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { control, handleSubmit } = useForm()
+  const { mutate: sendVerificationEmail } = useSendVerificationEmailMutation()
   const { mutate, isLoading } = useConfirmCodeMutation()
   const { mutate: resend, isLoading: isLoader } = useResendSms()
 
   const onSubmit = (data) => {
-    mutate(
-      {
-        ...data,
-        email: location.state.email
-      },
-      {
-        onSuccess: (res) => {
-          navigate('/auth/login')
-          toast.success(t('successfully_registered'))
-        }
+    mutate(data.otp, {
+      onSuccess: (res) => {
+        navigate('/auth/login')
+        toast.success(t('successfully_registered'))
       }
-    )
+    })
   }
 
   const onResend = (e) => {
     e.preventDefault()
-    resend(
-      {
-        email: location.state.email
+    sendVerificationEmail(null, {
+      onSuccess: () => {
+        toast.success(t('verification_email_sent'))
       },
-      {
-        onSuccess: () => {
-          toast.success(t('sent_otp_for_verification'), {
-            duration: 6000
-          })
-        }
+      onError: (error) => {
+        console.error('Error sending verification email:', error)
+        toast.error(t('error_sending_verification_email'))
       }
-    )
+    })
+    // resend(
+    //   {
+    //     email: location.state.email
+    //   },
+    //   {
+    //     onSuccess: () => {
+    //       toast.success(t('sent_otp_for_verification'), {
+    //         duration: 6000
+    //       })
+    //     }
+    //   }
+    // )
   }
 
   return (

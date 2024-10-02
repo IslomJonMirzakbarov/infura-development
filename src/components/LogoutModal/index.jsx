@@ -14,7 +14,7 @@ export default function LogoutModal({ toggle }) {
   const handleLogout = () => {
     mutate(
       {
-        refresh_token: token.refresh_token.token
+        refreshToken: token.refresh.token
       },
       {
         onSuccess: () => {

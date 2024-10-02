@@ -146,12 +146,22 @@ const Pool = () => {
 
       const result = await createPool({
         ...formData,
-        pool_size
+        pool_size,
       })
       setTxHash(result.transactionHash)
       if (result.transactionHash)
         mutate(
-          { ...formData, tx_hash: result.transactionHash },
+          {
+            subscriptionPlan: 0,
+            poolName: formData.pool_name,
+            poolSize: {
+              size: formData.pool_size.value,
+              type: formData.pool_size.unit
+            },
+            pinReplication: formData.pin_replication,
+            period: formData.pool_period,
+            tx_hash: result.transactionHash
+          },
           {
             onSuccess: (res) => {
               console.log('create pool response success: ', res)

@@ -1,12 +1,13 @@
-import styles from '../SignUp/style.module.scss'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { useResetPasswordMutation } from 'services/auth.service'
 import { LoadingButton } from '@mui/lab'
-import toast from 'react-hot-toast'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import PageTransition from 'components/PageTransition'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useResetPasswordMutation } from 'services/auth.service'
+import authStore from 'store/auth.store'
+import styles from '../SignUp/style.module.scss'
 
 const NewPassword = () => {
   const navigate = useNavigate()
@@ -14,6 +15,7 @@ const NewPassword = () => {
   const { control, handleSubmit, setError } = useForm()
   const { mutate, isLoading } = useResetPasswordMutation()
   const [searchParams] = useSearchParams()
+  const email = authStore?.userData?.email
   const onSubmit = (data) => {
     if (data.new_password !== data.confirm_password) {
       setError('confirm_password', {
@@ -24,8 +26,9 @@ const NewPassword = () => {
     }
     mutate(
       {
-        ...data,
-        token: searchParams.get('token')
+        email: email,
+        newPassword: data.new_password
+        // token: searchParams.get('token')
       },
       {
         onSuccess: () => {
