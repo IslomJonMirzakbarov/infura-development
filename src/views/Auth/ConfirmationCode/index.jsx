@@ -1,13 +1,13 @@
-import styles from './style.module.scss'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { useConfirmCodeMutation, useResendSms } from 'services/auth.service'
 import { LoadingButton } from '@mui/lab'
-import toast from 'react-hot-toast'
 import { CircularProgress } from '@mui/material'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import PageTransition from 'components/PageTransition'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { useConfirmCodeMutation, useResendSms } from 'services/auth.service'
+import styles from './style.module.scss'
 
 const ConfirmationCode = () => {
   const location = useLocation()
@@ -18,18 +18,12 @@ const ConfirmationCode = () => {
   const { mutate: resend, isLoading: isLoader } = useResendSms()
 
   const onSubmit = (data) => {
-    mutate(
-      {
-        ...data,
-        email: location.state.email
-      },
-      {
-        onSuccess: (res) => {
-          navigate('/auth/login')
-          toast.success(t('successfully_registered'))
-        }
+    mutate(data.otp, {
+      onSuccess: (res) => {
+        navigate('/auth/login')
+        toast.success(t('successfully_registered'))
       }
-    )
+    })
   }
 
   const onResend = (e) => {
