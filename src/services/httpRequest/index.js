@@ -7,7 +7,8 @@ import { getCustomTranslation } from 'utils/customTranslation'
 
 const httpRequest = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
-  timeout: 100000
+  timeout: 100000,
+  withCredentials: true,
 })
 
 const errorHandler = async (error, hooks) => {
@@ -65,7 +66,7 @@ httpRequest.interceptors.request.use((config) => {
       config.headers.Authorization = `Bearer ${token}`
     }
 
-    config.headers['X-Conun-Service'] = 'infura'
+    // config.headers['X-Conun-Service'] = 'infura'
   }
 
   return config
