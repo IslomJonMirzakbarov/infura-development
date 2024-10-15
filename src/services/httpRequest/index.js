@@ -12,6 +12,8 @@ const httpRequest = axios.create({
 })
 
 const errorHandler = async (error, hooks) => {
+  console.log('https service error: ', error)
+
   const originalRequest = error.config
   if (
     error?.response?.data?.message &&
@@ -47,12 +49,31 @@ const errorHandler = async (error, hooks) => {
     return Promise.reject(error.response)
   }
 
+  // if (error?.response?.status === 401) {
+  //   const token = authStore?.token?.refresh?.token
+  //   if (token) {
+  //     const res = await refreshToken(token)
+  //     authStore.setAccessToken(res?.details?.token?.access?.token)
+  //     return httpRequest(originalRequest)
+  //   }
+  // }
+
   if (error?.response?.status === 401) {
     const token = authStore?.token?.refresh?.token
+
     if (token) {
-      const res = await refreshToken(token)
-      authStore.setAccessToken(res?.details?.token?.access?.token)
-      return httpRequest(originalRequest)
+      try {
+        const res = await refreshToken(token)
+        authStore.setAccessToken(res?.details?.token?.access?.token)
+        originalRequest.headers.Authorization = `Bearer ${res?.details?.token?.access?.token}`
+
+        return httpRequest(originalRequest)
+      } catch (refreshError) {
+        authStore.logout() // If refresh fails, logout the user
+        return Promise.reject(refreshError)
+      }
+    } else {
+      authStore.logout()
     }
   }
 

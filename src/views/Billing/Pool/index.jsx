@@ -160,7 +160,7 @@ const Pool = () => {
             },
             pinReplication: formData.pin_replication,
             period: formData.pool_period,
-            tx_hash: result.transactionHash
+            // tx_hash: result.transactionHash
           },
           {
             onSuccess: (res) => {
