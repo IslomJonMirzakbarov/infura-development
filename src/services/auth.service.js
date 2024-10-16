@@ -13,7 +13,12 @@ const authService = {
       }
     }),
   confirmCode: async (otp) =>
-    httpRequest.get(`auth/users/verify-email-with-otp`, { params: { otp } }),
+    httpRequest.get(`auth/users/verify-email-with-otp`, {
+      params: { otp },
+      headers: {
+        Authorization: `Bearer ${authStore.token.refresh.token}`
+      }
+    }),
   resend: async (data) =>
     httpRequest.post('auth/users/re-send-verification-email', data), // in the old api only email is required but in new password added
   renew: async (data) => httpRequest.post('auth/users/refresh-tokens', data),
