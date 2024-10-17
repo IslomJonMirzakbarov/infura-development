@@ -208,11 +208,18 @@ const useMetaMask = () => {
   }
 
   const checkAllowance = async () => {
-    const contract = new web3.eth.Contract(ERC20_ABI, CYCON_CONTRACT_ADDRESS)
-    const allowance = await contract.methods
-      .allowance(address, REWARD_CONTRACT_ADDRESS)
-      .call()
-    return allowance
+    try {
+      console.log('check allowance initialized')
+      const contract = new web3.eth.Contract(ERC20_ABI, CYCON_CONTRACT_ADDRESS)
+      console.log('contract inside checkAllowance: ', contract)
+      const allowance = await contract.methods
+        .allowance(address, REWARD_CONTRACT_ADDRESS)
+        .call()
+      console.log('allowance inside checkAllowance: ', allowance)
+      return allowance
+    } catch (error) {
+      console.error('Error in checkAllowance:', error)
+    }
   }
 
   const addNetwork = async () => {

@@ -59,19 +59,20 @@ const Pool = () => {
 
   useEffect(() => {
     if (debouncedPoolName && poolName.length > 4 && poolName.length < 21) {
-      checkPool(
-        { pool_name: debouncedPoolName },
-        {
-          onSuccess: (res) => {
-            console.log('res: ', res?.success)
-            setPropError('')
-          },
-          onError: (error) => {
-            console.log('error: ', error?.data?.message)
-            setPropError(error?.data?.message)
+      checkPool(debouncedPoolName, {
+        onSuccess: (res) => {
+          console.log('res: ', res)
+          if (res?.details && Object.keys(res.details).length === 0) {
+            setPropError(false)
+          } else {
+            setPropError('Pool already exists')
           }
+        },
+        onError: (error) => {
+          console.log('error: ', error?.data?.message)
+          setPropError(error?.data?.message)
         }
-      )
+      })
     }
   }, [debouncedPoolName])
 
@@ -129,9 +130,11 @@ const Pool = () => {
   }
 
   const submitCheckout = async () => {
+    console.log('submit checkout clicked')
     try {
       setOpen(false)
       const allowance = await checkAllowance()
+      console.log('allowance: ', allowance)
       const numericAllowance = Number(allowance)
       if (numericAllowance < formData.pool_price) {
         setOpen(false)
@@ -143,11 +146,12 @@ const Pool = () => {
         formData.pool_size.unit === 'GB'
           ? parseInt(formData.pool_size.value)
           : parseInt(formData.pool_size.value * 1024)
-
+      console.log('formData inside submit checkout: ', formData)
       const result = await createPool({
         ...formData,
-        pool_size,
+        pool_size
       })
+      console.log('result of submit checkout: ', result)
       setTxHash(result.transactionHash)
       if (result.transactionHash)
         mutate(
@@ -160,31 +164,35 @@ const Pool = () => {
             },
             pinReplication: formData.pin_replication,
             period: formData.pool_period,
-            // tx_hash: result.transactionHash
+            tx_hash: result.transactionHash
           },
           {
             onSuccess: (res) => {
               console.log('create pool response success: ', res)
-              const data = {
-                data: { folderName: 'Root folder', poolId: res?.id },
-                token: res?.access_token?.token
-              }
-              createFolder(data, {
-                onSuccess: (resCreateFolder) => {
-                  console.log(
-                    'create folder response success: ',
-                    resCreateFolder
-                  )
-                  setPoolAddress(res?.access_token?.token)
-                  setOpen2(false)
-                  setOpen3(true)
-                  queryClient.invalidateQueries('pools')
-                },
-                onError: (error) => {
-                  setOpen2(false)
-                  console.log('create folder error: ', error)
-                }
-              })
+              setPoolAddress(res?.details?.poolAddress)
+              setOpen2(false)
+              setOpen3(true)
+              queryClient.invalidateQueries('pools')
+              // const data = {
+              //   data: { folderName: 'Root folder', poolId: res?.id },
+              //   token: res?.access_token?.token
+              // }
+              // createFolder(data, {
+              //   onSuccess: (resCreateFolder) => {
+              //     console.log(
+              //       'create folder response success: ',
+              //       resCreateFolder
+              //     )
+              //     setPoolAddress(res?.access_token?.token)
+              //     setOpen2(false)
+              //     setOpen3(true)
+              //     queryClient.invalidateQueries('pools')
+              //   },
+              //   onError: (error) => {
+              //     setOpen2(false)
+              //     console.log('create folder error: ', error)
+              //   }
+              // })
             },
             onError: (error) => {
               setOpen2(false)
@@ -197,7 +205,7 @@ const Pool = () => {
         )
     } catch (e) {
       setOpen2(false)
-      console.log(e)
+      console.log('submit checkout error: ', e)
       toast.error(getRPCErrorMessage(e))
     }
   }

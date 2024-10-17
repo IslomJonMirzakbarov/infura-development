@@ -6,11 +6,12 @@ const INFURA_NETWORK =
   process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
 
 export const poolService = {
-  check: async (data) => httpRequest.post('infura/api/v1/pools/check', data), // missing; it checks pool existance by poolName
+  check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
+  getPoolByName: async (poolName) => httpRequest.get(`pool/search/${poolName}`), // CHECK FROM ALL POOLS DONE
   create: async (data) => httpRequest.post('pool/create', data), // tx_hash is missing in body, and subscription plan is extra
   update: async (data) => httpRequest.patch('pool/update', data), // tx_hash is missing and subscription plan
   // getPools: async () => httpRequest.get('infura/api/v1/pools'), // missing in the new api
-  getPools: async () => httpRequest.get('pool/total-storage-size'), // is not working giving 400status error
+  getPools: async () => httpRequest.get('pools'), // should get all pool data
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
   getStats: async () =>
@@ -19,7 +20,7 @@ export const poolService = {
     axios.get('https://api.oceandrive.network/app/stats'),
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
-  getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`),
+  getPoolById: async (id) => httpRequest.get(`pool/${id}`),
   createFolder: async (data) =>
     axios.post(`${INFURA_NETWORK}/v1/file-service/folder/create`, data?.data, {
       headers: {
@@ -112,8 +113,14 @@ export const useDownloadsCount = (querySettings) => {
 export const useWalletsCount = (querySettings) => {
   return useQuery('wallets-count', poolService.getWalletsCount, querySettings)
 }
+// export const usePoolCheckMutation = (mutationSettings) => {
+//   return useMutation(poolService.check, mutationSettings)
+// }
 export const usePoolCheckMutation = (mutationSettings) => {
-  return useMutation(poolService.check, mutationSettings)
+  return useMutation(
+    (poolName) => poolService.getPoolByName(poolName),
+    mutationSettings
+  )
 }
 export const usePoolCreateMutation = (mutationSettings) => {
   return useMutation(poolService.create, mutationSettings)
