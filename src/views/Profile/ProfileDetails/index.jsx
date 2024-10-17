@@ -22,10 +22,16 @@ import { months, units } from 'views/Billing/Pool/poolData'
 import styles from './styles.module.scss'
 
 const ProfileDetails = ({ poolData, poolId }) => {
+  // console.log('poolData and poolId', poolData, poolId)
+
   const { poolId: workspacePoolId } = useParams()
+  // console.log('workspacePoolId', workspacePoolId)
+
   const { data: worksapcePoolData } = useGetPoolById({ id: workspacePoolId })
+
   const customPoolId = workspacePoolId ? workspacePoolId : poolId
   const customPoolData = workspacePoolId ? worksapcePoolData : poolData
+  console.log('customPoolId, customPoolData', customPoolId, customPoolData)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -61,25 +67,25 @@ const ProfileDetails = ({ poolData, poolId }) => {
     price: ''
   })
 
-  const editable = customPoolData?.is_active === false
+  const editable = customPoolData?.details?.isStopped !== false
 
   useEffect(() => {
     if (customPoolData) {
-      const formattedPrice = `${formatNumberWithCommas(customPoolData?.price)}`
+      const formattedPrice = `${formatNumberWithCommas(customPoolData?.details?.price)}`
 
       reset({
-        name: customPoolData?.name,
-        size: customPoolData?.size?.value,
-        unit: customPoolData?.size?.unit,
-        period: editable ? 1 : customPoolData?.period,
+        name: customPoolData?.details?.poolName,
+        size: customPoolData?.details?.poolSize?.size,
+        unit: customPoolData?.details?.poolSize?.type,
+        period: editable ? 1 : customPoolData?.details?.period,
         price: formattedPrice,
-        api_key: customPoolData?.token
+        api_key: customPoolData?.details?.token
       })
 
       setInitialValues({
-        size: customPoolData?.size?.value,
-        unit: customPoolData?.size?.unit,
-        period: customPoolData?.period,
+        size: customPoolData?.details?.poolSize?.size,
+        unit: customPoolData?.details?.poolSize?.type,
+        period: customPoolData?.details?.period,
         price: formattedPrice
       })
     }
@@ -145,12 +151,12 @@ const ProfileDetails = ({ poolData, poolId }) => {
             : parseInt(formData.pool_size.value * 1024)
 
         const result = await upgradePool({
-          poolId: customPoolData.reward_pool_id,
+          poolId: customPoolData?.details?.reward_pool_id,
           poolSize,
           poolPrice: formData.pool_price,
           replicationCount: 1000,
           replicationPeriod:
-            parseInt(data.period) + parseInt(customPoolData?.period)
+            parseInt(data.period) + parseInt(customPoolData?.details?.period)
         })
 
         console.log('result: ', result)
@@ -268,7 +274,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
               disabled={!editable}
             />
             <Box>
-              {customPoolData?.price !== 'FREE' && (
+              {customPoolData?.details?.price !== 'FREE' && (
                 <BasicTextField
                   control={control}
                   name='price'
@@ -290,7 +296,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
                 />
               )}
 
-              {customPoolData?.tx_hash && (
+              {customPoolData?.details?.tx_hash && (
                 <Box className={styles.txHash}>
                   <Typography
                     color='white'
@@ -301,11 +307,11 @@ const ProfileDetails = ({ poolData, poolId }) => {
                     {t('tx_hash')}
                   </Typography>
                   <a
-                    href={`https://baobab.scope.klaytn.com/tx/${customPoolData.tx_hash}`}
+                    href={`https://baobab.scope.klaytn.com/tx/${customPoolData?.details?.tx_hash}`}
                     target='_blank'
                     rel='noreferrer'
                   >
-                    <p>{customPoolData.tx_hash}</p>
+                    <p>{customPoolData?.details.tx_hash}</p>
                   </a>
                 </Box>
               )}
@@ -320,7 +326,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
               withCopy
               readOnly={true}
               disabled
-              value={customPoolData?.token}
+              value={customPoolData?.details?.token}
             />
           </div>
           {editable && (

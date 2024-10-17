@@ -11,22 +11,22 @@ import {
   useGetFoldersByPoolId,
   useGetPoolById
 } from 'services/pool.service'
+import formatTime from 'utils/formatTime'
+import { formatStatStorageNumber } from 'utils/utilFuncs'
 import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
 import WorkSpaceModal from './WorkSpaceModal'
 import useWorkspace from './Workspace.hooks'
 import { demoColumns } from './customData'
 import styles from './style.module.scss'
-import formatTime from 'utils/formatTime'
-import { formatStatStorageNumber } from 'utils/utilFuncs'
 
 const Workspace = () => {
   const { poolId } = useParams()
   const queryClient = useQueryClient()
   const { data: poolData, error, isError } = useGetPoolById({ id: poolId })
   const { data: folders } = useGetFoldersByPoolId({
-    poolId: poolData?.id,
-    token: poolData?.token
+    poolId: poolData?.details?.poolId,
+    token: poolData?.token // need to investigate when folder and files are ready
   })
   const rootFolderId = folders?.data?.data[0]?._id
   const parentFolderId = folders?.data?.data[folders?.data?.data?.length - 1]
@@ -89,7 +89,7 @@ const Workspace = () => {
 
   useEffect(() => {
     if (isError && error && !errorToastShown) {
-      const errorMessage = error?.data?.message.includes('Pool not found')
+      const errorMessage = error?.data?.message?.includes('Pool not found')
         ? 'Pool not found'
         : error?.data?.message
       toast.error(
@@ -161,7 +161,7 @@ const Workspace = () => {
             textDecoration: 'underline'
           }}
         >
-          {poolData?.name}
+          {poolData?.details?.poolName}
         </Typography>
       </Link>
       <Box>

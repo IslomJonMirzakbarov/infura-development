@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDashboard, useGetPools } from 'services/pool.service'
+import authStore from 'store/auth.store'
 import { CustomTooltip } from './Custom'
 import MobileSidebar from './MobileSidebar'
 import styles from './style.module.scss'
@@ -37,13 +38,14 @@ const workspaceItem = {
 }
 
 export default function Sidebar() {
+  const userId = authStore?.userData?.id
   const { poolId } = useParams()
   const isMainnet = process.env.REACT_APP_BASE_URL.includes('mainnet')
   const [open, setOpen] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [workspaceOpen, setWorkspaceOpen] = useState(false)
-  const { data: pools } = useGetPools()
-  console.log('pools: ', pools)
+  const { data: pools } = useGetPools({ id: userId })
+  // console.log('pools in sidebar: ', pools)
   const [selectedPool, setSelectedPool] = useState(null)
   const { isLoading } = useDashboard()
   const navigate = useNavigate()
@@ -73,11 +75,11 @@ export default function Sidebar() {
     if (poolId) {
       setSelectedPool(poolId)
     } else if (
-      pools?.payload?.count > 0 &&
+      pools?.details?.totalResults > 0 &&
       location.pathname === workspaceItem.path
     ) {
-      setSelectedPool(pools?.payload?.pools[0]?.id)
-      navigate(`${workspaceItem.path}/${pools?.payload?.pools[0]?.id}`)
+      setSelectedPool(pools?.details?.results[0]?.poolId)
+      navigate(`${workspaceItem.path}/${pools?.details?.results[0]?.poolId}`)
     } else {
       setSelectedPool(null)
       if (isLocationWorkspace) {
@@ -89,8 +91,8 @@ export default function Sidebar() {
     location.pathname,
     navigate,
     poolId,
-    pools?.payload?.count,
-    pools?.payload?.pools
+    pools?.details?.totalResults,
+    pools?.detials?.results
   ])
 
   const onClose = () => {
@@ -156,23 +158,23 @@ export default function Sidebar() {
                     {workspaceOpen ? <UpIcon /> : <DownIcon />}
                     {t(workspaceItem.title)}
                   </NavLink>
-                  {pools?.payload?.count > 0 &&
+                  {pools?.details?.totalResults > 0 &&
                     isLocationWorkspace &&
                     workspaceOpen && (
                       <div className={styles.poolList}>
-                        {pools?.payload?.pools?.map((pool) => (
+                        {pools?.details?.results?.map((pool) => (
                           <CustomTooltip
-                            key={pool.id}
+                            key={pool.poolId}
                             title='Expires in 2 weeks'
                             placement='right'
                           >
                             <div
                               className={classNames(styles.poolItem, {
-                                [styles.selected]: selectedPool === pool.id
+                                [styles.selected]: selectedPool === pool.poolId
                               })}
-                              onClick={() => handlePoolClick(pool.id)}
+                              onClick={() => handlePoolClick(pool.poolId)}
                             >
-                              {pool.name}
+                              {pool.poolName}
                             </div>
                           </CustomTooltip>
                         ))}
