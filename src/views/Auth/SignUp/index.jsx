@@ -6,7 +6,10 @@ import PageTransition from 'components/PageTransition'
 import { useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { useRegisterMutation, useSendVerificationEmailMutation } from 'services/auth.service'
+import {
+  useRegisterMutation,
+  useSendVerificationEmailMutation
+} from 'services/auth.service'
 import authStore from 'store/auth.store'
 import styles from './style.module.scss'
 import toast from 'react-hot-toast'
@@ -33,7 +36,7 @@ const Signup = () => {
 
           authStore.setAccessToken(res?.details?.token?.access?.token)
           authStore.setRefreshToken(res?.details?.token?.refresh?.token)
-          
+
           sendVerificationEmail(null, {
             onSuccess: () => {
               toast.success(t('verification_email_sent'))
@@ -85,7 +88,7 @@ const Signup = () => {
           type='password'
           rules={{
             pattern: {
-              value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
+              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/,
               message: t('password_requirements')
             }
           }}

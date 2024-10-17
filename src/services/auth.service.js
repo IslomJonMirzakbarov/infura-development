@@ -3,29 +3,30 @@ import authStore from 'store/auth.store'
 import httpRequest from './httpRequest'
 
 const authService = {
-  login: async (data) => httpRequest.post('auth/users/login', data),
-  logout: async (data) => httpRequest.post('auth/users/logout', data),
-  register: async (data) => httpRequest.post('auth/users/register', data), // email verification is not working
+  login: async (data) => httpRequest.post('api/v1/auth/users/login', data),
+  logout: async (data) => httpRequest.post('api/v1/auth/users/logout', data),
+  register: async (data) =>
+    httpRequest.post('api/v1/auth/users/register', data), // email verification is not working
   sendVerificationEmail: async () =>
-    httpRequest.get('auth/users/send-verification-email', {
+    httpRequest.get('api/v1/auth/users/send-verification-email', {
       headers: {
         Authorization: `Bearer ${authStore.token.refresh.token}`
       }
     }),
   confirmCode: async (otp) =>
-    httpRequest.get(`auth/users/verify-email-with-otp`, {
+    httpRequest.get(`api/v1/auth/users/verify-email-with-otp`, {
       params: { otp },
       headers: {
         Authorization: `Bearer ${authStore.token.refresh.token}`
       }
     }),
   resend: async (data) =>
-    httpRequest.post('auth/users/re-send-verification-email', data), // in the old api only email is required but in new password added
+    httpRequest.post('api/v1/auth/users/re-send-verification-email', data), // in the old api only email is required but in new password added
   renew: async (data) => httpRequest.post('auth/users/refresh-tokens', data),
   forgotPassword: async (data) =>
-    httpRequest.post('auth/users/forgot-password', data),
+    httpRequest.post('api/v1/auth/users/forgot-password', data),
   resetPassword: async (data) =>
-    httpRequest.patch('auth/users/reset-password', data)
+    httpRequest.patch('api/v1/auth/users/reset-password', data)
 }
 
 export const useLoginMutation = (mutationSettings) => {
