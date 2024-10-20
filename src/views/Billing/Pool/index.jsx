@@ -62,7 +62,8 @@ const Pool = () => {
       checkPool(debouncedPoolName, {
         onSuccess: (res) => {
           console.log('res: ', res)
-          if (res?.details && Object.keys(res.details).length === 0) {
+          // if (res?.details && Object.keys(res.details).length === 0) {
+          if (!res?.details?.isAvailable) {
             setPropError(false)
           } else {
             setPropError('Pool already exists')
@@ -164,7 +165,7 @@ const Pool = () => {
             },
             pinReplication: formData.pin_replication,
             period: formData.pool_period,
-            tx_hash: result.transactionHash
+            txHash: result.transactionHash
           },
           {
             onSuccess: (res) => {
@@ -173,26 +174,6 @@ const Pool = () => {
               setOpen2(false)
               setOpen3(true)
               queryClient.invalidateQueries('pools')
-              // const data = {
-              //   data: { folderName: 'Root folder', poolId: res?.id },
-              //   token: res?.access_token?.token
-              // }
-              // createFolder(data, {
-              //   onSuccess: (resCreateFolder) => {
-              //     console.log(
-              //       'create folder response success: ',
-              //       resCreateFolder
-              //     )
-              //     setPoolAddress(res?.access_token?.token)
-              //     setOpen2(false)
-              //     setOpen3(true)
-              //     queryClient.invalidateQueries('pools')
-              //   },
-              //   onError: (error) => {
-              //     setOpen2(false)
-              //     console.log('create folder error: ', error)
-              //   }
-              // })
             },
             onError: (error) => {
               setOpen2(false)
