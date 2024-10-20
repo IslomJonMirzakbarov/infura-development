@@ -24,7 +24,6 @@ export default function useWorkspace({
   rootFolderId,
   queryClient
 }) {
-  console.log('checkedFiles when selected for download: ', files)
   const fileButtons = [
     {
       bgColor: '#27E6D6',

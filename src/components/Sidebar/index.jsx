@@ -58,7 +58,7 @@ export default function Sidebar() {
 
   const handlePoolClick = (poolId) => {
     setSelectedPool(poolId)
-    navigate(`${workspaceItem.path}/${poolId}`)
+    navigate(`${workspaceItem.path}/${poolId}/root`)
   }
 
   const isLocationWorkspace = location.pathname.includes(workspaceItem.path)
@@ -71,7 +71,9 @@ export default function Sidebar() {
       location.pathname === workspaceItem.path
     ) {
       setSelectedPool(pools?.details?.results[0]?.poolId)
-      navigate(`${workspaceItem.path}/${pools?.details?.results[0]?.poolId}`)
+      navigate(
+        `${workspaceItem.path}/${pools?.details?.results[0]?.poolId}/root`
+      )
     } else {
       setSelectedPool(null)
       if (isLocationWorkspace) {
