@@ -1,8 +1,11 @@
 import { ArrowBack } from '@material-ui/icons'
 import { Box, Skeleton, Typography } from '@mui/material'
+import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
+import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
 import HFDropzone from 'components/Dropzone'
 import FileUploadTable from 'components/FileUploadTable'
 import FolderCard from 'components/FolderCard'
+import FileCard from 'components/FileCard'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useQueryClient } from 'react-query'
@@ -20,7 +23,7 @@ import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
 import WorkSpaceModal from './WorkSpaceModal'
 import WorkspaceContainer from './WorkspaceContainer'
-import { demoColumns } from './customData'
+import { demoColumns, formattedData } from './customData'
 import styles from './style.module.scss'
 
 const Workspace = () => {
@@ -81,31 +84,35 @@ const Workspace = () => {
   const { mutate: uploadFile } = useUploadFile()
   const { mutate: deleteFile } = useDeleteFile()
 
-  const handleDrop = useCallback((acceptedFiles) => {
-    if (acceptedFiles.length > 0) {
-      const formData = new FormData()
-      formData.append('ownerId', '')
-      formData.append('folderId', folderId)
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        const formData = new FormData()
+        formData.append('ownerId', '')
+        formData.append('folderId', folderId)
 
-      acceptedFiles.forEach((file) => {
-        formData.append(`files`, file)
-      })
+        acceptedFiles.forEach((file) => {
+          formData.append(`files`, file)
+        })
 
-      uploadFile(formData, {
-        onSuccess: () => {
-          toast.success(`Files uploaded successfully`)
-          refetchFolder()
-        },
-        onError: (error) => {
-          toast.error(`Failed to upload files: ${error.message}`)
-        }
-      })
+        uploadFile(formData, {
+          onSuccess: () => {
+            toast.success(`Files uploaded successfully`)
+            refetchFolder()
+          },
+          onError: (error) => {
+            toast.error(`Failed to upload files: ${error.message}`)
+          }
+        })
 
-      // Update UI to show upload progress
-      setUploads(acceptedFiles.map(file => ({ file, progress: 0, completed: false })))
-      setShowUploadProgress(true)
-    }
-  }, [folderId, uploadFile, refetchFolder])
+        setUploads(
+          acceptedFiles.map((file) => ({ file, progress: 0, completed: false }))
+        )
+        setShowUploadProgress(true)
+      }
+    },
+    [folderId, uploadFile, refetchFolder]
+  )
 
   const handleCheckboxToggle = useCallback((id) => {
     setCheckedFiles((prev) => ({ ...prev, [id]: !prev[id] }))
@@ -136,8 +143,20 @@ const Workspace = () => {
   )
 
   const fileButtons = [
-    { text: 'Delete', onClick: () => setDeleteModalOpen(true) }
-    // Add other buttons as needed
+    {
+      bgColor: '#27E6D6',
+      Icon: <DownloadIcon />,
+      color: '#000',
+      text: 'Download',
+      action: 'download'
+    },
+    {
+      bgColor: '#27275E',
+      Icon: <TrashIcon />,
+      color: '#fff',
+      text: 'Delete',
+      action: 'delete'
+    }
   ]
 
   const handleButtonClick = useCallback((action) => {
@@ -185,7 +204,8 @@ const Workspace = () => {
     }
   }, [handleDrop])
 
-  const folderList = folderContent?.details?.results?.folders
+  const folderList = folderContent?.details?.results?.folders || []
+  const fileList = folderContent?.details?.results?.files || []
 
   console.log('isLoading', isLoading)
 
@@ -276,12 +296,7 @@ const Workspace = () => {
           </Box>
         )}
       </Box>
-      {!isLoading && (!folderList || folderList?.length === 0) && (
-        <Box marginTop='20px'>
-          <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
-        </Box>
-      )}
-      {!isLoading && folderList?.length > 0 ? (
+      {!isLoading && (folderList.length > 0 || fileList.length > 0) ? (
         view === 'grid' ? (
           <Box
             display='grid'
@@ -301,14 +316,36 @@ const Workspace = () => {
                 }
               />
             ))}
+            {fileList.map((file, index) => (
+              <FileCard
+                key={file.id}
+                index={folderList.length + index}
+                file={file}
+                handleCheckboxToggle={handleCheckboxToggle}
+                checkedFiles={checkedFiles}
+              />
+            ))}
           </Box>
         ) : (
           <Box className={styles.tableHolder}>
-            <FileUploadTable columns={demoColumns} data={fPoolData} />
+            <FileUploadTable 
+              columns={demoColumns} 
+              data={[...folderList, ...fileList].map(item => ({
+                name: item.name || item.originalname,
+                type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
+                size: item.folderCount !== undefined ? `${item.totalItems} items` : formatStatStorageNumber(item.size).value + formatStatStorageNumber(item.size).cap,
+                created_at: formatTime(item.createdAt),
+                content_id: item.id
+              }))}
+            />
           </Box>
         )
       ) : (
-        <></>
+        !isLoading && (
+          <Box marginTop='20px'>
+            <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
+          </Box>
+        )
       )}
 
       {isLoading && (

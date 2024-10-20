@@ -27,21 +27,16 @@ export default function FileCard({
   handleCheckboxToggle,
   checkedFiles
 }) {
-  const isImageFile = (extension) => {
-    return [
-      'jpg',
-      'jpeg',
-      'png',
-      'gif',
-      'bmp',
-      'webp',
-      'image/png',
-      'image/jpeg'
-    ].includes(extension.toLowerCase())
+  const isImageFile = (mimetype) => {
+    return mimetype.startsWith('image/')
+  }
+
+  const getFileExtension = (filename) => {
+    return filename.split('.').pop().toUpperCase()
   }
 
   return (
-    <Box key={index} className={styles.fileCard}>
+    <Box className={styles.fileCard}>
       <Box
         className={styles.selectableArea}
         onClick={() => handleCheckboxToggle(index)}
@@ -51,14 +46,14 @@ export default function FileCard({
         </CustomCheckbox>
       </Box>
       <Box className={styles.imageContainer}>
-        {isImageFile(file.extension) ? (
+        {isImageFile(file.mimetype) ? (
           <img
-            src={`https://dexpo.oceandrive.network/ipfs/${file?.cid}`}
-            alt={file.fileName}
+            src={`https://dexpo.oceandrive.network/ipfs/${file.cid}`}
+            alt={file.originalname}
             className={styles.image}
           />
         ) : (
-          <img src={folderImage} alt='folder' className={styles.image} />
+          <img src={folderImage} alt='file' className={styles.image} />
         )}
       </Box>
       <Box padding='10px'>
@@ -70,7 +65,7 @@ export default function FileCard({
           marginBottom='3px'
           className={styles.filename}
         >
-          {file.fileName}
+          {file.originalname}
         </Typography>
         <Box display='flex' alignItems='center' justifyContent='space-between'>
           <Typography
@@ -79,9 +74,9 @@ export default function FileCard({
             color='#888888'
             lineHeight='15px'
           >
-            {file.extension.toUpperCase()} /{' '}
-            {formatStatStorageNumber(file.fileSize).value}{' '}
-            {formatStatStorageNumber(file.fileSize).cap}
+            {getFileExtension(file.originalname)} /{' '}
+            {formatStatStorageNumber(file.size).value}{' '}
+            {formatStatStorageNumber(file.size).cap}
           </Typography>
           <StarIcon />
         </Box>
