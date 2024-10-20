@@ -1,11 +1,14 @@
-import { Box, Skeleton, Typography, styled } from '@mui/material'
+import { ArrowBack } from '@material-ui/icons'
+import { Box, Skeleton, Typography } from '@mui/material'
 import HFDropzone from 'components/Dropzone'
-import FileCard from 'components/FileCard'
 import FileUploadTable from 'components/FileUploadTable'
-import { useEffect, useRef, useState } from 'react'
+import FolderCard from 'components/FolderCard'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useQueryClient } from 'react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useDeleteFile, useUploadFile } from 'services/file.service'
+import { useGetFolderList } from 'services/folder.service'
 import {
   useGetFileHistory,
   useGetFoldersByPoolId,
@@ -16,13 +19,9 @@ import { formatStatStorageNumber } from 'utils/utilFuncs'
 import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
 import WorkSpaceModal from './WorkSpaceModal'
-import useWorkspace from './Workspace.hooks'
+import WorkspaceContainer from './WorkspaceContainer'
 import { demoColumns } from './customData'
 import styles from './style.module.scss'
-import { useGetFolderList } from 'services/folder.service'
-import FolderCard from 'components/FolderCard'
-import WorkspaceContainer from './WorkspaceContainer'
-import { ArrowBack } from '@material-ui/icons'
 
 const Workspace = () => {
   const { poolId, folderId } = useParams()
@@ -79,31 +78,74 @@ const Workspace = () => {
     setErrorToastShown(false)
   }, [poolId])
 
-  const {
-    handleDrop,
-    handleCheckboxToggle,
-    confirmDelete,
-    handleMenuOpen,
-    handleMenuItemClick,
-    handleMenuClose,
-    fileButtons,
-    handleButtonClick
-  } = useWorkspace({
-    setUploads,
-    poolId,
-    parentFolderId,
-    setShowUploadProgress,
-    setCheckedFiles,
-    checkedFiles,
-    files: poolfiles,
-    setFiles,
-    setDeleteModalOpen,
-    setMenuAnchorEl,
-    setView,
-    token: poolData?.token,
-    rootFolderId,
-    queryClient
-  })
+  const { mutate: uploadFile } = useUploadFile()
+  const { mutate: deleteFile } = useDeleteFile()
+
+  const handleDrop = useCallback((acceptedFiles) => {
+    if (acceptedFiles.length > 0) {
+      const formData = new FormData()
+      formData.append('ownerId', '')
+      formData.append('folderId', folderId)
+
+      acceptedFiles.forEach((file) => {
+        formData.append(`files`, file)
+      })
+
+      uploadFile(formData, {
+        onSuccess: () => {
+          toast.success(`Files uploaded successfully`)
+          refetchFolder()
+        },
+        onError: (error) => {
+          toast.error(`Failed to upload files: ${error.message}`)
+        }
+      })
+
+      // Update UI to show upload progress
+      setUploads(acceptedFiles.map(file => ({ file, progress: 0, completed: false })))
+      setShowUploadProgress(true)
+    }
+  }, [folderId, uploadFile, refetchFolder])
+
+  const handleCheckboxToggle = useCallback((id) => {
+    setCheckedFiles((prev) => ({ ...prev, [id]: !prev[id] }))
+  }, [])
+
+  const confirmDelete = useCallback(() => {
+    const filesToDelete = Object.entries(checkedFiles)
+      .filter(([_, isChecked]) => isChecked)
+      .map(([id]) => id)
+    filesToDelete.forEach((fileId) => deleteFile({ fileId, poolId }))
+    setDeleteModalOpen(false)
+  }, [checkedFiles, deleteFile, poolId])
+
+  const handleMenuOpen = useCallback((event) => {
+    setMenuAnchorEl(event.currentTarget)
+  }, [])
+
+  const handleMenuClose = useCallback(() => {
+    setMenuAnchorEl(null)
+  }, [])
+
+  const handleMenuItemClick = useCallback(
+    (view) => {
+      setView(view)
+      handleMenuClose()
+    },
+    [handleMenuClose]
+  )
+
+  const fileButtons = [
+    { text: 'Delete', onClick: () => setDeleteModalOpen(true) }
+    // Add other buttons as needed
+  ]
+
+  const handleButtonClick = useCallback((action) => {
+    if (action === 'delete') {
+      setDeleteModalOpen(true)
+    }
+    // Handle other actions as needed
+  }, [])
 
   useEffect(() => {
     if (isError && error && !errorToastShown) {
