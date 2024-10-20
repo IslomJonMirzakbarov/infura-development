@@ -129,7 +129,6 @@ const Workspace = () => {
         }
       })
 
-      // Check if files exist
       if (selectedFiles.length > 0) {
         console.log('Selected Files:', selectedFiles)
         setUploads(selectedFiles)

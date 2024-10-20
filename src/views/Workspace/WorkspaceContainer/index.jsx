@@ -1,12 +1,14 @@
 import { Box, Typography, styled } from '@mui/material'
-import { useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
-import { useCreateFolder } from 'services/folder.service'
-import { useForm } from 'react-hook-form'
-import GatewayModal from 'views/Billing/GatewayModal'
-import Container from 'components/Container'
 import { ReactComponent as AddIcon } from 'assets/icons/add_icon.svg'
 import { ReactComponent as UploadIcon } from 'assets/icons/upload_icon.svg'
+import Container from 'components/Container'
+import React, { useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useParams } from 'react-router-dom'
+import { useUploadFile } from 'services/file.service'
+import { useCreateFolder } from 'services/folder.service'
+import GatewayModal from 'views/Billing/GatewayModal'
 
 const buttons = [
   {
@@ -35,6 +37,7 @@ const WorkspaceContainer = ({ refetchFolder, children }) => {
   const { control, handleSubmit, reset } = useForm()
   const [isCreateFolderModalOpen, setCreateFolderModalOpen] = useState(false)
   const createFolder = useCreateFolder()
+  const { mutate: uploadFile, isLoading: isUploading } = useUploadFile()
 
   const handleButtonClick = (action) => {
     if (action === 'upload') {
@@ -66,11 +69,40 @@ const WorkspaceContainer = ({ refetchFolder, children }) => {
     )
   }
 
-  const handleFileChange = (e) => {
-    const files = e.target.files
-    const event = new CustomEvent('files-selected', { detail: files })
-    window.dispatchEvent(event)
+  const handleFileUpload = (files) => {
+    if (files.length > 0) {
+      const formData = new FormData()
+      formData.append('ownerId', '')
+      formData.append('folderId', folderId)
+
+      files.forEach((file) => {
+        formData.append(`files`, file)
+      })
+
+      uploadFile(formData, {
+        onSuccess: () => {
+          toast.success(`Files uploaded successfully`)
+          refetchFolder()
+        },
+        onError: (error) => {
+          toast.error(`Failed to upload files: ${error.message}`)
+        }
+      })
+    }
   }
+
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files)
+    handleFileUpload(files)
+  }
+
+  // Pass handleFileUpload to children
+  const childrenWithProps = React.Children.map(children, child => {
+    if (React.isValidElement(child)) {
+      return React.cloneElement(child, { handleFileUpload })
+    }
+    return child
+  })
 
   return (
     <>
@@ -131,7 +163,7 @@ const WorkspaceContainer = ({ refetchFolder, children }) => {
             multiple
             onChange={handleFileChange}
           />
-          {children}
+          {childrenWithProps}
         </Box>
       </Container>
     </>
