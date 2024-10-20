@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useGetApiKey } from 'services/auth.service'
 import { useGetPoolById, usePoolUpdateMutation } from 'services/pool.service'
 import walletStore from 'store/wallet.store'
 import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
@@ -41,6 +42,16 @@ const ProfileDetails = ({ poolData, poolId }) => {
     process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
   const { type, address } = walletStore
   const { mutate } = usePoolUpdateMutation()
+  const { data: apiKeyData, isLoading: isLoadingApiKey } = useGetApiKey(
+    customPoolId,
+    {
+      onError: (error) => {
+        console.error('Error fetching API key:', error)
+        toast.error('Failed to fetch API key')
+      }
+    }
+  )
+  console.log('apiKeyData', apiKeyData)
   const metamask = useMetaMask()
   const kaikas = useKaikas()
 
@@ -71,7 +82,9 @@ const ProfileDetails = ({ poolData, poolId }) => {
 
   useEffect(() => {
     if (customPoolData) {
-      const formattedPrice = `${formatNumberWithCommas(customPoolData?.details?.price)}`
+      const formattedPrice = `${formatNumberWithCommas(
+        customPoolData?.details?.price
+      )}`
 
       reset({
         name: customPoolData?.details?.poolName,

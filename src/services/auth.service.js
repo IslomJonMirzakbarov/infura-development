@@ -1,4 +1,4 @@
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
 import authStore from 'store/auth.store'
 import httpRequest from './httpRequest'
 
@@ -26,7 +26,9 @@ const authService = {
   forgotPassword: async (data) =>
     httpRequest.post('api/v1/auth/users/forgot-password', data),
   resetPassword: async (data) =>
-    httpRequest.patch('api/v1/auth/users/reset-password', data)
+    httpRequest.patch('api/v1/auth/users/reset-password', data),
+  getApiKey: async (poolId) =>
+    httpRequest.get(`api/v1/auth/users/api-key-list/${poolId}`)
 }
 
 export const useLoginMutation = (mutationSettings) => {
@@ -68,4 +70,11 @@ export const refreshToken = async (token) => {
     })
     return res?.details?.token?.access?.token
   } catch (e) {}
+}
+
+export const useGetApiKey = (poolId, queryOptions) => {
+  return useQuery(['apiKey', poolId], () => authService.getApiKey(poolId), {
+    enabled: !!poolId,
+    ...queryOptions
+  })
 }

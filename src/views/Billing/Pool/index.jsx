@@ -147,17 +147,18 @@ const Pool = () => {
         formData.pool_size.unit === 'GB'
           ? parseInt(formData.pool_size.value)
           : parseInt(formData.pool_size.value * 1024)
-      console.log('formData inside submit checkout: ', formData)
+      // console.log('formData inside submit checkout: ', formData)
       const result = await createPool({
         ...formData,
         pool_size
       })
-      console.log('result of submit checkout: ', result)
+      // console.log('result of submit checkout: ', result)
       setTxHash(result.transactionHash)
       if (result.transactionHash)
         mutate(
           {
             subscriptionPlan: 0,
+            price: formData.pool_price,
             poolName: formData.pool_name,
             poolSize: {
               size: formData.pool_size.value,
