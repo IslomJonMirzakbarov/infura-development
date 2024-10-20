@@ -56,14 +56,6 @@ export default function Sidebar() {
   const toggleHamburger = () => setIsOpen((prev) => !prev)
   const toggleWorkspace = () => setWorkspaceOpen((prev) => !prev)
 
-  const handleNavigation = (path, event) => {
-    if (isLoading) {
-      event.preventDefault()
-    } else {
-      navigate(path)
-    }
-  }
-
   const handlePoolClick = (poolId) => {
     setSelectedPool(poolId)
     navigate(`${workspaceItem.path}/${poolId}`)
@@ -106,7 +98,7 @@ export default function Sidebar() {
         {open && <LogoutModal toggle={toggle} />}
         <div>
           <div className={styles.header}>
-            <NavLink to='/' onClick={(e) => handleNavigation('/', e)}>
+            <NavLink to='/'>
               {isMainnet ? (
                 <LogoM
                   style={{ width: 102, height: 43.57 }}
@@ -139,7 +131,6 @@ export default function Sidebar() {
                         navData.isActive ? styles.active : ''
                       }
                       to={item.path}
-                      onClick={(e) => handleNavigation(item.path, e)}
                     >
                       {item.icon}
                       {t(item.title)}
@@ -153,7 +144,7 @@ export default function Sidebar() {
                       isLocationWorkspace && styles.active
                     )}
                     onClick={toggleWorkspace}
-                    to={isLocationWorkspace ? '#' : workspaceItem.path}
+                    to={workspaceItem.path}
                   >
                     {workspaceOpen ? <UpIcon /> : <DownIcon />}
                     {t(workspaceItem.title)}

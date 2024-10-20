@@ -152,7 +152,7 @@ const Pool = () => {
         ...formData,
         pool_size
       })
-      // console.log('result of submit checkout: ', result)
+      console.log('result of create pool metamask: ', result)
       setTxHash(result.transactionHash)
       if (result.transactionHash)
         mutate(
