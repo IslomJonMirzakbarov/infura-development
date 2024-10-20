@@ -37,6 +37,26 @@ const workspaceItem = {
   path: '/main/workspace'
 }
 
+const getExpirationText = (expirationDate) => {
+  const now = new Date()
+  const expiration = new Date(expirationDate)
+  const diffTime = Math.abs(expiration - now)
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+  if (diffDays > 365) {
+    const years = Math.floor(diffDays / 365)
+    return `Expires in ${years} year${years > 1 ? 's' : ''}`
+  } else if (diffDays > 30) {
+    const months = Math.floor(diffDays / 30)
+    return `Expires in ${months} month${months > 1 ? 's' : ''}`
+  } else if (diffDays > 7) {
+    const weeks = Math.floor(diffDays / 7)
+    return `Expires in ${weeks} week${weeks > 1 ? 's' : ''}`
+  } else {
+    return `Expires in ${diffDays} day${diffDays > 1 ? 's' : ''}`
+  }
+}
+
 export default function Sidebar() {
   const userId = authStore?.userData?.id
   const { poolId } = useParams()
@@ -158,7 +178,7 @@ export default function Sidebar() {
                         {pools?.details?.results?.map((pool) => (
                           <CustomTooltip
                             key={pool.poolId}
-                            title='Expires in 2 weeks'
+                            title={getExpirationText(pool.expirationDate)}
                             placement='right'
                           >
                             <div
