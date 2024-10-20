@@ -92,7 +92,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
         unit: customPoolData?.details?.poolSize?.type,
         period: editable ? 1 : customPoolData?.details?.period,
         price: formattedPrice,
-        api_key: customPoolData?.details?.token
+        api_key: apiKeyData?.details?.[0]?.apiKey
       })
 
       setInitialValues({
@@ -102,7 +102,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
         price: formattedPrice
       })
     }
-  }, [customPoolData, reset])
+  }, [customPoolData, reset, apiKeyData])
 
   const watchedValues = watch(['size', 'unit', 'period', 'price'])
 
@@ -339,7 +339,7 @@ const ProfileDetails = ({ poolData, poolId }) => {
               withCopy
               readOnly={true}
               disabled
-              value={customPoolData?.details?.token}
+              value={apiKeyData?.details?.[0]?.apiKey}
             />
           </div>
           {editable && (

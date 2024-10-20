@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom'
+import { useApiGenerateKey } from 'services/auth.service'
 import {
   useCreateFolder,
   usePoolCheckMutation,
@@ -87,6 +88,15 @@ const Pool = () => {
   }, [])
 
   const { mutate } = usePoolCreateMutation()
+  const { mutate: generateApiKey } = useApiGenerateKey({
+    onSuccess: (apiKeyData) => {
+      console.log('API Key generated successfully:', apiKeyData)
+    },
+    onError: (error) => {
+      console.error('Error generating API Key:', error)
+      toast.error('Failed to generate API Key')
+    }
+  })
   const { mutate: createFolder } = useCreateFolder()
 
   const [formData, setFormData] = useState(null)
@@ -175,6 +185,17 @@ const Pool = () => {
               setOpen2(false)
               setOpen3(true)
               queryClient.invalidateQueries('pools')
+
+              const apiKeyData = {
+                poolId: res.details.poolId,
+                poolName: res.details.poolName,
+                poolNote: `API Key for ${res.details.poolName}`,
+                period: res.details.period,
+                read: true,
+                write: true
+              }
+
+              generateApiKey(apiKeyData)
             },
             onError: (error) => {
               setOpen2(false)
