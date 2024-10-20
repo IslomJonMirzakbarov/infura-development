@@ -6,12 +6,12 @@ import HFDropzone from 'components/Dropzone'
 import FileCard from 'components/FileCard'
 import FileUploadTable from 'components/FileUploadTable'
 import FolderCard from 'components/FolderCard'
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useQueryClient } from 'react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useDeleteFile, useUploadFile } from 'services/file.service'
-import { useGetFolderList } from 'services/folder.service'
+import { useDeleteFolder, useGetFolderList } from 'services/folder.service'
 import {
   useGetFileHistory,
   useGetFoldersByPoolId,
@@ -69,6 +69,7 @@ const Workspace = () => {
 
   const [files, setFiles] = useState([])
   const [checkedFiles, setCheckedFiles] = useState({})
+  console.log('checkedFiles===>', checkedFiles)
   const [menuAnchorEl, setMenuAnchorEl] = useState(null)
   const [view, setView] = useState('grid')
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -83,6 +84,7 @@ const Workspace = () => {
 
   const { mutate: uploadFile } = useUploadFile()
   const { mutate: deleteFile } = useDeleteFile()
+  const { mutate: deleteFolder } = useDeleteFolder()
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -118,13 +120,63 @@ const Workspace = () => {
     setCheckedFiles((prev) => ({ ...prev, [id]: !prev[id] }))
   }, [])
 
+  const { folderList, fileList } = useMemo(
+    () => ({
+      folderList: folderContent?.details?.results?.folders || [],
+      fileList: folderContent?.details?.results?.files || []
+    }),
+    [folderContent]
+  )
+
   const confirmDelete = useCallback(() => {
-    const filesToDelete = Object.entries(checkedFiles)
-      .filter(([_, isChecked]) => isChecked)
-      .map(([id]) => id)
-    filesToDelete.forEach((fileId) => deleteFile({ fileId, poolId }))
-    setDeleteModalOpen(false)
-  }, [checkedFiles, deleteFile, poolId])
+    console.log('checkedFiles===>', checkedFiles);
+
+    const itemsToDelete = Object.keys(checkedFiles)
+      .filter(key => checkedFiles[key])
+      .map(key => {
+        const index = parseInt(key, 10);
+        const isFolder = index < folderList.length;
+        const item = isFolder 
+          ? folderList[index] 
+          : fileList[index - folderList.length];
+
+        return {
+          id: item.id,
+          isFolder,
+          cid: item.cid,
+          name: item.name || item.originalname
+        };
+      });
+
+    console.log('itemsToDelete===>', itemsToDelete);
+
+    itemsToDelete.forEach(({ id, isFolder, cid, name }) => {
+      if (isFolder) {
+        deleteFolder(id, {
+          onSuccess: () => {
+            toast.success(`Folder "${name}" deleted successfully`);
+            refetchFolder();
+          },
+          onError: (error) => {
+            toast.error(`Failed to delete folder "${name}": ${error.message}`);
+          }
+        });
+      } else {
+        deleteFile(cid, {
+          onSuccess: () => {
+            toast.success(`File "${name}" deleted successfully`);
+            refetchFolder();
+          },
+          onError: (error) => {
+            toast.error(`Failed to delete file "${name}": ${error.message}`);
+          }
+        });
+      }
+    });
+
+    setCheckedFiles({});
+    setDeleteModalOpen(false);
+  }, [checkedFiles, deleteFile, deleteFolder, fileList, folderList, refetchFolder]);
 
   const handleMenuOpen = useCallback((event) => {
     setMenuAnchorEl(event.currentTarget)
@@ -159,12 +211,22 @@ const Workspace = () => {
     }
   ]
 
-  const handleButtonClick = useCallback((action) => {
-    if (action === 'delete') {
-      setDeleteModalOpen(true)
-    }
-    // Handle other actions as needed
-  }, [])
+  const handleButtonClick = useCallback(
+    (action) => {
+      if (action === 'delete') {
+        const hasCheckedItems = Object.values(checkedFiles).some(
+          (isChecked) => isChecked
+        )
+        if (hasCheckedItems) {
+          setDeleteModalOpen(true)
+        } else {
+          toast.error('Please select items to delete')
+        }
+      }
+      // Handle other actions as needed
+    },
+    [checkedFiles]
+  )
 
   useEffect(() => {
     if (isError && error && !errorToastShown) {
@@ -203,11 +265,6 @@ const Workspace = () => {
       window.removeEventListener('files-selected', handleFilesSelected) // Cleanup listener on unmount
     }
   }, [handleDrop])
-
-  const folderList = folderContent?.details?.results?.folders || []
-  const fileList = folderContent?.details?.results?.files || []
-
-  console.log('isLoading', isLoading)
 
   return (
     <WorkspaceContainer refetchFolder={refetchFolder}>
@@ -378,9 +435,16 @@ const Workspace = () => {
         submitLabel='Delete'
         onCancel={() => setDeleteModalOpen(false)}
         onSubmit={confirmDelete}
-        title='Delete Items'
+        title={`Delete ${
+          Object.values(checkedFiles).filter(Boolean).length
+        } Item(s)`}
         isLoading={false}
-      />
+      >
+        <Typography>
+          Are you sure you want to delete the selected item(s)? This action
+          cannot be undone.
+        </Typography>
+      </WorkSpaceModal>
 
       {/* {showUploadProgress && (
         <UploadProgress uploads={uploads} onClose={uploadProgressClose} />

@@ -9,7 +9,9 @@ export const folderService = {
   getList: async (folderId, params) =>
     httpRequest.get(`api/v1/folder/contents/${folderId}`, {
       params
-    })
+    }),
+  delete: async (folderId) =>
+    httpRequest.delete(`api/v1/folder/delete/${folderId}`)
 }
 
 export const useCreateFolder = (mutationSettings) => {
@@ -22,4 +24,8 @@ export const useGetFolderList = ({ params, folderId, queryProps }) => {
     () => folderService.getList(folderId, params),
     queryProps
   )
+}
+
+export const useDeleteFolder = (mutationSettings) => {
+  return useMutation(folderService.delete, mutationSettings)
 }

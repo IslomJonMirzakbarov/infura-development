@@ -8,7 +8,7 @@ export const fileService = {
     },
   }),
   getDownloads: async () => httpRequest.get('api/v1/file/downloads'),
-  delete: async (data) => httpRequest.post('api/v1/file/delete', data),
+  delete: async (cid) => httpRequest.post('api/v1/file/delete', { cid }),
   getMetadata: async (id) => httpRequest.get(`api/v1/file/metadata/${id}`)
 }
 
