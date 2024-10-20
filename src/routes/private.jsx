@@ -67,7 +67,7 @@ export const privateRoutes = [
             path: ':poolId/:folderId',
             element: <Workspace />
           },
-          { path: ':poolId/details', element: <ProfileDetails /> }
+          { path: ':poolId/:folderId/details', element: <ProfileDetails /> }
         ]
       },
       {

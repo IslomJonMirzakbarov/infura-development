@@ -72,7 +72,7 @@ const WorkspaceContainer = ({ refetchFolder, children }) => {
   const handleFileUpload = (files) => {
     if (files.length > 0) {
       const formData = new FormData()
-      formData.append('ownerId', '')
+      formData.append('poolId', poolId)
       formData.append('folderId', folderId)
 
       files.forEach((file) => {

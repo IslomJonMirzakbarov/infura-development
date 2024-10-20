@@ -3,9 +3,9 @@ import { Box, Skeleton, Typography } from '@mui/material'
 import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
 import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
 import HFDropzone from 'components/Dropzone'
+import FileCard from 'components/FileCard'
 import FileUploadTable from 'components/FileUploadTable'
 import FolderCard from 'components/FolderCard'
-import FileCard from 'components/FileCard'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useQueryClient } from 'react-query'
@@ -23,7 +23,7 @@ import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
 import WorkSpaceModal from './WorkSpaceModal'
 import WorkspaceContainer from './WorkspaceContainer'
-import { demoColumns, formattedData } from './customData'
+import { demoColumns } from './customData'
 import styles from './style.module.scss'
 
 const Workspace = () => {
@@ -88,7 +88,7 @@ const Workspace = () => {
     (acceptedFiles) => {
       if (acceptedFiles.length > 0) {
         const formData = new FormData()
-        formData.append('ownerId', '')
+        formData.append('poolId', poolId)
         formData.append('folderId', folderId)
 
         acceptedFiles.forEach((file) => {
@@ -211,7 +211,7 @@ const Workspace = () => {
 
   return (
     <WorkspaceContainer refetchFolder={refetchFolder}>
-      <Link to={`/main/workspace/${poolId}/details`}>
+      <Link to={`/main/workspace/${poolId}/${folderId}/details`}>
         <Typography
           fontWeight='500'
           fontSize='12px'
@@ -328,12 +328,16 @@ const Workspace = () => {
           </Box>
         ) : (
           <Box className={styles.tableHolder}>
-            <FileUploadTable 
-              columns={demoColumns} 
-              data={[...folderList, ...fileList].map(item => ({
+            <FileUploadTable
+              columns={demoColumns}
+              data={[...folderList, ...fileList].map((item) => ({
                 name: item.name || item.originalname,
                 type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
-                size: item.folderCount !== undefined ? `${item.totalItems} items` : formatStatStorageNumber(item.size).value + formatStatStorageNumber(item.size).cap,
+                size:
+                  item.folderCount !== undefined
+                    ? `${item.totalItems} items`
+                    : formatStatStorageNumber(item.size).value +
+                      formatStatStorageNumber(item.size).cap,
                 created_at: formatTime(item.createdAt),
                 content_id: item.id
               }))}

@@ -20,18 +20,31 @@ import { formatNumberWithCommas } from 'utils/utilFuncs'
 import LoaderModal from 'views/Billing/LoaderModal'
 import ApproveModal from 'views/Billing/Pool/ApproveModal'
 import { months, units } from 'views/Billing/Pool/poolData'
+import WorkspaceContainer from 'views/Workspace/WorkspaceContainer'
 import styles from './styles.module.scss'
+import { useGetFolderList } from 'services/folder.service'
 
-const ProfileDetails = ({ poolData, poolId }) => {
+const ProfileDetails = ({ poolData, poolId: propPoolId }) => {
   // console.log('poolData and poolId', poolData, poolId)
 
-  const { poolId: workspacePoolId } = useParams()
+  const { poolId, folderId } = useParams()
+  const {
+    refetch: refetchFolder,
+  } = useGetFolderList({
+    params: {
+      poolId
+    },
+    folderId,
+    queryProps: {
+      enabled: !!poolId
+    }
+  })
   // console.log('workspacePoolId', workspacePoolId)
 
-  const { data: worksapcePoolData } = useGetPoolById({ id: workspacePoolId })
+  const { data: worksapcePoolData } = useGetPoolById({ id: poolId })
 
-  const customPoolId = workspacePoolId ? workspacePoolId : poolId
-  const customPoolData = workspacePoolId ? worksapcePoolData : poolData
+  const customPoolId = poolId ? poolId : propPoolId
+  const customPoolData = poolId ? worksapcePoolData : poolData
   console.log('customPoolId, customPoolData', customPoolId, customPoolData)
   const queryClient = useQueryClient()
   const navigate = useNavigate()
@@ -214,159 +227,161 @@ const ProfileDetails = ({ poolData, poolId }) => {
 
   return (
     <PageTransition>
-      <Box
-        width='100%'
-        display='flex'
-        flexDirection={workspacePoolId ? 'column' : 'row'}
-        alignItems={workspacePoolId ? 'start' : 'center'}
-        className={styles.detailsBox}
-      >
-        {workspacePoolId && (
-          <Typography
-            fontWeight='500'
-            fontSize='15px'
-            lineHeight='22.5px'
-            color='#27e6d6'
-            style={{ textDecoration: 'underline', cursor: 'pointer' }}
-            onClick={() => navigate(-1)}
-            marginBottom='10px'
-          >
-            &lt; Back
-          </Typography>
-        )}
-        <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
-          <Typography component='p' color='#fff' variant='main' mb='22px'>
-            {t('details')}
-          </Typography>
-          <div className={styles.elements}>
-            <BasicTextField
-              control={control}
-              name='name'
-              label={t('pool_name')}
-              required
-              fullWidth
-              readOnly={true}
-              disabled
-            />
-            <div style={{ display: 'flex', gap: '6px' }}>
+      <WorkspaceContainer refetchFolder={refetchFolder}>
+        <Box
+          width='100%'
+          display='flex'
+          flexDirection={poolId ? 'column' : 'row'}
+          alignItems={poolId ? 'start' : 'center'}
+          className={styles.detailsBox}
+        >
+          {poolId && (
+            <Typography
+              fontWeight='500'
+              fontSize='15px'
+              lineHeight='22.5px'
+              color='#27e6d6'
+              style={{ textDecoration: 'underline', cursor: 'pointer' }}
+              onClick={() => navigate(-1)}
+              marginBottom='10px'
+            >
+              &lt; Back
+            </Typography>
+          )}
+          <form onSubmit={handleSubmit(onSubmit)} style={{ width: '100%' }}>
+            <Typography component='p' color='#fff' variant='main' mb='22px'>
+              {t('details')}
+            </Typography>
+            <div className={styles.elements}>
               <BasicTextField
                 control={control}
-                name='size'
-                label='pool_size'
-                type='number'
-                onKeyDown={(evt) =>
-                  (evt.key === '.' || evt.key === '-') && evt.preventDefault()
-                }
-                disabled={!editable}
+                name='name'
+                label={t('pool_name')}
+                required
+                fullWidth
+                readOnly={true}
+                disabled
+              />
+              <div style={{ display: 'flex', gap: '6px' }}>
+                <BasicTextField
+                  control={control}
+                  name='size'
+                  label='pool_size'
+                  type='number'
+                  onKeyDown={(evt) =>
+                    (evt.key === '.' || evt.key === '-') && evt.preventDefault()
+                  }
+                  disabled={!editable}
+                />
+                <HFSelect
+                  control={control}
+                  name='unit'
+                  required
+                  style={{ width: '80px' }}
+                  options={units}
+                  disabled={!editable}
+                />
+              </div>
+              <CopyField
+                control={control}
+                name='gateway'
+                label={t('gateway_b')}
+                fullWidth
+                withCopy
+                readOnly={true}
+                disabled
+                value={gatewayUrl}
               />
               <HFSelect
                 control={control}
-                name='unit'
-                required
-                style={{ width: '80px' }}
-                options={units}
+                name='period'
+                label={editable ? t('extra_period') : t('period')}
+                fullWidth
+                options={months}
                 disabled={!editable}
               />
+              <Box>
+                {customPoolData?.details?.price !== 'FREE' && (
+                  <BasicTextField
+                    control={control}
+                    name='price'
+                    label={t('pool_price')}
+                    fullWidth
+                    type='text'
+                    rules={{
+                      validate: (value) => {
+                        const numberString = value.replace(/,/g, '')
+                        return (
+                          (numberString &&
+                            !isNaN(numberString) &&
+                            parseInt(numberString, 10) >= minPrice) ||
+                          t('min_price', { value: minPrice })
+                        )
+                      }
+                    }}
+                    disabled={!editable}
+                  />
+                )}
+
+                {customPoolData?.details?.tx_hash && (
+                  <Box className={styles.txHash}>
+                    <Typography
+                      color='white'
+                      variant='standard'
+                      fontWeight={500}
+                      mb={1}
+                    >
+                      {t('tx_hash')}
+                    </Typography>
+                    <a
+                      href={`https://baobab.scope.klaytn.com/tx/${customPoolData?.details?.tx_hash}`}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      <p>{customPoolData?.details.tx_hash}</p>
+                    </a>
+                  </Box>
+                )}
+              </Box>
+
+              <PasswordField
+                control={control}
+                name='api_key'
+                type='password'
+                label={t('api_key')}
+                fullWidth
+                withCopy
+                readOnly={true}
+                disabled
+                value={apiKeyData?.details?.[0]?.apiKey}
+              />
             </div>
-            <CopyField
-              control={control}
-              name='gateway'
-              label={t('gateway_b')}
-              fullWidth
-              withCopy
-              readOnly={true}
-              disabled
-              value={gatewayUrl}
-            />
-            <HFSelect
-              control={control}
-              name='period'
-              label={editable ? t('extra_period') : t('period')}
-              fullWidth
-              options={months}
-              disabled={!editable}
-            />
-            <Box>
-              {customPoolData?.details?.price !== 'FREE' && (
-                <BasicTextField
-                  control={control}
-                  name='price'
-                  label={t('pool_price')}
-                  fullWidth
-                  type='text'
-                  rules={{
-                    validate: (value) => {
-                      const numberString = value.replace(/,/g, '')
-                      return (
-                        (numberString &&
-                          !isNaN(numberString) &&
-                          parseInt(numberString, 10) >= minPrice) ||
-                        t('min_price', { value: minPrice })
-                      )
-                    }
-                  }}
-                  disabled={!editable}
-                />
-              )}
-
-              {customPoolData?.details?.tx_hash && (
-                <Box className={styles.txHash}>
-                  <Typography
-                    color='white'
-                    variant='standard'
-                    fontWeight={500}
-                    mb={1}
-                  >
-                    {t('tx_hash')}
-                  </Typography>
-                  <a
-                    href={`https://baobab.scope.klaytn.com/tx/${customPoolData?.details?.tx_hash}`}
-                    target='_blank'
-                    rel='noreferrer'
-                  >
-                    <p>{customPoolData?.details.tx_hash}</p>
-                  </a>
-                </Box>
-              )}
-            </Box>
-
-            <PasswordField
-              control={control}
-              name='api_key'
-              type='password'
-              label={t('api_key')}
-              fullWidth
-              withCopy
-              readOnly={true}
-              disabled
-              value={apiKeyData?.details?.[0]?.apiKey}
-            />
-          </div>
-          {editable && (
-            <Box
-              display='flex'
-              justifyContent='flex-end'
-              width='100%'
-              height='100%'
-              mt='60px'
-              className={styles.planBtn}
-            >
-              <Button variant='contained' color='secondary' type='submit'>
-                {t('edit')}
-              </Button>
-            </Box>
-          )}
-        </form>
-      </Box>
-      <ApproveModal
-        onConfirmApprove={onConfirmApprove}
-        open={openApprove}
-        title='CYCON'
-        handleClose={() => setOpenApprove(false)}
-        desc={t('approve_desc')}
-        img='https://swap.conun.io/static/cycon.svg'
-      />
-      <LoaderModal title='Loading' open={open2} />
+            {editable && (
+              <Box
+                display='flex'
+                justifyContent='flex-end'
+                width='100%'
+                height='100%'
+                mt='60px'
+                className={styles.planBtn}
+              >
+                <Button variant='contained' color='secondary' type='submit'>
+                  {t('edit')}
+                </Button>
+              </Box>
+            )}
+          </form>
+        </Box>
+        <ApproveModal
+          onConfirmApprove={onConfirmApprove}
+          open={openApprove}
+          title='CYCON'
+          handleClose={() => setOpenApprove(false)}
+          desc={t('approve_desc')}
+          img='https://swap.conun.io/static/cycon.svg'
+        />
+        <LoaderModal title='Loading' open={open2} />
+      </WorkspaceContainer>
     </PageTransition>
   )
 }
