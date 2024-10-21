@@ -334,8 +334,7 @@ const Workspace = () => {
             height='38px'
           >
             <Box display='flex' gap='8px' alignItems='center'>
-              {(Object.values(checkedFiles).some((isChecked) => isChecked) ||
-                view === 'list') &&
+              {Object.values(checkedFiles).some((isChecked) => isChecked) &&
                 fileButtons.map((button) => (
                   <FileButton
                     button={button}
@@ -387,17 +386,18 @@ const Workspace = () => {
           <Box className={styles.tableHolder}>
             <FileUploadTable
               columns={demoColumns}
-              data={[...folderList, ...fileList].map((item) => ({
+              data={[...folderList, ...fileList].map((item, index) => ({
+                id: index,
                 name: item.name || item.originalname,
                 type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
-                size:
-                  item.folderCount !== undefined
-                    ? `${item.totalItems} items`
-                    : formatStatStorageNumber(item.size).value +
-                      formatStatStorageNumber(item.size).cap,
+                size: item.folderCount !== undefined
+                  ? `${item.totalItems} items`
+                  : formatStatStorageNumber(item.size).value + formatStatStorageNumber(item.size).cap,
                 created_at: formatTime(item.createdAt),
                 content_id: item.id
               }))}
+              checkedFiles={checkedFiles}
+              onCheckboxToggle={handleCheckboxToggle}
             />
           </Box>
         )
