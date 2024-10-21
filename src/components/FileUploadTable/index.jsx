@@ -18,7 +18,7 @@ export default function FileUploadTable({
   checkedFiles,
   onCheckboxToggle
 }) {
-  console.log('datadata: ', columns, data)
+  console.log('datadata: ', data)
   const navigate = useNavigate()
   const [copiedIndex, setCopiedIndex] = useState(null)
 
@@ -82,7 +82,11 @@ export default function FileUploadTable({
                       {item[value.key]?.replace(/\.[^/.]+$/, '')}
                     </td>
                   ) : value.key === 'type' ? (
-                    <td>{item[value.key]?.split('/')[1]}</td>
+                    <td>
+                      {item[value.key] === 'Folder'
+                        ? 'folder'
+                        : item[value.key]?.split('/')[1]}
+                    </td>
                   ) : (
                     <td>{item[value.key]}</td>
                   )
