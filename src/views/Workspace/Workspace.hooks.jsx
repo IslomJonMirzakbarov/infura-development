@@ -1,4 +1,5 @@
 import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
+import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
 import { saveAs } from 'file-saver'
 import toast from 'react-hot-toast'
 import {
@@ -30,14 +31,14 @@ export default function useWorkspace({
       color: '#000',
       text: 'Download',
       action: 'download'
+    },
+    {
+      bgColor: '#27275E',
+      Icon: <TrashIcon />,
+      color: '#fff',
+      text: 'Delete',
+      action: 'delete'
     }
-    // {
-    //   bgColor: '#27275E',
-    //   Icon: <TrashIcon />,
-    //   color: '#fff',
-    //   text: 'Delete',
-    //   action: 'delete'
-    // }
   ]
 
   // API Mutation for file upload

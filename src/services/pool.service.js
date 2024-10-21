@@ -24,12 +24,14 @@ export const poolService = {
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
   getPoolById: async (id) => httpRequest.get(`api/v1/pool/pool-info/${id}`),
+  // createFolder: async (data) =>
+  //   axios.post(`${INFURA_NETWORK}/v1/file-service/folder/create`, data?.data, {
+  //     headers: {
+  //       Authorization: `Bearer ${data?.token}`
+  //     }
+  //   }),
   createFolder: async (data) =>
-    axios.post(`${INFURA_NETWORK}/v1/file-service/folder/create`, data?.data, {
-      headers: {
-        Authorization: `Bearer ${data?.token}`
-      }
-    }),
+    httpRequest.post(`api/v1/folder/create`, data?.data),
   getFoldersByPoolId: async (poolId, token) =>
     axios.get(`${INFURA_NETWORK}/v1/file-service/folders/${poolId}`, {
       headers: {

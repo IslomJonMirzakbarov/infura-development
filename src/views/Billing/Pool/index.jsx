@@ -12,6 +12,7 @@ import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom'
+import { useApiGenerateKey } from 'services/auth.service'
 import {
   useCreateFolder,
   usePoolCheckMutation,
@@ -87,6 +88,15 @@ const Pool = () => {
   }, [])
 
   const { mutate } = usePoolCreateMutation()
+  const { mutate: generateApiKey } = useApiGenerateKey({
+    onSuccess: (apiKeyData) => {
+      console.log('API Key generated successfully:', apiKeyData)
+    },
+    onError: (error) => {
+      console.error('Error generating API Key:', error)
+      toast.error('Failed to generate API Key')
+    }
+  })
   const { mutate: createFolder } = useCreateFolder()
 
   const [formData, setFormData] = useState(null)
@@ -147,17 +157,18 @@ const Pool = () => {
         formData.pool_size.unit === 'GB'
           ? parseInt(formData.pool_size.value)
           : parseInt(formData.pool_size.value * 1024)
-      console.log('formData inside submit checkout: ', formData)
+      // console.log('formData inside submit checkout: ', formData)
       const result = await createPool({
         ...formData,
         pool_size
       })
-      console.log('result of submit checkout: ', result)
+      console.log('result of create pool metamask: ', result)
       setTxHash(result.transactionHash)
       if (result.transactionHash)
         mutate(
           {
             subscriptionPlan: 0,
+            price: formData.pool_price,
             poolName: formData.pool_name,
             poolSize: {
               size: formData.pool_size.value,
@@ -174,6 +185,17 @@ const Pool = () => {
               setOpen2(false)
               setOpen3(true)
               queryClient.invalidateQueries('pools')
+
+              const apiKeyData = {
+                poolId: res.details.poolId,
+                poolName: res.details.poolName,
+                poolNote: `API Key for ${res.details.poolName}`,
+                period: res.details.period,
+                read: true,
+                write: true
+              }
+
+              generateApiKey(apiKeyData)
             },
             onError: (error) => {
               setOpen2(false)

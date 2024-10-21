@@ -7,7 +7,7 @@
   transition: border 0.2s ease-in-out;
   position: relative;
   height: 252px;
-  width: 197px;
+  width: 100%;
 
   &:hover {
     border-color: #fff;
@@ -38,6 +38,7 @@
 .image {
   max-width: 100%;
   max-height: 100%;
+  object-fit: cover;
 }
 
 .filename {

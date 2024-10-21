@@ -1,11 +1,17 @@
-import { Box, Skeleton, Typography, styled } from '@mui/material'
+import { ArrowBack } from '@material-ui/icons'
+import { Box, Skeleton, Typography } from '@mui/material'
+import { ReactComponent as DownloadIcon } from 'assets/icons/download_icon.svg'
+import { ReactComponent as TrashIcon } from 'assets/icons/trash_icon.svg'
 import HFDropzone from 'components/Dropzone'
 import FileCard from 'components/FileCard'
 import FileUploadTable from 'components/FileUploadTable'
-import { useEffect, useRef, useState } from 'react'
+import FolderCard from 'components/FolderCard'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useQueryClient } from 'react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useDeleteFile, useUploadFile } from 'services/file.service'
+import { useDeleteFolder, useGetFolderList } from 'services/folder.service'
 import {
   useGetFileHistory,
   useGetFoldersByPoolId,
@@ -16,13 +22,9 @@ import { formatStatStorageNumber } from 'utils/utilFuncs'
 import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
 import WorkSpaceModal from './WorkSpaceModal'
-import useWorkspace from './Workspace.hooks'
+import WorkspaceContainer from './WorkspaceContainer'
 import { demoColumns } from './customData'
 import styles from './style.module.scss'
-import { useGetFolderList } from 'services/folder.service'
-import FolderCard from 'components/FolderCard'
-import WorkspaceContainer from './WorkspaceContainer'
-import { ArrowBack } from '@material-ui/icons'
 
 const Workspace = () => {
   const { poolId, folderId } = useParams()
@@ -67,6 +69,7 @@ const Workspace = () => {
 
   const [files, setFiles] = useState([])
   const [checkedFiles, setCheckedFiles] = useState({})
+  console.log('checkedFiles===>', checkedFiles)
   const [menuAnchorEl, setMenuAnchorEl] = useState(null)
   const [view, setView] = useState('grid')
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -79,31 +82,151 @@ const Workspace = () => {
     setErrorToastShown(false)
   }, [poolId])
 
-  const {
-    handleDrop,
-    handleCheckboxToggle,
-    confirmDelete,
-    handleMenuOpen,
-    handleMenuItemClick,
-    handleMenuClose,
-    fileButtons,
-    handleButtonClick
-  } = useWorkspace({
-    setUploads,
-    poolId,
-    parentFolderId,
-    setShowUploadProgress,
-    setCheckedFiles,
-    checkedFiles,
-    files: poolfiles,
-    setFiles,
-    setDeleteModalOpen,
-    setMenuAnchorEl,
-    setView,
-    token: poolData?.token,
-    rootFolderId,
-    queryClient
-  })
+  const { mutate: uploadFile } = useUploadFile()
+  const { mutate: deleteFile } = useDeleteFile()
+  const { mutate: deleteFolder } = useDeleteFolder()
+
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      if (acceptedFiles.length > 0) {
+        const formData = new FormData()
+        formData.append('poolId', poolId)
+        formData.append('folderId', folderId)
+
+        acceptedFiles.forEach((file) => {
+          formData.append(`files`, file)
+        })
+
+        uploadFile(formData, {
+          onSuccess: () => {
+            toast.success(`Files uploaded successfully`)
+            refetchFolder()
+          },
+          onError: (error) => {
+            toast.error(`Failed to upload files: ${error.message}`)
+          }
+        })
+
+        setUploads(
+          acceptedFiles.map((file) => ({ file, progress: 0, completed: false }))
+        )
+        setShowUploadProgress(true)
+      }
+    },
+    [folderId, uploadFile, refetchFolder]
+  )
+
+  const handleCheckboxToggle = useCallback((id) => {
+    setCheckedFiles((prev) => ({ ...prev, [id]: !prev[id] }))
+  }, [])
+
+  const { folderList, fileList } = useMemo(
+    () => ({
+      folderList: folderContent?.details?.results?.folders || [],
+      fileList: folderContent?.details?.results?.files || []
+    }),
+    [folderContent]
+  )
+
+  const confirmDelete = useCallback(() => {
+    console.log('checkedFiles===>', checkedFiles);
+
+    const itemsToDelete = Object.keys(checkedFiles)
+      .filter(key => checkedFiles[key])
+      .map(key => {
+        const index = parseInt(key, 10);
+        const isFolder = index < folderList.length;
+        const item = isFolder 
+          ? folderList[index] 
+          : fileList[index - folderList.length];
+
+        return {
+          id: item.id,
+          isFolder,
+          cid: item.cid,
+          name: item.name || item.originalname
+        };
+      });
+
+    console.log('itemsToDelete===>', itemsToDelete);
+
+    itemsToDelete.forEach(({ id, isFolder, cid, name }) => {
+      if (isFolder) {
+        deleteFolder(id, {
+          onSuccess: () => {
+            toast.success(`Folder "${name}" deleted successfully`);
+            refetchFolder();
+          },
+          onError: (error) => {
+            toast.error(`Failed to delete folder "${name}": ${error.message}`);
+          }
+        });
+      } else {
+        deleteFile(cid, {
+          onSuccess: () => {
+            toast.success(`File "${name}" deleted successfully`);
+            refetchFolder();
+          },
+          onError: (error) => {
+            toast.error(`Failed to delete file "${name}": ${error.message}`);
+          }
+        });
+      }
+    });
+
+    setCheckedFiles({});
+    setDeleteModalOpen(false);
+  }, [checkedFiles, deleteFile, deleteFolder, fileList, folderList, refetchFolder]);
+
+  const handleMenuOpen = useCallback((event) => {
+    setMenuAnchorEl(event.currentTarget)
+  }, [])
+
+  const handleMenuClose = useCallback(() => {
+    setMenuAnchorEl(null)
+  }, [])
+
+  const handleMenuItemClick = useCallback(
+    (view) => {
+      setView(view)
+      handleMenuClose()
+    },
+    [handleMenuClose]
+  )
+
+  const fileButtons = [
+    {
+      bgColor: '#27E6D6',
+      Icon: <DownloadIcon />,
+      color: '#000',
+      text: 'Download',
+      action: 'download'
+    },
+    {
+      bgColor: '#27275E',
+      Icon: <TrashIcon />,
+      color: '#fff',
+      text: 'Delete',
+      action: 'delete'
+    }
+  ]
+
+  const handleButtonClick = useCallback(
+    (action) => {
+      if (action === 'delete') {
+        const hasCheckedItems = Object.values(checkedFiles).some(
+          (isChecked) => isChecked
+        )
+        if (hasCheckedItems) {
+          setDeleteModalOpen(true)
+        } else {
+          toast.error('Please select items to delete')
+        }
+      }
+      // Handle other actions as needed
+    },
+    [checkedFiles]
+  )
 
   useEffect(() => {
     if (isError && error && !errorToastShown) {
@@ -129,7 +252,6 @@ const Workspace = () => {
         }
       })
 
-      // Check if files exist
       if (selectedFiles.length > 0) {
         console.log('Selected Files:', selectedFiles)
         setUploads(selectedFiles)
@@ -144,13 +266,9 @@ const Workspace = () => {
     }
   }, [handleDrop])
 
-  const folderList = folderContent?.details?.results?.folders
-
-  console.log('isLoading', isLoading)
-
   return (
     <WorkspaceContainer refetchFolder={refetchFolder}>
-      <Link to={`/main/workspace/${poolId}/details`}>
+      <Link to={`/main/workspace/${poolId}/${folderId}/details`}>
         <Typography
           fontWeight='500'
           fontSize='12px'
@@ -216,8 +334,7 @@ const Workspace = () => {
             height='38px'
           >
             <Box display='flex' gap='8px' alignItems='center'>
-              {(Object.values(checkedFiles).some((isChecked) => isChecked) ||
-                view === 'list') &&
+              {Object.values(checkedFiles).some((isChecked) => isChecked) &&
                 fileButtons.map((button) => (
                   <FileButton
                     button={button}
@@ -235,12 +352,7 @@ const Workspace = () => {
           </Box>
         )}
       </Box>
-      {!isLoading && (!folderList || folderList?.length === 0) && (
-        <Box marginTop='20px'>
-          <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
-        </Box>
-      )}
-      {!isLoading && folderList?.length > 0 ? (
+      {!isLoading && (folderList.length > 0 || fileList.length > 0) ? (
         view === 'grid' ? (
           <Box
             display='grid'
@@ -260,14 +372,41 @@ const Workspace = () => {
                 }
               />
             ))}
+            {fileList.map((file, index) => (
+              <FileCard
+                key={file.id}
+                index={folderList.length + index}
+                file={file}
+                handleCheckboxToggle={handleCheckboxToggle}
+                checkedFiles={checkedFiles}
+              />
+            ))}
           </Box>
         ) : (
           <Box className={styles.tableHolder}>
-            <FileUploadTable columns={demoColumns} data={fPoolData} />
+            <FileUploadTable
+              columns={demoColumns}
+              data={[...folderList, ...fileList].map((item, index) => ({
+                id: index,
+                name: item.name || item.originalname,
+                type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
+                size: item.folderCount !== undefined
+                  ? `${item.totalItems} items`
+                  : formatStatStorageNumber(item.size).value + formatStatStorageNumber(item.size).cap,
+                created_at: formatTime(item.createdAt),
+                content_id: item.id
+              }))}
+              checkedFiles={checkedFiles}
+              onCheckboxToggle={handleCheckboxToggle}
+            />
           </Box>
         )
       ) : (
-        <></>
+        !isLoading && (
+          <Box marginTop='20px'>
+            <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
+          </Box>
+        )
       )}
 
       {isLoading && (
@@ -296,9 +435,16 @@ const Workspace = () => {
         submitLabel='Delete'
         onCancel={() => setDeleteModalOpen(false)}
         onSubmit={confirmDelete}
-        title='Delete Items'
+        title={`Delete ${
+          Object.values(checkedFiles).filter(Boolean).length
+        } Item(s)`}
         isLoading={false}
-      />
+      >
+        <Typography>
+          Are you sure you want to delete the selected item(s)? This action
+          cannot be undone.
+        </Typography>
+      </WorkSpaceModal>
 
       {/* {showUploadProgress && (
         <UploadProgress uploads={uploads} onClose={uploadProgressClose} />

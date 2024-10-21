@@ -37,6 +37,26 @@ const workspaceItem = {
   path: '/main/workspace'
 }
 
+const getExpirationText = (expirationDate) => {
+  const now = new Date()
+  const expiration = new Date(expirationDate)
+  const diffTime = Math.abs(expiration - now)
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+  if (diffDays > 365) {
+    const years = Math.floor(diffDays / 365)
+    return `Expires in ${years} year${years > 1 ? 's' : ''}`
+  } else if (diffDays > 30) {
+    const months = Math.floor(diffDays / 30)
+    return `Expires in ${months} month${months > 1 ? 's' : ''}`
+  } else if (diffDays > 7) {
+    const weeks = Math.floor(diffDays / 7)
+    return `Expires in ${weeks} week${weeks > 1 ? 's' : ''}`
+  } else {
+    return `Expires in ${diffDays} day${diffDays > 1 ? 's' : ''}`
+  }
+}
+
 export default function Sidebar() {
   const userId = authStore?.userData?.id
   const { poolId } = useParams()
@@ -55,14 +75,6 @@ export default function Sidebar() {
   const toggle = () => setOpen((prev) => !prev)
   const toggleHamburger = () => setIsOpen((prev) => !prev)
   const toggleWorkspace = () => setWorkspaceOpen((prev) => !prev)
-
-  const handleNavigation = (path, event) => {
-    if (isLoading) {
-      event.preventDefault()
-    } else {
-      navigate(path)
-    }
-  }
 
   const handlePoolClick = (poolId) => {
     setSelectedPool(poolId)
@@ -108,7 +120,7 @@ export default function Sidebar() {
         {open && <LogoutModal toggle={toggle} />}
         <div>
           <div className={styles.header}>
-            <NavLink to='/' onClick={(e) => handleNavigation('/', e)}>
+            <NavLink to='/'>
               {isMainnet ? (
                 <LogoM
                   style={{ width: 102, height: 43.57 }}
@@ -141,7 +153,6 @@ export default function Sidebar() {
                         navData.isActive ? styles.active : ''
                       }
                       to={item.path}
-                      onClick={(e) => handleNavigation(item.path, e)}
                     >
                       {item.icon}
                       {t(item.title)}
@@ -155,7 +166,7 @@ export default function Sidebar() {
                       isLocationWorkspace && styles.active
                     )}
                     onClick={toggleWorkspace}
-                    to={isLocationWorkspace ? '#' : workspaceItem.path}
+                    to={workspaceItem.path}
                   >
                     {workspaceOpen ? <UpIcon /> : <DownIcon />}
                     {t(workspaceItem.title)}
@@ -167,7 +178,7 @@ export default function Sidebar() {
                         {pools?.details?.results?.map((pool) => (
                           <CustomTooltip
                             key={pool.poolId}
-                            title='Expires in 2 weeks'
+                            title={getExpirationText(pool.expirationDate)}
                             placement='right'
                           >
                             <div

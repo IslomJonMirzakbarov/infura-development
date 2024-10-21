@@ -1,20 +1,19 @@
-import React, { useEffect, useMemo } from 'react'
-import Container from 'components/Container'
-import styles from './style.module.scss'
 import { Box, Button, Typography } from '@mui/material'
-import HFSelect from 'components/ControlledFormElements/HFSelect'
-import { useForm } from 'react-hook-form'
 import DashboardBarChart from 'components/BarChart'
+import Container from 'components/Container'
+import HFSelect from 'components/ControlledFormElements/HFSelect'
+import PageTransition from 'components/PageTransition'
+import { useEffect, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { useDashboard } from 'services/pool.service'
 import poolStore from 'store/pool.store'
 import {
   formatStatNumber,
   formatStatStorageNumber,
   getShortenedPoolName
 } from 'utils/utilFuncs'
-import PageTransition from 'components/PageTransition'
-import { useTranslation } from 'react-i18next'
+import styles from './style.module.scss'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -27,9 +26,91 @@ const Dashboard = () => {
 
   const selectedPoolId = watch('dashboardPool')
 
-  const { data } = useDashboard()
-  console.log('dashboard: ', data)
+  // Wrap the data object in useMemo
+  const data = useMemo(() => ({
+    pools: [
+      {
+        id: '665ef016e7fb28ca37c8c0f0',
+        name: 'Demo pool ab5',
+        price: '300',
+        total_size: '44GB',
+        remaining_size: '44.000000GB',
+        subscribers_count: 0,
+        uploaded_files_count: 0,
+        downloaded_files_count: 0
+      },
+      {
+        id: '66e2ed53ce68b2fc846fc55f',
+        name: 'test pool i4',
+        price: '800',
+        total_size: '44GB',
+        remaining_size: '43.999718GB',
+        subscribers_count: 0,
+        uploaded_files_count: 1,
+        downloaded_files_count: 1
+      },
+      {
+        id: '66790d9f845169e3bd1ee013',
+        name: 'Demo Pool ab7',
+        price: '444',
+        total_size: '55GB',
+        remaining_size: '54.999718GB',
+        subscribers_count: 1,
+        uploaded_files_count: 2,
+        downloaded_files_count: 0
+      },
+      {
+        id: '665eed25e7fb28ca37c8c022',
+        name: 'Demo pool  ab2',
+        price: '334',
+        total_size: '223GB',
+        remaining_size: '223.000000GB',
+        subscribers_count: 0,
+        uploaded_files_count: 0,
+        downloaded_files_count: 0
+      },
+      {
+        id: '66e2e0f4ce68b2fc846fc483',
+        name: 'test poo i3',
+        price: '600',
+        total_size: '33GB',
+        remaining_size: '33.000000GB',
+        subscribers_count: 0,
+        uploaded_files_count: 0,
+        downloaded_files_count: 0
+      },
+      {
+        id: '66e30c533d89c7eef0684183',
+        name: 'test pool i5',
+        price: '400',
+        total_size: '55GB',
+        remaining_size: '55.000000GB',
+        subscribers_count: 0,
+        uploaded_files_count: 0,
+        downloaded_files_count: 0
+      },
+      {
+        id: '66e30f0f3d89c7eef068423f',
+        name: 'test pool i6',
+        price: '600',
+        total_size: '66GB',
+        remaining_size: '65.998934GB',
+        subscribers_count: 0,
+        uploaded_files_count: 4,
+        downloaded_files_count: 0
+      }
+    ],
+    all: {
+      total_size: '520GB',
+      remaining_size: '519.998371GB',
+      subscribers_count: 1,
+      uploaded_files_count: 7,
+      downloaded_files_count: 1
+    },
+    available_nodes_count: 73
+  }), []) // Empty dependency array means this will only be created once
 
+  // Update the existing useMemo to use the memoized data
   const poolData = useMemo(() => {
     return selectedPoolId === 'ALL'
       ? data?.all
