@@ -1,9 +1,11 @@
+import { useEffect, useState } from 'react'
 import CheckIcon from '@mui/icons-material/Check'
 import { Box, Typography, styled } from '@mui/material'
 import { ReactComponent as StarIcon } from 'assets/icons/star_icon.svg'
 import folderImage from 'assets/images/folder.png'
 import { formatStatStorageNumber } from 'utils/utilFuncs'
 import styles from './style.module.scss'
+import { useGetItemWebview } from 'services/file.service'
 
 const CustomCheckbox = styled('span')(({ theme, checked }) => ({
   borderRadius: 5,
@@ -27,6 +29,17 @@ export default function FileCard({
   handleCheckboxToggle,
   checkedFiles
 }) {
+  const [imageUrl, setImageUrl] = useState(null)
+  const { data: itemWebview, isLoading, error } = useGetItemWebview(file.cid)
+
+  useEffect(() => {
+    if (itemWebview) {
+      const url = URL.createObjectURL(itemWebview)
+      setImageUrl(url)
+      return () => URL.revokeObjectURL(url)
+    }
+  }, [itemWebview])
+
   const isImageFile = (mimetype) => {
     return mimetype.startsWith('image/')
   }
@@ -47,11 +60,23 @@ export default function FileCard({
       </Box>
       <Box className={styles.imageContainer}>
         {isImageFile(file.mimetype) ? (
-          <img
-            src={`https://dexpo.oceandrive.network/ipfs/${file.cid}`}
-            alt={file.originalname}
-            className={styles.image}
-          />
+          isLoading ? (
+            <div className={styles.loadingPlaceholder}>Loading...</div>
+          ) : imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={file.originalname}
+              className={styles.image}
+              onError={(e) => {
+                console.error('Image failed to load:', e)
+                e.target.src = folderImage // Fallback to folder image
+              }}
+            />
+          ) : (
+            <div className={styles.errorPlaceholder}>
+              {error ? `Error: ${error.message}` : 'Failed to load image'}
+            </div>
+          )
         ) : (
           <img src={folderImage} alt='file' className={styles.image} />
         )}

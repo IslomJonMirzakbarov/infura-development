@@ -9,7 +9,10 @@ export const fileService = {
   }),
   getDownloads: async () => httpRequest.get('api/v1/file/downloads'),
   delete: async (cid) => httpRequest.post('api/v1/file/delete', { cid }),
-  getMetadata: async (id) => httpRequest.get(`api/v1/file/metadata/${id}`)
+  getMetadata: async (id) => httpRequest.get(`api/v1/file/metadata/${id}`),
+  getItemWebview: async (cid) => httpRequest.get(`api/v1/file/get-item-webview/${cid}`, {
+    responseType: 'blob'
+  })
 }
 
 export const useUploadFile = (mutationSettings) => {
@@ -26,4 +29,11 @@ export const useDeleteFile = (mutationSettings) => {
 
 export const useGetFileMetadata = (id, queryProps) => {
   return useQuery(['GET_FILE_METADATA', id], () => fileService.getMetadata(id), queryProps)
+}
+
+export const useGetItemWebview = (cid, queryProps) => {
+  return useQuery(['GET_ITEM_WEBVIEW', cid], () => fileService.getItemWebview(cid), {
+    enabled: !!cid,
+    ...queryProps
+  })
 }
