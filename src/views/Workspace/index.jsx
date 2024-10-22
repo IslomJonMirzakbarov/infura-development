@@ -25,6 +25,7 @@ import WorkSpaceModal from './WorkSpaceModal'
 import WorkspaceContainer from './WorkspaceContainer'
 import { demoColumns } from './customData'
 import styles from './style.module.scss'
+import UploadProgress from './UploadProgress'
 
 const Workspace = () => {
   const { poolId, folderId } = useParams()
@@ -336,6 +337,10 @@ const Workspace = () => {
     }
   }, [handleDrop])
 
+  const uploadProgressClose = useCallback(() => {
+    setShowUploadProgress(false);
+  }, []);
+
   return (
     <WorkspaceContainer refetchFolder={refetchFolder}>
       <Link to={`/main/workspace/${poolId}/${folderId}/details`}>
@@ -517,9 +522,9 @@ const Workspace = () => {
         </Typography>
       </WorkSpaceModal>
 
-      {/* {showUploadProgress && (
+      {showUploadProgress && (
         <UploadProgress uploads={uploads} onClose={uploadProgressClose} />
-      )} */}
+      )}
     </WorkspaceContainer>
   )
 }

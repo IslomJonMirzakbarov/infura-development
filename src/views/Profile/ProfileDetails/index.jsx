@@ -1,9 +1,13 @@
-import { Box, Button, Typography } from '@mui/material'
+// import InfoIcon from '@mui/icons-material/Info'
+import { Box, Button, Tooltip, tooltipClasses, Typography } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import { ReactComponent as InfoIcon } from 'assets/icons/info_icon.svg'
 import HFSelect from 'components/ControlledFormElements/HFSelect'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import CopyField from 'components/ControlledFormElements/HFSimplified/CopyField'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import PageTransition from 'components/PageTransition'
+import { format } from 'date-fns' // Add this import at the top of your file
 import useKaikas from 'hooks/useKaikas'
 import useMetaMask from 'hooks/useMetaMask'
 import { useEffect, useState } from 'react'
@@ -13,6 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { useNavigate, useParams } from 'react-router-dom'
 import { useGetApiKey } from 'services/auth.service'
+import { useGetFolderList } from 'services/folder.service'
 import { useGetPoolById, usePoolUpdateMutation } from 'services/pool.service'
 import walletStore from 'store/wallet.store'
 import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
@@ -22,15 +27,29 @@ import ApproveModal from 'views/Billing/Pool/ApproveModal'
 import { months, units } from 'views/Billing/Pool/poolData'
 import WorkspaceContainer from 'views/Workspace/WorkspaceContainer'
 import styles from './styles.module.scss'
-import { useGetFolderList } from 'services/folder.service'
 
 const ProfileDetails = ({ poolData, poolId: propPoolId }) => {
+  const CustomTooltip = styled(({ className, ...props }) => (
+    <Tooltip {...props} classes={{ popper: className }} />
+  ))(({ theme }) => ({
+    [`& .${tooltipClasses.tooltip}`]: {
+      background:
+        'linear-gradient(to right, #0E5DF8 0%, #0F4EE0 33%, #1028A3 66%, #10249F 100%)',
+      color: 'white',
+      maxWidth: 220,
+      fontSize: theme.typography.pxToRem(14),
+      borderRadius: '11px',
+      padding: '10px 15px',
+      position: 'relative'
+    },
+    [`& .${tooltipClasses.arrow}`]: {
+      color: '#0E5DF8'
+    }
+  }))
   // console.log('poolData and poolId', poolData, poolId)
 
   const { poolId, folderId } = useParams()
-  const {
-    refetch: refetchFolder,
-  } = useGetFolderList({
+  const { refetch: refetchFolder } = useGetFolderList({
     params: {
       poolId
     },
@@ -99,13 +118,20 @@ const ProfileDetails = ({ poolData, poolId: propPoolId }) => {
         customPoolData?.details?.price
       )}`
 
+      // Format the expiration date
+      const expirationDate = customPoolData?.details?.expirationDate
+      const formattedExpirationDate = expirationDate
+        ? format(new Date(expirationDate), 'yyyy.MM.dd HH:mm')
+        : ''
+
       reset({
         name: customPoolData?.details?.poolName,
         size: customPoolData?.details?.poolSize?.size,
         unit: customPoolData?.details?.poolSize?.type,
         period: editable ? 1 : customPoolData?.details?.period,
         price: formattedPrice,
-        api_key: apiKeyData?.details?.[0]?.apiKey
+        api_key: apiKeyData?.details?.[0]?.apiKey,
+        expire_date: formattedExpirationDate
       })
 
       setInitialValues({
@@ -348,12 +374,101 @@ const ProfileDetails = ({ poolData, poolId: propPoolId }) => {
                 control={control}
                 name='api_key'
                 type='password'
-                label={t('api_key')}
+                label={
+                  <>
+                    {t('api_key')}
+                    <CustomTooltip
+                      title='Your API key.'
+                      placement='right'
+                      arrow
+                    >
+                      <InfoIcon
+                        fontSize='small'
+                        style={{
+                          marginLeft: '6px',
+                          verticalAlign: 'middle',
+                          cursor: 'pointer'
+                        }}
+                      />
+                    </CustomTooltip>
+                  </>
+                }
                 fullWidth
                 withCopy
                 readOnly={true}
                 disabled
                 value={apiKeyData?.details?.[0]?.apiKey}
+              />
+              <div>
+                <PasswordField
+                  control={control}
+                  name='api_secret_key'
+                  type='password'
+                  label={
+                    <>
+                      {t('api_secret_key')}
+                      <CustomTooltip
+                        title='Keep your API Key secret hidden. This should never be human-readable in your application.'
+                        placement='right'
+                        arrow
+                      >
+                        <InfoIcon
+                          fontSize='small'
+                          style={{
+                            marginLeft: '6px',
+                            verticalAlign: 'middle',
+                            cursor: 'pointer'
+                          }}
+                        />
+                      </CustomTooltip>
+                    </>
+                  }
+                  fullWidth
+                  withCopy
+                  readOnly={true}
+                  disabled
+                  value={apiKeyData?.details?.[0]?.apiSecret}
+                />
+                <a
+                  href='https://www.youtube.com'
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  style={{
+                    color: '#fff',
+                    textDecoration: 'underline',
+                    cursor: 'pointer',
+                    fontSize: '10px',
+                    fontWeight: '500',
+                    marginTop: '-15px',
+                    display: 'block',
+                    lineHeight: '15px',
+                    position: 'relative',
+                    zIndex: 1001
+                  }}
+                >
+                  {t('how_to_use_api_key')}
+                </a>
+              </div>
+
+              <BasicTextField
+                control={control}
+                name='expire_date'
+                label={t('expire_date')}
+                fullWidth
+                readOnly={true}
+                disabled
+                InputProps={{
+                  style: {
+                    color: '#fff',
+                    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                    borderRadius: '8px'
+                  }
+                }}
+                InputLabelProps={{
+                  style: {
+                    color: '#fff'
+                  }
+                }}
               />
             </div>
             {editable && (
