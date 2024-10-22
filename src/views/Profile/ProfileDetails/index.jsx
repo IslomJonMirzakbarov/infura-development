@@ -430,8 +430,8 @@ const ProfileDetails = ({ poolData, poolId: propPoolId }) => {
                   value={apiKeyData?.details?.[0]?.apiSecret}
                 />
                 <a
-                  href='https://www.youtube.com'
-                  target='_blank'
+                  href='#'
+                  // target='_blank'
                   rel='noopener noreferrer'
                   style={{
                     color: '#fff',
