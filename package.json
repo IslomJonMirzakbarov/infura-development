@@ -17,6 +17,7 @@
     "axios": "^1.2.0",
     "caver-js": "^1.9.0",
     "classnames": "^2.3.2",
+    "date-fns": "^4.1.0",
     "ethereumjs-tx": "^2.1.2",
     "file-saver": "^2.0.5",
     "framer-motion": "^10.16.16",

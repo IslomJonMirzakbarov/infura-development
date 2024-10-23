@@ -5,11 +5,16 @@ import httpRequest from './httpRequest'
 const INFURA_NETWORK =
   process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
 
+// IMPORTANT: getDashboard, getStats, get invoices, get walletscount, need in get pools extra expires in this time addition, getpoolbyid price is missing, period also is missing, token is missing, reward_pool_id is missing, tx_hash is missing, is_active missing
+
 export const poolService = {
-  check: async (data) => httpRequest.post('infura/api/v1/pools/check', data), // missing; it checks pool existance by poolName
-  create: async (data) => httpRequest.post('pool/create', data), // tx_hash is missing in body, and subscription plan is extra
+  // check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
+  getPoolByName: async (poolName) =>
+    httpRequest.get(`api/v1/pool/check-pool-name?poolName=${poolName}`),
+  create: async (data) => httpRequest.post('api/v1/pool/create', data),
   update: async (data) => httpRequest.patch('pool/update', data), // tx_hash is missing and subscription plan
-  getPools: async () => httpRequest.get('infura/api/v1/pools'),
+  getPools: async (id) =>
+    httpRequest.get(`api/v1/pool/pool-list?filter[userId]=${id}`),
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
   getStats: async () =>
@@ -18,13 +23,15 @@ export const poolService = {
     axios.get('https://api.oceandrive.network/app/stats'),
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
-  getPoolById: async (id) => httpRequest.get(`/infura/api/v1/pools/${id}`),
+  getPoolById: async (id) => httpRequest.get(`api/v1/pool/pool-info/${id}`),
+  // createFolder: async (data) =>
+  //   axios.post(`${INFURA_NETWORK}/v1/file-service/folder/create`, data?.data, {
+  //     headers: {
+  //       Authorization: `Bearer ${data?.token}`
+  //     }
+  //   }),
   createFolder: async (data) =>
-    axios.post(`${INFURA_NETWORK}/v1/file-service/folder/create`, data?.data, {
-      headers: {
-        Authorization: `Bearer ${data?.token}`
-      }
-    }),
+    httpRequest.post(`api/v1/folder/create`, data?.data),
   getFoldersByPoolId: async (poolId, token) =>
     axios.get(`${INFURA_NETWORK}/v1/file-service/folders/${poolId}`, {
       headers: {
@@ -111,8 +118,14 @@ export const useDownloadsCount = (querySettings) => {
 export const useWalletsCount = (querySettings) => {
   return useQuery('wallets-count', poolService.getWalletsCount, querySettings)
 }
+// export const usePoolCheckMutation = (mutationSettings) => {
+//   return useMutation(poolService.check, mutationSettings)
+// }
 export const usePoolCheckMutation = (mutationSettings) => {
-  return useMutation(poolService.check, mutationSettings)
+  return useMutation(
+    (poolName) => poolService.getPoolByName(poolName),
+    mutationSettings
+  )
 }
 export const usePoolCreateMutation = (mutationSettings) => {
   return useMutation(poolService.create, mutationSettings)
@@ -120,8 +133,11 @@ export const usePoolCreateMutation = (mutationSettings) => {
 export const usePoolUpdateMutation = (mutationSettings) => {
   return useMutation(poolService.update, mutationSettings)
 }
-export const useGetPools = (mutationSettings) => {
-  return useQuery('pools', poolService.getPools, mutationSettings)
+export const useGetPools = ({ id, querySettings }) => {
+  return useQuery('pools', () => poolService.getPools(id), {
+    enabled: !!id,
+    ...querySettings
+  })
 }
 export const useDashboard = (mutationSettings) => {
   return useQuery('dashboard', poolService.getDashboard, mutationSettings)

@@ -14,27 +14,22 @@ export default function FileUploadTable({
   poolId,
   onRowSelected,
   dataChecker,
-  error
+  error,
+  checkedFiles,
+  onCheckboxToggle
 }) {
-  console.log('datadata: ', columns, data)
+  console.log('datadata: ', data)
   const navigate = useNavigate()
-  const [selectedRow, setSelectedRow] = useState(null)
   const [copiedIndex, setCopiedIndex] = useState(null)
 
   const handleRowClick = (item, index) => {
     console.log('selected item: ', item)
-    const isSelected = selectedRow === index
-    setSelectedRow(isSelected ? null : index)
-
-    onRowSelected(
-      isSelected
-        ? null
-        : {
-            contentId: item.content_id,
-            type: item.type,
-            name: item.name
-          }
-    )
+    onCheckboxToggle(item.id)
+    onRowSelected({
+      contentId: item.content_id,
+      type: item.type,
+      name: item.name
+    })
   }
 
   const copyToClipboard = async (text, index) => {
@@ -81,13 +76,17 @@ export default function FileUploadTable({
                       <div></div>
                       <div
                         className={classNames(styles.clickableBox, {
-                          [styles.isSelected]: selectedRow === index
+                          [styles.isSelected]: checkedFiles[item.id]
                         })}
                       />
                       {item[value.key]?.replace(/\.[^/.]+$/, '')}
                     </td>
                   ) : value.key === 'type' ? (
-                    <td>{item[value.key]?.split('/')[1]}</td>
+                    <td>
+                      {item[value.key] === 'Folder'
+                        ? 'folder'
+                        : item[value.key]?.split('/')[1]}
+                    </td>
                   ) : (
                     <td>{item[value.key]}</td>
                   )

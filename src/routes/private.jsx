@@ -64,10 +64,10 @@ export const privateRoutes = [
         children: [
           { index: true, element: <Workspace /> },
           {
-            path: ':poolId',
+            path: ':poolId/:folderId',
             element: <Workspace />
           },
-          { path: ':poolId/details', element: <ProfileDetails /> }
+          { path: ':poolId/:folderId/details', element: <ProfileDetails /> }
         ]
       },
       {

@@ -57,7 +57,7 @@ const Login = () => {
           minLength='8'
           rules={{
             pattern: {
-              value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
+              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/,
               message: t('password_requirements')
             }
           }}

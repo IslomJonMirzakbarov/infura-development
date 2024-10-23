@@ -6,6 +6,7 @@ import PageTransition from 'components/PageTransition'
 import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Outlet, useParams } from 'react-router-dom'
+import { useCreateFolder } from 'services/folder.service'
 import GatewayModal from 'views/Billing/GatewayModal'
 
 const buttons = [
@@ -34,6 +35,7 @@ const WorkspaceLayout = () => {
   const fileInputRef = useRef(null)
   const { control, handleSubmit, reset } = useForm()
   const [isCreateFolderModalOpen, setCreateFolderModalOpen] = useState(false)
+  const createFolder = useCreateFolder()
 
   const handleButtonClick = (action) => {
     if (action === 'upload') {
@@ -49,81 +51,31 @@ const WorkspaceLayout = () => {
   }
 
   const handleCreateFolder = (data) => {
-    const event = new CustomEvent('create-folder', { detail: data.name })
-    window.dispatchEvent(event)
-    setCreateFolderModalOpen(false)
-    reset()
+    createFolder.mutate(
+      {
+        poolId: 'string',
+        name: 'string',
+        parentId: 'string'
+      },
+      {
+        onSuccess: (res) => {
+          console.log('res===>', res)
+          reset()
+          setCreateFolderModalOpen(false)
+        }
+      }
+    )
   }
 
-  // Listen for file input change, and dispatch files-selected event
   const handleFileChange = (e) => {
     const files = e.target.files
     const event = new CustomEvent('files-selected', { detail: files })
-    window.dispatchEvent(event) // Dispatch event so Workspace component can handle upload
+    window.dispatchEvent(event)
   }
 
   return (
     <PageTransition>
-      <Container>
-        <Box width='100%' display='flex' flexDirection='column'>
-          <Box
-            display='flex'
-            gap='15px'
-            marginBottom={poolId ? '47px' : '66px'}
-          >
-            {buttons.map((button, index) => (
-              <Box
-                key={index}
-                width='153px'
-                height='88px'
-                borderRadius='10px'
-                backgroundColor={button.bgColor}
-                display='flex'
-                flexDirection='column'
-                padding='13px'
-                justifyContent='space-between'
-                sx={{
-                  cursor: 'pointer',
-                  '&:hover': {
-                    '& .icon': {
-                      transform: 'translateY(2px)'
-                    }
-                  }
-                }}
-                onClick={() => handleButtonClick(button.action)}
-              >
-                <IconWrapper className='icon'>{button.Icon}</IconWrapper>
-                <Typography
-                  fontWeight='500'
-                  fontSize='15px'
-                  lineHeight='22.5px'
-                  color={button.color}
-                >
-                  {button.text}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-          <input
-            type='file'
-            ref={fileInputRef}
-            style={{ display: 'none' }}
-            multiple
-            onChange={handleFileChange} // Handle file selection
-          />
-          <Outlet />
-        </Box>
-      </Container>
-
-      <GatewayModal
-        open={isCreateFolderModalOpen}
-        cancelLabel='Cancel'
-        submitLabel='Create'
-        toggle={toggle}
-        onSubmit={handleSubmit(handleCreateFolder)}
-        isLoading={false}
-        control={control}
-      />
+      <Outlet />
     </PageTransition>
   )
 }
