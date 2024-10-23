@@ -10,7 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useQueryClient } from 'react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useDeleteFile, useUploadFile } from 'services/file.service'
+import { useDeleteFile, useUploadFile, useGetDownloads, fileService } from 'services/file.service'
 import { useDeleteFolder, useGetFolderList } from 'services/folder.service'
 import {
   useGetFileHistory,
@@ -25,6 +25,7 @@ import WorkSpaceModal from './WorkSpaceModal'
 import WorkspaceContainer from './WorkspaceContainer'
 import { demoColumns } from './customData'
 import styles from './style.module.scss'
+import UploadProgress from './UploadProgress'
 
 const Workspace = () => {
   const { poolId, folderId } = useParams()
@@ -49,7 +50,7 @@ const Workspace = () => {
     }
   })
 
-  console.log('folderContent===>', folderContent)
+  // console.log('folderContent===>', folderContent)
   const rootFolderId = folders?.data?.data[0]?._id
   const parentFolderId = folders?.data?.data[folders?.data?.data?.length - 1]
   const { data: poolFiles } = useGetFileHistory({ token: poolData?.token })
@@ -69,7 +70,7 @@ const Workspace = () => {
 
   const [files, setFiles] = useState([])
   const [checkedFiles, setCheckedFiles] = useState({})
-  console.log('checkedFiles===>', checkedFiles)
+  // console.log('checkedFiles===>', checkedFiles)
   const [menuAnchorEl, setMenuAnchorEl] = useState(null)
   const [view, setView] = useState('grid')
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false)
@@ -77,6 +78,10 @@ const Workspace = () => {
   const [showUploadProgress, setShowUploadProgress] = useState(false)
   const intervalsRef = useRef([])
   const [errorToastShown, setErrorToastShown] = useState(false)
+  const [downloadCids, setDownloadCids] = useState([])
+  const [currentDownloadIndex, setCurrentDownloadIndex] = useState(0);
+  const [selectedCids, setSelectedCids] = useState([]);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   useEffect(() => {
     setErrorToastShown(false)
@@ -85,6 +90,45 @@ const Workspace = () => {
   const { mutate: uploadFile } = useUploadFile()
   const { mutate: deleteFile } = useDeleteFile()
   const { mutate: deleteFolder } = useDeleteFolder()
+
+  const downloadFile = useCallback(async (cid) => {
+    try {
+      const response = await fileService.getDownloads(cid);
+      if (response && response.blob instanceof Blob) {
+        const url = window.URL.createObjectURL(response.blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', response.filename || `file_${cid}`);
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+        window.URL.revokeObjectURL(url);
+        toast.success(`File ${currentDownloadIndex + 1} of ${selectedCids.length} downloaded successfully`);
+      } else {
+        throw new Error('Unexpected response format');
+      }
+    } catch (error) {
+      console.error('Failed to download file:', error);
+      toast.error(`Failed to download file: ${error.message}`);
+    }
+  }, [currentDownloadIndex, selectedCids.length]);
+
+  useEffect(() => {
+    const downloadNext = async () => {
+      if (selectedCids.length > 0 && currentDownloadIndex < selectedCids.length && !isDownloading) {
+        setIsDownloading(true);
+        await downloadFile(selectedCids[currentDownloadIndex]);
+        setIsDownloading(false);
+        setCurrentDownloadIndex(prevIndex => prevIndex + 1);
+      } else if (currentDownloadIndex >= selectedCids.length && selectedCids.length > 0) {
+        toast.success('All files downloaded successfully');
+        setSelectedCids([]);
+        setCurrentDownloadIndex(0);
+      }
+    };
+
+    downloadNext();
+  }, [selectedCids, currentDownloadIndex, isDownloading, downloadFile]);
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -129,7 +173,7 @@ const Workspace = () => {
   )
 
   const confirmDelete = useCallback(() => {
-    console.log('checkedFiles===>', checkedFiles);
+    // console.log('checkedFiles===>', checkedFiles);
 
     const itemsToDelete = Object.keys(checkedFiles)
       .filter(key => checkedFiles[key])
@@ -148,7 +192,7 @@ const Workspace = () => {
         };
       });
 
-    console.log('itemsToDelete===>', itemsToDelete);
+    // console.log('itemsToDelete===>', itemsToDelete);
 
     itemsToDelete.forEach(({ id, isFolder, cid, name }) => {
       if (isFolder) {
@@ -194,6 +238,31 @@ const Workspace = () => {
     [handleMenuClose]
   )
 
+  const handleDownload = useCallback(() => {
+    const newSelectedCids = Object.entries(checkedFiles)
+      .filter(([_, isChecked]) => isChecked)
+      .map(([index, _]) => {
+        const isFolder = parseInt(index) < folderList.length;
+        if (!isFolder) {
+          const fileIndex = parseInt(index) - folderList.length;
+          return fileList[fileIndex].cid;
+        }
+        return null;
+      })
+      .filter(cid => cid !== null);
+
+    // console.log('Selected CIDs:', newSelectedCids);
+
+    if (newSelectedCids.length > 0) {
+      // console.log('Starting download process for selected CIDs');
+      setSelectedCids(newSelectedCids);
+      setCurrentDownloadIndex(0);
+    } else {
+      console.log('No files selected for download');
+      toast.error('Please select files to download');
+    }
+  }, [checkedFiles, folderList, fileList]);
+
   const fileButtons = [
     {
       bgColor: '#27E6D6',
@@ -213,7 +282,9 @@ const Workspace = () => {
 
   const handleButtonClick = useCallback(
     (action) => {
-      if (action === 'delete') {
+      if (action === 'download') {
+        handleDownload();
+      } else if (action === 'delete') {
         const hasCheckedItems = Object.values(checkedFiles).some(
           (isChecked) => isChecked
         )
@@ -225,7 +296,7 @@ const Workspace = () => {
       }
       // Handle other actions as needed
     },
-    [checkedFiles]
+    [handleDownload]
   )
 
   useEffect(() => {
@@ -253,7 +324,7 @@ const Workspace = () => {
       })
 
       if (selectedFiles.length > 0) {
-        console.log('Selected Files:', selectedFiles)
+        // console.log('Selected Files:', selectedFiles)
         setUploads(selectedFiles)
         handleDrop(selectedFiles)
         setShowUploadProgress(true)
@@ -265,6 +336,10 @@ const Workspace = () => {
       window.removeEventListener('files-selected', handleFilesSelected) // Cleanup listener on unmount
     }
   }, [handleDrop])
+
+  const uploadProgressClose = useCallback(() => {
+    setShowUploadProgress(false);
+  }, []);
 
   return (
     <WorkspaceContainer refetchFolder={refetchFolder}>
@@ -340,6 +415,7 @@ const Workspace = () => {
                     button={button}
                     handleButtonClick={handleButtonClick}
                     key={button.text}
+                    disabled={isDownloading}
                   />
                 ))}
             </Box>
@@ -446,9 +522,9 @@ const Workspace = () => {
         </Typography>
       </WorkSpaceModal>
 
-      {/* {showUploadProgress && (
+      {showUploadProgress && (
         <UploadProgress uploads={uploads} onClose={uploadProgressClose} />
-      )} */}
+      )}
     </WorkspaceContainer>
   )
 }

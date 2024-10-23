@@ -67,7 +67,7 @@ export default function Sidebar() {
   const { data: pools } = useGetPools({ id: userId })
   // console.log('pools in sidebar: ', pools)
   const [selectedPool, setSelectedPool] = useState(null)
-  const { isLoading } = useDashboard()
+  // const { isLoading } = useDashboard()
   const navigate = useNavigate()
   const { t } = useTranslation()
   const location = useLocation()
