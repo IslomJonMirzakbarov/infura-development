@@ -1,17 +1,36 @@
-import { useMutation } from 'react-query'
+import { useMutation, useQuery } from 'react-query'
+import authStore from 'store/auth.store'
 import httpRequest from './httpRequest'
 
 const authService = {
-  login: async (data) => httpRequest.post('api/v1/auth/login', data),
-  logout: async (data) => httpRequest.post('api/v1/auth/logout', data),
-  register: async (data) => httpRequest.post('api/v1/auth/register', data),
-  confirmCode: async (data) => httpRequest.post('api/v1/auth/confirm', data),
-  resend: async (data) => httpRequest.post('api/v1/auth/resend-otp', data),
-  renew: async (data) => httpRequest.post('api/v1/auth/renew', data),
+  login: async (data) => httpRequest.post('api/v1/auth/users/login', data),
+  logout: async (data) => httpRequest.post('api/v1/auth/users/logout', data),
+  register: async (data) =>
+    httpRequest.post('api/v1/auth/users/register', data), // email verification is not working
+  sendVerificationEmail: async () =>
+    httpRequest.get('api/v1/auth/users/send-verification-email', {
+      headers: {
+        Authorization: `Bearer ${authStore.token.refresh.token}`
+      }
+    }),
+  confirmCode: async (otp) =>
+    httpRequest.get(`api/v1/auth/users/verify-email-with-otp`, {
+      params: { otp },
+      headers: {
+        Authorization: `Bearer ${authStore.token.refresh.token}`
+      }
+    }),
+  resend: async (data) =>
+    httpRequest.post('api/v1/auth/users/re-send-verification-email', data), // in the old api only email is required but in new password added
+  renew: async (data) => httpRequest.post('auth/users/refresh-tokens', data),
   forgotPassword: async (data) =>
-    httpRequest.post('api/v1/auth/reset-password', data),
+    httpRequest.post('api/v1/auth/users/forgot-password', data),
   resetPassword: async (data) =>
-    httpRequest.patch('api/v1/auth/reset-password', data)
+    httpRequest.patch('api/v1/auth/users/reset-password', data),
+  getApiKey: async (poolId) =>
+    httpRequest.get(`api/v1/auth/users/api-key-list/${poolId}`),
+  generateApiKey: async (data) =>
+    httpRequest.post('api/v1/auth/users/generate-api-key', data),
 }
 
 export const useLoginMutation = (mutationSettings) => {
@@ -24,6 +43,10 @@ export const useLogoutMutation = (mutationSettings) => {
 
 export const useRegisterMutation = (mutationSettings) => {
   return useMutation(authService.register, mutationSettings)
+}
+
+export const useSendVerificationEmailMutation = (mutationSettings) => {
+  return useMutation(authService.sendVerificationEmail, mutationSettings)
 }
 
 export const useConfirmCodeMutation = (mutationSettings) => {
@@ -45,8 +68,21 @@ export const useResendSms = (mutationSettings) => {
 export const refreshToken = async (token) => {
   try {
     const res = await authService.renew({
-      refresh_token: token
+      refreshToken: token
     })
-    return res?.payload?.token?.access_token
+    return res?.details?.token?.access?.token
   } catch (e) {}
+}
+
+export const useGetApiKey = (poolId, queryOptions) => {
+  return useQuery(['apiKey', poolId], () => authService.getApiKey(poolId), {
+    enabled: !!poolId,
+    ...queryOptions
+  })
+}
+
+export const useApiGenerateKey = (mutationOptions) => {
+  return useMutation(authService.generateApiKey, {
+    ...mutationOptions,
+  })
 }

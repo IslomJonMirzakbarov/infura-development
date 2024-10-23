@@ -110,6 +110,7 @@
     "pool_price": "풀 가격",
     "tx_hash": "Tx 해시",
     "api_key": "API 키",
+    "api_secret_key": "API 비밀키",
     "regenerate": "재생성",
     "change_plan": "계획 변경",
     "cancel": "취소",
@@ -179,6 +180,10 @@
     "users": "사용자",
     "pool_creation": "풀 생성",
     "edit": "편집하다",
-    "extra_period": "추가 기간"
+    "extra_period": "추가 기간",
+    "username": "사용자 이름",
+    "username_placeholder": "사용자 이름을 입력하세요",
+    "how_to_use_api_key": "API 키 사용 방법",
+    "expire_date": "만료일"
   }
 }

@@ -110,6 +110,7 @@
     "pool_price": "Pool price in CYCON",
     "tx_hash": "Tx hash",
     "api_key": "API Key",
+    "api_secret_key": "API secret",
     "regenerate": "Regenerate",
     "change_plan": "Change plan",
     "cancel": "Cancel",
@@ -179,6 +180,10 @@
     "users": "Users",
     "pool_creation": "Pool Creation",
     "edit": "Edit",
-    "extra_period": "Extra Period"
+    "extra_period": "Extra Period",
+    "username": "Username",
+    "username_placeholder": "Enter your username",
+    "how_to_use_api_key": "How to use API Key",
+    "expire_date": "Expire Date"
   }
 }
