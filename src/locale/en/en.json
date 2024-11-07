@@ -187,6 +187,10 @@
     "expire_date": "Expire Date",
     "user_already_exists": "User already exists",
     "invalid_email": "Invalid email address",
-    "invalid_password": "Invalid password format"
+    "invalid_password": "Invalid password format",
+    "user_not_found": "User not found",
+    "invalid_credentials": "Invalid email or password",
+    "email_not_verified": "Please verify your email first",
+    "login_success": "Successfully logged in"
   }
 }
