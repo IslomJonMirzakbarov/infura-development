@@ -3,15 +3,14 @@ import httpRequest from './httpRequest'
 
 export const folderService = {
   getById: async (poolName) =>
-    httpRequest.get(`api/v1/pool/check-pool-name?poolName=${poolName}`),
-  create: async (data) => httpRequest.post('api/v1/folder/create', data),
+    httpRequest.get(`pool/check-pool-name?poolName=${poolName}`),
+  create: async (data) => httpRequest.post('folder/create', data),
   update: async (data) => httpRequest.patch('pool/update', data), // tx_hash is missing and subscription plan
   getList: async (folderId, params) =>
-    httpRequest.get(`api/v1/folder/contents/${folderId}`, {
+    httpRequest.get(`folder/contents/${folderId}`, {
       params
     }),
-  delete: async (folderId) =>
-    httpRequest.delete(`api/v1/folder/delete/${folderId}`)
+  delete: async (folderId) => httpRequest.delete(`folder/delete/${folderId}`)
 }
 
 export const useCreateFolder = (mutationSettings) => {

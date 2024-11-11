@@ -3,6 +3,7 @@ import Table from 'components/Table'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGetPools } from 'services/pool.service'
+import authStore from 'store/auth.store'
 import poolStore from 'store/pool.store'
 import styles from './style.module.scss'
 
@@ -16,7 +17,8 @@ export default function Profile({
   setViewTable
 }) {
   const { t } = useTranslation()
-  const { data: pools } = useGetPools()
+  const id = authStore.userData?.id
+  const { data: pools } = useGetPools({ id })
   const freePool = pools?.payload?.pools?.find((pool) => pool.price === 'FREE')
   const poolCount = pools?.payload?.count
   useEffect(() => {
@@ -38,7 +40,7 @@ export default function Profile({
             <Table
               name='profileTable'
               columns={headColumns}
-              data={pools?.payload?.pools}
+              data={pools?.details?.results}
             />
           )}
         </>
