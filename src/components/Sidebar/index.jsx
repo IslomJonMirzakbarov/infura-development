@@ -12,12 +12,12 @@ import Hamburger from 'hamburger-react'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation, useNavigate, useParams } from 'react-router-dom'
-import { useDashboard, useGetPools } from 'services/pool.service'
+import { useGetPools } from 'services/pool.service'
 import authStore from 'store/auth.store'
+import poolStore from 'store/pool.store'
 import { CustomTooltip } from './Custom'
 import MobileSidebar from './MobileSidebar'
 import styles from './style.module.scss'
-import poolStore from 'store/pool.store'
 
 export const items = [
   {
@@ -69,14 +69,15 @@ export default function Sidebar() {
   const pendingPools = poolStore.pendingPools
 
   const activePendingPools = pendingPools.filter(
-    pendingPool => !pools?.details?.results?.some(
-      pool => pool.txHash === pendingPool.txHash
-    )
+    (pendingPool) =>
+      !pools?.details?.results?.some(
+        (pool) => pool.txHash === pendingPool.txHash
+      )
   )
 
   const allPools = [
     ...(pools?.details?.results || []),
-    ...activePendingPools.map(pool => ({
+    ...activePendingPools.map((pool) => ({
       ...pool,
       isPending: true
     }))
@@ -112,12 +113,10 @@ export default function Sidebar() {
       allPools?.length > 0 &&
       location.pathname === workspaceItem.path
     ) {
-      const firstNonPendingPool = allPools.find(pool => !pool.isPending)
+      const firstNonPendingPool = allPools.find((pool) => !pool.isPending)
       if (firstNonPendingPool) {
         setSelectedPool(firstNonPendingPool.poolId)
-        navigate(
-          `${workspaceItem.path}/${firstNonPendingPool.poolId}/root`
-        )
+        navigate(`${workspaceItem.path}/${firstNonPendingPool.poolId}/root`)
       }
     } else {
       setSelectedPool(null)
@@ -125,13 +124,7 @@ export default function Sidebar() {
         navigate(workspaceItem.path)
       }
     }
-  }, [
-    isLocationWorkspace,
-    location.pathname,
-    navigate,
-    poolId,
-    allPools
-  ])
+  }, [isLocationWorkspace, location.pathname, navigate, poolId, allPools])
 
   const onClose = () => {
     setIsOpen(false)
@@ -202,7 +195,11 @@ export default function Sidebar() {
                         {allPools?.map((pool) => (
                           <CustomTooltip
                             key={pool.poolId || pool.txHash}
-                            title={pool.isPending ? 'Pool creation pending...' : getExpirationText(pool.expirationDate)}
+                            title={
+                              pool.isPending
+                                ? 'Pool pending...'
+                                : getExpirationText(pool.expirationDate)
+                            }
                             placement='right'
                           >
                             <div
@@ -210,7 +207,9 @@ export default function Sidebar() {
                                 [styles.selected]: selectedPool === pool.poolId,
                                 [styles.pending]: pool.isPending
                               })}
-                              onClick={() => !pool.isPending && handlePoolClick(pool.poolId)}
+                              onClick={() =>
+                                !pool.isPending && handlePoolClick(pool.poolId)
+                              }
                             >
                               {pool.poolName}
                               {pool.isPending && ' (Pending)'}

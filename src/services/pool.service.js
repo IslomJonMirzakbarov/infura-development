@@ -24,46 +24,6 @@ export const poolService = {
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
   getPoolById: async (id) => httpRequest.get(`pool/pool-info/${id}`)
-  // createFolder: async (data) =>
-  //   axios.post(`${INFURA_NETWORK}/v1/file-service/folder/create`, data?.data, {
-  //     headers: {
-  //       Authorization: `Bearer ${data?.token}`
-  //     }
-  //   }),
-  // createFolder: async (data) =>
-  //   httpRequest.post(`api/v1/folder/create`, data?.data),
-  // getFoldersByPoolId: async (poolId, token) =>
-  //   axios.get(`${INFURA_NETWORK}/v1/file-service/folders/${poolId}`, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`
-  //     }
-  //   }),
-  // fileUpload: async (data) =>
-  //   axios.post(`${INFURA_NETWORK}/v1/file-service/file/upload`, data?.data, {
-  //     headers: {
-  //       Authorization: `Bearer ${data?.token}`,
-  //       'Content-Type': 'multipart/form-data'
-  //     }
-  //   }),
-  // getFileHistory: async (token) => {
-  //   // const params = new URLSearchParams({ page, limit })
-  //   return axios.get(`${INFURA_NETWORK}/v1/file-service/file/history`, {
-  //     headers: {
-  //       Authorization: `Bearer ${token}`
-  //     }
-  //   })
-  // },
-  // downloadFile: async (token, contentId, config) =>
-  //   axios.get(
-  //     `${INFURA_NETWORK}/v1/file-service/file/download?contentId=${contentId}`,
-  //     {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`
-  //       },
-  //       responseType: 'blob',
-  //       ...config
-  //     }
-  //   )
 }
 
 export const useGetFoldersByPoolId = ({
