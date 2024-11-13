@@ -10,17 +10,11 @@ import { useEffect, useState } from 'react'
 import { useForm, useWatch } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import { useQueryClient } from 'react-query'
 import { useNavigate } from 'react-router-dom'
-import { useApiGenerateKey } from 'services/auth.service'
-import {
-  useCreateFolder,
-  usePoolCheckMutation,
-  usePoolCreateMutation
-} from 'services/pool.service'
+import { usePoolCheckMutation } from 'services/pool.service'
 import walletStore from 'store/wallet.store'
+import poolStore from 'store/pool.store'
 import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
-import ApiKeyModal from '../ApiKeyModal'
 import CheckoutModal from '../CheckoutModal'
 import LoaderModal from '../LoaderModal'
 import ApproveModal from './ApproveModal'
@@ -31,8 +25,6 @@ const Pool = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { type } = walletStore
-  const queryClient = useQueryClient()
-  const isMobile = useMediaQuery('(max-width:640px)')
   const { control, handleSubmit, formState } = useForm({
     defaultValues: {
       unit: 'GB'
@@ -45,12 +37,14 @@ const Pool = () => {
     type === 'metamask' ? metamask : kaikas
 
   const minPrice = type === 'metamask' ? metamask.minPrice : kaikas.minPrice
-  console.log('minPrice: ', minPrice)
   const [propError, setPropError] = useState('')
   const [openApprove, setOpenApprove] = useState(false)
-  const [txHash, setTxHash] = useState(null)
-  const { mutate: checkPool, isLoading: isCheckLoading } =
-    usePoolCheckMutation()
+  const [formData, setFormData] = useState(null)
+  const [open, setOpen] = useState(false)
+  const [open2, setOpen2] = useState(false)
+
+  const { mutate: checkPool, isLoading: isCheckLoading } = usePoolCheckMutation()
+  
   const poolName = useWatch({
     control,
     name: 'name'
@@ -62,8 +56,6 @@ const Pool = () => {
     if (debouncedPoolName && poolName.length > 4 && poolName.length < 21) {
       checkPool(debouncedPoolName, {
         onSuccess: (res) => {
-          console.log('res: ', res)
-          // if (res?.details && Object.keys(res.details).length === 0) {
           if (!res?.details?.isAvailable) {
             setPropError(false)
           } else {
@@ -76,7 +68,7 @@ const Pool = () => {
         }
       })
     }
-  }, [debouncedPoolName])
+  }, [debouncedPoolName, poolName])
 
   useEffect(() => {
     if (window.ethereum) {
@@ -85,36 +77,16 @@ const Pool = () => {
         navigate('/main/billing/connect')
       })
     }
-  }, [])
-
-  const { mutate } = usePoolCreateMutation()
-  const { mutate: generateApiKey } = useApiGenerateKey({
-    onSuccess: (apiKeyData) => {
-      console.log('API Key generated successfully:', apiKeyData)
-    },
-    onError: (error) => {
-      console.error('Error generating API Key:', error)
-      toast.error('Failed to generate API Key')
-    }
-  })
-  const { mutate: createFolder } = useCreateFolder()
-
-  const [formData, setFormData] = useState(null)
-  const [poolAddress, setPoolAddress] = useState(null)
-  const [open, setOpen] = useState(false)
-  const [open2, setOpen2] = useState(false)
-  const [open3, setOpen3] = useState(false)
+  }, [navigate])
 
   const toggle = () => setOpen((prev) => !prev)
   const toggle2 = () => setOpen2((prev) => !prev)
-  const toggle3 = () => setOpen3((prev) => !prev)
 
   const onSubmit = (data) => {
     const formData = {
       pool_name: data.name,
       pool_period: parseInt(data.period),
       pool_price: data.price,
-      // pin_replication: parseInt(data.replication),
       pin_replication: 1000,
       pool_size: {
         value: parseInt(data.size),
@@ -141,11 +113,9 @@ const Pool = () => {
   }
 
   const submitCheckout = async () => {
-    console.log('submit checkout clicked')
     try {
       setOpen(false)
       const allowance = await checkAllowance()
-      console.log('allowance: ', allowance)
       const numericAllowance = Number(allowance)
       if (numericAllowance < formData.pool_price) {
         setOpen(false)
@@ -157,55 +127,28 @@ const Pool = () => {
         formData.pool_size.unit === 'GB'
           ? parseInt(formData.pool_size.value)
           : parseInt(formData.pool_size.value * 1024)
-      // console.log('formData inside submit checkout: ', formData)
+
       const result = await createPool({
         ...formData,
         pool_size
       })
-      console.log('result of create pool metamask: ', result)
-      setTxHash(result.transactionHash)
-      if (result.transactionHash)
-        mutate(
-          {
-            subscriptionPlan: 0,
-            price: formData.pool_price,
-            poolName: formData.pool_name,
-            poolSize: {
-              size: formData.pool_size.value,
-              type: formData.pool_size.unit
-            },
-            pinReplication: formData.pin_replication,
-            period: formData.pool_period,
-            txHash: result.transactionHash
-          },
-          {
-            onSuccess: (res) => {
-              console.log('create pool response success: ', res)
-              setPoolAddress(res?.details?.poolAddress)
-              setOpen2(false)
-              setOpen3(true)
-              queryClient.invalidateQueries('pools')
 
-              const apiKeyData = {
-                poolId: res.details.poolId,
-                poolName: res.details.poolName,
-                poolNote: `API Key for ${res.details.poolName}`,
-                period: res.details.period,
-                read: true,
-                write: true
-              }
-
-              generateApiKey(apiKeyData)
-            },
-            onError: (error) => {
-              setOpen2(false)
-              console.log('create pool error: ', error)
-              if (error.status === 401) {
-                // navigate('/auth/register')
-              }
-            }
-          }
-        )
+      if (result.transactionHash) {
+        const pendingPoolData = {
+          poolId: formData.pool_name,
+          poolName: formData.pool_name,
+          txHash: result.transactionHash,
+          price: formData.pool_price,
+          size: `${formData.pool_size.value} ${formData.pool_size.unit}`,
+          period: formData.pool_period,
+          isPending: true,
+          created_at: new Date().toISOString()
+        }
+        
+        poolStore.addPendingPool(pendingPoolData)
+        toast.success('Pool creation is pending...')
+        navigate('/main/workspace')
+      }
     } catch (e) {
       setOpen2(false)
       console.log('submit checkout error: ', e)
@@ -239,14 +182,7 @@ const Pool = () => {
                   }}
                 />
                 {propError && (
-                  <p
-                    style={{
-                      color: '#d32f2f',
-                      margin: '-20px 0 5px 10px',
-                      fontSize: '0.75rem',
-                      fontWeight: '400'
-                    }}
-                  >
+                  <p className={styles.errorText}>
                     {propError}
                   </p>
                 )}
@@ -273,16 +209,6 @@ const Pool = () => {
                 />
               </div>
 
-              {/* <HFSelect
-                control={control}
-                name='replication'
-                label={t('pin_replication_b')}
-                placeholder={t('select_pin_replication')}
-                fullWidth
-                required
-                options={sizes}
-              /> */}
-
               <HFSelect
                 control={control}
                 name='period'
@@ -300,10 +226,6 @@ const Pool = () => {
                 placeholder={t('enter_pool_price')}
                 required
                 fullWidth
-                // type='number'
-                // rules={{
-                //   validate: (value) => value >= 1000 || t('min_price_1000')
-                // }}
                 type='text'
                 rules={{
                   validate: (value) => {
@@ -326,7 +248,6 @@ const Pool = () => {
               mt='50px'
             >
               <Button
-                // onClick={toggle}
                 variant='contained'
                 color='secondary'
                 type='submit'
@@ -352,18 +273,6 @@ const Pool = () => {
         img='https://swap.conun.io/static/cycon.svg'
       />
       <LoaderModal title='Loading' toggle={toggle2} open={open2} />
-      <ApiKeyModal
-        onSubmit={() => navigate('/main/workspace')}
-        poolAddress={poolAddress}
-        title={
-          isMobile
-            ? t('transaction_complete_mobile')
-            : t('transaction_complete_desktop')
-        }
-        txHash={txHash}
-        toggle={toggle3}
-        open={open3}
-      />
     </PageTransition>
   )
 }

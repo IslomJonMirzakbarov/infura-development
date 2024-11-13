@@ -12,11 +12,13 @@ export default function Table({
   isLoading,
   name = ''
 }) {
+  console.log('data from table: ', data)
   const navigate = useNavigate()
   if (isLoading) return <></>
   const handleRowClick = (row) => {
+    if (row.isPending) return // Don't allow clicks on pending pools
+    
     if (name === 'profileTable') {
-      // navigate(`/main/profile/${row.id}/file-upload`)
       navigate(`/main/profile/${row.id}/details`)
     }
 
@@ -58,7 +60,13 @@ export default function Table({
         >
           {data?.length > 0 &&
             data.map((item) => (
-              <tr key={item.id} onClick={() => handleRowClick(item)}>
+              <tr 
+                key={item.id} 
+                onClick={() => handleRowClick(item)}
+                className={classNames({
+                  [styles.pending]: item.isPending
+                })}
+              >
                 {columns?.map((value) => (
                   <td key={`${item.id}-${value.key}`}>
                     {value.key === 'id' ? (

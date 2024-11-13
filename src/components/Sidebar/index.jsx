@@ -17,6 +17,7 @@ import authStore from 'store/auth.store'
 import { CustomTooltip } from './Custom'
 import MobileSidebar from './MobileSidebar'
 import styles from './style.module.scss'
+import poolStore from 'store/pool.store'
 
 export const items = [
   {
@@ -65,9 +66,23 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false)
   const [workspaceOpen, setWorkspaceOpen] = useState(false)
   const { data: pools } = useGetPools({ id: userId })
-  // console.log('pools in sidebar: ', pools)
+  const pendingPools = poolStore.pendingPools
+
+  const activePendingPools = pendingPools.filter(
+    pendingPool => !pools?.details?.results?.some(
+      pool => pool.txHash === pendingPool.txHash
+    )
+  )
+
+  const allPools = [
+    ...(pools?.details?.results || []),
+    ...activePendingPools.map(pool => ({
+      ...pool,
+      isPending: true
+    }))
+  ]
+
   const [selectedPool, setSelectedPool] = useState(null)
-  // const { isLoading } = useDashboard()
   const navigate = useNavigate()
   const { t } = useTranslation()
   const location = useLocation()
@@ -77,6 +92,7 @@ export default function Sidebar() {
   const toggleWorkspace = () => setWorkspaceOpen((prev) => !prev)
 
   const handlePoolClick = (poolId) => {
+    if (!poolId) return
     setSelectedPool(poolId)
     navigate(`${workspaceItem.path}/${poolId}/root`)
   }
@@ -84,16 +100,25 @@ export default function Sidebar() {
   const isLocationWorkspace = location.pathname.includes(workspaceItem.path)
 
   useEffect(() => {
+    if (location.pathname === '/main/workspace') {
+      setWorkspaceOpen(true)
+    }
+  }, [location.pathname])
+
+  useEffect(() => {
     if (poolId) {
       setSelectedPool(poolId)
     } else if (
-      pools?.details?.totalResults > 0 &&
+      allPools?.length > 0 &&
       location.pathname === workspaceItem.path
     ) {
-      setSelectedPool(pools?.details?.results[0]?.poolId)
-      navigate(
-        `${workspaceItem.path}/${pools?.details?.results[0]?.poolId}/root`
-      )
+      const firstNonPendingPool = allPools.find(pool => !pool.isPending)
+      if (firstNonPendingPool) {
+        setSelectedPool(firstNonPendingPool.poolId)
+        navigate(
+          `${workspaceItem.path}/${firstNonPendingPool.poolId}/root`
+        )
+      }
     } else {
       setSelectedPool(null)
       if (isLocationWorkspace) {
@@ -105,8 +130,7 @@ export default function Sidebar() {
     location.pathname,
     navigate,
     poolId,
-    pools?.details?.totalResults,
-    pools?.detials?.results
+    allPools
   ])
 
   const onClose = () => {
@@ -171,23 +195,25 @@ export default function Sidebar() {
                     {workspaceOpen ? <UpIcon /> : <DownIcon />}
                     {t(workspaceItem.title)}
                   </NavLink>
-                  {pools?.details?.totalResults > 0 &&
+                  {(allPools?.length > 0 || activePendingPools.length > 0) &&
                     isLocationWorkspace &&
                     workspaceOpen && (
                       <div className={styles.poolList}>
-                        {pools?.details?.results?.map((pool) => (
+                        {allPools?.map((pool) => (
                           <CustomTooltip
-                            key={pool.poolId}
-                            title={getExpirationText(pool.expirationDate)}
+                            key={pool.poolId || pool.txHash}
+                            title={pool.isPending ? 'Pool creation pending...' : getExpirationText(pool.expirationDate)}
                             placement='right'
                           >
                             <div
                               className={classNames(styles.poolItem, {
-                                [styles.selected]: selectedPool === pool.poolId
+                                [styles.selected]: selectedPool === pool.poolId,
+                                [styles.pending]: pool.isPending
                               })}
-                              onClick={() => handlePoolClick(pool.poolId)}
+                              onClick={() => !pool.isPending && handlePoolClick(pool.poolId)}
                             >
                               {pool.poolName}
+                              {pool.isPending && ' (Pending)'}
                             </div>
                           </CustomTooltip>
                         ))}

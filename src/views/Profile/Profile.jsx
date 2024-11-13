@@ -19,16 +19,23 @@ export default function Profile({
   const { t } = useTranslation()
   const id = authStore.userData?.id
   const { data: pools } = useGetPools({ id })
-  const freePool = pools?.payload?.pools?.find((pool) => pool.price === 'FREE')
-  const poolCount = pools?.payload?.count
-  useEffect(() => {
-    poolStore.setPoolCount(poolCount)
-    if (freePool) {
-      poolStore.setSelected(true)
-    } else {
-      poolStore.setSelected(false)
-    }
-  }, [freePool, poolCount])
+  const pendingPools = poolStore.pendingPools
+
+  // Filter out pending pools that are now confirmed
+  const activePendingPools = pendingPools.filter(
+    pendingPool => !pools?.details?.results?.some(
+      pool => pool.txHash === pendingPool.txHash
+    )
+  )
+
+  // Combine server pools with pending pools
+  const allPools = [
+    ...(pools?.details?.results || []),
+    ...activePendingPools.map(pool => ({
+      ...pool,
+      isPending: true
+    }))
+  ]
 
   return (
     <>
@@ -40,7 +47,7 @@ export default function Profile({
             <Table
               name='profileTable'
               columns={headColumns}
-              data={pools?.details?.results}
+              data={allPools}
             />
           )}
         </>
