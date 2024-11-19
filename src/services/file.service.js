@@ -3,7 +3,7 @@ import httpRequest from './httpRequest'
 
 export const fileService = {
   upload: async (formData) =>
-    httpRequest.post('file/upload', formData, {
+    httpRequest.post('api/v1/file/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -15,7 +15,7 @@ export const fileService = {
     }
     // console.log('fileService.getDownloads called with cid:', cid);
     try {
-      const response = await httpRequest.get(`file/downloads?cid=${cid}`, {
+      const response = await httpRequest.get(`api/v1/file/downloads?cid=${cid}`, {
         responseType: 'json',
         headers: {
           Accept: 'application/json'
@@ -45,10 +45,10 @@ export const fileService = {
       throw error
     }
   },
-  delete: async (cid) => httpRequest.post('file/delete', { cid }),
-  getMetadata: async (id) => httpRequest.get(`file/metadata/${id}`),
+  delete: async (cid) => httpRequest.post('api/v1/file/delete', { cid }),
+  getMetadata: async (id) => httpRequest.get(`api/v1/file/metadata/${id}`),
   getItemWebview: async (cid) =>
-    httpRequest.get(`file/get-item-webview/${cid}`, {
+    httpRequest.get(`api/v1/file/get-item-webview/${cid}`, {
       responseType: 'blob'
     })
 }

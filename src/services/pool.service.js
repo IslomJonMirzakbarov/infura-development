@@ -2,21 +2,16 @@ import axios from 'axios'
 import { useMutation, useQuery } from 'react-query'
 import httpRequest from './httpRequest'
 
-const INFURA_NETWORK =
-  process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
-
-// IMPORTANT: getDashboard, getStats, get invoices, get walletscount, need in get pools extra expires in this time addition, getpoolbyid price is missing, period also is missing, token is missing, reward_pool_id is missing, tx_hash is missing, is_active missing
-
 export const poolService = {
   // check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
   getPoolByName: async (poolName) =>
-    httpRequest.get(`pool/check-pool-name?poolName=${poolName}`),
-  create: async (data) => httpRequest.post('pool/create', data),
-  update: async (data) => httpRequest.patch('pool/update', data), // tx_hash is missing and subscription plan
+    httpRequest.get(`api/v1/pool/check-pool-name?poolName=${poolName}`),
+  create: async (data) => httpRequest.post('api/v1/pool/create', data),
+  update: async (data) => httpRequest.patch('api/v1/pool/update', data), // tx_hash is missing and subscription plan
   getPools: async (id) =>
-    httpRequest.get(`pool/pool-list?filter[userId]=${id}`),
-  getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
-  getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
+    httpRequest.get(`api/v1/pool/pool-list?filter[userId]=${id}`),
+  getDashboard: async () => httpRequest.get('api/v1/user/dashboard'),
+  getInvoices: async () => httpRequest.get('api/v1/user/invoices'),
   getStats: async () =>
     axios.get('https://api.oceandrive.network/infura/api/v1/stats'),
   getWalletsCount: async () =>
