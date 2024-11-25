@@ -5,8 +5,7 @@ import httpRequest from './httpRequest'
 const authService = {
   login: async (data) => httpRequest.post('api/v1/auth/users/login', data),
   logout: async (data) => httpRequest.post('api/v1/auth/users/logout', data),
-  register: async (data) =>
-    httpRequest.post('api/v1/auth/users/register', data), // email verification is not working
+  register: async (data) => httpRequest.post('api/v1/auth/users/register', data), // email verification is not working
   sendVerificationEmail: async () =>
     httpRequest.get('api/v1/auth/users/send-verification-email', {
       headers: {
@@ -22,7 +21,7 @@ const authService = {
     }),
   resend: async (data) =>
     httpRequest.post('api/v1/auth/users/re-send-verification-email', data), // in the old api only email is required but in new password added
-  renew: async (data) => httpRequest.post('auth/users/refresh-tokens', data),
+  renew: async (data) => httpRequest.post('api/v1/auth/users/refresh-tokens', data),
   forgotPassword: async (data) =>
     httpRequest.post('api/v1/auth/users/forgot-password', data),
   resetPassword: async (data) =>
@@ -30,7 +29,7 @@ const authService = {
   getApiKey: async (poolId) =>
     httpRequest.get(`api/v1/auth/users/api-key-list/${poolId}`),
   generateApiKey: async (data) =>
-    httpRequest.post('api/v1/auth/users/generate-api-key', data),
+    httpRequest.post('api/v1/auth/users/generate-api-key', data)
 }
 
 export const useLoginMutation = (mutationSettings) => {
@@ -83,6 +82,6 @@ export const useGetApiKey = (poolId, queryOptions) => {
 
 export const useApiGenerateKey = (mutationOptions) => {
   return useMutation(authService.generateApiKey, {
-    ...mutationOptions,
+    ...mutationOptions
   })
 }

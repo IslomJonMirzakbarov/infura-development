@@ -3,6 +3,8 @@ import walletStore from 'store/wallet.store'
 import ERC20_ABI from 'utils/ABI/ERC20ABI'
 import REWARD_ABI from 'utils/ABI/REWARD_ABI_V2'
 import Web3 from 'web3'
+import toast from 'react-hot-toast'
+import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
 
 const KLAYTN_CHAIN_ID = process.env.REACT_APP_KLAYTN_CHAIN_ID
 const REWARD_CONTRACT_ADDRESS = process.env.REACT_APP_REWARD_CONTRACT
@@ -185,7 +187,7 @@ const useMetaMask = () => {
       return result
     } catch (error) {
       console.log('Error during upgradePool: ', error)
-      throw error
+      toast.error(getRPCErrorMessage(error))
     }
   }
 

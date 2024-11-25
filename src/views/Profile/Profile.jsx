@@ -3,6 +3,7 @@ import Table from 'components/Table'
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useGetPools } from 'services/pool.service'
+import authStore from 'store/auth.store'
 import poolStore from 'store/pool.store'
 import styles from './style.module.scss'
 
@@ -16,17 +17,25 @@ export default function Profile({
   setViewTable
 }) {
   const { t } = useTranslation()
-  const { data: pools } = useGetPools()
-  const freePool = pools?.payload?.pools?.find((pool) => pool.price === 'FREE')
-  const poolCount = pools?.payload?.count
-  useEffect(() => {
-    poolStore.setPoolCount(poolCount)
-    if (freePool) {
-      poolStore.setSelected(true)
-    } else {
-      poolStore.setSelected(false)
-    }
-  }, [freePool, poolCount])
+  const id = authStore.userData?.id
+  const { data: pools } = useGetPools({ id })
+  const pendingPools = poolStore.pendingPools
+
+  // Filter out pending pools that are now confirmed
+  const activePendingPools = pendingPools.filter(
+    pendingPool => !pools?.details?.results?.some(
+      pool => pool.txHash === pendingPool.txHash
+    )
+  )
+
+  // Combine server pools with pending pools
+  const allPools = [
+    ...(pools?.details?.results || []),
+    ...activePendingPools.map(pool => ({
+      ...pool,
+      isPending: true
+    }))
+  ]
 
   return (
     <>
@@ -38,7 +47,7 @@ export default function Profile({
             <Table
               name='profileTable'
               columns={headColumns}
-              data={pools?.payload?.pools}
+              data={allPools}
             />
           )}
         </>

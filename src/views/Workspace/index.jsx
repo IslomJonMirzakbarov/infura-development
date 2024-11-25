@@ -400,7 +400,7 @@ const Workspace = () => {
             </Typography>
           </Box>
         </Box>
-        {folderList?.length > 0 && (
+        {(folderList?.length > 0 || fileList?.length > 0) && (
           <Box
             display='flex'
             alignItems='center'

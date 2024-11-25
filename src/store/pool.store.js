@@ -7,7 +7,7 @@ class Store {
 
     makePersistable(this, {
       name: 'poolStore',
-      properties: ['isSelected', 'poolCount'],
+      properties: ['isSelected', 'poolCount', 'pendingPools'],
       storage: window.localStorage
     })
   }
@@ -32,6 +32,7 @@ class Store {
   ]
   isSelected = false
   poolCount = null
+  pendingPools = []
 
   setSelected(value) {
     this.isSelected = value
@@ -41,6 +42,12 @@ class Store {
   }
   changeBillingItems(value) {
     this.billingItems = value
+  }
+  addPendingPool(poolData) {
+    this.pendingPools.push(poolData)
+  }
+  removePendingPool(txHash) {
+    this.pendingPools = this.pendingPools.filter(pool => pool.txHash !== txHash)
   }
 }
 

@@ -48,7 +48,7 @@
     "invalid_email_format": "Invalid email format",
     "password": "Password",
     "password_placeholder": "Enter your password",
-    "password_requirements": "Password must have a minimum of 8 characters, at least one number, one letter, and one special character",
+    "password_requirements": "Password must have a minimum of 8 characters, at least one number, one letter (one uppercase as well), and one special character",
     "already_have_account": "Already have an account?",
     "dont_have_account": "Don't have an account?",
     "forgot_password": "Forgot password?",
@@ -184,6 +184,13 @@
     "username": "Username",
     "username_placeholder": "Enter your username",
     "how_to_use_api_key": "How to use API Key",
-    "expire_date": "Expire Date"
+    "expire_date": "Expire Date",
+    "user_already_exists": "User already exists",
+    "invalid_email": "Invalid email address",
+    "invalid_password": "Invalid password format",
+    "user_not_found": "User not found",
+    "invalid_credentials": "Invalid email or password",
+    "email_not_verified": "Please verify your email first",
+    "login_success": "Successfully logged in"
   }
 }

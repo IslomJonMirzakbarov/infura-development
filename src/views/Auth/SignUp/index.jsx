@@ -4,6 +4,7 @@ import BasicTextField from 'components/ControlledFormElements/HFSimplified/Basic
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import PageTransition from 'components/PageTransition'
 import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import {
@@ -12,7 +13,6 @@ import {
 } from 'services/auth.service'
 import authStore from 'store/auth.store'
 import styles from './style.module.scss'
-import toast from 'react-hot-toast'
 
 const Signup = () => {
   const navigate = useNavigate()
@@ -20,6 +20,19 @@ const Signup = () => {
   const { mutate, isLoading } = useRegisterMutation()
   const { mutate: sendVerificationEmail } = useSendVerificationEmailMutation()
   const { t } = useTranslation()
+
+  const formatErrorMessage = (error) => {
+    const message =
+      error?.data?.status?.message || error?.message || 'Unknown error'
+
+    const errorMessages = {
+      USER_ALREADY_EXISTS: t('user_already_exists'),
+      INVALID_EMAIL: t('invalid_email'),
+      INVALID_PASSWORD: t('invalid_password')
+    }
+
+    return errorMessages[message] || message.toLowerCase().split('_').join(' ')
+  }
 
   const onSubmit = (data) => {
     mutate(
@@ -31,8 +44,11 @@ const Signup = () => {
         onSuccess: (res) => {
           console.log(
             'register success res: ',
+            res,
             res?.details?.token?.access?.token
           )
+
+          toast.success(t('Account created'))
 
           authStore.setAccessToken(res?.details?.token?.access?.token)
           authStore.setRefreshToken(res?.details?.token?.refresh?.token)
@@ -47,10 +63,15 @@ const Signup = () => {
               })
             },
             onError: (error) => {
-              console.error('Error sending verification email:', error)
-              toast.error(t('error_sending_verification_email'))
+              const readableError = formatErrorMessage(error)
+              toast.error(readableError)
             }
           })
+        },
+        onError: (error) => {
+          console.log('register error: ', error)
+          const readableError = formatErrorMessage(error)
+          toast.error(readableError)
         }
       }
     )
