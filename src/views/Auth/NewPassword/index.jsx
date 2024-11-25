@@ -13,9 +13,16 @@ const NewPassword = () => {
   const navigate = useNavigate()
   const { t } = useTranslation()
   const { control, handleSubmit, setError } = useForm()
-  const { mutate, isLoading } = useResetPasswordMutation()
   const [searchParams] = useSearchParams()
+  const token = searchParams.get('token')
+  const { mutate, isLoading } = useResetPasswordMutation({
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+
   const email = authStore?.userData?.email
+  const email2 = searchParams.get('email')
   const onSubmit = (data) => {
     if (data.new_password !== data.confirm_password) {
       setError('confirm_password', {
@@ -26,7 +33,7 @@ const NewPassword = () => {
     }
     mutate(
       {
-        email: email,
+        email: email2 || email,
         newPassword: data.new_password
         // token: searchParams.get('token')
       },

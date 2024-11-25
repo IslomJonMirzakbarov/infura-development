@@ -1,11 +1,13 @@
 import { useMutation, useQuery } from 'react-query'
 import authStore from 'store/auth.store'
 import httpRequest from './httpRequest'
+import axios from 'axios'
 
 const authService = {
   login: async (data) => httpRequest.post('api/v1/auth/users/login', data),
   logout: async (data) => httpRequest.post('api/v1/auth/users/logout', data),
-  register: async (data) => httpRequest.post('api/v1/auth/users/register', data), // email verification is not working
+  register: async (data) =>
+    httpRequest.post('api/v1/auth/users/register', data), // email verification is not working
   sendVerificationEmail: async () =>
     httpRequest.get('api/v1/auth/users/send-verification-email', {
       headers: {
@@ -21,11 +23,18 @@ const authService = {
     }),
   resend: async (data) =>
     httpRequest.post('api/v1/auth/users/re-send-verification-email', data), // in the old api only email is required but in new password added
-  renew: async (data) => httpRequest.post('api/v1/auth/users/refresh-tokens', data),
+  renew: async (data) =>
+    httpRequest.post('api/v1/auth/users/refresh-tokens', data),
   forgotPassword: async (data) =>
     httpRequest.post('api/v1/auth/users/forgot-password', data),
-  resetPassword: async (data) =>
-    httpRequest.patch('api/v1/auth/users/reset-password', data),
+  resetPassword: async (data, headers) =>
+    axios.post(
+      `${process.env.REACT_APP_BASE_URL}api/v1/auth/users/reset-password`,
+      data,
+      {
+        headers
+      }
+    ),
   getApiKey: async (poolId) =>
     httpRequest.get(`api/v1/auth/users/api-key-list/${poolId}`),
   generateApiKey: async (data) =>
@@ -56,8 +65,11 @@ export const useForgotPasswordMutation = (mutationSettings) => {
   return useMutation(authService.forgotPassword, mutationSettings)
 }
 
-export const useResetPasswordMutation = (mutationSettings) => {
-  return useMutation(authService.resetPassword, mutationSettings)
+export const useResetPasswordMutation = ({ mutationSettings, headers }) => {
+  return useMutation(
+    (data) => authService.resetPassword(data, headers),
+    mutationSettings
+  )
 }
 
 export const useResendSms = (mutationSettings) => {
