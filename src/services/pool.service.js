@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { useMutation, useQuery } from 'react-query'
+import authStore from 'store/auth.store'
 import httpRequest from './httpRequest'
 
 export const poolService = {
@@ -18,7 +19,16 @@ export const poolService = {
     axios.get('https://api.oceandrive.network/app/stats'),
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
-  getPoolById: async (id) => httpRequest.get(`pool/pool-info/${id}`)
+  getPoolById: async (id) => httpRequest.get(`pool/pool-info/${id}`),
+  getOldPools: async () => {
+    const token = authStore.token.access.token
+    return axios.get('https://api.oceandrive.network/infura/api/v1/pools', {
+      headers: {
+        'X-Conun-Service': 'infura',
+        Authorization: `Bearer ${token}`
+      }
+    })
+  }
 }
 
 export const useGetFoldersByPoolId = ({
@@ -116,4 +126,8 @@ export const useGetPoolById = ({ id, enabled = true, queryProps }) => {
 
 export const useConditionalPoolById = (id) => {
   return useGetPoolById({ id, enabled: id !== 'ALL' })
+}
+
+export const useGetOldPools = (querySettings) => {
+  return useQuery('old-pools', poolService.getOldPools, querySettings)
 }
