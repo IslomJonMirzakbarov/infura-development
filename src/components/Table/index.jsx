@@ -17,7 +17,7 @@ export default function Table({
   const handleRowClick = (row) => {
     if (name === 'profileTable') {
       // navigate(`/main/profile/${row.id}/file-upload`)
-      navigate(`/main/profile/${row.id}/details`)
+      navigate(`/main/profile/${row.id || row.poolId}/details`)
     }
 
     if (name === 'billingTable' && row.txHash) {

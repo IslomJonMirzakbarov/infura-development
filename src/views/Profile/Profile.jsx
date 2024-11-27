@@ -30,6 +30,8 @@ export default function Profile({
     }
   }, [freePool, poolCount])
 
+  console.log('pools', pools)
+
   return (
     <>
       <h2 className={styles.tableTitle}>{t('Pool List')}</h2>
