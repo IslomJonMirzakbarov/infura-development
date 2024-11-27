@@ -157,14 +157,16 @@ const Pool = () => {
         formData.pool_size.unit === 'GB'
           ? parseInt(formData.pool_size.value)
           : parseInt(formData.pool_size.value * 1024)
-      // console.log('formData inside submit checkout: ', formData)
+
       const result = await createPool({
         ...formData,
         pool_size
       })
       console.log('result of create pool metamask: ', result)
       setTxHash(result.transactionHash)
-      if (result.transactionHash)
+
+      if (result.transactionHash && result.poolId) {
+        console.log('poolId: ', result.poolId)
         mutate(
           {
             subscriptionPlan: 0,
@@ -176,7 +178,8 @@ const Pool = () => {
             },
             pinReplication: formData.pin_replication,
             period: formData.pool_period,
-            txHash: result.transactionHash
+            txHash: result.transactionHash,
+            rewardPoolId: result.poolId
           },
           {
             onSuccess: (res) => {
@@ -206,6 +209,12 @@ const Pool = () => {
             }
           }
         )
+      } else {
+        setOpen2(false)
+        toast.error(
+          'Could not find poolId in transaction. Please contact support.'
+        )
+      }
     } catch (e) {
       setOpen2(false)
       console.log('submit checkout error: ', e)
