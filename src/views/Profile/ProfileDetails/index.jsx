@@ -55,7 +55,7 @@ const ProfileDetails = ({ poolData, poolId: propPoolId }) => {
     },
     folderId,
     queryProps: {
-      enabled: !!poolId
+      enabled: !!poolId && !!folderId
     }
   })
   // console.log('workspacePoolId', workspacePoolId)
