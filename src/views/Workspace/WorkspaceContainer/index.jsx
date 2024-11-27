@@ -97,7 +97,7 @@ const WorkspaceContainer = ({ refetchFolder, children }) => {
   }
 
   // Pass handleFileUpload to children
-  const childrenWithProps = React.Children.map(children, child => {
+  const childrenWithProps = React.Children.map(children, (child) => {
     if (React.isValidElement(child)) {
       return React.cloneElement(child, { handleFileUpload })
     }
@@ -112,7 +112,7 @@ const WorkspaceContainer = ({ refetchFolder, children }) => {
         submitLabel='Create'
         toggle={toggle}
         onSubmit={handleSubmit(handleCreateFolder)}
-        isLoading={false}
+        isLoading={createFolder.isLoading}
         control={control}
       />
 
