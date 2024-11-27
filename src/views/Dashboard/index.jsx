@@ -14,6 +14,7 @@ import {
   getShortenedPoolName
 } from 'utils/utilFuncs'
 import styles from './style.module.scss'
+import { usePoolStatistics } from 'services/pool.service'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -26,89 +27,55 @@ const Dashboard = () => {
 
   const selectedPoolId = watch('dashboardPool')
 
-  // Wrap the data object in useMemo
-  const data = useMemo(() => ({
-    pools: [
-      {
-        id: '665ef016e7fb28ca37c8c0f0',
-        name: 'Demo pool ab5',
-        price: '300',
-        total_size: '44GB',
-        remaining_size: '44.000000GB',
-        subscribers_count: 0,
-        uploaded_files_count: 0,
-        downloaded_files_count: 0
-      },
-      {
-        id: '66e2ed53ce68b2fc846fc55f',
-        name: 'test pool i4',
-        price: '800',
-        total_size: '44GB',
-        remaining_size: '43.999718GB',
-        subscribers_count: 0,
-        uploaded_files_count: 1,
-        downloaded_files_count: 1
-      },
-      {
-        id: '66790d9f845169e3bd1ee013',
-        name: 'Demo Pool ab7',
-        price: '444',
-        total_size: '55GB',
-        remaining_size: '54.999718GB',
-        subscribers_count: 1,
-        uploaded_files_count: 2,
-        downloaded_files_count: 0
-      },
-      {
-        id: '665eed25e7fb28ca37c8c022',
-        name: 'Demo pool  ab2',
-        price: '334',
-        total_size: '223GB',
-        remaining_size: '223.000000GB',
-        subscribers_count: 0,
-        uploaded_files_count: 0,
-        downloaded_files_count: 0
-      },
-      {
-        id: '66e2e0f4ce68b2fc846fc483',
-        name: 'test poo i3',
-        price: '600',
-        total_size: '33GB',
-        remaining_size: '33.000000GB',
-        subscribers_count: 0,
-        uploaded_files_count: 0,
-        downloaded_files_count: 0
-      },
-      {
-        id: '66e30c533d89c7eef0684183',
-        name: 'test pool i5',
-        price: '400',
-        total_size: '55GB',
-        remaining_size: '55.000000GB',
-        subscribers_count: 0,
-        uploaded_files_count: 0,
-        downloaded_files_count: 0
-      },
-      {
-        id: '66e30f0f3d89c7eef068423f',
-        name: 'test pool i6',
-        price: '600',
-        total_size: '66GB',
-        remaining_size: '65.998934GB',
-        subscribers_count: 0,
-        uploaded_files_count: 4,
-        downloaded_files_count: 0
+  // Fetch real data from server
+  const { data: serverData, isLoading } = usePoolStatistics()
+
+  // Wrap the data object in useMemo with fallback to demo data
+  const data = useMemo(() => {
+    if (!serverData?.details?.results) {
+      return {
+        pools: [], // Return empty array if no data
+        all: {
+          total_size: '0GB',
+          remaining_size: '0GB',
+          subscribers_count: 0,
+          uploaded_files_count: 0,
+          downloaded_files_count: 0
+        },
+        available_nodes_count: 0
       }
-    ],
-    all: {
-      total_size: '520GB',
-      remaining_size: '519.998371GB',
-      subscribers_count: 1,
-      uploaded_files_count: 7,
-      downloaded_files_count: 1
-    },
-    available_nodes_count: 73
-  }), []) // Empty dependency array means this will only be created once
+    }
+
+    // Transform server data to match expected format
+    const pools = serverData.details.results.map(pool => ({
+      id: pool.poolId,
+      name: pool.poolName,
+      price: pool.price,
+      total_size: `${pool.poolSize.size}${pool.poolSize.type}`,
+      remaining_size: `${pool.poolSize.size - (pool.usedStorage.size || 0)}${pool.poolSize.type}`,
+      subscribers_count: 0, // Use demo value as not provided by API
+      uploaded_files_count: pool.uploadedFilesCount,
+      downloaded_files_count: pool.downlodedFilesCount
+    }))
+
+    // Calculate totals for 'all' data
+    const totalSize = pools.reduce((sum, pool) => sum + parseFloat(pool.total_size), 0)
+    const remainingSize = pools.reduce((sum, pool) => sum + parseFloat(pool.remaining_size), 0)
+    const uploadedFiles = pools.reduce((sum, pool) => sum + pool.uploaded_files_count, 0)
+    const downloadedFiles = pools.reduce((sum, pool) => sum + pool.downloaded_files_count, 0)
+
+    return {
+      pools,
+      all: {
+        total_size: `${totalSize}GB`,
+        remaining_size: `${remainingSize}GB`,
+        subscribers_count: 0, // Use demo value as not provided by API
+        uploaded_files_count: uploadedFiles,
+        downloaded_files_count: downloadedFiles
+      },
+      available_nodes_count: serverData.details.statistics?.availableNodesCount || 0
+    }
+  }, [serverData])
 
   // Update the existing useMemo to use the memoized data
   const poolData = useMemo(() => {
