@@ -138,7 +138,22 @@ const useMetaMask = () => {
         gas: gasLimit
       })
 
-    return result
+    // Find PoolCreate event and extract poolId
+    let poolId = null
+    if (result.events) {
+      // Look through all events to find PoolCreate
+      Object.values(result.events).forEach(event => {
+        if (event.event === 'PoolCreate') {
+          poolId = event.returnValues.poolId
+          console.log('Found poolId from event:', poolId)
+        }
+      })
+    }
+
+    return {
+      ...result,
+      poolId
+    }
   }
 
   const upgradePool = async ({
@@ -210,11 +225,18 @@ const useMetaMask = () => {
   }
 
   const checkAllowance = async () => {
-    const contract = new web3.eth.Contract(ERC20_ABI, CYCON_CONTRACT_ADDRESS)
-    const allowance = await contract.methods
-      .allowance(address, REWARD_CONTRACT_ADDRESS)
-      .call()
-    return allowance
+    try {
+      console.log('check allowance initialized')
+      const contract = new web3.eth.Contract(ERC20_ABI, CYCON_CONTRACT_ADDRESS)
+      console.log('contract inside checkAllowance: ', contract)
+      const allowance = await contract.methods
+        .allowance(address, REWARD_CONTRACT_ADDRESS)
+        .call()
+      console.log('allowance inside checkAllowance: ', allowance)
+      return allowance
+    } catch (error) {
+      console.error('Error in checkAllowance:', error)
+    }
   }
 
   const addNetwork = async () => {

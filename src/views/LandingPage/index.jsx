@@ -8,6 +8,8 @@ import PageTransition from 'components/PageTransition'
 
 const LandingPage = () => {
   const { data } = useStats()
+  console.log('statdata: ', data);
+  
 
   return (
     <PageTransition>

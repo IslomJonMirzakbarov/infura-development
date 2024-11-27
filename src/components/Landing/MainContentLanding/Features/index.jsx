@@ -1,10 +1,9 @@
-import React from 'react'
 import { Box, Typography, useMediaQuery } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import styles from '../style.module.scss'
 import { ReactComponent as MiddleIcon } from 'assets/images/landing/middle_icon2.svg'
-import { features } from '../data'
 import { useTranslation } from 'react-i18next'
+import { features } from '../data'
+import styles from '../style.module.scss'
 
 const formatTextForMobile = (text, isMobile) => {
   return isMobile ? text.replace(/<br\s*\/?>/gi, ' ') : text

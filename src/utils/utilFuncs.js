@@ -34,21 +34,39 @@ export const getShortenedPoolName = (poolName) => {
   return poolName
 }
 
-export function formatStatStorageNumber(num) {
-  if (num >= 1e18) {
-    return { value: (num / 1e18).toFixed(1), cap: 'Exabyte (EB)' } // Exabytes
-  } else if (num >= 1e15) {
-    return { value: (num / 1e15).toFixed(1), cap: 'Petabyte (PB)' } // Petabytes
-  } else if (num >= 1e12) {
-    return { value: (num / 1e12).toFixed(1), cap: 'TB' } // Terabytes
-  } else if (num >= 1e9) {
-    return { value: (num / 1e9).toFixed(1), cap: 'GB' } // Gigabytes
-  } else if (num >= 1e6) {
-    return { value: (num / 1e6).toFixed(1), cap: 'MB' } // Millions
-  } else if (num >= 1e3) {
-    return { value: (num / 1e3).toFixed(1), cap: 'KB' } // Thousands
+// export function formatStatStorageNumber(num) {
+//   if (num >= 1e18) {
+//     return { value: (num / 1e18).toFixed(1), cap: 'Exabyte (EB)' } // Exabytes
+//   } else if (num >= 1e15) {
+//     return { value: (num / 1e15).toFixed(1), cap: 'Petabyte (PB)' } // Petabytes
+//   } else if (num >= 1e12) {
+//     return { value: (num / 1e12).toFixed(1), cap: 'TB' } // Terabytes
+//   } else if (num >= 1e9) {
+//     return { value: (num / 1e9).toFixed(1), cap: 'GB' } // Gigabytes
+//   } else if (num >= 1e6) {
+//     return { value: (num / 1e6).toFixed(1), cap: 'MB' } // Millions
+//   } else if (num >= 1e3) {
+//     return { value: (num / 1e3).toFixed(1), cap: 'KB' } // Thousands
+//   } else {
+//     return { value: num.toFixed(1), cap: 'B' } // Numbers less than 1000
+//   }
+// }
+
+export function formatStatStorageNumber(num, fixNum = 1) {
+  if (num >= 1024 ** 6) {
+    return { value: (num / 1024 ** 6).toFixed(fixNum), cap: 'Exabyte (EB)' }
+  } else if (num >= 1024 ** 5) {
+    return { value: (num / 1024 ** 5).toFixed(fixNum), cap: 'Petabyte (PB)' }
+  } else if (num >= 1024 ** 4) {
+    return { value: (num / 1024 ** 4).toFixed(fixNum), cap: 'TB' }
+  } else if (num >= 1024 ** 3) {
+    return { value: (num / 1024 ** 3).toFixed(fixNum), cap: 'GB' }
+  } else if (num >= 1024 ** 2) {
+    return { value: (num / 1024 ** 2).toFixed(fixNum), cap: 'MB' }
+  } else if (num >= 1024) {
+    return { value: (num / 1024).toFixed(fixNum), cap: 'KB' }
   } else {
-    return { value: num.toFixed(1), cap: 'B' } // Numbers less than 1000
+    return { value: num.toFixed(fixNum), cap: 'B' }
   }
 }
 

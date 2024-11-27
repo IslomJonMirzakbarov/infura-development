@@ -97,17 +97,100 @@
               border-radius: 10px;
               background: rgba(255, 255, 255, 0.15);
               color: var(--main);
-              // svg {
-              //   path {
-              //     fill: #27e6d6;
-              //   }
-              // }
               svg {
                 path:first-of-type {
                   fill: #27e6d6;
                 }
               }
             }
+          }
+
+          .workspace {
+            width: 230px;
+            height: 55px;
+            @include align-items-center;
+            padding: 17px 13px;
+            padding-left: 16px;
+            column-gap: 19px;
+            position: relative;
+            transition: 0.4s ease-in-out all;
+            color: var(--base-white);
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 150%;
+            &:hover,
+            &.active {
+              border-radius: 10px;
+              background: rgba(255, 255, 255, 0.15);
+              color: var(--main);
+              svg {
+                path:first-of-type {
+                  fill: #27e6d6;
+                }
+              }
+            }
+          }
+
+          .poolList {
+            overflow-y: auto;
+            background: #141332;
+            margin-top: 10px;
+            width: 240px;
+            max-height: 418px;
+            min-height: 200px  ;
+            border-radius: 6px;
+            padding: 10px 0;
+
+            /* Custom scrollbar styles */
+            &::-webkit-scrollbar {
+              width: 8px; /* Width of the entire scrollbar */
+            }
+
+            &::-webkit-scrollbar-track {
+              background: #141332; /* Color of the scrollbar track */
+              border-radius: 10px;
+            }
+
+            &::-webkit-scrollbar-thumb {
+              background-color: #888; /* Color of the scrollbar thumb */
+              border-radius: 10px; /* Roundness of the scrollbar thumb */
+              border: 2px solid #141332; /* Padding around thumb */
+            }
+
+            &::-webkit-scrollbar-thumb:hover {
+              background-color: #555; /* Color of the scrollbar thumb on hover */
+            }
+          }
+
+          .poolItem {
+            color: #fff;
+            background-color: transparent;
+            height: 35px;
+            width: 100%;
+            overflow: hidden;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 18px;
+            text-decoration: underline;
+
+            &:hover {
+              background: #252546;
+            }
+          }
+
+          .selected {
+            background: #252546;
+          }
+
+          .customTooltip {
+            background-color: #673ab7;
+            color: #fff;
+            font-size: 14px;
+            border-radius: 4px;
+            padding: 8px 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
           }
         }
       }

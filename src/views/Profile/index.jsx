@@ -15,7 +15,7 @@ const useTranslatedColumns = () => {
       title: t('domain')
     },
     {
-      key: 'name',
+      key: 'poolName',
       title: t('pool_name')
     },
     {
@@ -27,7 +27,7 @@ const useTranslatedColumns = () => {
       title: t('price')
     },
     {
-      key: 'created_at',
+      key: 'createdAt',
       title: t('created')
     }
   ]

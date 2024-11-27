@@ -1,41 +1,30 @@
-import React from 'react'
+import { Box } from '@mui/material'
 import Dropzone from 'react-dropzone'
+import Disabled from './Disabled'
+import Drop from './Drop'
 import styles from './style.module.scss'
-import { ReactComponent as FileIcon } from '../../assets/icons/file.svg'
-import { Button } from '@mui/material'
-import classNames from 'classnames'
 
-const HFDropzone = ({
-  icon = <FileIcon />,
-  label,
-  withButton = true,
-  description,
-  handleDrop = (files) => console.log(files),
-  size = 'medium',
-  multiple = false
-}) => {
+const HFDropzone = ({ handleDrop, disabled = false }) => {
   return (
-    <Dropzone onDrop={(files) => handleDrop(files)} multiple={multiple}>
+    <Dropzone onDrop={handleDrop} disabled={disabled}>
       {({ getRootProps, getInputProps }) => (
-        <div className={classNames(styles.container, styles[size])}>
-          <div
-            {...getRootProps({
-              className: styles.wrapper,
-              onDrop: (event) => event.stopPropagation()
-            })}
-          >
-            <input {...getInputProps()} />
-            {icon}
-            <div
-              className={styles.label}
-              dangerouslySetInnerHTML={{
-                __html: label
-              }}
-            />
-            {withButton && <Button>Browse</Button>}
-            {description && <p className={styles.description}>{description}</p>}
-          </div>
-        </div>
+        <Box
+          {...getRootProps()}
+          className={`${styles.dropzone} ${disabled ? styles.disabled : ''}`}
+          display='flex'
+          flexDirection='column'
+          alignItems='center'
+          justifyContent='center'
+          padding='20px'
+          border='2px dashed #707070'
+          borderRadius='10px'
+          backgroundColor='#1F1E48'
+          textAlign='center'
+          style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
+        >
+          <input {...getInputProps()} />
+          {disabled ? <Disabled /> : <Drop />}
+        </Box>
       )}
     </Dropzone>
   )

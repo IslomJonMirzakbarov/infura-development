@@ -1,11 +1,11 @@
-import { useState } from 'react'
-import classNames from 'classnames'
-import styles from './style.module.scss'
-import { useNavigate } from 'react-router-dom'
 import { Box, Tooltip, Typography } from '@mui/material'
+import { ReactComponent as LoaderIcon } from 'assets/icons/loader_infinite.svg'
+import classNames from 'classnames'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ReactComponent as CopyIcon } from '../../assets/icons/copy_white.svg'
 import { ReactComponent as SearchIcon } from '../../assets/icons/search_icon.svg'
-import { ReactComponent as LoaderIcon } from 'assets/icons/loader_infinite.svg'
+import styles from './style.module.scss'
 
 export default function FileUploadTable({
   columns,
@@ -14,26 +14,22 @@ export default function FileUploadTable({
   poolId,
   onRowSelected,
   dataChecker,
-  error
+  error,
+  checkedFiles,
+  onCheckboxToggle
 }) {
+  console.log('datadata: ', data)
   const navigate = useNavigate()
-  const [selectedRow, setSelectedRow] = useState(null)
   const [copiedIndex, setCopiedIndex] = useState(null)
 
   const handleRowClick = (item, index) => {
     console.log('selected item: ', item)
-    const isSelected = selectedRow === index
-    setSelectedRow(isSelected ? null : index)
-
-    onRowSelected(
-      isSelected
-        ? null
-        : {
-            contentId: item.content_id,
-            type: item.type,
-            name: item.name
-          }
-    )
+    onCheckboxToggle(item.id)
+    onRowSelected({
+      contentId: item.content_id,
+      type: item.type,
+      name: item.name
+    })
   }
 
   const copyToClipboard = async (text, index) => {
@@ -80,13 +76,17 @@ export default function FileUploadTable({
                       <div></div>
                       <div
                         className={classNames(styles.clickableBox, {
-                          [styles.isSelected]: selectedRow === index
+                          [styles.isSelected]: checkedFiles[item.id]
                         })}
                       />
                       {item[value.key]?.replace(/\.[^/.]+$/, '')}
                     </td>
                   ) : value.key === 'type' ? (
-                    <td>{item[value.key]?.split('/')[1]}</td>
+                    <td>
+                      {item[value.key] === 'Folder'
+                        ? 'folder'
+                        : item[value.key]?.split('/')[1]}
+                    </td>
                   ) : (
                     <td>{item[value.key]}</td>
                   )

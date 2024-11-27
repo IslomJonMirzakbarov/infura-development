@@ -1,29 +1,31 @@
 import { Box, Button, Typography, useMediaQuery } from '@mui/material'
 import Container from 'components/Container'
-import React, { useEffect, useState } from 'react'
-import { useForm, useWatch } from 'react-hook-form'
-import styles from './styles.module.scss'
-import ApiKeyModal from '../ApiKeyModal'
 import HFSelect from 'components/ControlledFormElements/HFSelect'
-import CheckoutModal from '../CheckoutModal'
-import LoaderModal from '../LoaderModal'
+import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
+import PageTransition from 'components/PageTransition'
+import useDebounce from 'hooks/useDebounce'
+import useKaikas from 'hooks/useKaikas'
+import useMetaMask from 'hooks/useMetaMask'
+import { useEffect, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
+import { useQueryClient } from 'react-query'
+import { useNavigate } from 'react-router-dom'
+import { useApiGenerateKey } from 'services/auth.service'
 import {
+  useCreateFolder,
   usePoolCheckMutation,
   usePoolCreateMutation
 } from 'services/pool.service'
-import { useNavigate } from 'react-router-dom'
-import { useQueryClient } from 'react-query'
-import useDebounce from 'hooks/useDebounce'
-import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
-import useMetaMask from 'hooks/useMetaMask'
-import ApproveModal from './ApproveModal'
-import toast from 'react-hot-toast'
-import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
-import { months, sizes, units } from './poolData'
 import walletStore from 'store/wallet.store'
-import PageTransition from 'components/PageTransition'
-import { useTranslation } from 'react-i18next'
-import useKaikas from 'hooks/useKaikas'
+import { getRPCErrorMessage } from 'utils/getRPCErrorMessage'
+import ApiKeyModal from '../ApiKeyModal'
+import CheckoutModal from '../CheckoutModal'
+import LoaderModal from '../LoaderModal'
+import ApproveModal from './ApproveModal'
+import { months, units } from './poolData'
+import styles from './styles.module.scss'
 
 const Pool = () => {
   const { t } = useTranslation()
@@ -58,19 +60,21 @@ const Pool = () => {
 
   useEffect(() => {
     if (debouncedPoolName && poolName.length > 4 && poolName.length < 21) {
-      checkPool(
-        { pool_name: debouncedPoolName },
-        {
-          onSuccess: (res) => {
-            console.log('res: ', res?.success)
-            setPropError('')
-          },
-          onError: (error) => {
-            console.log('error: ', error?.data?.message)
-            setPropError(error?.data?.message)
+      checkPool(debouncedPoolName, {
+        onSuccess: (res) => {
+          console.log('res: ', res)
+          // if (res?.details && Object.keys(res.details).length === 0) {
+          if (!res?.details?.isAvailable) {
+            setPropError(false)
+          } else {
+            setPropError('Pool already exists')
           }
+        },
+        onError: (error) => {
+          console.log('error: ', error?.data?.message)
+          setPropError(error?.data?.message)
         }
-      )
+      })
     }
   }, [debouncedPoolName])
 
@@ -84,6 +88,16 @@ const Pool = () => {
   }, [])
 
   const { mutate } = usePoolCreateMutation()
+  const { mutate: generateApiKey } = useApiGenerateKey({
+    onSuccess: (apiKeyData) => {
+      console.log('API Key generated successfully:', apiKeyData)
+    },
+    onError: (error) => {
+      console.error('Error generating API Key:', error)
+      toast.error('Failed to generate API Key')
+    }
+  })
+  const { mutate: createFolder } = useCreateFolder()
 
   const [formData, setFormData] = useState(null)
   const [poolAddress, setPoolAddress] = useState(null)
@@ -127,9 +141,11 @@ const Pool = () => {
   }
 
   const submitCheckout = async () => {
+    console.log('submit checkout clicked')
     try {
       setOpen(false)
       const allowance = await checkAllowance()
+      console.log('allowance: ', allowance)
       const numericAllowance = Number(allowance)
       if (numericAllowance < formData.pool_price) {
         setOpen(false)
@@ -146,30 +162,62 @@ const Pool = () => {
         ...formData,
         pool_size
       })
+      console.log('result of create pool metamask: ', result)
       setTxHash(result.transactionHash)
-      if (result.transactionHash)
+
+      if (result.transactionHash && result.poolId) {
+        console.log('poolId: ', result.poolId)
         mutate(
-          { ...formData, tx_hash: result.transactionHash },
+          {
+            subscriptionPlan: 0,
+            price: formData.pool_price,
+            poolName: formData.pool_name,
+            poolSize: {
+              size: formData.pool_size.value,
+              type: formData.pool_size.unit
+            },
+            pinReplication: formData.pin_replication,
+            period: formData.pool_period,
+            txHash: result.transactionHash,
+            rewardPoolId: result.poolId
+          },
           {
             onSuccess: (res) => {
-              console.log('res: ', res)
-              setPoolAddress(res?.access_token?.token)
+              console.log('create pool response success: ', res)
+              setPoolAddress(res?.details?.poolAddress)
               setOpen2(false)
               setOpen3(true)
               queryClient.invalidateQueries('pools')
+
+              const apiKeyData = {
+                poolId: res.details.poolId,
+                poolName: res.details.poolName,
+                poolNote: `API Key for ${res.details.poolName}`,
+                period: res.details.period,
+                read: true,
+                write: true
+              }
+
+              generateApiKey(apiKeyData)
             },
             onError: (error) => {
               setOpen2(false)
-              console.log('error: ', error)
+              console.log('create pool error: ', error)
               if (error.status === 401) {
                 // navigate('/auth/register')
               }
             }
           }
         )
+      } else {
+        setOpen2(false)
+        toast.error(
+          'Could not find poolId in transaction. Please contact support.'
+        )
+      }
     } catch (e) {
       setOpen2(false)
-      console.log(e)
+      console.log('submit checkout error: ', e)
       toast.error(getRPCErrorMessage(e))
     }
   }
@@ -314,7 +362,7 @@ const Pool = () => {
       />
       <LoaderModal title='Loading' toggle={toggle2} open={open2} />
       <ApiKeyModal
-        onSubmit={() => navigate('/main/profile')}
+        onSubmit={() => navigate('/main/workspace')}
         poolAddress={poolAddress}
         title={
           isMobile
