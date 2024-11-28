@@ -85,7 +85,7 @@ export const useGetItemWebview = (cid, queryProps) => {
     ['GET_ITEM_WEBVIEW', cid],
     () => fileService.getItemWebview(cid),
     {
-      enabled: !!cid,
+      enabled: !!cid && queryProps?.enabled !== false,
       ...queryProps
     }
   )

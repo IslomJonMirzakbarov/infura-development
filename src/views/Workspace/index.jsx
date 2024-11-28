@@ -10,7 +10,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useQueryClient } from 'react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useDeleteFile, useUploadFile, useGetDownloads, fileService } from 'services/file.service'
+import {
+  fileService,
+  useDeleteFile,
+  useUploadFile
+} from 'services/file.service'
 import { useDeleteFolder, useGetFolderList } from 'services/folder.service'
 import {
   useGetFileHistory,
@@ -25,7 +29,6 @@ import WorkSpaceModal from './WorkSpaceModal'
 import WorkspaceContainer from './WorkspaceContainer'
 import { demoColumns } from './customData'
 import styles from './style.module.scss'
-import UploadProgress from './UploadProgress'
 
 const Workspace = () => {
   const { poolId, folderId } = useParams()
@@ -79,9 +82,9 @@ const Workspace = () => {
   const intervalsRef = useRef([])
   const [errorToastShown, setErrorToastShown] = useState(false)
   const [downloadCids, setDownloadCids] = useState([])
-  const [currentDownloadIndex, setCurrentDownloadIndex] = useState(0);
-  const [selectedCids, setSelectedCids] = useState([]);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [currentDownloadIndex, setCurrentDownloadIndex] = useState(0)
+  const [selectedCids, setSelectedCids] = useState([])
+  const [isDownloading, setIsDownloading] = useState(false)
 
   useEffect(() => {
     setErrorToastShown(false)
@@ -91,44 +94,58 @@ const Workspace = () => {
   const { mutate: deleteFile } = useDeleteFile()
   const { mutate: deleteFolder } = useDeleteFolder()
 
-  const downloadFile = useCallback(async (cid) => {
-    try {
-      const response = await fileService.getDownloads(cid);
-      if (response && response.blob instanceof Blob) {
-        const url = window.URL.createObjectURL(response.blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', response.filename || `file_${cid}`);
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
-        toast.success(`File ${currentDownloadIndex + 1} of ${selectedCids.length} downloaded successfully`);
-      } else {
-        throw new Error('Unexpected response format');
+  const downloadFile = useCallback(
+    async (cid) => {
+      try {
+        const response = await fileService.getDownloads(cid)
+        if (response && response.blob instanceof Blob) {
+          const url = window.URL.createObjectURL(response.blob)
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', response.filename || `file_${cid}`)
+          document.body.appendChild(link)
+          link.click()
+          link.parentNode.removeChild(link)
+          window.URL.revokeObjectURL(url)
+          toast.success(
+            `File ${currentDownloadIndex + 1} of ${
+              selectedCids.length
+            } downloaded successfully`
+          )
+        } else {
+          throw new Error('Unexpected response format')
+        }
+      } catch (error) {
+        console.error('Failed to download file:', error)
+        toast.error(`Failed to download file: ${error.message}`)
       }
-    } catch (error) {
-      console.error('Failed to download file:', error);
-      toast.error(`Failed to download file: ${error.message}`);
-    }
-  }, [currentDownloadIndex, selectedCids.length]);
+    },
+    [currentDownloadIndex, selectedCids.length]
+  )
 
   useEffect(() => {
     const downloadNext = async () => {
-      if (selectedCids.length > 0 && currentDownloadIndex < selectedCids.length && !isDownloading) {
-        setIsDownloading(true);
-        await downloadFile(selectedCids[currentDownloadIndex]);
-        setIsDownloading(false);
-        setCurrentDownloadIndex(prevIndex => prevIndex + 1);
-      } else if (currentDownloadIndex >= selectedCids.length && selectedCids.length > 0) {
-        toast.success('All files downloaded successfully');
-        setSelectedCids([]);
-        setCurrentDownloadIndex(0);
+      if (
+        selectedCids.length > 0 &&
+        currentDownloadIndex < selectedCids.length &&
+        !isDownloading
+      ) {
+        setIsDownloading(true)
+        await downloadFile(selectedCids[currentDownloadIndex])
+        setIsDownloading(false)
+        setCurrentDownloadIndex((prevIndex) => prevIndex + 1)
+      } else if (
+        currentDownloadIndex >= selectedCids.length &&
+        selectedCids.length > 0
+      ) {
+        toast.success('All files downloaded successfully')
+        setSelectedCids([])
+        setCurrentDownloadIndex(0)
       }
-    };
+    }
 
-    downloadNext();
-  }, [selectedCids, currentDownloadIndex, isDownloading, downloadFile]);
+    downloadNext()
+  }, [selectedCids, currentDownloadIndex, isDownloading, downloadFile])
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -176,21 +193,21 @@ const Workspace = () => {
     // console.log('checkedFiles===>', checkedFiles);
 
     const itemsToDelete = Object.keys(checkedFiles)
-      .filter(key => checkedFiles[key])
-      .map(key => {
-        const index = parseInt(key, 10);
-        const isFolder = index < folderList.length;
-        const item = isFolder 
-          ? folderList[index] 
-          : fileList[index - folderList.length];
+      .filter((key) => checkedFiles[key])
+      .map((key) => {
+        const index = parseInt(key, 10)
+        const isFolder = index < folderList.length
+        const item = isFolder
+          ? folderList[index]
+          : fileList[index - folderList.length]
 
         return {
           id: item.id,
           isFolder,
           cid: item.cid,
           name: item.name || item.originalname
-        };
-      });
+        }
+      })
 
     // console.log('itemsToDelete===>', itemsToDelete);
 
@@ -198,29 +215,36 @@ const Workspace = () => {
       if (isFolder) {
         deleteFolder(id, {
           onSuccess: () => {
-            toast.success(`Folder "${name}" deleted successfully`);
-            refetchFolder();
+            toast.success(`Folder "${name}" deleted successfully`)
+            refetchFolder()
           },
           onError: (error) => {
-            toast.error(`Failed to delete folder "${name}": ${error.message}`);
+            toast.error(`Failed to delete folder "${name}": ${error.message}`)
           }
-        });
+        })
       } else {
         deleteFile(cid, {
           onSuccess: () => {
-            toast.success(`File "${name}" deleted successfully`);
-            refetchFolder();
+            toast.success(`File "${name}" deleted successfully`)
+            refetchFolder()
           },
           onError: (error) => {
-            toast.error(`Failed to delete file "${name}": ${error.message}`);
+            toast.error(`Failed to delete file "${name}": ${error.message}`)
           }
-        });
+        })
       }
-    });
+    })
 
-    setCheckedFiles({});
-    setDeleteModalOpen(false);
-  }, [checkedFiles, deleteFile, deleteFolder, fileList, folderList, refetchFolder]);
+    setCheckedFiles({})
+    setDeleteModalOpen(false)
+  }, [
+    checkedFiles,
+    deleteFile,
+    deleteFolder,
+    fileList,
+    folderList,
+    refetchFolder
+  ])
 
   const handleMenuOpen = useCallback((event) => {
     setMenuAnchorEl(event.currentTarget)
@@ -242,26 +266,26 @@ const Workspace = () => {
     const newSelectedCids = Object.entries(checkedFiles)
       .filter(([_, isChecked]) => isChecked)
       .map(([index, _]) => {
-        const isFolder = parseInt(index) < folderList.length;
+        const isFolder = parseInt(index) < folderList.length
         if (!isFolder) {
-          const fileIndex = parseInt(index) - folderList.length;
-          return fileList[fileIndex].cid;
+          const fileIndex = parseInt(index) - folderList.length
+          return fileList[fileIndex].cid
         }
-        return null;
+        return null
       })
-      .filter(cid => cid !== null);
+      .filter((cid) => cid !== null)
 
     // console.log('Selected CIDs:', newSelectedCids);
 
     if (newSelectedCids.length > 0) {
       // console.log('Starting download process for selected CIDs');
-      setSelectedCids(newSelectedCids);
-      setCurrentDownloadIndex(0);
+      setSelectedCids(newSelectedCids)
+      setCurrentDownloadIndex(0)
     } else {
-      console.log('No files selected for download');
-      toast.error('Please select files to download');
+      console.log('No files selected for download')
+      toast.error('Please select files to download')
     }
-  }, [checkedFiles, folderList, fileList]);
+  }, [checkedFiles, folderList, fileList])
 
   const fileButtons = [
     {
@@ -283,7 +307,7 @@ const Workspace = () => {
   const handleButtonClick = useCallback(
     (action) => {
       if (action === 'download') {
-        handleDownload();
+        handleDownload()
       } else if (action === 'delete') {
         const hasCheckedItems = Object.values(checkedFiles).some(
           (isChecked) => isChecked
@@ -338,8 +362,12 @@ const Workspace = () => {
   }, [handleDrop])
 
   const uploadProgressClose = useCallback(() => {
-    setShowUploadProgress(false);
-  }, []);
+    setShowUploadProgress(false)
+  }, [])
+
+  const isImageFile = (mimetype) => {
+    return mimetype && mimetype.startsWith('image/')
+  }
 
   return (
     <WorkspaceContainer refetchFolder={refetchFolder}>
@@ -455,6 +483,7 @@ const Workspace = () => {
                 file={file}
                 handleCheckboxToggle={handleCheckboxToggle}
                 checkedFiles={checkedFiles}
+                shouldFetchWebview={isImageFile(file.mimetype)}
               />
             ))}
           </Box>
@@ -466,9 +495,11 @@ const Workspace = () => {
                 id: index,
                 name: item.name || item.originalname,
                 type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
-                size: item.folderCount !== undefined
-                  ? `${item.totalItems} items`
-                  : formatStatStorageNumber(item.size).value + formatStatStorageNumber(item.size).cap,
+                size:
+                  item.folderCount !== undefined
+                    ? `${item.totalItems} items`
+                    : formatStatStorageNumber(item.size).value +
+                      formatStatStorageNumber(item.size).cap,
                 created_at: formatTime(item.createdAt),
                 content_id: item.id
               }))}
@@ -522,9 +553,9 @@ const Workspace = () => {
         </Typography>
       </WorkSpaceModal>
 
-      {showUploadProgress && (
+      {/* {showUploadProgress && (
         <UploadProgress uploads={uploads} onClose={uploadProgressClose} />
-      )}
+      )} */}
     </WorkspaceContainer>
   )
 }
