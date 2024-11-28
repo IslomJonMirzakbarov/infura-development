@@ -522,7 +522,7 @@ const Workspace = () => {
         </Typography>
       </WorkSpaceModal>
 
-      {showUploadProgress && (
+      {false && (
         <UploadProgress uploads={uploads} onClose={uploadProgressClose} />
       )}
     </WorkspaceContainer>

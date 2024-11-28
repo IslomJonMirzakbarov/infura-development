@@ -4,10 +4,10 @@ import httpRequest from './httpRequest'
 import axios from 'axios'
 
 const authService = {
-  login: async (data) => httpRequest.post('api/v1/api/v1/auth/users/login', data),
-  logout: async (data) => httpRequest.post('api/v1/api/v1/auth/users/logout', data),
+  login: async (data) => httpRequest.post('api/v1/auth/users/login', data),
+  logout: async (data) => httpRequest.post('api/v1/auth/users/logout', data),
   register: async (data) =>
-    httpRequest.post('api/v1/api/v1/auth/users/register', data), // email verification is not working
+    httpRequest.post('api/v1/auth/users/register', data), // email verification is not working
   sendVerificationEmail: async () =>
     httpRequest.get('api/v1/auth/users/send-verification-email', {
       headers: {
