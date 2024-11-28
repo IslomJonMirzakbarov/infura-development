@@ -3,6 +3,9 @@ import { useMutation, useQuery } from 'react-query'
 import authStore from 'store/auth.store'
 import httpRequest from './httpRequest'
 
+const INFURA_NETWORK =
+  process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
+
 export const poolService = {
   // check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
   getPoolByName: async (poolName) =>
@@ -11,8 +14,8 @@ export const poolService = {
   update: async (data) => httpRequest.patch('api/v1/pool/update', data), // tx_hash is missing and subscription plan
   getPools: async (id) =>
     httpRequest.get(`api/v1/pool/pool-list?filter[userId]=${id}`),
-  getDashboard: async () => httpRequest.get('api/v1/user/dashboard'),
-  getInvoices: async () => httpRequest.get('api/v1/user/invoices'),
+  getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
+  getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
   getStats: async () =>
     axios.get('https://api.oceandrive.network/infura/api/v1/stats'),
   getWalletsCount: async () =>
@@ -28,7 +31,9 @@ export const poolService = {
         Authorization: `Bearer ${token}`
       }
     })
-  }
+  },
+  getPoolStatistics: async () => 
+    httpRequest.get('api/v1/aggregation/user-pool-statistics'),
 }
 
 export const useGetFoldersByPoolId = ({
@@ -126,6 +131,10 @@ export const useGetPoolById = ({ id, enabled = true, queryProps }) => {
 
 export const useConditionalPoolById = (id) => {
   return useGetPoolById({ id, enabled: id !== 'ALL' })
+}
+
+export const usePoolStatistics = (querySettings) => {
+  return useQuery('pool-statistics', poolService.getPoolStatistics, querySettings)
 }
 
 export const useGetOldPools = (querySettings) => {

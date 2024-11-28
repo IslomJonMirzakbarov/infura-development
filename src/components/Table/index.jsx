@@ -19,7 +19,8 @@ export default function Table({
     if (row.isPending) return // Don't allow clicks on pending pools
     
     if (name === 'profileTable') {
-      navigate(`/main/profile/${row.id}/details`)
+      // navigate(`/main/profile/${row.id}/file-upload`)
+      navigate(`/main/profile/${row.id || row.poolId}/details`)
     }
 
     if (name === 'billingTable' && row.txHash) {

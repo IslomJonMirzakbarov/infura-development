@@ -138,7 +138,22 @@ const useMetaMask = () => {
         gas: gasLimit
       })
 
-    return result
+    // Find PoolCreate event and extract poolId
+    let poolId = null
+    if (result.events) {
+      // Look through all events to find PoolCreate
+      Object.values(result.events).forEach(event => {
+        if (event.event === 'PoolCreate') {
+          poolId = event.returnValues.poolId
+          console.log('Found poolId from event:', poolId)
+        }
+      })
+    }
+
+    return {
+      ...result,
+      poolId
+    }
   }
 
   const upgradePool = async ({
