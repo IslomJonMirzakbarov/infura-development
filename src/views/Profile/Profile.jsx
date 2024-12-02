@@ -1,13 +1,11 @@
-import Header from 'components/Header'
-import Table from 'components/Table'
-import styles from './style.module.scss'
-import Container from 'components/Container'
 import Product from 'components/Product'
-import { useGetPools } from 'services/pool.service'
+import Table from 'components/Table'
 import { useEffect } from 'react'
-import poolStore from 'store/pool.store'
-import PageTransition from 'components/PageTransition'
 import { useTranslation } from 'react-i18next'
+import { useGetPools } from 'services/pool.service'
+import authStore from 'store/auth.store'
+import poolStore from 'store/pool.store'
+import styles from './style.module.scss'
 
 export default function Profile({
   downloadData,
@@ -19,7 +17,8 @@ export default function Profile({
   setViewTable
 }) {
   const { t } = useTranslation()
-  const { data: pools } = useGetPools()
+  const id = authStore.userData?.id
+  const { data: pools } = useGetPools({ id })
   const freePool = pools?.payload?.pools?.find((pool) => pool.price === 'FREE')
   const poolCount = pools?.payload?.count
   useEffect(() => {
@@ -31,33 +30,31 @@ export default function Profile({
     }
   }, [freePool, poolCount])
 
+  console.log('pools', pools)
+
   return (
-    <PageTransition>
-      <Header title='Profile' />
+    <>
+      <h2 className={styles.tableTitle}>{t('Pool List')}</h2>
 
-      <Container>
-        <h2 className={styles.tableTitle}>{t('gateway_b')}</h2>
-
-        {viewTable ? (
-          <>
-            {value === 0 && (
-              <Table
-                name='profileTable'
-                columns={headColumns}
-                data={pools?.payload?.pools}
-              />
-            )}
-          </>
-        ) : (
-          <div className={styles.list}>
-            <Product />
-            <Product />
-            <Product />
-            <Product />
-            <Product />
-          </div>
-        )}
-      </Container>
-    </PageTransition>
+      {viewTable ? (
+        <>
+          {value === 0 && (
+            <Table
+              name='profileTable'
+              columns={headColumns}
+              data={pools?.details?.results}
+            />
+          )}
+        </>
+      ) : (
+        <div className={styles.list}>
+          <Product />
+          <Product />
+          <Product />
+          <Product />
+          <Product />
+        </div>
+      )}
+    </>
   )
 }

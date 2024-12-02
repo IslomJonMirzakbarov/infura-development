@@ -1,15 +1,16 @@
-import styles from '../SignUp/style.module.scss'
-import { NavLink, useNavigate } from 'react-router-dom'
-import { useForm } from 'react-hook-form'
-import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
-import { useLoginMutation } from 'services/auth.service'
-import authStore from 'store/auth.store'
 import { LoadingButton } from '@mui/lab'
+import { ReactComponent as ForwardIcon } from 'assets/icons/forward-icon.svg'
 import BasicTextField from 'components/ControlledFormElements/HFSimplified/BasicTextField'
 import PasswordField from 'components/ControlledFormElements/HFSimplified/PasswordField'
 import PageTransition from 'components/PageTransition'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useLoginMutation } from 'services/auth.service'
+import authStore from 'store/auth.store'
 import walletStore from 'store/wallet.store'
+import styles from '../SignUp/style.module.scss'
 
 const Login = () => {
   const navigate = useNavigate()
@@ -17,14 +18,34 @@ const Login = () => {
   const { mutate, isLoading } = useLoginMutation()
   const { t } = useTranslation()
 
+  const formatErrorMessage = (error) => {
+    const message =
+      error?.data?.status?.message || error?.message || 'Unknown error'
+
+    const errorMessages = {
+      USER_NOT_FOUND: t('user_not_found'),
+      INVALID_PASSWORD: t('invalid_password'),
+      INVALID_CREDENTIALS: t('invalid_credentials'),
+      EMAIL_NOT_VERIFIED: t('email_not_verified')
+    }
+
+    return errorMessages[message] || message.toLowerCase().split('_').join(' ')
+  }
+
   const onSubmit = (data) => {
     mutate(data, {
       onSuccess: (res) => {
-        authStore.login(res.payload)
+        console.log('login response: ', res)
+        authStore.login(res.details)
         walletStore.logout()
+        toast.success(t('login_success'))
       },
       onError: (error) => {
-        if (error.status === 404) {
+        console.log('login error: ', error)
+        const readableError = formatErrorMessage(error)
+        toast.error(readableError)
+
+        if (error?.data?.status?.message === 'USER_NOT_FOUND') {
           navigate('/auth/register')
         }
       }
@@ -55,7 +76,7 @@ const Login = () => {
           minLength='8'
           rules={{
             pattern: {
-              value: /^(?=.*[a-zA-Z])(?=.*\d).{8,32}$/,
+              value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/,
               message: t('password_requirements')
             }
           }}

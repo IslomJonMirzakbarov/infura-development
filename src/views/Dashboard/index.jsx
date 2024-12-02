@@ -1,20 +1,20 @@
-import React, { useEffect, useMemo } from 'react'
-import Container from 'components/Container'
-import styles from './style.module.scss'
 import { Box, Button, Typography } from '@mui/material'
-import HFSelect from 'components/ControlledFormElements/HFSelect'
-import { useForm } from 'react-hook-form'
 import DashboardBarChart from 'components/BarChart'
+import Container from 'components/Container'
+import HFSelect from 'components/ControlledFormElements/HFSelect'
+import PageTransition from 'components/PageTransition'
+import { useEffect, useMemo } from 'react'
+import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
-import { useDashboard } from 'services/pool.service'
 import poolStore from 'store/pool.store'
 import {
   formatStatNumber,
   formatStatStorageNumber,
   getShortenedPoolName
 } from 'utils/utilFuncs'
-import PageTransition from 'components/PageTransition'
-import { useTranslation } from 'react-i18next'
+import styles from './style.module.scss'
+import { usePoolStatistics } from 'services/pool.service'
 
 const Dashboard = () => {
   const navigate = useNavigate()
@@ -27,9 +27,57 @@ const Dashboard = () => {
 
   const selectedPoolId = watch('dashboardPool')
 
-  const { data } = useDashboard()
-  console.log('dashboard: ', data)
+  // Fetch real data from server
+  const { data: serverData, isLoading } = usePoolStatistics()
 
+  // Wrap the data object in useMemo with fallback to demo data
+  const data = useMemo(() => {
+    if (!serverData?.details?.results) {
+      return {
+        pools: [], // Return empty array if no data
+        all: {
+          total_size: '0GB',
+          remaining_size: '0GB',
+          subscribers_count: 0,
+          uploaded_files_count: 0,
+          downloaded_files_count: 0
+        },
+        available_nodes_count: 0
+      }
+    }
+
+    // Transform server data to match expected format
+    const pools = serverData.details.results.map(pool => ({
+      id: pool.poolId,
+      name: pool.poolName,
+      price: pool.price,
+      total_size: `${pool.poolSize.size}${pool.poolSize.type}`,
+      remaining_size: `${pool.poolSize.size - (pool.usedStorage.size || 0)}${pool.poolSize.type}`,
+      subscribers_count: 0, // Use demo value as not provided by API
+      uploaded_files_count: pool.uploadedFilesCount,
+      downloaded_files_count: pool.downlodedFilesCount
+    }))
+
+    // Calculate totals for 'all' data
+    const totalSize = pools.reduce((sum, pool) => sum + parseFloat(pool.total_size), 0)
+    const remainingSize = pools.reduce((sum, pool) => sum + parseFloat(pool.remaining_size), 0)
+    const uploadedFiles = pools.reduce((sum, pool) => sum + pool.uploaded_files_count, 0)
+    const downloadedFiles = pools.reduce((sum, pool) => sum + pool.downloaded_files_count, 0)
+
+    return {
+      pools,
+      all: {
+        total_size: `${totalSize}GB`,
+        remaining_size: `${remainingSize}GB`,
+        subscribers_count: 0, // Use demo value as not provided by API
+        uploaded_files_count: uploadedFiles,
+        downloaded_files_count: downloadedFiles
+      },
+      available_nodes_count: serverData.details.statistics?.availableNodesCount || 0
+    }
+  }, [serverData])
+
+  // Update the existing useMemo to use the memoized data
   const poolData = useMemo(() => {
     return selectedPoolId === 'ALL'
       ? data?.all

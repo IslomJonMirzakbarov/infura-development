@@ -1,16 +1,15 @@
-import React from 'react'
 import { Box, Typography } from '@mui/material'
-import styles from '../style.module.scss'
-import { formatStatStorageNumber, formatStatNumber } from 'utils/utilFuncs'
 import { useTranslation } from 'react-i18next'
 import { useDownloadsCount, useWalletsCount } from 'services/pool.service'
+import { formatStatNumber, formatStatStorageNumber } from 'utils/utilFuncs'
+import styles from '../style.module.scss'
 
 const Stats = ({ stats: statsData }) => {
   const { data } = useDownloadsCount()
-  console.log('datastorage: ', statsData)
   const { data: walletsData } = useWalletsCount()
+  console.log('datastorage: ', walletsData)
 
-  const walletsCount = walletsData?.payload?.wallet_count
+  const walletsCount = walletsData?.data?.payload?.wallet_count
 
   let downloadsCount = 0
   if (
@@ -30,22 +29,22 @@ const Stats = ({ stats: statsData }) => {
     },
     {
       statTitle: t('connected_nodes'),
-      statNum: statsData?.connected_nodes_count ?? 0,
+      statNum: statsData?.data?.connected_nodes_count ?? 0,
       formatFunction: formatStatNumber
     },
     {
       statTitle: t('storage_capacity'),
-      statNum: statsData ? statsData.live_available_storage * 1e9 : 0,
+      statNum: statsData?.data ? statsData?.data.live_available_storage * 1e9 : 0,
       formatFunction: formatStatStorageNumber
     },
     {
       statTitle: t('stored_data'),
-      statNum: statsData ? statsData.stored_data * 1e9 : 0,
+      statNum: statsData?.data ? statsData?.data.stored_data * 1e9 : 0,
       formatFunction: formatStatStorageNumber
     },
     {
       statTitle: t('created_pools'),
-      statNum: statsData?.pools_count ?? 0,
+      statNum: statsData?.data?.pools_count ?? 0,
       formatFunction: formatStatNumber
     }
   ]

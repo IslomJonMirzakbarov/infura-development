@@ -1,0 +1,83 @@
+.fileCard {
+  position: relative;
+  width: 100%;
+  height: 252px;
+  background: #1D1D41;
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+
+  .selectableArea {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 2;
+    cursor: pointer;
+  }
+
+  .filePreviewContainer {
+    flex: 1;
+    min-height: 0;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .filePreview {
+    width: 100%;
+    height: 140px; // Fixed height for preview area
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .previewImage {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; // Changed from cover to contain
+    object-position: center;
+  }
+
+  .iconWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .fileInfo {
+    padding: 10px;
+    background: #1D1D41;
+    border-bottom-left-radius: 7px;
+    border-bottom-right-radius: 7px;
+    min-height: 65px; // Fixed height for info area
+  }
+
+  .filename {
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 18px;
+    color: #fff;
+    margin-bottom: 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .fileDetails {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .fileMetadata {
+    font-weight: 500;
+    font-size: 10px;
+    color: #888888;
+    line-height: 15px;
+  }
+}

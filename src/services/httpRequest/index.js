@@ -1,22 +1,26 @@
 import axios from 'axios'
-import authStore from 'store/auth.store'
 import toast from 'react-hot-toast'
 import { refreshToken } from 'services/auth.service'
+import authStore from 'store/auth.store'
 import modalStore from 'store/modal.store'
 import { getCustomTranslation } from 'utils/customTranslation'
 
 const httpRequest = axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
-  timeout: 100000
+  timeout: 100000,
+  withCredentials: true
 })
 
 const errorHandler = async (error, hooks) => {
+  console.log('https service error: ', error)
+
   const originalRequest = error.config
   if (
     error?.response?.data?.message &&
     error?.response?.data?.message !==
       "code=400, message=Key: 'CheckPoolReq.PoolName' Error:Field validation for 'PoolName' failed on the 'min' tag" &&
-    error?.response?.data?.message !== 'pool already exists'
+    error?.response?.data?.message !== 'pool already exists' &&
+    !error?.response?.data?.message.includes('Pool not found')
   ) {
     toast.error(capitalizeFirstLetter(error.response.data.message))
   }
@@ -25,7 +29,10 @@ const errorHandler = async (error, hooks) => {
     toast.error(capitalizeFirstLetter(error?.message))
   }
 
-  if (error?.response?.status === 500) {
+  if (
+    error?.response?.status === 500 &&
+    !error?.response?.data?.message.includes('Pool not found')
+  ) {
     modalStore.setOpenServerError(true)
   }
 
@@ -42,12 +49,31 @@ const errorHandler = async (error, hooks) => {
     return Promise.reject(error.response)
   }
 
+  // if (error?.response?.status === 401) {
+  //   const token = authStore?.token?.refresh?.token
+  //   if (token) {
+  //     const res = await refreshToken(token)
+  //     authStore.setAccessToken(res?.details?.token?.access?.token)
+  //     return httpRequest(originalRequest)
+  //   }
+  // }
+
   if (error?.response?.status === 401) {
-    const token = authStore?.token?.refresh_token?.token
+    const token = authStore?.token?.refresh?.token
+
     if (token) {
-      const res = await refreshToken(token)
-      authStore.setAccessToken(res)
-      return httpRequest(originalRequest)
+      try {
+        const res = await refreshToken(token)
+        authStore.setAccessToken(res?.details?.token?.access?.token)
+        originalRequest.headers.Authorization = `Bearer ${res?.details?.token?.access?.token}`
+
+        return httpRequest(originalRequest)
+      } catch (refreshError) {
+        authStore.logout() // If refresh fails, logout the user
+        return Promise.reject(refreshError)
+      }
+    } else {
+      authStore.logout()
     }
   }
 
@@ -55,13 +81,13 @@ const errorHandler = async (error, hooks) => {
 }
 
 httpRequest.interceptors.request.use((config) => {
-  if (!config.url.includes('app/stats')) {
-    const token = authStore?.token?.access_token?.token
+  if (!config.headers['Authorization'] && !config.url.includes('app/stats')) {
+    const token = authStore?.token?.access?.token
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
 
-    config.headers['X-Conun-Service'] = 'infura'
+    // config.headers['X-Conun-Service'] = 'infura'
   }
 
   return config

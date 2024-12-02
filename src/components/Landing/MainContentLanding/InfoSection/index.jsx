@@ -1,30 +1,30 @@
-import React, { useState } from 'react'
 import { Box, Grid, useMediaQuery } from '@mui/material'
-import styles from './style.module.scss'
-import { ReactComponent as WorldwideIcon } from 'assets/images/landing/worldwide.svg'
-import { ReactComponent as EmpowerIcon } from 'assets/images/landing/empower.svg'
-import { ReactComponent as DeveloperIcon } from 'assets/images/landing/developer.svg'
 import { ReactComponent as DataIcon } from 'assets/images/landing/data-assurance.svg'
+import { ReactComponent as DeveloperIcon } from 'assets/images/landing/developer.svg'
+import { ReactComponent as EmpowerIcon } from 'assets/images/landing/empower.svg'
+import { ReactComponent as WorldwideIcon } from 'assets/images/landing/worldwide.svg'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import styles from './style.module.scss'
 
 const optionsData = {
   worldwide: {
-    icon: <WorldwideIcon />,
+    icon: <WorldwideIcon data-testid='WorldwideIcon' />,
     title: 'worldwide_title',
     description: 'worldwide_description'
   },
   empower: {
-    icon: <EmpowerIcon />,
+    icon: <EmpowerIcon data-testid='EmpowerIcon' />,
     title: 'empower_title',
     description: 'empower_description'
   },
   developer: {
-    icon: <DeveloperIcon />,
+    icon: <DeveloperIcon data-testid='DeveloperIcon' />,
     title: 'developer_title',
     description: 'developer_description'
   },
   dataAssurance: {
-    icon: <DataIcon className={styles.dataIcon} />,
+    icon: <DataIcon data-testid='DataIcon' className={styles.dataIcon} />,
     title: 'data_assurance_title',
     description: 'data_assurance_description'
   }
@@ -82,7 +82,7 @@ const InfoSection = () => {
                 className={
                   selectedOption.title === optionsData[key].title
                     ? styles.activeOption
-                    : ''
+                    : undefined
                 }
               >
                 <p
@@ -101,8 +101,9 @@ const InfoSection = () => {
           <Box className={styles.optionDesc}>
             <div
               className={
-                selectedOption.title === 'data_assurance_title' &&
-                styles.specialIcon
+                selectedOption.title === 'data_assurance_title'
+                  ? styles.specialIcon
+                  : undefined
               }
             >
               {selectedOption.icon}

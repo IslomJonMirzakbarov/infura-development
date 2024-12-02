@@ -1,32 +1,23 @@
-import React, { useState } from 'react'
-import {
-  Box,
-  Button,
-  Container,
-  Menu,
-  MenuItem,
-  Tooltip,
-  useMediaQuery
-} from '@mui/material'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { Box, Button, Tooltip, useMediaQuery } from '@mui/material'
 import { ReactComponent as LogoT } from 'assets/images/landing/oceandrive.svg'
 import { ReactComponent as LogoM } from 'assets/images/landing/oceandrive1.svg'
-import { ReactComponent as ArrowDownIcon } from 'assets/images/landing/down_arrow.svg'
-import styles from './style.module.scss'
-import authStore from 'store/auth.store'
-import walletStore from 'store/wallet.store'
-import classNames from 'classnames'
-import { truncateWalletAddress } from 'utils/utilFuncs'
-import Hamburger from 'hamburger-react'
-import MobileMenu from './MobileMenu'
-import i18next from 'i18next'
-import { useTranslation } from 'react-i18next'
-import languageStore from 'store/language.store'
-import { useEffect } from 'react'
 import { ReactComponent as WalletIcon } from 'assets/images/landing/wallet.svg'
-import { ReactComponent as LanguageIcon } from 'assets/images/landing/language.svg'
-import { ReactComponent as KoreanIcon } from 'assets/images/landing/korean.svg'
-import { ReactComponent as EnglishIcon } from 'assets/images/landing/english.svg'
+import classNames from 'classnames'
+import Hamburger from 'hamburger-react'
+import i18next from 'i18next'
+import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { NavLink, useNavigate } from 'react-router-dom'
+import authStore from 'store/auth.store'
+import languageStore from 'store/language.store'
+import walletStore from 'store/wallet.store'
+import { truncateWalletAddress } from 'utils/utilFuncs'
+import WorkSpaceModal from 'views/Workspace/WorkSpaceModal'
+import LanguagePicker from './LanguagePicker'
+import MobileMenu from './MobileMenu'
+import ProfileItemPicker from './ProfileItemPicker'
+import UserGuidePicker from './UserGuidePicker'
+import styles from './style.module.scss'
 
 const NavbarLanding = () => {
   const navigate = useNavigate()
@@ -34,12 +25,17 @@ const NavbarLanding = () => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [language, setLanguage] = useState(languageStore.language)
   const [languageAnchorEl, setLanguageAnchorEl] = useState(null)
+  const [profileAnchorEl, setProfileAnchorEl] = useState(null)
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false)
   const { t } = useTranslation()
   const [hoveredItem, setHoveredItem] = useState(null)
   const isMobile = useMediaQuery('(max-width:600px)')
 
   const menuItemStyle = (language) => ({
-    color: hoveredItem === language ? '#27E6D6' : '#FFF',
+    color:
+      hoveredItem === language && !hoveredItem.includes('_')
+        ? '#27E6D6'
+        : '#FFF',
     fontFamily: 'Poppins',
     fontSize: '13px',
     fontWeight: '500'
@@ -79,6 +75,23 @@ const NavbarLanding = () => {
     setLanguageAnchorEl(null)
   }
 
+  const redirectProfile = (item) => {
+    if (item === 'my_profile') {
+      navigate('/main/profile')
+    } else if (item === 'profile_billing') {
+      navigate('/main/billing')
+    } else if (item === 'profile_logout') {
+      setLogoutModalOpen(true)
+    }
+  }
+
+  const handleLogout = () => {
+    authStore.logout()
+    walletStore.logout()
+    setLogoutModalOpen(false)
+    navigate('/')
+  }
+
   const handleMenuToggle = (menu) => (event) => {
     if (menu === 'language') {
       setLanguageAnchorEl(
@@ -86,12 +99,52 @@ const NavbarLanding = () => {
       )
     } else if (menu === 'userGuide') {
       setAnchorEl(event.type === 'mouseenter' ? event.currentTarget : null)
+    } else if (menu === 'profile') {
+      setProfileAnchorEl(
+        event.type === 'mouseenter' ? event.currentTarget : null
+      )
     }
   }
 
   useEffect(() => {
     i18next.changeLanguage(languageStore.language)
   }, [])
+
+  const userGuidePickerProps = {
+    handleMenuToggle,
+    menuPaperStyle,
+    menuItemStyle,
+    handleClose,
+    setHoveredItem,
+    hoveredItem,
+    anchorEl,
+    setAnchorEl
+  }
+
+  const languagePickerProps = {
+    isMobile,
+    handleMenuToggle,
+    languageAnchorEl,
+    setLanguageAnchorEl,
+    menuPaperStyle,
+    changeLanguage,
+    setHoveredItem,
+    menuItemStyle,
+    iconStyle
+  }
+
+  const profileItemPickerProps = {
+    isMobile,
+    handleMenuToggle,
+    profileAnchorEl,
+    setProfileAnchorEl,
+    menuPaperStyle,
+    redirectProfile,
+    setHoveredItem,
+    menuItemStyle,
+    iconStyle,
+    hoveredItem
+  }
 
   return (
     <>
@@ -104,72 +157,9 @@ const NavbarLanding = () => {
             <ul>
               <li>
                 <NavLink to='/faq'>FAQ</NavLink>
-                {/* <NavLink to='/'>{t('pricing')}</NavLink> */}
               </li>
 
-              <li onMouseEnter={handleMenuToggle('userGuide')}>
-                <p>
-                  {t('user_guide')} <ArrowDownIcon />
-                </p>
-
-                <Menu
-                  id='user-guide'
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={() => setAnchorEl(null)}
-                  className={styles.languageMenu}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'right'
-                  }}
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right'
-                  }}
-                  PaperProps={{ style: menuPaperStyle }}
-                  MenuListProps={{
-                    onMouseLeave: () => setAnchorEl(null)
-                  }}
-                >
-                  <MenuItem
-                    onClick={handleClose}
-                    style={menuItemStyle('user-guide-en')}
-                  >
-                    <Link
-                      to='/OceanDrive_Infura_User Guide_en.pdf'
-                      target='_blank'
-                      style={{
-                        textDecoration: 'none',
-                        color:
-                          hoveredItem === 'user-guide-en' ? '#27E6D6' : '#FFF'
-                      }}
-                      onMouseEnter={() => setHoveredItem('user-guide-en')}
-                      onMouseLeave={() => setHoveredItem(null)}
-                    >
-                      User Guide (en)
-                    </Link>
-                  </MenuItem>
-                  <MenuItem
-                    onClick={handleClose}
-                    style={menuItemStyle('user-guide-ko')}
-                  >
-                    <Link
-                      to='/OceanDrive_Infura_User Guide_ko.pdf'
-                      target='_blank'
-                      style={{
-                        textDecoration: 'none',
-                        color:
-                          hoveredItem === 'user-guide-ko' ? '#27E6D6' : '#FFF'
-                      }}
-                      onMouseEnter={() => setHoveredItem('user-guide-ko')}
-                      onMouseLeave={() => setHoveredItem(null)}
-                    >
-                      User Guide (ko)
-                    </Link>
-                  </MenuItem>
-                </Menu>
-              </li>
+              <UserGuidePicker {...userGuidePickerProps} />
 
               <li>
                 <NavLink
@@ -220,56 +210,9 @@ const NavbarLanding = () => {
                 <WalletIcon />
               </Box>
             </Tooltip>
+            <LanguagePicker {...languagePickerProps} />
 
-            {!isMobile && (
-              <Tooltip title='Select Language' placement='bottom-end' arrow>
-                <Box
-                  className={styles.languageIcon}
-                  // onMouseEnter={handleLanguageIconHover}
-                  onMouseEnter={handleMenuToggle('language')}
-                >
-                  <LanguageIcon />
-                </Box>
-              </Tooltip>
-            )}
-
-            <Menu
-              id='language-menu'
-              anchorEl={languageAnchorEl}
-              keepMounted
-              open={Boolean(languageAnchorEl)}
-              onClose={() => setLanguageAnchorEl(null)}
-              className={styles.languageMenu}
-              anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right'
-              }}
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              PaperProps={{ style: menuPaperStyle }}
-              MenuListProps={{
-                onMouseLeave: () => setLanguageAnchorEl(null)
-              }}
-            >
-              <MenuItem
-                onClick={() => changeLanguage('ko')}
-                onMouseEnter={() => setHoveredItem('ko')}
-                onMouseLeave={() => setHoveredItem(null)}
-                style={menuItemStyle('ko')}
-              >
-                <KoreanIcon style={iconStyle} /> Korean
-              </MenuItem>
-              <MenuItem
-                onClick={() => changeLanguage('en')}
-                onMouseEnter={() => setHoveredItem('en')}
-                onMouseLeave={() => setHoveredItem(null)}
-                style={menuItemStyle('en')}
-              >
-                <EnglishIcon style={iconStyle} /> English
-              </MenuItem>
-            </Menu>
+            {isAuth && <ProfileItemPicker {...profileItemPickerProps} />}
 
             <Box className={styles.burgerBtn}>
               <Hamburger
@@ -284,6 +227,16 @@ const NavbarLanding = () => {
         </div>
       </header>
       <MobileMenu isOpen={isOpen} onClose={onClose} />
+      <WorkSpaceModal
+        open={isLogoutModalOpen}
+        handleClose={() => setLogoutModalOpen(false)}
+        cancelLabel='Cancel'
+        submitLabel='Yes'
+        onCancel={() => setLogoutModalOpen(false)}
+        onSubmit={handleLogout}
+        title='Bye Bye'
+        isLoading={false}
+      />
     </>
   )
 }

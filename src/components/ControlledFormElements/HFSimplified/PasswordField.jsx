@@ -62,10 +62,10 @@ const PasswordField = ({
       {...boxProps}
     >
       {label && (
-        <Typography color='white' variant='standard' fontWeight={500} mb={1}>
-          {t(label)}
+        <Typography color='white' variant='standard' fontWeight={500} mb={1} display="flex" alignItems="center">
+          {typeof label === 'string' ? t(label) : label}
           {required && !readOnly && (
-            <span style={{ color: '#27E6D6' }}> *</span>
+            <span style={{ color: '#27E6D6', marginLeft: '4px' }}> *</span>
           )}
         </Typography>
       )}

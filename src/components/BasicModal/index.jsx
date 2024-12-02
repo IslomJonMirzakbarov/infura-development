@@ -1,9 +1,8 @@
-import React from 'react'
 import CloseIcon from '@mui/icons-material/Close'
-import { Box, Button, Modal } from '@mui/material'
-import styles from './style.module.scss'
-import classNames from 'classnames'
 import { LoadingButton } from '@mui/lab'
+import { Box, Modal } from '@mui/material'
+import classNames from 'classnames'
+import styles from './style.module.scss'
 
 const BasicModal = ({
   open,
@@ -24,6 +23,7 @@ const BasicModal = ({
       handleClose()
     }
   }
+  const isWorkspace = title === 'Delete Items' || title === 'Bye Bye'
   return (
     <Modal open={open} onClose={handleModalClose}>
       <Box
@@ -32,10 +32,17 @@ const BasicModal = ({
         })}
       >
         <Box className={styles.content}>
-          {!isLoader && (
+          {!isLoader && !isWorkspace && (
             <CloseIcon className={styles.close} onClick={handleClose} />
           )}
-          {!isLoader && <p className={styles.title}>{title}</p>}
+          {!isLoader && (
+            <p
+              className={styles.title}
+              style={{ textAlign: isWorkspace && 'center' }}
+            >
+              {title}
+            </p>
+          )}
           {children}
         </Box>
 
