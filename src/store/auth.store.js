@@ -30,10 +30,16 @@ class Store {
   }
 
   setAccessToken(value) {
+    if (!this.token.access) {
+      this.token.access = null
+    }
     this.token.access.token = value
   }
 
   setRefreshToken(value) {
+    if (!this.token.refresh) {
+      this.token.refresh = null
+    }
     this.token.refresh.token = value
   }
 
