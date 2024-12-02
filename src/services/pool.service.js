@@ -15,15 +15,13 @@ export const poolService = {
     httpRequest.get(`api/v1/pool/pool-list?filter[userId]=${id}`),
   getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
   getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
-  getStats: async () =>
-    axios.get('https://api.oceandrive.network/infura/api/v1/stats'),
-  getWalletsCount: async () =>
-    axios.get('https://api.oceandrive.network/app/stats'),
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
   getPoolById: async (id) => httpRequest.get(`api/v1/pool/pool-info/${id}`),
   getPoolStatistics: async () => 
     httpRequest.get('api/v1/aggregation/user-pool-statistics'),
+  getNodeStats: async () => 
+    httpRequest.get('api/v1/aggregation/get-node-count?entryPoint=0'),
 }
 
 export const useGetFoldersByPoolId = ({
@@ -75,8 +73,8 @@ export const useDownloadsCount = (querySettings) => {
     querySettings
   )
 }
-export const useWalletsCount = (querySettings) => {
-  return useQuery('wallets-count', poolService.getWalletsCount, querySettings)
+export const useNodeStats = (querySettings) => {
+  return useQuery('node-stats', poolService.getNodeStats, querySettings)
 }
 // export const usePoolCheckMutation = (mutationSettings) => {
 //   return useMutation(poolService.check, mutationSettings)
@@ -107,9 +105,6 @@ export const useInvoice = (querySettings = {}) => {
     cacheTime: 20000,
     ...querySettings
   })
-}
-export const useStats = (mutationSettings) => {
-  return useQuery('stats', poolService.getStats, mutationSettings)
 }
 export const useGetPoolById = ({ id, enabled = true, queryProps }) => {
   return useQuery(`get-pool-${id}`, () => poolService.getPoolById(id), {

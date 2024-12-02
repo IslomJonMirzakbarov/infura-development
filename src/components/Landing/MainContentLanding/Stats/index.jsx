@@ -1,50 +1,47 @@
 import { Box, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { useDownloadsCount, useWalletsCount } from 'services/pool.service'
+import { useDownloadsCount } from 'services/pool.service'
 import { formatStatNumber, formatStatStorageNumber } from 'utils/utilFuncs'
 import styles from '../style.module.scss'
 
 const Stats = ({ stats: statsData }) => {
-  const { data } = useDownloadsCount()
-  const { data: walletsData } = useWalletsCount()
-  console.log('datastorage: ', walletsData)
-
-  const walletsCount = walletsData?.data?.payload?.wallet_count
+  const { data: downloadsData } = useDownloadsCount()
 
   let downloadsCount = 0
   if (
-    data?.data?.data?.attributes?.mac ||
-    data?.data?.data?.attributes?.windows
+    downloadsData?.data?.data?.attributes?.mac ||
+    downloadsData?.data?.data?.attributes?.windows
   ) {
     downloadsCount =
-      parseInt(data?.data?.data?.attributes?.mac) +
-      parseInt(data?.data?.data?.attributes?.windows)
+      parseInt(downloadsData?.data?.data?.attributes?.mac) +
+      parseInt(downloadsData?.data?.data?.attributes?.windows)
   }
+
   const { t } = useTranslation()
   const stats = [
     {
       statTitle: t('users'),
-      statNum: walletsCount ?? 0,
+      statNum: statsData?.totalNodesCount ?? 0,
       formatFunction: formatStatNumber
     },
     {
       statTitle: t('connected_nodes'),
-      statNum: statsData?.data?.connected_nodes_count ?? 0,
+      statNum: statsData?.totalActivePoolsCount ?? 0,
       formatFunction: formatStatNumber
     },
     {
       statTitle: t('storage_capacity'),
-      statNum: statsData?.data ? statsData?.data.live_available_storage * 1e9 : 0,
+      statNum: statsData?.totalStorageSize ?? 0,
       formatFunction: formatStatStorageNumber
     },
     {
       statTitle: t('stored_data'),
-      statNum: statsData?.data ? statsData?.data.stored_data * 1e9 : 0,
+      statNum: statsData?.totalUsedStorage ?? 0,
       formatFunction: formatStatStorageNumber
     },
     {
       statTitle: t('created_pools'),
-      statNum: statsData?.data?.pools_count ?? 0,
+      statNum: statsData?.totalPoolsCount ?? 0,
       formatFunction: formatStatNumber
     }
   ]
