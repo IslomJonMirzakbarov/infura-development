@@ -16,6 +16,14 @@ const errorHandler = async (error, hooks) => {
 
   const originalRequest = error.config
   if (
+    error?.response?.data?.code === 4001 || 
+    error?.response?.data?.message === 'AUTH_TOKEN_EXPIRED'
+  ) {
+    authStore.logout()
+    return Promise.reject(error.response)
+  }
+
+  if (
     error?.response?.data?.message &&
     error?.response?.data?.message !==
       "code=400, message=Key: 'CheckPoolReq.PoolName' Error:Field validation for 'PoolName' failed on the 'min' tag" &&
