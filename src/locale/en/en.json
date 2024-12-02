@@ -191,6 +191,8 @@
     "user_not_found": "User not found",
     "invalid_credentials": "Invalid email or password",
     "email_not_verified": "Please verify your email first",
-    "login_success": "Successfully logged in"
+    "login_success": "Successfully logged in",
+    "AUTH_OTP_INVALID": "Invalid confirmation code. Please try again.",
+    "invalid_otp": "Invalid confirmation code. Please try again."
   }
 }
