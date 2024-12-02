@@ -94,50 +94,55 @@ const Workspace = () => {
   const { mutate: deleteFile } = useDeleteFile()
   const { mutate: deleteFolder } = useDeleteFolder()
 
-  const downloadFile = useCallback(
-    async (cid) => {
-      try {
-        const response = await fileService.getDownloads(cid)
-        if (response && response.blob instanceof Blob) {
-          const url = window.URL.createObjectURL(response.blob)
-          const link = document.createElement('a')
-          link.href = url
-          link.setAttribute('download', response.filename || `file_${cid}`)
-          document.body.appendChild(link)
+  const downloadFile = useCallback(async (cid) => {
+    try {
+      setIsDownloading(true)
+      const response = await fileService.getDownloads(cid)
+      
+      if (response && response.blob instanceof Blob) {
+        // Create and click download link
+        const url = window.URL.createObjectURL(response.blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', response.filename || `file_${cid}`)
+        document.body.appendChild(link)
+        
+        // Create a promise that resolves when the download is complete
+        await new Promise((resolve, reject) => {
+          link.onclick = () => {
+            // Small timeout to ensure download starts
+            setTimeout(resolve, 1000)
+          }
           link.click()
-          link.parentNode.removeChild(link)
-          window.URL.revokeObjectURL(url)
-          toast.success(
-            `File ${currentDownloadIndex + 1} of ${
-              selectedCids.length
-            } downloaded successfully`
-          )
-        } else {
-          throw new Error('Unexpected response format')
-        }
-      } catch (error) {
-        console.error('Failed to download file:', error)
-        toast.error(`Failed to download file: ${error.message}`)
+        })
+        
+        // Cleanup
+        link.parentNode.removeChild(link)
+        window.URL.revokeObjectURL(url)
+        
+        toast.success(
+          `File ${currentDownloadIndex + 1} of ${selectedCids.length} downloaded successfully`
+        )
+        
+        // Move to next file
+        setCurrentDownloadIndex(prev => prev + 1)
+      } else {
+        throw new Error('Unexpected response format')
       }
-    },
-    [currentDownloadIndex, selectedCids.length]
-  )
+    } catch (error) {
+      console.error('Failed to download file:', error)
+      toast.error(`Failed to download file: ${error.message}`)
+    } finally {
+      setIsDownloading(false)
+    }
+  }, [currentDownloadIndex, selectedCids.length])
 
   useEffect(() => {
     const downloadNext = async () => {
-      if (
-        selectedCids.length > 0 &&
-        currentDownloadIndex < selectedCids.length &&
-        !isDownloading
-      ) {
-        setIsDownloading(true)
+      if (selectedCids.length > 0 && currentDownloadIndex < selectedCids.length && !isDownloading) {
         await downloadFile(selectedCids[currentDownloadIndex])
-        setIsDownloading(false)
-        setCurrentDownloadIndex((prevIndex) => prevIndex + 1)
-      } else if (
-        currentDownloadIndex >= selectedCids.length &&
-        selectedCids.length > 0
-      ) {
+      } else if (currentDownloadIndex >= selectedCids.length && selectedCids.length > 0) {
+        // All downloads completed
         toast.success('All files downloaded successfully')
         setSelectedCids([])
         setCurrentDownloadIndex(0)
