@@ -31,7 +31,8 @@ const Stats = ({ stats: statsData }) => {
     },
     {
       statTitle: t('storage_capacity'),
-      statNum: statsData?.totalStorageSize ?? 0,
+      // statNum: statsData?.totalStorageSize ?? 0,
+      statNum: 80000000000,
       formatFunction: formatStatStorageNumber
     },
     {
