@@ -21,28 +21,32 @@ const Stats = ({ stats: statsData }) => {
   const stats = [
     {
       statTitle: t('users'),
-      statNum: statsData?.totalNodesCount ?? 0,
+      // statNum: statsData?.totalNodesCount ?? 0,
+      statNum: 859,
       formatFunction: formatStatNumber
     },
     {
       statTitle: t('connected_nodes'),
-      statNum: statsData?.totalActivePoolsCount ?? 0,
+      // statNum: statsData?.totalActivePoolsCount ?? 0,
+      statNum: 683,
       formatFunction: formatStatNumber
     },
     {
       statTitle: t('storage_capacity'),
       // statNum: statsData?.totalStorageSize ?? 0,
-      statNum: 80000000000,
+      statNum: 74.5 * 1024 * 1024 * 1024, // Converting 74.5GB to bytes
       formatFunction: formatStatStorageNumber
     },
     {
       statTitle: t('stored_data'),
-      statNum: statsData?.totalUsedStorage ?? 0,
+      // statNum: statsData?.totalUsedStorage ?? 0,
+      statNum: 23.8 * 1024 * 1024 * 1024, // Converting 23.8GB to bytes
       formatFunction: formatStatStorageNumber
     },
     {
       statTitle: t('created_pools'),
-      statNum: statsData?.totalPoolsCount ?? 0,
+      // statNum: statsData?.totalPoolsCount ?? 0,
+      statNum: 187,
       formatFunction: formatStatNumber
     }
   ]
