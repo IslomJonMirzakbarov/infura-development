@@ -194,6 +194,7 @@
     "login_success": "Successfully logged in",
     "AUTH_OTP_INVALID": "Invalid confirmation code. Please try again.",
     "invalid_otp": "Invalid confirmation code. Please try again.",
-    "verification_email_sent": "Verification sent. Please check your email."
+    "verification_email_sent": "Verification sent. Please check your email.",
+    "file_upload_failed_no_subscribers": "You can upload a file when someone subscribes to this pool."
   }
 }

@@ -8,6 +8,7 @@ import FileUploadTable from 'components/FileUploadTable'
 import FolderCard from 'components/FolderCard'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import {
@@ -33,6 +34,7 @@ import styles from './style.module.scss'
 const Workspace = () => {
   const { poolId, folderId } = useParams()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { data: poolData, error, isError } = useGetPoolById({ id: poolId })
   const { data: folders } = useGetFoldersByPoolId({
@@ -94,54 +96,66 @@ const Workspace = () => {
   const { mutate: deleteFile } = useDeleteFile()
   const { mutate: deleteFolder } = useDeleteFolder()
 
-  const downloadFile = useCallback(async (cid) => {
-    try {
-      setIsDownloading(true)
-      const response = await fileService.getDownloads(cid)
-      
-      if (response && response.blob instanceof Blob) {
-        // Create and click download link
-        const url = window.URL.createObjectURL(response.blob)
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', response.filename || `file_${cid}`)
-        document.body.appendChild(link)
-        
-        // Create a promise that resolves when the download is complete
-        await new Promise((resolve, reject) => {
-          link.onclick = () => {
-            // Small timeout to ensure download starts
-            setTimeout(resolve, 1000)
-          }
-          link.click()
-        })
-        
-        // Cleanup
-        link.parentNode.removeChild(link)
-        window.URL.revokeObjectURL(url)
-        
-        toast.success(
-          `File ${currentDownloadIndex + 1} of ${selectedCids.length} downloaded successfully`
-        )
-        
-        // Move to next file
-        setCurrentDownloadIndex(prev => prev + 1)
-      } else {
-        throw new Error('Unexpected response format')
+  const downloadFile = useCallback(
+    async (cid) => {
+      try {
+        setIsDownloading(true)
+        const response = await fileService.getDownloads(cid)
+
+        if (response && response.blob instanceof Blob) {
+          // Create and click download link
+          const url = window.URL.createObjectURL(response.blob)
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', response.filename || `file_${cid}`)
+          document.body.appendChild(link)
+
+          // Create a promise that resolves when the download is complete
+          await new Promise((resolve, reject) => {
+            link.onclick = () => {
+              // Small timeout to ensure download starts
+              setTimeout(resolve, 1000)
+            }
+            link.click()
+          })
+
+          // Cleanup
+          link.parentNode.removeChild(link)
+          window.URL.revokeObjectURL(url)
+
+          toast.success(
+            `File ${currentDownloadIndex + 1} of ${
+              selectedCids.length
+            } downloaded successfully`
+          )
+
+          // Move to next file
+          setCurrentDownloadIndex((prev) => prev + 1)
+        } else {
+          throw new Error('Unexpected response format')
+        }
+      } catch (error) {
+        console.error('Failed to download file:', error)
+        toast.error(`Failed to download file: ${error.message}`)
+      } finally {
+        setIsDownloading(false)
       }
-    } catch (error) {
-      console.error('Failed to download file:', error)
-      toast.error(`Failed to download file: ${error.message}`)
-    } finally {
-      setIsDownloading(false)
-    }
-  }, [currentDownloadIndex, selectedCids.length])
+    },
+    [currentDownloadIndex, selectedCids.length]
+  )
 
   useEffect(() => {
     const downloadNext = async () => {
-      if (selectedCids.length > 0 && currentDownloadIndex < selectedCids.length && !isDownloading) {
+      if (
+        selectedCids.length > 0 &&
+        currentDownloadIndex < selectedCids.length &&
+        !isDownloading
+      ) {
         await downloadFile(selectedCids[currentDownloadIndex])
-      } else if (currentDownloadIndex >= selectedCids.length && selectedCids.length > 0) {
+      } else if (
+        currentDownloadIndex >= selectedCids.length &&
+        selectedCids.length > 0
+      ) {
         // All downloads completed
         toast.success('All files downloaded successfully')
         setSelectedCids([])
@@ -169,7 +183,12 @@ const Workspace = () => {
             refetchFolder()
           },
           onError: (error) => {
-            toast.error(`Failed to upload files: ${error.message}`)
+            if (error?.data?.status?.code === 9003) {
+              toast.error(t('file_upload_failed_no_subscribers'))
+            } else {
+              toast.error(`Failed to upload files: ${error.message}`)
+            }
+            console.log('file upload error', error)
           }
         })
 

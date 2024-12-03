@@ -185,12 +185,13 @@
     "username_placeholder": "사용자 이름을 입력하세요",
     "how_to_use_api_key": "API 키 사용 방법",
     "expire_date": "만료일",
-    "user_already_exists": "이미 존재하는 사���자입니다",
+    "user_already_exists": "이미 존재하는 사자입니다",
     "invalid_email": "잘못된 이메일 주소입니다",
     "invalid_password": "잘못된 비밀번호 형식입니다",
     "user_not_found": "사용자를 찾을 수 없습니다",
     "invalid_credentials": "이메일 또는 비밀번호가 잘못되었습니다",
     "email_not_verified": "먼저 이메일을 확인해주세요",
-    "login_success": "로그인에 성공했습니다"
+    "login_success": "로그인에 성공했습니다",
+    "file_upload_failed_no_subscribers": "누군가 이 풀을 구독하면 파일을 업로드할 수 있습니다."
   }
 }

@@ -9,6 +9,7 @@ import { useParams } from 'react-router-dom'
 import { useUploadFile } from 'services/file.service'
 import { useCreateFolder } from 'services/folder.service'
 import GatewayModal from 'views/Billing/GatewayModal'
+import { useTranslation } from 'react-i18next'
 
 const buttons = [
   {
@@ -38,6 +39,7 @@ const WorkspaceContainer = ({ refetchFolder, children }) => {
   const [isCreateFolderModalOpen, setCreateFolderModalOpen] = useState(false)
   const createFolder = useCreateFolder()
   const { mutate: uploadFile, isLoading: isUploading } = useUploadFile()
+  const { t } = useTranslation()
 
   const handleButtonClick = (action) => {
     if (action === 'upload') {
@@ -85,7 +87,12 @@ const WorkspaceContainer = ({ refetchFolder, children }) => {
           refetchFolder()
         },
         onError: (error) => {
-          toast.error(`Failed to upload files: ${error.message}`)
+          if (error?.data?.status?.code === 9003) {
+            toast.error(t('file_upload_failed_no_subscribers'))
+          } else {
+            toast.error(`Failed to upload files: ${error.message}`)
+          }
+          console.log('file upload error', error)
         }
       })
     }
