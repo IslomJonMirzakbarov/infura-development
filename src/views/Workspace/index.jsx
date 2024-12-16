@@ -497,7 +497,7 @@ const Workspace = () => {
                 lineHeight='33px'
                 color='#fff'
               >
-                File History
+                File History {folderContent?.details?.results?.parent?.name ? `(${folderContent.details.results.parent.name})` : ''}
               </Typography>
             </Box>
             <Box display='flex' flexDirection='column' alignItems='end'>
