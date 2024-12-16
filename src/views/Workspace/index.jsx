@@ -439,7 +439,12 @@ const Workspace = () => {
               lineHeight='17px'
               color='#fff'
             >
-              Remaining Capacity: <span style={{ color: '#27E6D6' }}>20GB</span>
+              Remaining Capacity:{' '}
+              <span style={{ color: '#27E6D6' }}>
+                {poolData?.details?.poolSize 
+                  ? `${poolData.details.poolSize.size}${poolData.details.poolSize.type}`
+                  : '0GB'}
+              </span>
             </Typography>
             <Typography
               fontWeight='500'
@@ -448,7 +453,18 @@ const Workspace = () => {
               color='#fff'
             >
               Expire Date:{' '}
-              <span style={{ color: '#27E6D6' }}>2024/06/28 14:04</span>
+              <span style={{ color: '#27E6D6' }}>
+                {poolData?.details?.expirationDate 
+                  ? new Date(poolData.details.expirationDate).toLocaleString('en-US', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      hour12: false
+                    }).replace(',', '')
+                  : 'Not Set'}
+              </span>
             </Typography>
           </Box>
         </Box>

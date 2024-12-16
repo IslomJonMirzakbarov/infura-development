@@ -16,8 +16,8 @@ const errorHandler = async (error, hooks) => {
 
   const originalRequest = error.config
   if (
-    error?.response?.data?.code === 4001 || 
-    error?.response?.data?.message === 'AUTH_TOKEN_EXPIRED'
+    error?.response?.data?.status?.code === 4001 ||
+    error?.response?.data?.status?.message === 'AUTH_TOKEN_EXPIRED'
   ) {
     authStore.logout()
     return Promise.reject(error.response)
