@@ -32,6 +32,15 @@ import WorkspaceContainer from './WorkspaceContainer'
 import { demoColumns } from './customData'
 import styles from './style.module.scss'
 
+const decodeFileName = (filename) => {
+  try {
+    return decodeURIComponent(filename);
+  } catch (e) {
+    console.error('Error decoding filename:', e);
+    return filename;
+  }
+};
+
 const Workspace = () => {
   const { poolId, folderId } = useParams()
   const navigate = useNavigate()
@@ -540,7 +549,9 @@ const Workspace = () => {
               columns={demoColumns}
               data={[...folderList, ...fileList].map((item, index) => ({
                 id: index,
-                name: item.name || item.originalname,
+                name: item.folderCount !== undefined 
+                  ? item.name 
+                  : decodeFileName(item.originalname || item.name),
                 type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
                 size:
                   item.folderCount !== undefined
@@ -601,15 +612,7 @@ const Workspace = () => {
       </WorkSpaceModal>
 
       {showUploadProgress && (
-        <UploadProgress
-          uploads={uploads}
-          onClose={() => {
-            if (uploads.every(upload => upload.completed)) {
-              setShowUploadProgress(false)
-              setUploads([])
-            }
-          }}
-        />
+        <UploadProgress uploads={uploads} onClose={handleUploadProgressClose} />
       )}
     </WorkspaceContainer>
   )

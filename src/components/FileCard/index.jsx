@@ -23,6 +23,15 @@ const CustomCheckbox = styled('span')(({ theme, checked }) => ({
   }
 }))
 
+const decodeFileName = (filename) => {
+  try {
+    return decodeURIComponent(filename);
+  } catch (e) {
+    console.error('Error decoding filename:', e);
+    return filename;
+  }
+};
+
 export default function FileCard({
   index,
   file,
@@ -88,10 +97,14 @@ export default function FileCard({
       </Box>
       <Box className={styles.fileInfo}>
         <Typography
+          fontWeight='400'
+          fontSize='12px'
+          lineHeight='18px'
+          color='#fff'
+          marginBottom='3px'
           className={styles.filename}
-          title={file.originalname}
         >
-          {file.originalname}
+          {decodeFileName(file.originalname)}
         </Typography>
         <Box className={styles.fileDetails}>
           <Typography className={styles.fileMetadata}>
