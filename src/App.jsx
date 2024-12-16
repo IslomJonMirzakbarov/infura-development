@@ -1,13 +1,13 @@
-import { BrowserRouter } from 'react-router-dom'
-import theme from './mui-theme'
 import { ThemeProvider } from '@emotion/react'
-import { QueryClient, QueryClientProvider } from 'react-query'
-import AuthProvider from 'components/AuthProvider'
-import { Toaster } from 'react-hot-toast'
 import { StylesProvider } from '@mui/styles'
-import { useEffect } from 'react'
+import AuthProvider from 'components/AuthProvider'
 import i18next from 'i18next'
+import { useEffect } from 'react'
+import { Toaster } from 'react-hot-toast'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { BrowserRouter } from 'react-router-dom'
 import languageStore from 'store/language.store'
+import theme from './mui-theme'
 
 // pipeline test 1
 
@@ -24,7 +24,17 @@ function App() {
         <BrowserRouter>
           <QueryClientProvider client={queryClient}>
             <AuthProvider />
-            <Toaster position='top-right' />
+            <Toaster
+              position='top-right'
+              toastOptions={{
+                // Default duration for success/info toasts
+                duration: 2000,
+                // Custom settings for error toasts
+                error: {
+                  duration: 5000
+                }
+              }}
+            />
           </QueryClientProvider>
         </BrowserRouter>
       </StylesProvider>

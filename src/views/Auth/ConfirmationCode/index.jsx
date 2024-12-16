@@ -23,6 +23,10 @@ const ConfirmationCode = () => {
       onSuccess: (res) => {
         navigate('/auth/login')
         toast.success(t('successfully_registered'))
+      },
+      onError: (error) => {
+        const errorMessage = error?.response?.data?.message || 'invalid_otp'
+        toast.error(t(errorMessage))
       }
     })
   }

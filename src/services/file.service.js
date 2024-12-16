@@ -1,13 +1,35 @@
 import { useMutation, useQuery } from 'react-query'
 import httpRequest from './httpRequest'
 
+// ci/cd test commit
+
 export const fileService = {
-  upload: async (formData) =>
-    httpRequest.post('api/v1/file/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
+  upload: async (formData) => {
+    // Add proper encoding headers
+    const headers = {
+      'Content-Type': 'multipart/form-data',
+      'Accept-Charset': 'UTF-8'
+    }
+
+    // Create a new FormData and properly encode the filename
+    const encodedFormData = new FormData()
+    
+    // Copy existing entries from the original formData
+    for (let [key, value] of formData.entries()) {
+      if (key === 'files') {
+        // For files, create a new File object with encoded filename
+        const file = value
+        const encodedFile = new File([file], encodeURIComponent(file.name), {
+          type: file.type
+        })
+        encodedFormData.append(key, encodedFile)
+      } else {
+        encodedFormData.append(key, value)
       }
-    }),
+    }
+
+    return httpRequest.post('api/v1/file/upload', encodedFormData, { headers })
+  },
   getDownloads: async (cid) => {
     if (!cid) {
       console.error('No CID provided for download')
@@ -85,7 +107,7 @@ export const useGetItemWebview = (cid, queryProps) => {
     ['GET_ITEM_WEBVIEW', cid],
     () => fileService.getItemWebview(cid),
     {
-      enabled: !!cid,
+      enabled: !!cid && queryProps?.enabled !== false,
       ...queryProps
     }
   )

@@ -40,6 +40,8 @@ export default function Profile({
 
   const displayPools = poolType === 'new' ? allNewPools : (oldPools?.data || [])
 
+  console.log('pools', pools)
+
   return (
     <>
       <div className={styles.headerContainer}>

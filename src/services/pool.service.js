@@ -3,6 +3,9 @@ import { useMutation, useQuery } from 'react-query'
 import authStore from 'store/auth.store'
 import httpRequest from './httpRequest'
 
+const INFURA_NETWORK =
+  process.env.REACT_APP_INFURA_NETWORK || 'https://infura.oceandrive.network'
+
 export const poolService = {
   // check: async (data) => httpRequest.post('infura/api/v1/pools/check', data),
   getPoolByName: async (poolName) =>
@@ -11,24 +14,15 @@ export const poolService = {
   update: async (data) => httpRequest.patch('api/v1/pool/update', data), // tx_hash is missing and subscription plan
   getPools: async (id) =>
     httpRequest.get(`api/v1/pool/pool-list?filter[userId]=${id}`),
-  getDashboard: async () => httpRequest.get('api/v1/user/dashboard'),
-  getInvoices: async () => httpRequest.get('api/v1/user/invoices'),
-  getStats: async () =>
-    axios.get('https://api.oceandrive.network/infura/api/v1/stats'),
-  getWalletsCount: async () =>
-    axios.get('https://api.oceandrive.network/app/stats'),
+  getDashboard: async () => httpRequest.get('infura/api/v1/user/dashboard'),
+  getInvoices: async () => httpRequest.get('infura/api/v1/user/invoices'),
   getDownloadsCount: async () =>
     axios.get('https://admin.conun.io/api/analytic-downloads-ocea-drive'),
-  getPoolById: async (id) => httpRequest.get(`pool/pool-info/${id}`),
-  getOldPools: async () => {
-    const token = authStore.token.access.token
-    return axios.get('https://api.oceandrive.network/infura/api/v1/pools', {
-      headers: {
-        'X-Conun-Service': 'infura',
-        Authorization: `Bearer ${token}`
-      }
-    })
-  }
+  getPoolById: async (id) => httpRequest.get(`api/v1/pool/pool-info/${id}`),
+  getPoolStatistics: async () => 
+    httpRequest.get('api/v1/aggregation/user-pool-statistics'),
+  getNodeStats: async () => 
+    httpRequest.get('api/v1/aggregation/get-node-count?entryPoint=0'),
 }
 
 export const useGetFoldersByPoolId = ({
@@ -80,8 +74,8 @@ export const useDownloadsCount = (querySettings) => {
     querySettings
   )
 }
-export const useWalletsCount = (querySettings) => {
-  return useQuery('wallets-count', poolService.getWalletsCount, querySettings)
+export const useNodeStats = (querySettings) => {
+  return useQuery('node-stats', poolService.getNodeStats, querySettings)
 }
 // export const usePoolCheckMutation = (mutationSettings) => {
 //   return useMutation(poolService.check, mutationSettings)
@@ -113,9 +107,6 @@ export const useInvoice = (querySettings = {}) => {
     ...querySettings
   })
 }
-export const useStats = (mutationSettings) => {
-  return useQuery('stats', poolService.getStats, mutationSettings)
-}
 export const useGetPoolById = ({ id, enabled = true, queryProps }) => {
   return useQuery(`get-pool-${id}`, () => poolService.getPoolById(id), {
     enabled: enabled && !!id,
@@ -128,6 +119,6 @@ export const useConditionalPoolById = (id) => {
   return useGetPoolById({ id, enabled: id !== 'ALL' })
 }
 
-export const useGetOldPools = (querySettings) => {
-  return useQuery('old-pools', poolService.getOldPools, querySettings)
+export const usePoolStatistics = (querySettings) => {
+  return useQuery('pool-statistics', poolService.getPoolStatistics, querySettings)
 }

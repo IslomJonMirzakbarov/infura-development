@@ -30,10 +30,22 @@ class Store {
   }
 
   setAccessToken(value) {
+    if (!this.token.access) {
+      this.token.access = {
+        token: null,
+        expires: null
+      }
+    }
     this.token.access.token = value
   }
 
   setRefreshToken(value) {
+    if (!this.token.refresh) {
+      this.token.refresh = {
+        token: null,
+        expires: null
+      }
+    }
     this.token.refresh.token = value
   }
 

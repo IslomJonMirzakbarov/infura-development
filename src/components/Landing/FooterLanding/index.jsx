@@ -12,10 +12,10 @@ import { useTranslation } from 'react-i18next'
 import styles from './style.module.scss'
 
 const icons = [
-  { IconComp: TelegramIcon, url: 'https://t.me/conuncycon' },
-  { IconComp: TwitterIcon, url: 'https://twitter.com/cyconandconun' },
+  { IconComp: TelegramIcon, url: 'https://t.me/PSJGLOBALCYCON' },
+  { IconComp: TwitterIcon, url: 'https://x.com/psjglobalcycon?s=11&t=zQMQXjLbQ-J2SrsDCCNYbA' },
   { IconComp: KatotIcon, url: 'https://open.kakao.com/o/g5ux462e' },
-  { IconComp: GithubIcon, url: 'https://github.com/CONUN-Global' },
+  { IconComp: GithubIcon, url: 'https://github.com/PSJGLOBAL' },
   {
     IconComp: YouTubeIcon,
     url: 'https://www.youtube.com/channel/UCVbpETcXaPRZkL2HACUXOsA'

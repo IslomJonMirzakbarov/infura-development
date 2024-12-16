@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import CheckIcon from '@mui/icons-material/Check'
 import { Box, Typography, styled } from '@mui/material'
 import { ReactComponent as StarIcon } from 'assets/icons/star_icon.svg'
-import folderImage from 'assets/images/folder.png'
+import { ZipFileIcon, PdfFileIcon, TextFileIcon, DefaultFileIcon } from 'components/FileIcons'
 import { formatStatStorageNumber } from 'utils/utilFuncs'
 import styles from './style.module.scss'
 import { useGetItemWebview } from 'services/file.service'
@@ -23,22 +23,25 @@ const CustomCheckbox = styled('span')(({ theme, checked }) => ({
   }
 }))
 
+const decodeFileName = (filename) => {
+  try {
+    return decodeURIComponent(filename);
+  } catch (e) {
+    console.error('Error decoding filename:', e);
+    return filename;
+  }
+};
+
 export default function FileCard({
   index,
   file,
   handleCheckboxToggle,
-  checkedFiles
+  checkedFiles,
+  shouldFetchWebview
 }) {
-  const [imageUrl, setImageUrl] = useState(null)
-  const { data: itemWebview, isLoading, error } = useGetItemWebview(file.cid)
-
-  useEffect(() => {
-    if (itemWebview) {
-      const url = URL.createObjectURL(itemWebview)
-      setImageUrl(url)
-      return () => URL.revokeObjectURL(url)
-    }
-  }, [itemWebview])
+  const { data: webviewData } = useGetItemWebview(shouldFetchWebview ? file.cid : null, {
+    enabled: shouldFetchWebview
+  })
 
   const isImageFile = (mimetype) => {
     return mimetype.startsWith('image/')
@@ -46,6 +49,35 @@ export default function FileCard({
 
   const getFileExtension = (filename) => {
     return filename.split('.').pop().toUpperCase()
+  }
+
+  const renderFilePreview = () => {
+    if (shouldFetchWebview && webviewData) {
+      return (
+        <img 
+          src={URL.createObjectURL(webviewData)} 
+          alt={file.originalname}
+          className={styles.previewImage}
+        />
+      )
+    }
+
+    return (
+      <Box className={styles.iconWrapper}>
+        {(() => {
+          switch (file.mimetype) {
+            case 'application/zip':
+              return <ZipFileIcon />
+            case 'application/pdf':
+              return <PdfFileIcon />
+            case 'text/plain':
+              return <TextFileIcon />
+            default:
+              return <DefaultFileIcon />
+          }
+        })()}
+      </Box>
+    )
   }
 
   return (
@@ -58,30 +90,12 @@ export default function FileCard({
           <CheckIcon fontSize='10px' />
         </CustomCheckbox>
       </Box>
-      <Box className={styles.imageContainer}>
-        {isImageFile(file.mimetype) ? (
-          isLoading ? (
-            <div className={styles.loadingPlaceholder}>Loading...</div>
-          ) : imageUrl ? (
-            <img
-              src={imageUrl}
-              alt={file.originalname}
-              className={styles.image}
-              onError={(e) => {
-                console.error('Image failed to load:', e)
-                e.target.src = folderImage // Fallback to folder image
-              }}
-            />
-          ) : (
-            <div className={styles.errorPlaceholder}>
-              {error ? `Error: ${error.message}` : 'Failed to load image'}
-            </div>
-          )
-        ) : (
-          <img src={folderImage} alt='file' className={styles.image} />
-        )}
+      <Box className={styles.filePreviewContainer}>
+        <Box className={styles.filePreview}>
+          {renderFilePreview()}
+        </Box>
       </Box>
-      <Box padding='10px'>
+      <Box className={styles.fileInfo}>
         <Typography
           fontWeight='400'
           fontSize='12px'
@@ -90,15 +104,10 @@ export default function FileCard({
           marginBottom='3px'
           className={styles.filename}
         >
-          {file.originalname}
+          {decodeFileName(file.originalname)}
         </Typography>
-        <Box display='flex' alignItems='center' justifyContent='space-between'>
-          <Typography
-            fontWeight='500'
-            fontSize='10px'
-            color='#888888'
-            lineHeight='15px'
-          >
+        <Box className={styles.fileDetails}>
+          <Typography className={styles.fileMetadata}>
             {getFileExtension(file.originalname)} /{' '}
             {formatStatStorageNumber(file.size).value}{' '}
             {formatStatStorageNumber(file.size).cap}

@@ -48,8 +48,6 @@ const Signup = () => {
             res?.details?.token?.access?.token
           )
 
-          toast.success(t('Account created'))
-
           authStore.setAccessToken(res?.details?.token?.access?.token)
           authStore.setRefreshToken(res?.details?.token?.refresh?.token)
 

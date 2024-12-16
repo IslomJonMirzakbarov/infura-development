@@ -8,9 +8,14 @@ import FileUploadTable from 'components/FileUploadTable'
 import FolderCard from 'components/FolderCard'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 import { useQueryClient } from 'react-query'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { useDeleteFile, useUploadFile, useGetDownloads, fileService } from 'services/file.service'
+import {
+  fileService,
+  useDeleteFile,
+  useUploadFile
+} from 'services/file.service'
 import { useDeleteFolder, useGetFolderList } from 'services/folder.service'
 import {
   useGetFileHistory,
@@ -21,15 +26,25 @@ import formatTime from 'utils/formatTime'
 import { formatStatStorageNumber } from 'utils/utilFuncs'
 import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
+import UploadProgress from './UploadProgress'
 import WorkSpaceModal from './WorkSpaceModal'
 import WorkspaceContainer from './WorkspaceContainer'
 import { demoColumns } from './customData'
 import styles from './style.module.scss'
-import UploadProgress from './UploadProgress'
+
+const decodeFileName = (filename) => {
+  try {
+    return decodeURIComponent(filename);
+  } catch (e) {
+    console.error('Error decoding filename:', e);
+    return filename;
+  }
+};
 
 const Workspace = () => {
   const { poolId, folderId } = useParams()
   const navigate = useNavigate()
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const { data: poolData, error, isError } = useGetPoolById({ id: poolId })
   const { data: folders } = useGetFoldersByPoolId({
@@ -79,9 +94,10 @@ const Workspace = () => {
   const intervalsRef = useRef([])
   const [errorToastShown, setErrorToastShown] = useState(false)
   const [downloadCids, setDownloadCids] = useState([])
-  const [currentDownloadIndex, setCurrentDownloadIndex] = useState(0);
-  const [selectedCids, setSelectedCids] = useState([]);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [currentDownloadIndex, setCurrentDownloadIndex] = useState(0)
+  const [selectedCids, setSelectedCids] = useState([])
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     setErrorToastShown(false)
@@ -91,51 +107,110 @@ const Workspace = () => {
   const { mutate: deleteFile } = useDeleteFile()
   const { mutate: deleteFolder } = useDeleteFolder()
 
-  const downloadFile = useCallback(async (cid) => {
-    try {
-      const response = await fileService.getDownloads(cid);
-      if (response && response.blob instanceof Blob) {
-        const url = window.URL.createObjectURL(response.blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', response.filename || `file_${cid}`);
-        document.body.appendChild(link);
-        link.click();
-        link.parentNode.removeChild(link);
-        window.URL.revokeObjectURL(url);
-        toast.success(`File ${currentDownloadIndex + 1} of ${selectedCids.length} downloaded successfully`);
-      } else {
-        throw new Error('Unexpected response format');
+  const downloadFile = useCallback(
+    async (cid) => {
+      try {
+        setIsDownloading(true)
+        const response = await fileService.getDownloads(cid)
+
+        if (response && response.blob instanceof Blob) {
+          // Create and click download link
+          const url = window.URL.createObjectURL(response.blob)
+          const link = document.createElement('a')
+          link.href = url
+          link.setAttribute('download', response.filename || `file_${cid}`)
+          document.body.appendChild(link)
+
+          // Create a promise that resolves when the download is complete
+          await new Promise((resolve, reject) => {
+            link.onclick = () => {
+              // Small timeout to ensure download starts
+              setTimeout(resolve, 1000)
+            }
+            link.click()
+          })
+
+          // Cleanup
+          link.parentNode.removeChild(link)
+          window.URL.revokeObjectURL(url)
+
+          toast.success(
+            `File ${currentDownloadIndex + 1} of ${
+              selectedCids.length
+            } downloaded successfully`
+          )
+
+          // Move to next file
+          setCurrentDownloadIndex((prev) => prev + 1)
+        } else {
+          throw new Error('Unexpected response format')
+        }
+      } catch (error) {
+        console.error('Failed to download file:', error)
+        toast.error(`Failed to download file: ${error.message}`)
+      } finally {
+        setIsDownloading(false)
       }
-    } catch (error) {
-      console.error('Failed to download file:', error);
-      toast.error(`Failed to download file: ${error.message}`);
-    }
-  }, [currentDownloadIndex, selectedCids.length]);
+    },
+    [currentDownloadIndex, selectedCids.length]
+  )
 
   useEffect(() => {
     const downloadNext = async () => {
-      if (selectedCids.length > 0 && currentDownloadIndex < selectedCids.length && !isDownloading) {
-        setIsDownloading(true);
-        await downloadFile(selectedCids[currentDownloadIndex]);
-        setIsDownloading(false);
-        setCurrentDownloadIndex(prevIndex => prevIndex + 1);
-      } else if (currentDownloadIndex >= selectedCids.length && selectedCids.length > 0) {
-        toast.success('All files downloaded successfully');
-        setSelectedCids([]);
-        setCurrentDownloadIndex(0);
+      if (
+        selectedCids.length > 0 &&
+        currentDownloadIndex < selectedCids.length &&
+        !isDownloading
+      ) {
+        await downloadFile(selectedCids[currentDownloadIndex])
+      } else if (
+        currentDownloadIndex >= selectedCids.length &&
+        selectedCids.length > 0
+      ) {
+        // All downloads completed
+        toast.success('All files downloaded successfully')
+        setSelectedCids([])
+        setCurrentDownloadIndex(0)
       }
-    };
+    }
 
-    downloadNext();
-  }, [selectedCids, currentDownloadIndex, isDownloading, downloadFile]);
+    downloadNext()
+  }, [selectedCids, currentDownloadIndex, isDownloading, downloadFile])
+
+  const handleDragEnter = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    setIsDragging(false);
+  }, []);
+
+  const handleDragOver = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
+      setIsDragging(false);
       if (acceptedFiles.length > 0) {
         const formData = new FormData()
         formData.append('poolId', poolId)
         formData.append('folderId', folderId)
+
+        // Create upload entries first
+        const newUploads = acceptedFiles.map((file) => ({
+          file,
+          progress: 0,
+          completed: false
+        }))
+        setUploads(newUploads)
+        setShowUploadProgress(true)
 
         acceptedFiles.forEach((file) => {
           formData.append(`files`, file)
@@ -143,22 +218,37 @@ const Workspace = () => {
 
         uploadFile(formData, {
           onSuccess: () => {
-            toast.success(`Files uploaded successfully`)
+            setUploads((prev) =>
+              prev.map((upload) => ({
+                ...upload,
+                completed: true,
+                progress: 100
+              }))
+            )
             refetchFolder()
           },
           onError: (error) => {
-            toast.error(`Failed to upload files: ${error.message}`)
+            if (error?.data?.status?.code === 9003) {
+              toast.error(t('file_upload_failed_no_subscribers'))
+            } else {
+              toast.error(`Failed to upload files: ${error.message}`)
+            }
+            console.log('file upload error', error)
           }
         })
-
-        setUploads(
-          acceptedFiles.map((file) => ({ file, progress: 0, completed: false }))
-        )
-        setShowUploadProgress(true)
       }
     },
-    [folderId, uploadFile, refetchFolder]
-  )
+    [folderId, poolId, uploadFile, refetchFolder, t]
+  );
+
+  const handleDropEvent = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    handleDrop(files);
+  }, [handleDrop]);
 
   const handleCheckboxToggle = useCallback((id) => {
     setCheckedFiles((prev) => ({ ...prev, [id]: !prev[id] }))
@@ -176,21 +266,21 @@ const Workspace = () => {
     // console.log('checkedFiles===>', checkedFiles);
 
     const itemsToDelete = Object.keys(checkedFiles)
-      .filter(key => checkedFiles[key])
-      .map(key => {
-        const index = parseInt(key, 10);
-        const isFolder = index < folderList.length;
-        const item = isFolder 
-          ? folderList[index] 
-          : fileList[index - folderList.length];
+      .filter((key) => checkedFiles[key])
+      .map((key) => {
+        const index = parseInt(key, 10)
+        const isFolder = index < folderList.length
+        const item = isFolder
+          ? folderList[index]
+          : fileList[index - folderList.length]
 
         return {
           id: item.id,
           isFolder,
           cid: item.cid,
           name: item.name || item.originalname
-        };
-      });
+        }
+      })
 
     // console.log('itemsToDelete===>', itemsToDelete);
 
@@ -198,29 +288,36 @@ const Workspace = () => {
       if (isFolder) {
         deleteFolder(id, {
           onSuccess: () => {
-            toast.success(`Folder "${name}" deleted successfully`);
-            refetchFolder();
+            toast.success(`Folder "${name}" deleted successfully`)
+            refetchFolder()
           },
           onError: (error) => {
-            toast.error(`Failed to delete folder "${name}": ${error.message}`);
+            toast.error(`Failed to delete folder "${name}": ${error.message}`)
           }
-        });
+        })
       } else {
         deleteFile(cid, {
           onSuccess: () => {
-            toast.success(`File "${name}" deleted successfully`);
-            refetchFolder();
+            toast.success(`File "${name}" deleted successfully`)
+            refetchFolder()
           },
           onError: (error) => {
-            toast.error(`Failed to delete file "${name}": ${error.message}`);
+            toast.error(`Failed to delete file "${name}": ${error.message}`)
           }
-        });
+        })
       }
-    });
+    })
 
-    setCheckedFiles({});
-    setDeleteModalOpen(false);
-  }, [checkedFiles, deleteFile, deleteFolder, fileList, folderList, refetchFolder]);
+    setCheckedFiles({})
+    setDeleteModalOpen(false)
+  }, [
+    checkedFiles,
+    deleteFile,
+    deleteFolder,
+    fileList,
+    folderList,
+    refetchFolder
+  ])
 
   const handleMenuOpen = useCallback((event) => {
     setMenuAnchorEl(event.currentTarget)
@@ -242,26 +339,26 @@ const Workspace = () => {
     const newSelectedCids = Object.entries(checkedFiles)
       .filter(([_, isChecked]) => isChecked)
       .map(([index, _]) => {
-        const isFolder = parseInt(index) < folderList.length;
+        const isFolder = parseInt(index) < folderList.length
         if (!isFolder) {
-          const fileIndex = parseInt(index) - folderList.length;
-          return fileList[fileIndex].cid;
+          const fileIndex = parseInt(index) - folderList.length
+          return fileList[fileIndex].cid
         }
-        return null;
+        return null
       })
-      .filter(cid => cid !== null);
+      .filter((cid) => cid !== null)
 
     // console.log('Selected CIDs:', newSelectedCids);
 
     if (newSelectedCids.length > 0) {
       // console.log('Starting download process for selected CIDs');
-      setSelectedCids(newSelectedCids);
-      setCurrentDownloadIndex(0);
+      setSelectedCids(newSelectedCids)
+      setCurrentDownloadIndex(0)
     } else {
-      console.log('No files selected for download');
-      toast.error('Please select files to download');
+      console.log('No files selected for download')
+      toast.error('Please select files to download')
     }
-  }, [checkedFiles, folderList, fileList]);
+  }, [checkedFiles, folderList, fileList])
 
   const fileButtons = [
     {
@@ -283,7 +380,7 @@ const Workspace = () => {
   const handleButtonClick = useCallback(
     (action) => {
       if (action === 'download') {
-        handleDownload();
+        handleDownload()
       } else if (action === 'delete') {
         const hasCheckedItems = Object.values(checkedFiles).some(
           (isChecked) => isChecked
@@ -315,216 +412,263 @@ const Workspace = () => {
   // Listen for files-selected event when file input is triggered from WorkspaceLayout
   useEffect(() => {
     const handleFilesSelected = (event) => {
-      const selectedFiles = Array.from(event.detail).map((file) => {
-        return {
-          file,
-          progress: 0,
-          completed: false
-        }
-      })
-
+      const selectedFiles = Array.from(event.detail)
       if (selectedFiles.length > 0) {
-        // console.log('Selected Files:', selectedFiles)
-        setUploads(selectedFiles)
         handleDrop(selectedFiles)
-        setShowUploadProgress(true)
       }
     }
 
-    window.addEventListener('files-selected', handleFilesSelected) // Listen for the files-selected event
+    window.addEventListener('files-selected', handleFilesSelected)
     return () => {
-      window.removeEventListener('files-selected', handleFilesSelected) // Cleanup listener on unmount
+      window.removeEventListener('files-selected', handleFilesSelected)
     }
   }, [handleDrop])
 
-  const uploadProgressClose = useCallback(() => {
-    setShowUploadProgress(false);
-  }, []);
+  const handleUploadProgressClose = useCallback(() => {
+    if (uploads.every((upload) => upload.completed)) {
+      setShowUploadProgress(false)
+      setUploads([])
+    }
+  }, [uploads])
+
+  const isImageFile = (mimetype) => {
+    return mimetype && mimetype.startsWith('image/')
+  }
 
   return (
     <WorkspaceContainer refetchFolder={refetchFolder}>
-      <Link to={`/main/workspace/${poolId}/${folderId}/details`}>
-        <Typography
-          fontWeight='500'
-          fontSize='12px'
-          lineHeight='18px'
-          color='#27E6D6'
-          marginBottom='1.5px'
-          style={{
-            cursor: 'pointer',
-            textDecoration: 'underline'
-          }}
-        >
-          {poolData?.details?.poolName}
-        </Typography>
-      </Link>
-      <Box>
-        <Box display='flex' justifyContent='space-between' alignItems='end'>
-          <Box display='flex' alignItems='center' gap='10px'>
-            {folderId !== 'root' && (
-              <ArrowBack
-                style={{
-                  fill: '#fff',
-                  cursor: 'pointer'
-                }}
-                onClick={() => navigate(-1)}
-              />
-            )}
-
-            <Typography
-              fontWeight='700'
-              fontSize='22px'
-              lineHeight='33px'
-              color='#fff'
-            >
-              File History
-            </Typography>
-          </Box>
-          <Box display='flex' flexDirection='column' alignItems='end'>
-            <Typography
-              fontWeight='500'
-              fontSize='10px'
-              lineHeight='17px'
-              color='#fff'
-            >
-              Remaining Capacity: <span style={{ color: '#27E6D6' }}>20GB</span>
-            </Typography>
-            <Typography
-              fontWeight='500'
-              fontSize='10px'
-              lineHeight='17px'
-              color='#fff'
-            >
-              Expire Date:{' '}
-              <span style={{ color: '#27E6D6' }}>2024/06/28 14:04</span>
-            </Typography>
-          </Box>
-        </Box>
-        {(folderList?.length > 0 || fileList?.length > 0) && (
-          <Box
-            display='flex'
-            alignItems='center'
-            justifyContent='space-between'
-            marginTop='10px'
-            height='38px'
+      <Box
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDropEvent}
+        sx={{
+          position: 'relative',
+          minHeight: '650px',
+          width: '100%',
+          ...(isDragging && {
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              top: 82,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              border: '2px dashed #27E6D6',
+              borderRadius: '10px',
+              backgroundColor: 'rgba(39, 230, 214, 0.1)',
+              zIndex: 1,
+              pointerEvents: 'none'
+            }
+          })
+        }}
+      >
+        <Link to={`/main/workspace/${poolId}/${folderId}/details`}>
+          <Typography
+            fontWeight='500'
+            fontSize='12px'
+            lineHeight='18px'
+            color='#27E6D6'
+            marginBottom='1.5px'
+            style={{
+              cursor: 'pointer',
+              textDecoration: 'underline'
+            }}
           >
-            <Box display='flex' gap='8px' alignItems='center'>
-              {Object.values(checkedFiles).some((isChecked) => isChecked) &&
-                fileButtons.map((button) => (
-                  <FileButton
-                    button={button}
-                    handleButtonClick={handleButtonClick}
-                    key={button.text}
-                    disabled={isDownloading}
-                  />
-                ))}
+            {poolData?.details?.poolName}
+          </Typography>
+        </Link>
+        <Box>
+          <Box display='flex' justifyContent='space-between' alignItems='end'>
+            <Box display='flex' alignItems='center' gap='10px'>
+              {folderId !== 'root' && (
+                <ArrowBack
+                  style={{
+                    fill: '#fff',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => navigate(-1)}
+                />
+              )}
+
+              <Typography
+                fontWeight='700'
+                fontSize='22px'
+                lineHeight='33px'
+                color='#fff'
+              >
+                File History {folderContent?.details?.results?.parent?.name ? `(${folderContent.details.results.parent.name})` : ''}
+              </Typography>
             </Box>
-            <GridListPicker
-              handleMenuOpen={handleMenuOpen}
-              handleMenuClose={handleMenuClose}
-              handleMenuItemClick={handleMenuItemClick}
-              menuAnchorEl={menuAnchorEl}
-            />
+            <Box display='flex' flexDirection='column' alignItems='end'>
+              <Typography
+                fontWeight='500'
+                fontSize='10px'
+                lineHeight='17px'
+                color='#fff'
+              >
+                Remaining Capacity:{' '}
+                <span style={{ color: '#27E6D6' }}>
+                  {poolData?.details?.poolSize
+                    ? `${poolData.details.poolSize.size}${poolData.details.poolSize.type}`
+                    : '0GB'}
+                </span>
+              </Typography>
+              <Typography
+                fontWeight='500'
+                fontSize='10px'
+                lineHeight='17px'
+                color='#fff'
+              >
+                Expire Date:{' '}
+                <span style={{ color: '#27E6D6' }}>
+                  {poolData?.details?.expirationDate
+                    ? new Date(poolData.details.expirationDate)
+                        .toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false
+                        })
+                        .replace(',', '')
+                    : 'Not Set'}
+                </span>
+              </Typography>
+            </Box>
           </Box>
+          {(folderList?.length > 0 || fileList?.length > 0) && (
+            <Box
+              display='flex'
+              alignItems='center'
+              justifyContent='space-between'
+              marginTop='10px'
+              height='38px'
+            >
+              <Box display='flex' gap='8px' alignItems='center'>
+                {Object.values(checkedFiles).some((isChecked) => isChecked) &&
+                  fileButtons.map((button) => (
+                    <FileButton
+                      button={button}
+                      handleButtonClick={handleButtonClick}
+                      key={button.text}
+                      disabled={isDownloading}
+                    />
+                  ))}
+              </Box>
+              <GridListPicker
+                handleMenuOpen={handleMenuOpen}
+                handleMenuClose={handleMenuClose}
+                handleMenuItemClick={handleMenuItemClick}
+                menuAnchorEl={menuAnchorEl}
+              />
+            </Box>
+          )}
+        </Box>
+        {!isLoading && (folderList.length > 0 || fileList.length > 0) ? (
+          view === 'grid' ? (
+            <Box
+              display='grid'
+              gridTemplateColumns='repeat(5, minmax(0, 1fr))'
+              gap='10px'
+              marginTop='20px'
+            >
+              {folderList.map((folder, index) => (
+                <FolderCard
+                  key={folder.id}
+                  index={index}
+                  folder={folder}
+                  handleCheckboxToggle={handleCheckboxToggle}
+                  checkedFiles={checkedFiles}
+                  onClick={() =>
+                    navigate(`/main/workspace/${poolId}/${folder.id}`)
+                  }
+                />
+              ))}
+              {fileList.map((file, index) => (
+                <FileCard
+                  key={file.id}
+                  index={folderList.length + index}
+                  file={file}
+                  handleCheckboxToggle={handleCheckboxToggle}
+                  checkedFiles={checkedFiles}
+                  shouldFetchWebview={isImageFile(file.mimetype)}
+                />
+              ))}
+            </Box>
+          ) : (
+            <Box className={styles.tableHolder}>
+              <FileUploadTable
+                columns={demoColumns}
+                data={[...folderList, ...fileList].map((item, index) => ({
+                  id: index,
+                  name: item.folderCount !== undefined 
+                    ? item.name 
+                    : decodeFileName(item.originalname || item.name),
+                  type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
+                  size:
+                    item.folderCount !== undefined
+                      ? `${item.totalItems} items`
+                      : formatStatStorageNumber(item.size).value +
+                        formatStatStorageNumber(item.size).cap,
+                  created_at: formatTime(item.createdAt),
+                  content_id: item.id
+                }))}
+                checkedFiles={checkedFiles}
+                onCheckboxToggle={handleCheckboxToggle}
+              />
+            </Box>
+          )
+        ) : (
+          !isLoading && (
+            <Box marginTop='20px'>
+              <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
+            </Box>
+          )
         )}
-      </Box>
-      {!isLoading && (folderList.length > 0 || fileList.length > 0) ? (
-        view === 'grid' ? (
+
+        {isLoading && (
           <Box
             display='grid'
             gridTemplateColumns='repeat(5, minmax(0, 1fr))'
             gap='10px'
             marginTop='20px'
           >
-            {folderList.map((folder, index) => (
-              <FolderCard
-                key={folder.id}
-                index={index}
-                folder={folder}
-                handleCheckboxToggle={handleCheckboxToggle}
-                checkedFiles={checkedFiles}
-                onClick={() =>
-                  navigate(`/main/workspace/${poolId}/${folder.id}`)
-                }
-              />
-            ))}
-            {fileList.map((file, index) => (
-              <FileCard
-                key={file.id}
-                index={folderList.length + index}
-                file={file}
-                handleCheckboxToggle={handleCheckboxToggle}
-                checkedFiles={checkedFiles}
+            {Array.from(Array(10).keys()).map((_, index) => (
+              <Skeleton
+                variant='rounded'
+                key={index + '-skleton'}
+                width='100%'
+                height='252px'
+                sx={{ bgcolor: 'grey.800' }}
               />
             ))}
           </Box>
-        ) : (
-          <Box className={styles.tableHolder}>
-            <FileUploadTable
-              columns={demoColumns}
-              data={[...folderList, ...fileList].map((item, index) => ({
-                id: index,
-                name: item.name || item.originalname,
-                type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
-                size: item.folderCount !== undefined
-                  ? `${item.totalItems} items`
-                  : formatStatStorageNumber(item.size).value + formatStatStorageNumber(item.size).cap,
-                created_at: formatTime(item.createdAt),
-                content_id: item.id
-              }))}
-              checkedFiles={checkedFiles}
-              onCheckboxToggle={handleCheckboxToggle}
-            />
-          </Box>
-        )
-      ) : (
-        !isLoading && (
-          <Box marginTop='20px'>
-            <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
-          </Box>
-        )
-      )}
+        )}
 
-      {isLoading && (
-        <Box
-          display='grid'
-          gridTemplateColumns='repeat(5, minmax(0, 1fr))'
-          gap='10px'
-          marginTop='20px'
+        <WorkSpaceModal
+          open={isDeleteModalOpen}
+          handleClose={() => setDeleteModalOpen(false)}
+          cancelLabel='Cancel'
+          submitLabel='Delete'
+          onCancel={() => setDeleteModalOpen(false)}
+          onSubmit={confirmDelete}
+          title={`Delete ${
+            Object.values(checkedFiles).filter(Boolean).length
+          } Item(s)`}
+          isLoading={false}
         >
-          {Array.from(Array(10).keys()).map((_, index) => (
-            <Skeleton
-              variant='rounded'
-              key={index + '-skleton'}
-              width='100%'
-              height='252px'
-              sx={{ bgcolor: 'grey.800' }}
-            />
-          ))}
-        </Box>
-      )}
+          <Typography>
+            Are you sure you want to delete the selected item(s)? This action
+            cannot be undone.
+          </Typography>
+        </WorkSpaceModal>
 
-      <WorkSpaceModal
-        open={isDeleteModalOpen}
-        handleClose={() => setDeleteModalOpen(false)}
-        cancelLabel='Cancel'
-        submitLabel='Delete'
-        onCancel={() => setDeleteModalOpen(false)}
-        onSubmit={confirmDelete}
-        title={`Delete ${
-          Object.values(checkedFiles).filter(Boolean).length
-        } Item(s)`}
-        isLoading={false}
-      >
-        <Typography>
-          Are you sure you want to delete the selected item(s)? This action
-          cannot be undone.
-        </Typography>
-      </WorkSpaceModal>
-
-      {showUploadProgress && (
-        <UploadProgress uploads={uploads} onClose={uploadProgressClose} />
-      )}
+        {showUploadProgress && (
+          <UploadProgress uploads={uploads} onClose={handleUploadProgressClose} />
+        )}
+      </Box>
     </WorkspaceContainer>
   )
 }

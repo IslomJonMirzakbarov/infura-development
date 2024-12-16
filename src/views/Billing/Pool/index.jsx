@@ -132,22 +132,58 @@ const Pool = () => {
         ...formData,
         pool_size
       })
+      console.log('result of create pool metamask: ', result)
+      setTxHash(result.transactionHash)
 
-      if (result.transactionHash) {
-        const pendingPoolData = {
-          poolId: formData.pool_name,
-          poolName: formData.pool_name,
-          txHash: result.transactionHash,
-          price: formData.pool_price,
-          size: `${formData.pool_size.value} ${formData.pool_size.unit}`,
-          period: formData.pool_period,
-          isPending: true,
-          created_at: new Date().toISOString()
-        }
-        
-        poolStore.addPendingPool(pendingPoolData)
-        toast.success('Pool creation is pending...')
-        navigate('/main/workspace')
+      if (result.transactionHash && result.poolId) {
+        console.log('poolId: ', result.poolId)
+        mutate(
+          {
+            subscriptionPlan: 0,
+            price: formData.pool_price,
+            poolName: formData.pool_name,
+            poolSize: {
+              size: formData.pool_size.value,
+              type: formData.pool_size.unit
+            },
+            pinReplication: formData.pin_replication,
+            period: formData.pool_period,
+            txHash: result.transactionHash,
+            rewardPoolId: result.poolId
+          },
+          {
+            onSuccess: (res) => {
+              console.log('create pool response success: ', res)
+              setPoolAddress(res?.details?.poolAddress)
+              setOpen2(false)
+              setOpen3(true)
+              queryClient.invalidateQueries('pools')
+
+              const apiKeyData = {
+                poolId: res.details.poolId,
+                poolName: res.details.poolName,
+                poolNote: `API Key for ${res.details.poolName}`,
+                period: res.details.period,
+                read: true,
+                write: true
+              }
+
+              generateApiKey(apiKeyData)
+            },
+            onError: (error) => {
+              setOpen2(false)
+              console.log('create pool error: ', error)
+              if (error.status === 401) {
+                // navigate('/auth/register')
+              }
+            }
+          }
+        )
+      } else {
+        setOpen2(false)
+        toast.error(
+          'Could not find poolId in transaction. Please contact support.'
+        )
       }
     } catch (e) {
       setOpen2(false)
