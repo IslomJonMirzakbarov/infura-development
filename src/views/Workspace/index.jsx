@@ -97,6 +97,7 @@ const Workspace = () => {
   const [currentDownloadIndex, setCurrentDownloadIndex] = useState(0)
   const [selectedCids, setSelectedCids] = useState([])
   const [isDownloading, setIsDownloading] = useState(false)
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     setErrorToastShown(false)
@@ -176,8 +177,27 @@ const Workspace = () => {
     downloadNext()
   }, [selectedCids, currentDownloadIndex, isDownloading, downloadFile])
 
+  const handleDragEnter = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  }, []);
+
+  const handleDragLeave = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.currentTarget.contains(e.relatedTarget)) return;
+    setIsDragging(false);
+  }, []);
+
+  const handleDragOver = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  }, []);
+
   const handleDrop = useCallback(
     (acceptedFiles) => {
+      setIsDragging(false);
       if (acceptedFiles.length > 0) {
         const formData = new FormData()
         formData.append('poolId', poolId)
@@ -198,7 +218,6 @@ const Workspace = () => {
 
         uploadFile(formData, {
           onSuccess: () => {
-            // Update all uploads to completed
             setUploads((prev) =>
               prev.map((upload) => ({
                 ...upload,
@@ -219,8 +238,17 @@ const Workspace = () => {
         })
       }
     },
-    [folderId, uploadFile, refetchFolder]
-  )
+    [folderId, poolId, uploadFile, refetchFolder, t]
+  );
+
+  const handleDropEvent = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    
+    const files = Array.from(e.dataTransfer.files);
+    handleDrop(files);
+  }, [handleDrop]);
 
   const handleCheckboxToggle = useCallback((id) => {
     setCheckedFiles((prev) => ({ ...prev, [id]: !prev[id] }))
@@ -409,211 +437,238 @@ const Workspace = () => {
 
   return (
     <WorkspaceContainer refetchFolder={refetchFolder}>
-      <Link to={`/main/workspace/${poolId}/${folderId}/details`}>
-        <Typography
-          fontWeight='500'
-          fontSize='12px'
-          lineHeight='18px'
-          color='#27E6D6'
-          marginBottom='1.5px'
-          style={{
-            cursor: 'pointer',
-            textDecoration: 'underline'
-          }}
-        >
-          {poolData?.details?.poolName}
-        </Typography>
-      </Link>
-      <Box>
-        <Box display='flex' justifyContent='space-between' alignItems='end'>
-          <Box display='flex' alignItems='center' gap='10px'>
-            {folderId !== 'root' && (
-              <ArrowBack
-                style={{
-                  fill: '#fff',
-                  cursor: 'pointer'
-                }}
-                onClick={() => navigate(-1)}
-              />
-            )}
-
-            <Typography
-              fontWeight='700'
-              fontSize='22px'
-              lineHeight='33px'
-              color='#fff'
-            >
-              File History
-            </Typography>
-          </Box>
-          <Box display='flex' flexDirection='column' alignItems='end'>
-            <Typography
-              fontWeight='500'
-              fontSize='10px'
-              lineHeight='17px'
-              color='#fff'
-            >
-              Remaining Capacity:{' '}
-              <span style={{ color: '#27E6D6' }}>
-                {poolData?.details?.poolSize
-                  ? `${poolData.details.poolSize.size}${poolData.details.poolSize.type}`
-                  : '0GB'}
-              </span>
-            </Typography>
-            <Typography
-              fontWeight='500'
-              fontSize='10px'
-              lineHeight='17px'
-              color='#fff'
-            >
-              Expire Date:{' '}
-              <span style={{ color: '#27E6D6' }}>
-                {poolData?.details?.expirationDate
-                  ? new Date(poolData.details.expirationDate)
-                      .toLocaleString('en-US', {
-                        year: 'numeric',
-                        month: '2-digit',
-                        day: '2-digit',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                      })
-                      .replace(',', '')
-                  : 'Not Set'}
-              </span>
-            </Typography>
-          </Box>
-        </Box>
-        {(folderList?.length > 0 || fileList?.length > 0) && (
-          <Box
-            display='flex'
-            alignItems='center'
-            justifyContent='space-between'
-            marginTop='10px'
-            height='38px'
+      <Box
+        onDragEnter={handleDragEnter}
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDropEvent}
+        sx={{
+          position: 'relative',
+          minHeight: '650px',
+          width: '100%',
+          ...(isDragging && {
+            '&::after': {
+              content: '""',
+              position: 'absolute',
+              top: 82,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              border: '2px dashed #27E6D6',
+              borderRadius: '10px',
+              backgroundColor: 'rgba(39, 230, 214, 0.1)',
+              zIndex: 1,
+              pointerEvents: 'none'
+            }
+          })
+        }}
+      >
+        <Link to={`/main/workspace/${poolId}/${folderId}/details`}>
+          <Typography
+            fontWeight='500'
+            fontSize='12px'
+            lineHeight='18px'
+            color='#27E6D6'
+            marginBottom='1.5px'
+            style={{
+              cursor: 'pointer',
+              textDecoration: 'underline'
+            }}
           >
-            <Box display='flex' gap='8px' alignItems='center'>
-              {Object.values(checkedFiles).some((isChecked) => isChecked) &&
-                fileButtons.map((button) => (
-                  <FileButton
-                    button={button}
-                    handleButtonClick={handleButtonClick}
-                    key={button.text}
-                    disabled={isDownloading}
-                  />
-                ))}
+            {poolData?.details?.poolName}
+          </Typography>
+        </Link>
+        <Box>
+          <Box display='flex' justifyContent='space-between' alignItems='end'>
+            <Box display='flex' alignItems='center' gap='10px'>
+              {folderId !== 'root' && (
+                <ArrowBack
+                  style={{
+                    fill: '#fff',
+                    cursor: 'pointer'
+                  }}
+                  onClick={() => navigate(-1)}
+                />
+              )}
+
+              <Typography
+                fontWeight='700'
+                fontSize='22px'
+                lineHeight='33px'
+                color='#fff'
+              >
+                File History
+              </Typography>
             </Box>
-            <GridListPicker
-              handleMenuOpen={handleMenuOpen}
-              handleMenuClose={handleMenuClose}
-              handleMenuItemClick={handleMenuItemClick}
-              menuAnchorEl={menuAnchorEl}
-            />
+            <Box display='flex' flexDirection='column' alignItems='end'>
+              <Typography
+                fontWeight='500'
+                fontSize='10px'
+                lineHeight='17px'
+                color='#fff'
+              >
+                Remaining Capacity:{' '}
+                <span style={{ color: '#27E6D6' }}>
+                  {poolData?.details?.poolSize
+                    ? `${poolData.details.poolSize.size}${poolData.details.poolSize.type}`
+                    : '0GB'}
+                </span>
+              </Typography>
+              <Typography
+                fontWeight='500'
+                fontSize='10px'
+                lineHeight='17px'
+                color='#fff'
+              >
+                Expire Date:{' '}
+                <span style={{ color: '#27E6D6' }}>
+                  {poolData?.details?.expirationDate
+                    ? new Date(poolData.details.expirationDate)
+                        .toLocaleString('en-US', {
+                          year: 'numeric',
+                          month: '2-digit',
+                          day: '2-digit',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                          hour12: false
+                        })
+                        .replace(',', '')
+                    : 'Not Set'}
+                </span>
+              </Typography>
+            </Box>
           </Box>
+          {(folderList?.length > 0 || fileList?.length > 0) && (
+            <Box
+              display='flex'
+              alignItems='center'
+              justifyContent='space-between'
+              marginTop='10px'
+              height='38px'
+            >
+              <Box display='flex' gap='8px' alignItems='center'>
+                {Object.values(checkedFiles).some((isChecked) => isChecked) &&
+                  fileButtons.map((button) => (
+                    <FileButton
+                      button={button}
+                      handleButtonClick={handleButtonClick}
+                      key={button.text}
+                      disabled={isDownloading}
+                    />
+                  ))}
+              </Box>
+              <GridListPicker
+                handleMenuOpen={handleMenuOpen}
+                handleMenuClose={handleMenuClose}
+                handleMenuItemClick={handleMenuItemClick}
+                menuAnchorEl={menuAnchorEl}
+              />
+            </Box>
+          )}
+        </Box>
+        {!isLoading && (folderList.length > 0 || fileList.length > 0) ? (
+          view === 'grid' ? (
+            <Box
+              display='grid'
+              gridTemplateColumns='repeat(5, minmax(0, 1fr))'
+              gap='10px'
+              marginTop='20px'
+            >
+              {folderList.map((folder, index) => (
+                <FolderCard
+                  key={folder.id}
+                  index={index}
+                  folder={folder}
+                  handleCheckboxToggle={handleCheckboxToggle}
+                  checkedFiles={checkedFiles}
+                  onClick={() =>
+                    navigate(`/main/workspace/${poolId}/${folder.id}`)
+                  }
+                />
+              ))}
+              {fileList.map((file, index) => (
+                <FileCard
+                  key={file.id}
+                  index={folderList.length + index}
+                  file={file}
+                  handleCheckboxToggle={handleCheckboxToggle}
+                  checkedFiles={checkedFiles}
+                  shouldFetchWebview={isImageFile(file.mimetype)}
+                />
+              ))}
+            </Box>
+          ) : (
+            <Box className={styles.tableHolder}>
+              <FileUploadTable
+                columns={demoColumns}
+                data={[...folderList, ...fileList].map((item, index) => ({
+                  id: index,
+                  name: item.folderCount !== undefined 
+                    ? item.name 
+                    : decodeFileName(item.originalname || item.name),
+                  type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
+                  size:
+                    item.folderCount !== undefined
+                      ? `${item.totalItems} items`
+                      : formatStatStorageNumber(item.size).value +
+                        formatStatStorageNumber(item.size).cap,
+                  created_at: formatTime(item.createdAt),
+                  content_id: item.id
+                }))}
+                checkedFiles={checkedFiles}
+                onCheckboxToggle={handleCheckboxToggle}
+              />
+            </Box>
+          )
+        ) : (
+          !isLoading && (
+            <Box marginTop='20px'>
+              <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
+            </Box>
+          )
         )}
-      </Box>
-      {!isLoading && (folderList.length > 0 || fileList.length > 0) ? (
-        view === 'grid' ? (
+
+        {isLoading && (
           <Box
             display='grid'
             gridTemplateColumns='repeat(5, minmax(0, 1fr))'
             gap='10px'
             marginTop='20px'
           >
-            {folderList.map((folder, index) => (
-              <FolderCard
-                key={folder.id}
-                index={index}
-                folder={folder}
-                handleCheckboxToggle={handleCheckboxToggle}
-                checkedFiles={checkedFiles}
-                onClick={() =>
-                  navigate(`/main/workspace/${poolId}/${folder.id}`)
-                }
-              />
-            ))}
-            {fileList.map((file, index) => (
-              <FileCard
-                key={file.id}
-                index={folderList.length + index}
-                file={file}
-                handleCheckboxToggle={handleCheckboxToggle}
-                checkedFiles={checkedFiles}
-                shouldFetchWebview={isImageFile(file.mimetype)}
+            {Array.from(Array(10).keys()).map((_, index) => (
+              <Skeleton
+                variant='rounded'
+                key={index + '-skleton'}
+                width='100%'
+                height='252px'
+                sx={{ bgcolor: 'grey.800' }}
               />
             ))}
           </Box>
-        ) : (
-          <Box className={styles.tableHolder}>
-            <FileUploadTable
-              columns={demoColumns}
-              data={[...folderList, ...fileList].map((item, index) => ({
-                id: index,
-                name: item.folderCount !== undefined 
-                  ? item.name 
-                  : decodeFileName(item.originalname || item.name),
-                type: item.folderCount !== undefined ? 'Folder' : item.mimetype,
-                size:
-                  item.folderCount !== undefined
-                    ? `${item.totalItems} items`
-                    : formatStatStorageNumber(item.size).value +
-                      formatStatStorageNumber(item.size).cap,
-                created_at: formatTime(item.createdAt),
-                content_id: item.id
-              }))}
-              checkedFiles={checkedFiles}
-              onCheckboxToggle={handleCheckboxToggle}
-            />
-          </Box>
-        )
-      ) : (
-        !isLoading && (
-          <Box marginTop='20px'>
-            <HFDropzone handleDrop={handleDrop} disabled={!poolId} />
-          </Box>
-        )
-      )}
+        )}
 
-      {isLoading && (
-        <Box
-          display='grid'
-          gridTemplateColumns='repeat(5, minmax(0, 1fr))'
-          gap='10px'
-          marginTop='20px'
+        <WorkSpaceModal
+          open={isDeleteModalOpen}
+          handleClose={() => setDeleteModalOpen(false)}
+          cancelLabel='Cancel'
+          submitLabel='Delete'
+          onCancel={() => setDeleteModalOpen(false)}
+          onSubmit={confirmDelete}
+          title={`Delete ${
+            Object.values(checkedFiles).filter(Boolean).length
+          } Item(s)`}
+          isLoading={false}
         >
-          {Array.from(Array(10).keys()).map((_, index) => (
-            <Skeleton
-              variant='rounded'
-              key={index + '-skleton'}
-              width='100%'
-              height='252px'
-              sx={{ bgcolor: 'grey.800' }}
-            />
-          ))}
-        </Box>
-      )}
+          <Typography>
+            Are you sure you want to delete the selected item(s)? This action
+            cannot be undone.
+          </Typography>
+        </WorkSpaceModal>
 
-      <WorkSpaceModal
-        open={isDeleteModalOpen}
-        handleClose={() => setDeleteModalOpen(false)}
-        cancelLabel='Cancel'
-        submitLabel='Delete'
-        onCancel={() => setDeleteModalOpen(false)}
-        onSubmit={confirmDelete}
-        title={`Delete ${
-          Object.values(checkedFiles).filter(Boolean).length
-        } Item(s)`}
-        isLoading={false}
-      >
-        <Typography>
-          Are you sure you want to delete the selected item(s)? This action
-          cannot be undone.
-        </Typography>
-      </WorkSpaceModal>
-
-      {showUploadProgress && (
-        <UploadProgress uploads={uploads} onClose={handleUploadProgressClose} />
-      )}
+        {showUploadProgress && (
+          <UploadProgress uploads={uploads} onClose={handleUploadProgressClose} />
+        )}
+      </Box>
     </WorkspaceContainer>
   )
 }
