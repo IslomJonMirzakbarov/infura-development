@@ -26,6 +26,7 @@ import formatTime from 'utils/formatTime'
 import { formatStatStorageNumber } from 'utils/utilFuncs'
 import FileButton from './FileButton'
 import GridListPicker from './GridListPicker'
+import UploadProgress from './UploadProgress'
 import WorkSpaceModal from './WorkSpaceModal'
 import WorkspaceContainer from './WorkspaceContainer'
 import { demoColumns } from './customData'
@@ -173,13 +174,29 @@ const Workspace = () => {
         formData.append('poolId', poolId)
         formData.append('folderId', folderId)
 
+        // Create upload entries first
+        const newUploads = acceptedFiles.map((file) => ({
+          file,
+          progress: 0,
+          completed: false
+        }))
+        setUploads(newUploads)
+        setShowUploadProgress(true)
+
         acceptedFiles.forEach((file) => {
           formData.append(`files`, file)
         })
 
         uploadFile(formData, {
           onSuccess: () => {
-            toast.success(`Files uploaded successfully`)
+            // Update all uploads to completed
+            setUploads((prev) =>
+              prev.map((upload) => ({
+                ...upload,
+                completed: true,
+                progress: 100
+              }))
+            )
             refetchFolder()
           },
           onError: (error) => {
@@ -191,11 +208,6 @@ const Workspace = () => {
             console.log('file upload error', error)
           }
         })
-
-        setUploads(
-          acceptedFiles.map((file) => ({ file, progress: 0, completed: false }))
-        )
-        setShowUploadProgress(true)
       }
     },
     [folderId, uploadFile, refetchFolder]
@@ -363,31 +375,24 @@ const Workspace = () => {
   // Listen for files-selected event when file input is triggered from WorkspaceLayout
   useEffect(() => {
     const handleFilesSelected = (event) => {
-      const selectedFiles = Array.from(event.detail).map((file) => {
-        return {
-          file,
-          progress: 0,
-          completed: false
-        }
-      })
-
+      const selectedFiles = Array.from(event.detail)
       if (selectedFiles.length > 0) {
-        // console.log('Selected Files:', selectedFiles)
-        setUploads(selectedFiles)
         handleDrop(selectedFiles)
-        setShowUploadProgress(true)
       }
     }
 
-    window.addEventListener('files-selected', handleFilesSelected) // Listen for the files-selected event
+    window.addEventListener('files-selected', handleFilesSelected)
     return () => {
-      window.removeEventListener('files-selected', handleFilesSelected) // Cleanup listener on unmount
+      window.removeEventListener('files-selected', handleFilesSelected)
     }
   }, [handleDrop])
 
-  const uploadProgressClose = useCallback(() => {
-    setShowUploadProgress(false)
-  }, [])
+  const handleUploadProgressClose = useCallback(() => {
+    if (uploads.every((upload) => upload.completed)) {
+      setShowUploadProgress(false)
+      setUploads([])
+    }
+  }, [uploads])
 
   const isImageFile = (mimetype) => {
     return mimetype && mimetype.startsWith('image/')
@@ -441,7 +446,7 @@ const Workspace = () => {
             >
               Remaining Capacity:{' '}
               <span style={{ color: '#27E6D6' }}>
-                {poolData?.details?.poolSize 
+                {poolData?.details?.poolSize
                   ? `${poolData.details.poolSize.size}${poolData.details.poolSize.type}`
                   : '0GB'}
               </span>
@@ -454,15 +459,17 @@ const Workspace = () => {
             >
               Expire Date:{' '}
               <span style={{ color: '#27E6D6' }}>
-                {poolData?.details?.expirationDate 
-                  ? new Date(poolData.details.expirationDate).toLocaleString('en-US', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      hour12: false
-                    }).replace(',', '')
+                {poolData?.details?.expirationDate
+                  ? new Date(poolData.details.expirationDate)
+                      .toLocaleString('en-US', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                      })
+                      .replace(',', '')
                   : 'Not Set'}
               </span>
             </Typography>
@@ -593,9 +600,17 @@ const Workspace = () => {
         </Typography>
       </WorkSpaceModal>
 
-      {/* {showUploadProgress && (
-        <UploadProgress uploads={uploads} onClose={uploadProgressClose} />
-      )} */}
+      {showUploadProgress && (
+        <UploadProgress
+          uploads={uploads}
+          onClose={() => {
+            if (uploads.every(upload => upload.completed)) {
+              setShowUploadProgress(false)
+              setUploads([])
+            }
+          }}
+        />
+      )}
     </WorkspaceContainer>
   )
 }

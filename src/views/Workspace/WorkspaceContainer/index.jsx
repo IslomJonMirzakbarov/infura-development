@@ -100,7 +100,11 @@ const WorkspaceContainer = ({ refetchFolder, children }) => {
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files)
-    handleFileUpload(files)
+    if (files.length > 0) {
+      // Dispatch the files-selected event
+      const event = new CustomEvent('files-selected', { detail: files })
+      window.dispatchEvent(event)
+    }
   }
 
   // Pass handleFileUpload to children
