@@ -25,13 +25,19 @@ export default function FolderCard({
   folder,
   handleCheckboxToggle,
   checkedFiles,
+  onDoubleClick,
   onClick
 }) {
+  const handleCheckboxClick = (e) => {
+    e.stopPropagation()
+    handleCheckboxToggle(index)
+  }
+
   return (
-    <Box className={styles.fileCard} onDoubleClick={onClick}>
+    <Box className={styles.fileCard} onDoubleClick={onDoubleClick} onClick={onClick}>
       <Box
         className={styles.selectableArea}
-        onClick={() => handleCheckboxToggle(index)}
+        onClick={handleCheckboxClick}
       >
         <CustomCheckbox checked={checkedFiles[index]}>
           <CheckIcon fontSize='10px' />
